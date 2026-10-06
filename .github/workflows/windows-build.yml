@@ -1,0 +1,75 @@
+name: TWR Offline Windows Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [twr-offline-dev]
+    paths:
+      - 'src/**'
+      - 'content/**'
+      - 'tools/**'
+      - 'tests/**'
+      - 'build/**'
+      - '.github/workflows/windows-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-export:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Set up pinned .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.425'
+
+      - name: Validate evidence/content/domain contracts
+        shell: pwsh
+        run: python tools/validation/run_all.py
+
+      - name: Bootstrap pinned Godot .NET and export Windows build
+        shell: pwsh
+        run: .\build\Windows\build.ps1 -BootstrapToolchain -SkipTests
+
+      - name: Verify executable
+        shell: pwsh
+        run: |
+          if (!(Test-Path 'build/output/ThoseWhoRemainOffline.exe')) { throw 'Missing Windows executable' }
+
+      - name: Package portable build
+        shell: pwsh
+        run: |
+          $pkg = 'release/package/ThoseWhoRemainOffline'
+          New-Item -ItemType Directory -Force -Path $pkg | Out-Null
+          Copy-Item 'build/output/*' $pkg -Recurse -Force
+          Copy-Item 'README.md' $pkg -Force
+          if (Test-Path 'docs/PRODUCT_PROFILE.md') { Copy-Item 'docs/PRODUCT_PROFILE.md' $pkg -Force }
+          $manifest = @{
+            build_commit = '${{ github.sha }}'
+            godot = '4.7.2-stable-mono'
+            dotnet = '8.0.425'
+            executable = 'ThoseWhoRemainOffline.exe'
+            offline_runtime = $true
+          } | ConvertTo-Json
+          Set-Content -Path "$pkg/BUILD_MANIFEST.json" -Value $manifest -Encoding UTF8
+          Compress-Archive -Path "$pkg/*" -DestinationPath 'release/ThoseWhoRemainOffline-Windows-x64.zip' -Force
+
+      - name: Upload portable Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ThoseWhoRemainOffline-Windows-x64
+          path: release/ThoseWhoRemainOffline-Windows-x64.zip
+          if-no-files-found: error
+          retention-days: 30
