@@ -1,0 +1,30 @@
+# Godot
+.godot/
+.import/
+*.tmp
+
+# .NET
+**/bin/
+**/obj/
+
+# IDE
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Builds / packages
+build/output/
+release/*.zip
+release/*.exe
+release/*.pck
+
+# Local evidence/source archives
+private-evidence/
+raw-evidence/
+*.rbxlx
+*.rbxl
+
+# OS
+.DS_Store
+Thumbs.db
