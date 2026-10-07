@@ -5,7 +5,8 @@ def read(path): return (ROOT/path).read_text()
 def test_body_armor_expires_at_wave_boundary():
     s=read("src/Twr.Domain/Runtime/LocalSession.cs")
     assert "case EndWaveCleanupCommand:" in s
-    assert "State.Player.ArmorDurability = 0" in s
+    assert 'State.Player.ArmorKind=="Body"' in s
+    assert "State.Player.ArmorDurability=0" in s
     g=read("src/Twr.Godot/Scripts/GameplayRoot.cs")
     assert "Runtime.EndWaveCleanup();" in g
 
