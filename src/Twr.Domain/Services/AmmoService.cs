@@ -22,10 +22,10 @@ public sealed class AmmoService(EventStream events)
         var loaded=player.Ammo.GetValueOrDefault(weapon);
         var reserve=player.ReserveAmmo.GetValueOrDefault(weapon);
         var needed=Math.Max(0,magazineCapacity-loaded);
-        var moved=Math.Min(needed,reserve);
+        var moved = Math.Min(needed, reserve);
         if(moved<=0)return false;
-        player.Ammo[weapon]=loaded+moved;
-        player.ReserveAmmo[weapon]=reserve-moved;
+        player.Ammo[weapon] = loaded + moved;
+        player.ReserveAmmo[weapon] = reserve - moved;
         events.Publish(new AmmoChangedEvent(weapon,player.Ammo[weapon],now));
         return true;
     }
