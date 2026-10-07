@@ -4,7 +4,7 @@ def read(path): return (ROOT/path).read_text()
 
 def test_pickup_values_preserve_recovered_item_rules():
     s=read("src/Twr.Godot/Scripts/PickupActor.cs")
-    assert "Runtime.HealPlayer(20)" in s
+    assert 'Runtime.HealPlayer(Runtime.HasPerk("Medic") ? 26 : 20)' in s
     assert "Runtime.HealPlayer(0, true)" in s
     assert "Runtime.EquipBodyArmor()" in s
     assert "RuntimeWeaponCatalog.Get(weapon)" in s
