@@ -38,7 +38,7 @@ public partial class Bootstrap : Node
         _menu.AddChild(MakeLabel(74, 225, 1070, 115, 18,
             "Current playable vertical slice: Manor reconstruction blockout.\n" +
             "Map measurements/art remain provisional until stronger source geometry is recovered.\n" +
-            "WASD move | Shift sprint | Space jump | Mouse aim/fire | R reload"));
+            "WASD move | Shift sprint | Space jump | Mouse aim/fire | R reload | 1/2/3 weapons"));
 
         var play = new Button
         {

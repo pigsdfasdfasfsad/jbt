@@ -9,6 +9,7 @@ public sealed class StarterLoadoutService
 {
     public const string Glock17 = "Glock 17";
     public const string SawnOff = "Sawn Off Shotgun";
+    public const string TwoByFour = "2x4";
 
     public void ResetForMatch(PlayerState player)
     {

@@ -53,7 +53,7 @@ public partial class GameplayRoot : Node3D
 
         if (_finished)
         {
-            _hud.UpdateState(Runtime.Player, Runtime.Match, "RESULTS", 0);
+            _hud.UpdateState(Runtime.Player, Runtime.Match, "RESULTS", 0, _player.EquippedWeaponName);
             return;
         }
 
@@ -81,7 +81,7 @@ public partial class GameplayRoot : Node3D
                 break;
         }
 
-        _hud.UpdateState(Runtime.Player, Runtime.Match, StageName(), _stageTime);
+        _hud.UpdateState(Runtime.Player, Runtime.Match, StageName(), _stageTime, _player.EquippedWeaponName);
     }
 
     public override void _UnhandledInput(InputEvent @event)

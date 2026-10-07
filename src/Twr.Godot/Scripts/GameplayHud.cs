@@ -16,8 +16,8 @@ public partial class GameplayHud : CanvasLayer
     {
         _top = MakeLabel(24, 20, 760, 42, 24);
         _health = MakeLabel(24, 650, 360, 38, 22);
-        _ammo = MakeLabel(940, 650, 310, 38, 22);
-        _credits = MakeLabel(24, 610, 400, 34, 18);
+        _ammo = MakeLabel(860, 650, 390, 38, 22);
+        _credits = MakeLabel(24, 610, 500, 34, 18);
         _banner = MakeLabel(250, 90, 780, 70, 32);
         _banner.HorizontalAlignment = HorizontalAlignment.Center;
 
@@ -40,14 +40,23 @@ public partial class GameplayHud : CanvasLayer
         return label;
     }
 
-    public void UpdateState(PlayerState player, MatchState match, string stage, double seconds)
+    public void UpdateState(PlayerState player, MatchState match, string stage, double seconds, string weaponName)
     {
         _top.Text = $"REGULAR  |  {match.MapName.ToUpperInvariant()}  |  WAVE {match.Wave}/15  |  {stage}  {FormatTime(seconds)}";
         _health.Text = $"HEALTH  {Math.Ceiling(player.Health):0} / {player.MaxHealth:0}";
-        var loaded = player.Ammo.GetValueOrDefault(StarterLoadoutService.Glock17);
-        var reserve = player.ReserveAmmo.GetValueOrDefault(StarterLoadoutService.Glock17);
-        _ammo.Text = $"GLOCK 17   {loaded} / {reserve}";
-        _credits.Text = $"CREDITS ${player.Credits:N0}    XP {player.Xp:N0}";
+
+        if (weaponName == StarterLoadoutService.TwoByFour)
+        {
+            _ammo.Text = "2x4   MELEE";
+        }
+        else
+        {
+            var loaded = player.Ammo.GetValueOrDefault(weaponName);
+            var reserve = player.ReserveAmmo.GetValueOrDefault(weaponName);
+            _ammo.Text = $"{weaponName.ToUpperInvariant()}   {loaded} / {reserve}";
+        }
+
+        _credits.Text = $"CREDITS ${player.Credits:N0}    XP {player.Xp:N0}    [1] SAWN OFF  [2] GLOCK  [3] 2x4";
     }
 
     public void SetBanner(string text) => _banner.Text = text;

@@ -6,12 +6,17 @@ namespace Twr.Godot;
 public partial class FirstPersonPlayer : CharacterBody3D
 {
     public LocalSessionNode? Runtime { get; set; }
+    public string EquippedWeaponName => _equippedWeapon;
 
     private Camera3D _camera = null!;
+    private MeshInstance3D _viewModel = null!;
+    private readonly RandomNumberGenerator _rng = new();
     private float _pitch;
     private bool _jumpRequested;
-    private double _fireCooldown;
+    private double _actionCooldown;
     private double _reloadTimer;
+    private string? _reloadWeapon;
+    private string _equippedWeapon = StarterLoadoutService.Glock17;
 
     private const float WalkSpeed = 17f;
     private const float SprintSpeed = 24f; // APPROXIMATED: retail absolute sprint speed is not recovered
@@ -19,17 +24,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private const float Gravity = 22f; // reconstruction physics tuning
     private const float MouseSensitivity = 0.0022f;
 
-    private const string Weapon = StarterLoadoutService.Glock17;
-    private const int MagazineCapacity = 18;
-    private const float WeaponDamage = 15f;
-    private const double FireInterval = 60.0 / 400.0;
-    private const double ReloadSeconds = 1.85;
-    private const float Range = 1000f;
-
     public override void _Ready()
     {
         CollisionLayer = 1;
         CollisionMask = 1 | 2;
+        _rng.Randomize();
 
         AddChild(new CollisionShape3D
         {
@@ -45,13 +44,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
         };
         AddChild(_camera);
 
-        _camera.AddChild(new MeshInstance3D
+        _viewModel = new MeshInstance3D
         {
-            Position = new Vector3(0.28f, -0.22f, -0.62f),
-            RotationDegrees = new Vector3(-4, 4, 0),
             Mesh = new BoxMesh
             {
-                Size = new Vector3(0.16f, 0.18f, 0.62f),
                 Material = new StandardMaterial3D
                 {
                     AlbedoColor = new Color(0.10f, 0.10f, 0.11f),
@@ -59,19 +55,26 @@ public partial class FirstPersonPlayer : CharacterBody3D
                     Roughness = 0.28f
                 }
             }
-        });
+        };
+        _camera.AddChild(_viewModel);
+        ApplyViewModel();
 
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        _fireCooldown = Math.Max(0, _fireCooldown - delta);
+        _actionCooldown = Math.Max(0, _actionCooldown - delta);
 
         if (_reloadTimer > 0)
         {
             _reloadTimer -= delta;
-            if (_reloadTimer <= 0) Runtime?.ReloadWeapon(Weapon, MagazineCapacity);
+            if (_reloadTimer <= 0 && _reloadWeapon is not null)
+            {
+                var spec = StarterWeaponCatalog.Get(_reloadWeapon);
+                Runtime?.ReloadWeapon(_reloadWeapon, spec.MagazineCapacity);
+                _reloadWeapon = null;
+            }
         }
 
         if (Runtime?.Player is null || !Runtime.Player.IsAlive)
@@ -120,45 +123,116 @@ public partial class FirstPersonPlayer : CharacterBody3D
         {
             if (key.Keycode == Key.Space) _jumpRequested = true;
             else if (key.Keycode == Key.R) BeginReload();
+            else if (key.Keycode == Key.Key1) Equip(StarterLoadoutService.SawnOff);
+            else if (key.Keycode == Key.Key2) Equip(StarterLoadoutService.Glock17);
+            else if (key.Keycode == Key.Key3) Equip(StarterLoadoutService.TwoByFour);
             else if (key.Keycode == Key.Escape) Input.MouseMode = Input.MouseModeEnum.Visible;
         }
 
         if (@event is InputEventMouseButton mouse && mouse.Pressed && mouse.ButtonIndex == MouseButton.Left)
         {
             if (Input.MouseMode != Input.MouseModeEnum.Captured) Input.MouseMode = Input.MouseModeEnum.Captured;
-            else TryFire();
+            else TryUseWeapon();
+        }
+    }
+
+    private void Equip(string weapon)
+    {
+        _equippedWeapon = weapon;
+        _reloadTimer = 0;
+        _reloadWeapon = null;
+        _actionCooldown = 0;
+        ApplyViewModel();
+    }
+
+    private void ApplyViewModel()
+    {
+        var spec = StarterWeaponCatalog.Get(_equippedWeapon);
+        if (spec.Kind == StarterWeaponKind.Melee)
+        {
+            _viewModel.Position = new Vector3(0.38f, -0.28f, -0.75f);
+            _viewModel.RotationDegrees = new Vector3(-12, 0, -18);
+            ((BoxMesh)_viewModel.Mesh).Size = new Vector3(0.10f, 0.75f, 0.10f);
+        }
+        else if (spec.Kind == StarterWeaponKind.Shotgun)
+        {
+            _viewModel.Position = new Vector3(0.30f, -0.24f, -0.75f);
+            _viewModel.RotationDegrees = new Vector3(-4, 3, 0);
+            ((BoxMesh)_viewModel.Mesh).Size = new Vector3(0.22f, 0.18f, 0.95f);
+        }
+        else
+        {
+            _viewModel.Position = new Vector3(0.28f, -0.22f, -0.62f);
+            _viewModel.RotationDegrees = new Vector3(-4, 4, 0);
+            ((BoxMesh)_viewModel.Mesh).Size = new Vector3(0.16f, 0.18f, 0.62f);
         }
     }
 
     private void BeginReload()
     {
         if (_reloadTimer > 0 || Runtime?.Player is null) return;
-        var loaded = Runtime.Player.Ammo.GetValueOrDefault(Weapon);
-        var reserve = Runtime.Player.ReserveAmmo.GetValueOrDefault(Weapon);
-        if (loaded >= MagazineCapacity || reserve <= 0) return;
-        _reloadTimer = ReloadSeconds;
+        var spec = StarterWeaponCatalog.Get(_equippedWeapon);
+        if (spec.Kind == StarterWeaponKind.Melee) return;
+
+        var loaded = Runtime.Player.Ammo.GetValueOrDefault(spec.Name);
+        var reserve = Runtime.Player.ReserveAmmo.GetValueOrDefault(spec.Name);
+        if (loaded >= spec.MagazineCapacity || reserve <= 0) return;
+
+        _reloadTimer = spec.ReloadSeconds;
+        _reloadWeapon = spec.Name;
     }
 
-    private void TryFire()
+    private void TryUseWeapon()
     {
-        if (_fireCooldown > 0 || _reloadTimer > 0 || Runtime?.Player is null || !Runtime.Player.IsAlive) return;
+        if (_actionCooldown > 0 || _reloadTimer > 0 || Runtime?.Player is null || !Runtime.Player.IsAlive) return;
+        var spec = StarterWeaponCatalog.Get(_equippedWeapon);
 
-        if (Runtime.Player.Ammo.GetValueOrDefault(Weapon) <= 0)
+        if (spec.Kind == StarterWeaponKind.Melee)
+        {
+            _actionCooldown = spec.ActionSeconds;
+            FireRay(-_camera.GlobalTransform.Basis.Z, spec.Range, spec.Damage);
+            return;
+        }
+
+        if (Runtime.Player.Ammo.GetValueOrDefault(spec.Name) <= 0)
         {
             BeginReload();
             return;
         }
 
-        if (!Runtime.SpendAmmo(Weapon, 1)) return;
-        _fireCooldown = FireInterval;
+        if (!Runtime.SpendAmmo(spec.Name, 1)) return;
+        _actionCooldown = spec.Rpm > 0 ? 60.0 / spec.Rpm : spec.ActionSeconds;
 
+        if (spec.Kind == StarterWeaponKind.Shotgun)
+        {
+            for (var i = 0; i < spec.Pellets; i++)
+                FireRay(SpreadDirection(spec.SpreadDegrees), spec.Range, spec.Damage);
+        }
+        else
+        {
+            FireRay(-_camera.GlobalTransform.Basis.Z, spec.Range, spec.Damage);
+        }
+    }
+
+    private Vector3 SpreadDirection(float spreadDegrees)
+    {
+        var direction = -_camera.GlobalTransform.Basis.Z;
+        var yaw = Mathf.DegToRad(_rng.RandfRange(-spreadDegrees, spreadDegrees));
+        var pitch = Mathf.DegToRad(_rng.RandfRange(-spreadDegrees, spreadDegrees));
+        direction = direction.Rotated(Vector3.Up, yaw);
+        direction = direction.Rotated(_camera.GlobalTransform.Basis.X.Normalized(), pitch);
+        return direction.Normalized();
+    }
+
+    private void FireRay(Vector3 direction, float range, float damage)
+    {
         var origin = _camera.GlobalPosition;
-        var end = origin + (-_camera.GlobalTransform.Basis.Z * Range);
+        var end = origin + direction.Normalized() * range;
         var query = PhysicsRayQueryParameters3D.Create(origin, end);
         query.Exclude = new global::Godot.Collections.Array<Rid> { GetRid() };
         var hit = GetWorld3D().DirectSpaceState.IntersectRay(query);
 
         if (hit.Count > 0 && hit["collider"].AsGodotObject() is InfectedAgent infected)
-            infected.ApplyDamage(WeaponDamage);
+            infected.ApplyDamage(damage);
     }
 }
