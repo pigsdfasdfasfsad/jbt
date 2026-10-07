@@ -25,3 +25,10 @@ def test_project_has_no_network_runtime_api():
 def test_content_sync_file_count_and_bytes():
  src=[p for p in (ROOT/'content').rglob('*') if p.is_file()]; dst=ROOT/'src/Twr.Godot/Content'; assert len(src)>300
  for p in src: assert (dst/p.relative_to(ROOT/'content')).read_bytes()==p.read_bytes()
+
+
+def test_godot_project_declares_csharp_assembly_name():
+ text=(ROOT/'src/Twr.Godot/project.godot').read_text()
+ assert '[dotnet]' in text
+ assert 'project/assembly_name="Twr.Godot"' in text
+ assert '"C#"' in text
