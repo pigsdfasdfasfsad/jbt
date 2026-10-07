@@ -120,6 +120,7 @@ public partial class GameplayRoot : Node3D
         _stageTime = RegularWaveRules.WaveEndSeconds;
         var survivedWave = Runtime.Match.Wave;
         Runtime.AwardWaveSurvival(survivedWave, _completedObjectivesThisWave, 1);
+        Runtime.EndWaveCleanup();
         _hud.SetBanner($"WAVE {survivedWave} SURVIVED");
 
         // APPROXIMATED boundary behavior: surviving infected are cleared for

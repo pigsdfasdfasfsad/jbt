@@ -49,6 +49,7 @@ public partial class LocalSessionNode : Node
     public void AwardKill(string infectedType, int credits, int xp) => Submit(new AwardKillCommand(infectedType, credits, xp));
     public void AwardWaveSurvival(int wave, int completedObjectives, int playerCount) =>
         Submit(new AwardWaveSurvivalCommand(wave, completedObjectives, playerCount));
+    public void EndWaveCleanup() => Submit(new EndWaveCleanupCommand());
     public void CompleteObjective(string objectiveId, string family) =>
         Submit(new CompleteObjectiveCommand(objectiveId, family));
     public void FailMatch(string reason) => Submit(new FailMatchCommand(reason));

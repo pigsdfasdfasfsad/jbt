@@ -105,6 +105,13 @@ public sealed class LocalSession
                 if (_waveRewards.Award(State.Player, State.Match.MapName, x.Wave, x.CompletedObjectives, x.PlayerCount, now))
                     PersistProfile($"Wave{x.Wave}Survival", now);
                 break;
+            case EndWaveCleanupCommand:
+                if (State.Player.ArmorDurability > 0)
+                {
+                    State.Player.ArmorDurability = 0;
+                    _events.Publish(new ArmorChangedEvent(0, now));
+                }
+                break;
             case CompleteObjectiveCommand x:
                 if (_objectives.Complete(State.Match, State.Player, x.ObjectiveId, x.Family, now))
                     PersistProfile($"Objective:{x.ObjectiveId}", now);
@@ -113,6 +120,8 @@ public sealed class LocalSession
                 _economy.Purchase(State.Player, x.ItemId, x.Price, now);
                 break;
             case FailMatchCommand x:
+                State.Player.Inventory.Clear();
+                State.Player.ArmorDurability = 0;
                 PersistProfile("MatchFailure", now);
                 State.Match.SaveCommitted = true;
                 _match.Fail(State.Match);
