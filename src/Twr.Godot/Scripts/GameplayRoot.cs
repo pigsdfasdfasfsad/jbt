@@ -313,7 +313,7 @@ public partial class GameplayRoot : Node3D
         var result = new List<FortPickup>();
         try
         {
-            var json = Godot.FileAccess.GetFileAsString("res://Content/fortifications/fortifications.json");
+            var json = global::Godot.FileAccess.GetFileAsString("res://Content/fortifications/fortifications.json");
             using var document = JsonDocument.Parse(json);
             foreach (var entry in document.RootElement.GetProperty("fortifications").EnumerateArray())
             {
