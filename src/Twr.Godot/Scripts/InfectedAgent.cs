@@ -21,6 +21,8 @@ public partial class InfectedAgent : CharacterBody3D
     private double _leapRecovery;
     private Vector3 _leapVelocity;
     private bool _leapHit;
+    private double _steerHold;
+    private int _steerSign=1;
 
     public override void _Ready()
     {
@@ -53,6 +55,7 @@ public partial class InfectedAgent : CharacterBody3D
         _attackCooldown = Math.Max(0, _attackCooldown - delta);
         _specialCooldown = Math.Max(0, _specialCooldown - delta);
         _slowTime = Math.Max(0, _slowTime - delta);
+        _steerHold = Math.Max(0, _steerHold - delta);
         if (_slowTime <= 0) _slowFactor = 1f;
 
         if (Target is null || Runtime?.Player is null || !Runtime.Player.IsAlive)
@@ -82,7 +85,8 @@ public partial class InfectedAgent : CharacterBody3D
 
         if (distance > 1.55f)
         {
-            var direction = flat.LengthSquared() > 0.001f ? flat.Normalized() : Vector3.Zero;
+            var desired = flat.LengthSquared() > 0.001f ? flat.Normalized() : Vector3.Zero;
+            var direction = SteerAroundObstacles(desired);
             velocity.X = direction.X * MoveSpeed * _slowFactor;
             velocity.Z = direction.Z * MoveSpeed * _slowFactor;
             if (direction.LengthSquared() > 0.001f) LookAt(GlobalPosition + direction, Vector3.Up);
@@ -101,6 +105,48 @@ public partial class InfectedAgent : CharacterBody3D
 
         Velocity = velocity;
         MoveAndSlide();
+    }
+
+    private Vector3 SteerAroundObstacles(Vector3 desired)
+    {
+        if(desired.LengthSquared()<0.001f)return desired;
+
+        if(_steerHold>0)
+        {
+            var held=desired.Rotated(Vector3.Up,_steerSign*0.72f).Normalized();
+            if(!ObstacleAhead(held,1.8f))return held;
+        }
+
+        if(!ObstacleAhead(desired,2.2f))return desired;
+
+        var left=desired.Rotated(Vector3.Up,0.78f).Normalized();
+        var right=desired.Rotated(Vector3.Up,-0.78f).Normalized();
+        var leftBlocked=ObstacleAhead(left,2.0f);
+        var rightBlocked=ObstacleAhead(right,2.0f);
+
+        if(!leftBlocked && !rightBlocked)
+            _steerSign=(GetInstanceId() & 1UL)==0 ? 1 : -1;
+        else if(!leftBlocked)
+            _steerSign=1;
+        else if(!rightBlocked)
+            _steerSign=-1;
+        else
+            _steerSign=-_steerSign;
+
+        _steerHold=0.9; // APPROXIMATED steering persistence for reconstructed collision geometry.
+        return desired.Rotated(Vector3.Up,_steerSign*0.92f).Normalized();
+    }
+
+    private bool ObstacleAhead(Vector3 direction,float distance)
+    {
+        if(direction.LengthSquared()<0.001f)return false;
+        var from=GlobalPosition+Vector3.Up*0.75f;
+        var query=PhysicsRayQueryParameters3D.Create(from,from+direction.Normalized()*distance);
+        query.CollisionMask=1; // World/player layer; infected are on layer 2.
+        var exclude=new global::Godot.Collections.Array<Rid>{GetRid()};
+        if(Target is not null)exclude.Add(Target.GetRid());
+        query.Exclude=exclude;
+        return GetWorld3D().DirectSpaceState.IntersectRay(query).Count>0;
     }
 
     private bool TickBolterLeap(double delta, Vector3 flat, float distance)
