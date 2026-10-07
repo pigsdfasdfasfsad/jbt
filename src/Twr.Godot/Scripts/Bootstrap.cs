@@ -232,7 +232,15 @@ public partial class Bootstrap : Node
             MapName = map
         };
         _game.ExitRequested = ExitGame;
+        _game.RestartRequested = RestartGame;
         AddChild(_game);
+    }
+
+    private void RestartGame(string map)
+    {
+        _game?.QueueFree();
+        _game = null;
+        StartGame(map);
     }
 
     private void ExitGame()

@@ -9,6 +9,7 @@ public partial class GameplayRoot : Node3D
     public LocalSessionNode? Runtime { get; set; }
     public string MapName { get; set; } = "Manor";
     public Action? ExitRequested { get; set; }
+    public Action<string>? RestartRequested { get; set; }
 
     private GameplayHud _hud = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
@@ -25,6 +26,7 @@ public partial class GameplayRoot : Node3D
     private double _stageTime = RegularWaveRules.CountdownSeconds;
     private double _spawnTimer;
     private bool _finished;
+    private PauseOverlayRuntime? _pauseOverlay;
 
     private enum Stage { Countdown, Wave, WaveEnd, Intermission, Results }
 
@@ -106,13 +108,75 @@ public partial class GameplayRoot : Node3D
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (!_finished || @event is not InputEventKey key || !key.Pressed || key.Echo) return;
+        if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;
+
+        if (!_finished && (key.Keycode is Key.P or Key.Escape))
+        {
+            OpenPause();
+            return;
+        }
+
+        if (!_finished) return;
 
         if (key.Keycode is Key.Enter or Key.KpEnter)
         {
             Runtime?.ReturnToLobby();
             ExitRequested?.Invoke();
         }
+        else if (key.Keycode == Key.R)
+        {
+            Runtime?.ReturnToLobby();
+            RestartRequested?.Invoke(MapName);
+        }
+    }
+
+    private void OpenPause()
+    {
+        if (_pauseOverlay is not null || _finished) return;
+
+        _pauseOverlay = new PauseOverlayRuntime { Name = "PauseOverlay" };
+        _pauseOverlay.ResumeRequested = ResumePause;
+        _pauseOverlay.RestartRequested = RestartFromPause;
+        _pauseOverlay.QuitRequested = QuitFromPause;
+        AddChild(_pauseOverlay);
+        Input.MouseMode = Input.MouseModeEnum.Visible;
+        GetTree().Paused = true;
+    }
+
+    private void ResumePause()
+    {
+        GetTree().Paused = false;
+        _pauseOverlay?.QueueFree();
+        _pauseOverlay = null;
+        if (!_finished) Input.MouseMode = Input.MouseModeEnum.Captured;
+    }
+
+    private void RestartFromPause()
+    {
+        GetTree().Paused = false;
+        _pauseOverlay?.QueueFree();
+        _pauseOverlay = null;
+        if (!_finished)
+        {
+            Runtime?.FailMatch("Player restarted map");
+            _finished = true;
+        }
+        Runtime?.ReturnToLobby();
+        RestartRequested?.Invoke(MapName);
+    }
+
+    private void QuitFromPause()
+    {
+        GetTree().Paused = false;
+        _pauseOverlay?.QueueFree();
+        _pauseOverlay = null;
+        if (!_finished)
+        {
+            Runtime?.FailMatch("Player quit to menu");
+            _finished = true;
+        }
+        Runtime?.ReturnToLobby();
+        ExitRequested?.Invoke();
     }
 
     private void StartWave()
@@ -451,9 +515,10 @@ public partial class GameplayRoot : Node3D
         _finished = true;
         _stage = Stage.Results;
         ClearInfected();
+        ClearObjectives();
         _fortifications.ClearDeployed();
         Input.MouseMode = Input.MouseModeEnum.Visible;
-        _hud.SetBanner($"{title}  -  PRESS ENTER TO RETURN");
+        _hud.SetBanner($"{title}  -  [R] RESTART  |  [ENTER] MENU");
     }
 
     private void ClearInfected()
