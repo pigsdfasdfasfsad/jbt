@@ -82,8 +82,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
             _reloadTimer -= delta;
             if (_reloadTimer <= 0 && _reloadWeapon is not null)
             {
-                var spec = RuntimeWeaponCatalog.Get(_reloadWeapon);
-                Runtime?.ReloadWeapon(_reloadWeapon, spec.Magazine);
+                var reloadSpec = RuntimeWeaponCatalog.Get(_reloadWeapon);
+                Runtime?.ReloadWeapon(_reloadWeapon, reloadSpec.Magazine);
                 _reloadWeapon = null;
             }
         }
