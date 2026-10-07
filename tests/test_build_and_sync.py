@@ -2,8 +2,13 @@ import pytest
 from conftest import ROOT
 
 def test_workflow_pins_python(): assert "python-version: '3.13'" in (ROOT/'.github/workflows/windows-build.yml').read_text()
-def test_workflow_pins_dotnet(): assert "dotnet-version: '8.0.425'" in (ROOT/'.github/workflows/windows-build.yml').read_text()
-def test_build_script_pins_godot(): assert '4.7.2' in (ROOT/'build/Windows/build.ps1').read_text()
+def test_workflow_pins_dotnet():
+ import json
+ assert "dotnet-version: '8.0.425'" in (ROOT/'.github/workflows/windows-build.yml').read_text()
+ assert json.loads((ROOT/'global.json').read_text())['sdk']['version']=='8.0.425'
+def test_build_script_pins_godot():
+ assert '4.7.2' in (ROOT/'build/Windows/build.ps1').read_text()
+ assert '<ImplicitUsings>enable</ImplicitUsings>' in (ROOT/'src/Twr.Godot/Twr.Godot.csproj').read_text()
 def test_expected_executable_path(): assert 'ThoseWhoRemainOffline.exe' in (ROOT/'src/Twr.Godot/export_presets.cfg').read_text()
 def test_project_has_no_network_runtime_api():
  text='\n'.join(p.read_text(errors='replace').lower() for p in (ROOT/'src').rglob('*') if p.is_file() and p.suffix in {'.cs','.godot','.tscn','.cfg','.csproj'})

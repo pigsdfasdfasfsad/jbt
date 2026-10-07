@@ -7,8 +7,8 @@
   "counts": {
     "deterministically_regenerated": 348,
     "directly_recovered": 77,
-    "newly_reconstructed": 96,
-    "total": 521
+    "newly_reconstructed": 97,
+    "total": 522
   },
   "format": "twr-recovery-provenance-v1",
   "known_unrecovered_components": [
@@ -17,318 +17,6 @@
     "Historical 78-file C# source tree byte-for-byte"
   ],
   "records": [
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/asset-scaffold.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/bypass-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/cabin-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/cargo-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/district-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/expressway-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/laboratory-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/manor-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/mill-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/prison-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/maps/ranch-outline.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/bypass-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/cabin-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/cargo-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/district-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/expressway-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/laboratory-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/manor-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/mill-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/prison-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/assets/reference-boards/ranch-reference-board.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/BUILD_PROCESS.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/README.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/YOUTUBE_DEVLOG_STORYBOARD.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/phases/phase-01.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/phases/phase-02.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/phases/phase-03.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/phases/phase-04.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/phases/phase-05.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/phases/phase-06.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/phases/phase-07.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/development/phases/phase-08.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/BYPASS.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/CABIN.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/CARGO.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/DISTRICT.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/EXPRESSWAY.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/LABORATORY.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/MANOR.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/MAP_INVENTORY.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/MILL.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/PRISON.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/RANCH.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/README.md"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/bypass.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/cabin.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/cargo.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/district.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/expressway.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/laboratory.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/manor.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/mill.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/prison.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "docs/maps/previews/ranch.png"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/archive_manifest.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/artifact_validation.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/bundle_manifest.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/contradictions.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/expanded_shared_tables.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/fidelity_matrix.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/investigation_coverage.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/map_catalog.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/master_checklist.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/place_property_audit.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/reward_analysis.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/risk_register.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/roadmap.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/script_index.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/script_version_comparison.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/shared_tables.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/spawn_markers.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/technical_sources.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/traceability.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/unknowns.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/video_measurements.json"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "evidence/catalog/video_metadata.json"
-    },
-    {
-      "class": "deterministically_regenerated",
-      "path": "evidence/catalog/weapon_catalog.json.gz"
-    },
-    {
-      "class": "directly_recovered",
-      "path": "tools/documentation/generate_dev_docs.py"
-    },
     {
       "class": "deterministically_regenerated",
       "path": "content/fortifications/fortifications.json"
@@ -1699,6 +1387,10 @@
     },
     {
       "class": "deterministically_regenerated",
+      "path": "evidence/catalog/weapon_catalog.json.gz"
+    },
+    {
+      "class": "deterministically_regenerated",
       "path": "evidence/recovery/fortifications_info.json"
     },
     {
@@ -1716,6 +1408,314 @@
     {
       "class": "deterministically_regenerated",
       "path": "evidence/recovery/source_archive_verification.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/asset-scaffold.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/bypass-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/cabin-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/cargo-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/district-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/expressway-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/laboratory-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/manor-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/mill-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/prison-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/ranch-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/bypass-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/cabin-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/cargo-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/district-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/expressway-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/laboratory-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/manor-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/mill-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/prison-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/ranch-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/BUILD_PROCESS.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/README.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/YOUTUBE_DEVLOG_STORYBOARD.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-01.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-02.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-03.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-04.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-05.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-06.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-07.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-08.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/BYPASS.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/CABIN.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/CARGO.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/DISTRICT.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/EXPRESSWAY.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/LABORATORY.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/MANOR.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/MAP_INVENTORY.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/MILL.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/PRISON.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/RANCH.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/README.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/bypass.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/cabin.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/cargo.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/district.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/expressway.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/laboratory.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/manor.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/mill.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/prison.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/ranch.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/archive_manifest.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/artifact_validation.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/bundle_manifest.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/contradictions.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/expanded_shared_tables.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/fidelity_matrix.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/investigation_coverage.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/map_catalog.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/master_checklist.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/place_property_audit.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/reward_analysis.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/risk_register.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/roadmap.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/script_index.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/script_version_comparison.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/shared_tables.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/spawn_markers.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/technical_sources.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/traceability.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/unknowns.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/video_measurements.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/video_metadata.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "tools/documentation/generate_dev_docs.py"
     },
     {
       "class": "newly_reconstructed",
@@ -1748,6 +1748,10 @@
     {
       "class": "newly_reconstructed",
       "path": "evidence/README.md"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "global.json"
     },
     {
       "class": "newly_reconstructed",
