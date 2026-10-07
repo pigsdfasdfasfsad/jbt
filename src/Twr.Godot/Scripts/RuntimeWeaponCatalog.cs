@@ -39,6 +39,32 @@ public static class RuntimeWeaponCatalog
 {
     private static IReadOnlyDictionary<string, RuntimeWeaponDefinition>? _cache;
 
+    // VERIFIED from the Ammo wiki table where older weapon modules omit AmmoPickup.
+    private static readonly IReadOnlyDictionary<string,int> VerifiedAmmoPickups =
+        new Dictionary<string,int>(StringComparer.Ordinal)
+        {
+            ["Sawn Off Shotgun"]=8, ["Ruger 10-22"]=20, ["Ingram MAC-10"]=60,
+            ["Sten Mk V"]=32, ["Mossberg 500"]=8, ["Thompson M1"]=20,
+            ["Aero Survival Rifle"]=17, ["Winchester Model 70"]=10, ["KAC PDW"]=30,
+            ["Benelli M4"]=10, ["PP-91 Kedr"]=40, ["UMP-45"]=25, ["SAP-6"]=12,
+            ["Kriss Vector"]=50, ["M1 Garand"]=8, ["OTs-14 Groza"]=30,
+            ["MP5A2"]=30, ["G36C"]=30, ["AR-57"]=50, ["MP7"]=41, ["PPSh-41"]=71,
+            ["AUG"]=30, ["P90"]=50, ["SPAS-12"]=8, ["M16A1"]=20, ["M4A1"]=30,
+            ["SKO Shorty"]=10, ["FN FAL"]=20, ["SCAR-H"]=20, ["M14"]=20,
+            ["AK-47"]=30, ["Mosin Nagant"]=10, ["AS VAL"]=30, ["VSS"]=20,
+            ["CMMG Mk47 Mutant"]=30, ["RPK"]=40, ["ASh-12"]=20, ["LWRC IC-PSD"]=60,
+            ["M110 SASS"]=20, ["Flamethrower"]=50, ["MK18"]=30, ["AA-12"]=16,
+            ["M60"]=100, ["SVD"]=10, ["Barrett M82A1"]=10,
+            ["Winchester Model 1892"]=15, ["RPG-7"]=2, ["MG 42"]=75,
+            ["Glock 17"]=17, ["LH9 MKII"]=13, ["Walther P38"]=8, ["XD-9"]=16,
+            ["Serbu Super Shorty"]=4, ["M1911A1"]=7, ["Makarov"]=8, ["TEC-9"]=32,
+            ["MP-443 Grach"]=17, ["PB 6P9"]=8, ["P320"]=21, ["Uzi"]=25,
+            ["Taurus Judge"]=12, ["Taurus Model 66"]=12, ["CBJ-MS"]=50,
+            ["CZ Scorpion EVO Micro K"]=20, ["Obrez Mosin"]=10, ["Gepard PDW"]=25,
+            ["Colt Python"]=12, ["HK P30L"]=15, ["Maxim 9"]=17, ["TP9SFx"]=20,
+            ["Desert Eagle"]=7, ["M320"]=3
+        };
+
     public static RuntimeWeaponDefinition Get(string name)
     {
         _cache ??= Load();
@@ -83,8 +109,12 @@ public static class RuntimeWeaponCatalog
             var price = Int(stats, "Price", 0);
             var magazine = Int(stats, "Mag", 0);
             var reserve = Int(stats, "Pool", 0);
-            var ammoPickupVerified = stats.TryGetProperty("AmmoPickup", out _);
-            var ammoPickup = Int(stats, "AmmoPickup", Math.Max(1, magazine));
+            var moduleHasAmmoPickup = stats.TryGetProperty("AmmoPickup", out _);
+            var wikiHasAmmoPickup = VerifiedAmmoPickups.TryGetValue(name, out var verifiedPickup);
+            var ammoPickupVerified = moduleHasAmmoPickup || wikiHasAmmoPickup;
+            var ammoPickup = moduleHasAmmoPickup
+                ? Int(stats, "AmmoPickup", Math.Max(1, magazine))
+                : wikiHasAmmoPickup ? verifiedPickup : Math.Max(1, magazine);
             var rpm = Double(stats, "RPM", 0);
             var rangeVerified = stats.TryGetProperty("Distance", out _) || stats.TryGetProperty("Range", out _);
             var range = Float(stats, "Distance", Float(stats, "Range", weaponType == "Melee" ? 4.5f : 1000f));

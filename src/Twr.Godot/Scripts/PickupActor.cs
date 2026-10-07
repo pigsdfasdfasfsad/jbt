@@ -84,14 +84,19 @@ public partial class PickupActor : Node3D
             }
             case "Ammo":
             {
-                var weapon = Player.EquippedWeaponName;
-                var spec = RuntimeWeaponCatalog.Get(weapon);
-                if (spec.IsMelee || spec.Reserve <= 0)
-                    return false;
+                // VERIFIED: one Ammo pickup supplies both primary and
+                // secondary independently, capped at each weapon's reserve.
+                var changed = false;
+                foreach (var weapon in new[] { Player.PrimaryWeaponName, Player.SecondaryWeaponName })
+                {
+                    var spec = RuntimeWeaponCatalog.Get(weapon);
+                    if (spec.IsMelee || spec.Reserve <= 0) continue;
 
-                var before = state.ReserveAmmo.GetValueOrDefault(weapon);
-                Runtime.GrantAmmo(weapon, spec.AmmoPickup, spec.Reserve);
-                return state.ReserveAmmo.GetValueOrDefault(weapon) > before;
+                    var before = state.ReserveAmmo.GetValueOrDefault(weapon);
+                    Runtime.GrantAmmo(weapon, spec.AmmoPickup, spec.Reserve);
+                    changed |= state.ReserveAmmo.GetValueOrDefault(weapon) > before;
+                }
+                return changed;
             }
             default:
                 Runtime.GrantItem(PickupType, GrantCount);

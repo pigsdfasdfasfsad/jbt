@@ -7,6 +7,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
 {
     public LocalSessionNode? Runtime { get; set; }
     public string EquippedWeaponName => _equippedWeapon;
+    public string PrimaryWeaponName => _primaryWeapon;
+    public string SecondaryWeaponName => _secondaryWeapon;
     public bool HammerMode { get; private set; }
     public Vector3 AimOrigin => _camera.GlobalPosition;
     public Vector3 AimDirection => -_camera.GlobalTransform.Basis.Z;
