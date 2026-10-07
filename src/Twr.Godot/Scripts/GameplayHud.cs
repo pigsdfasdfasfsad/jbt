@@ -16,6 +16,9 @@ public partial class GameplayHud : CanvasLayer
     private Label _utility = null!;
     private ColorRect _damageFlash = null!;
     private ColorRect _lowHealth = null!;
+    private Control _armorRow = null!;
+    private Label _armorLabel = null!;
+    private readonly ColorRect[] _armorBars = new ColorRect[4];
     private double _damageFlashSeconds;
 
     public override void _Ready()
@@ -30,6 +33,31 @@ public partial class GameplayHud : CanvasLayer
         _objective.HorizontalAlignment = HorizontalAlignment.Center;
         _utility = MakeLabel(250, 195, 780, 36, 17);
         _utility.HorizontalAlignment = HorizontalAlignment.Center;
+        _armorLabel=MakeLabel(24,570,92,20,14);
+        _armorLabel.Text="ARMOR";
+        _armorRow=new Control
+        {
+            OffsetLeft=118,OffsetTop=575,OffsetRight=422,OffsetBottom=585
+        };
+        AddChild(_armorRow);
+        for(var i=0;i<4;i++)
+        {
+            var back=new ColorRect
+            {
+                OffsetLeft=i*76,OffsetTop=0,OffsetRight=i*76+72,OffsetBottom=8,
+                Color=new Color(0.094f,0.094f,0.102f,0.72f),
+                MouseFilter=Control.MouseFilterEnum.Ignore
+            };
+            _armorRow.AddChild(back);
+            var fill=new ColorRect
+            {
+                OffsetLeft=0,OffsetTop=0,OffsetRight=72,OffsetBottom=8,
+                Color=new Color(70f/255f,140f/255f,230f/255f),
+                MouseFilter=Control.MouseFilterEnum.Ignore
+            };
+            back.AddChild(fill);
+            _armorBars[i]=fill;
+        }
 
         // APPROXIMATED base presentation: original post-processing stack is not
         // recovered. Perk reduction percentages applied to these effects are exact.
@@ -73,8 +101,7 @@ public partial class GameplayHud : CanvasLayer
     public void UpdateState(PlayerState player, MatchState match, string stage, double seconds, string weaponName, string? throwableName=null)
     {
         _top.Text = $"REGULAR  |  {match.MapName.ToUpperInvariant()}  |  WAVE {match.Wave}/15  |  {stage}  {FormatTime(seconds)}";
-        var armorLabel=player.ArmorKind=="Juggernaut" ? "JUG" : "ARMOR";
-        _health.Text = $"HEALTH {Math.Ceiling(player.Health):0}/{player.MaxHealth:0}  {armorLabel} {Math.Ceiling(player.ArmorDurability):0}" +
+        _health.Text = $"HEALTH {Math.Ceiling(player.Health):0}/{player.MaxHealth:0}" +
             (player.GasMaskActive ? "  MASK" : "") +
             (player.EnergyDrinkSeconds>0 ? $"  DRINK {Math.Ceiling(player.EnergyDrinkSeconds):0}s" : "");
 
@@ -98,6 +125,7 @@ public partial class GameplayHud : CanvasLayer
         }
 
         _credits.Text = $"LEVEL {player.Level}  XP {player.Xp:N0}/{ProgressionRules.RequiredForNextLevel(player.Level):N0}  CREDITS ${player.Credits:N0}  [1/2/3] WEAPONS [5/6/7/G] GRENADES [F] HAMMER";
+        UpdateArmor(player);
 
         var healthRatio=player.MaxHealth<=0 ? 1f : player.Health/player.MaxHealth;
         var baseLowAlpha=healthRatio<0.35f ? Math.Clamp((0.35f-healthRatio)/0.35f*0.45f,0f,0.45f) : 0f;
@@ -125,6 +153,27 @@ public partial class GameplayHud : CanvasLayer
         _damageFlashSeconds=0.22;
     }
 
+    private void UpdateArmor(PlayerState player)
+    {
+        var visible=player.ArmorDurability>0;
+        _armorRow.Visible=visible;
+        _armorLabel.Visible=visible;
+        if(!visible)return;
+
+        var juggernaut=player.ArmorKind=="Juggernaut";
+        _armorLabel.Text=juggernaut ? "JUG" : "ARMOR";
+        var max=juggernaut ? 80f : 40f;
+        var per=max/4f;
+        var color=juggernaut
+            ? new Color(230f/255f,140f/255f,40f/255f)
+            : new Color(70f/255f,140f/255f,230f/255f);
+        for(var i=0;i<4;i++)
+        {
+            var fraction=Math.Clamp((player.ArmorDurability-i*per)/per,0f,1f);
+            _armorBars[i].OffsetRight=72f*fraction;
+            _armorBars[i].Color=color;
+        }
+    }
     public void SetBanner(string text) => _banner.Text = text;
     public void SetObjective(string text) => _objective.Text = text;
     public void SetUtility(string text) => _utility.Text = text;

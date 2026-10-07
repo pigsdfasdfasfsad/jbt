@@ -169,6 +169,11 @@ public static class MapBlockoutBuilder
         InteriorShell(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
         InteriorShell(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
         InteriorShell(root, "FrontHall", new Vector3(0, 2.7f, 31), new Vector3(28, 5.4f, 11), new Color(0.25f, 0.22f, 0.19f));
+        // RECOVERED topology: Manor has usable rooms on both floors and a front
+        // staircase plus a west staircase. Exact dimensions remain APPROXIMATED.
+        AddUpperFloor(root,"WestWingUpper",new Vector3(-21,2.95f,-7),new Vector3(18.1f,0.22f,49.0f),new Color(0.20f,0.18f,0.16f),true);
+        AddUpperFloor(root,"EastWingUpper",new Vector3(21,2.95f,-7),new Vector3(18.1f,0.22f,49.0f),new Color(0.20f,0.18f,0.16f),false);
+        AddUpperFloor(root,"FrontHallUpper",new Vector3(0,2.85f,31),new Vector3(27.0f,0.22f,10.0f),new Color(0.22f,0.20f,0.17f),true);
         for (var z = -25; z <= 18; z += 14)
         {
             DecorativeBox(root, "CourtyardCoverL" + z, new Vector3(-6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
@@ -233,6 +238,26 @@ public static class MapBlockoutBuilder
         });
     }
 
+    private static void AddUpperFloor(Node3D root,string name,Vector3 center,Vector3 size,Color color,bool stairsFromSouth)
+    {
+        // Split deck leaves an opening beside the stair run.
+        var half=(size.X-4.0f)*0.5f;
+        StaticBox(root,name+"_DeckL",new Vector3(center.X-(2.0f+half*0.5f),center.Y,center.Z),
+            new Vector3(half,size.Y,size.Z),color);
+        StaticBox(root,name+"_DeckR",new Vector3(center.X+(2.0f+half*0.5f),center.Y,center.Z),
+            new Vector3(half,size.Y,size.Z),color);
+
+        var startZ=center.Z+(stairsFromSouth ? size.Z*0.30f : -size.Z*0.30f);
+        var zDir=stairsFromSouth ? -1f : 1f;
+        const int steps=8;
+        for(var i=0;i<steps;i++)
+        {
+            var y=0.25f+(center.Y-0.35f)*(i+1)/steps;
+            var z=startZ+zDir*i*0.75f;
+            StaticBox(root,name+"_Stair"+i,new Vector3(center.X,y,z),
+                new Vector3(3.2f,0.32f,0.9f),color.Lightened(0.03f));
+        }
+    }
     private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color)
     {
         // APPROXIMATED reconstruction: exact wall/door transforms are not recovered.
