@@ -12,6 +12,9 @@ public sealed class StarterLoadoutService
     {
         player.Health = player.MaxHealth;
         player.ArmorDurability = 0;
+        player.ArmorKind = "";
+        player.GasMaskActive = false;
+        player.EnergyDrinkSeconds = 0;
         player.Ammo.Clear();
         player.ReserveAmmo.Clear();
         player.Inventory.Clear();

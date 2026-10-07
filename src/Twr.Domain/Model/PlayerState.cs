@@ -4,6 +4,9 @@ public sealed class PlayerState
     public float MaxHealth {get;init;}=100;
     public float Health {get;set;}=100;
     public float ArmorDurability {get;set;}=0;
+    public string ArmorKind {get;set;}="";
+    public bool GasMaskActive {get;set;}=false;
+    public double EnergyDrinkSeconds {get;set;}=0;
     public int Credits {get;set;}=0;
     public int Xp {get;set;}=0;
     public int Level {get;set;}=1;

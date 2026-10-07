@@ -26,6 +26,7 @@ public sealed class LocalSession
     private readonly WaveRewardService _waveRewards;
     private readonly ProgressionService _progression;
     private readonly ArmoryService _armory;
+    private readonly PerkService _perks;
 
     public GameState State { get; } = new();
     public Profile Profile { get; private set; }
@@ -54,6 +55,7 @@ public sealed class LocalSession
         _waveRewards = new(new ReceiptLedger(), _events);
         _progression = new(_events);
         _armory = new(_events);
+        _perks = new(_events);
     }
 
     public void Enqueue(IGameCommand command) => _commands.Enqueue(command);
@@ -80,6 +82,12 @@ public sealed class LocalSession
             case StartMatchCommand x:
                 _match.Start(State.Match, x.MapName, now);
                 _starterLoadout.ResetForMatch(State.Player);
+                if(Profile.EquippedPerks.Contains("Juggernaut"))
+                {
+                    State.Player.ArmorDurability=80;
+                    State.Player.ArmorKind="Juggernaut";
+                    _events.Publish(new ArmorChangedEvent(80,now));
+                }
                 break;
             case AdvanceWaveCommand:
                 _match.Advance(State.Match, now);
@@ -119,11 +127,14 @@ public sealed class LocalSession
                     PersistProfile($"Wave{x.Wave}Survival", now);
                 break;
             case EndWaveCleanupCommand:
-                if (State.Player.ArmorDurability > 0)
+                if(State.Player.ArmorKind=="Body" && State.Player.ArmorDurability>0)
                 {
-                    State.Player.ArmorDurability = 0;
-                    _events.Publish(new ArmorChangedEvent(0, now));
+                    State.Player.ArmorDurability=0;
+                    State.Player.ArmorKind="";
+                    _events.Publish(new ArmorChangedEvent(0,now));
                 }
+                State.Player.GasMaskActive=false;
+                State.Player.EnergyDrinkSeconds=0;
                 break;
             case CompleteObjectiveCommand x:
                 if (_objectives.Complete(State.Match, State.Player, x.ObjectiveId, x.Family, now))
@@ -137,12 +148,19 @@ public sealed class LocalSession
                 if (_armory.Equip(Profile,x.Slot,x.WeaponId,now))
                     PersistProfile("Loadout:" + x.Slot,now);
                 break;
+            case SetPerkCommand x:
+                if(_perks.Set(Profile,State.Player.Level,x.PerkName,x.Enabled,now))
+                    PersistProfile("Perk:" + x.PerkName,now);
+                break;
             case PurchaseCommand x:
                 _economy.Purchase(State.Player, x.ItemId, x.Price, now);
                 break;
             case FailMatchCommand x:
                 State.Player.Inventory.Clear();
-                State.Player.ArmorDurability = 0;
+                State.Player.ArmorDurability=0;
+                State.Player.ArmorKind="";
+                State.Player.GasMaskActive=false;
+                State.Player.EnergyDrinkSeconds=0;
                 PersistProfile("MatchFailure", now);
                 State.Match.SaveCommitted = true;
                 _match.Fail(State.Match);

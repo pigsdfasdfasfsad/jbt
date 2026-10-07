@@ -67,6 +67,14 @@ public partial class LocalSessionNode : Node
         Submit(new SetLoadoutCommand(slot,weapon));
         return Session.Profile.Loadout.GetValueOrDefault(slot)==weapon;
     }
+    public bool SetPerk(string perk,bool enabled)
+    {
+        if(Session is null)return false;
+        var before=Session.Profile.EquippedPerks.Contains(perk);
+        Submit(new SetPerkCommand(perk,enabled));
+        return before!=Session.Profile.EquippedPerks.Contains(perk);
+    }
+    public bool HasPerk(string perk) => Session?.Profile.EquippedPerks.Contains(perk)==true;
     public void FailMatch(string reason) => Submit(new FailMatchCommand(reason));
 
     public bool SpendAmmo(string weapon, int amount)

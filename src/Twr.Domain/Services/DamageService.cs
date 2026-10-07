@@ -18,6 +18,7 @@ public sealed class DamageService(DamagePolicy policy, EventStream events)
             var absorbed=raw-healthDamage;
             // APPROXIMATED: exact armor durability depletion equation is not recovered.
             player.ArmorDurability=Math.Max(0,player.ArmorDurability-absorbed);
+            if(player.ArmorDurability<=0)player.ArmorKind="";
             events.Publish(new ArmorChangedEvent(player.ArmorDurability,now));
         }
 

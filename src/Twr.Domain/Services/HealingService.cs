@@ -19,8 +19,9 @@ public sealed class HealingService(EventStream events)
 
     public bool EquipBodyArmor(PlayerState player,DateTimeOffset now)
     {
-        if(player.ArmorDurability>15)return false;
+        if(player.ArmorDurability>0)return false;
         player.ArmorDurability=40;
+        player.ArmorKind="Body";
         events.Publish(new ArmorChangedEvent(player.ArmorDurability,now));
         return true;
     }
