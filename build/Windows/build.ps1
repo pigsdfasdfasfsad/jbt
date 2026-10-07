@@ -13,11 +13,14 @@ $Project = Join-Path $Repo 'src\Twr.Godot'
 
 function Find-Godot {
   $candidates = @(
+    (Join-Path $Tools 'Godot_v4.7.2-stable_mono_win64_console.exe'),
+    (Join-Path $Tools 'Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64_console.exe'),
     (Join-Path $Tools 'Godot_v4.7.2-stable_mono_win64.exe'),
     (Join-Path $Tools 'Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe')
   )
   foreach ($p in $candidates) { if (Test-Path $p) { return $p } }
-  $found = Get-ChildItem -Path $Tools -Filter 'Godot*_mono_win64.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+  $found = Get-ChildItem -Path $Tools -Filter 'Godot*_mono_win64_console.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+  if (-not $found) { $found = Get-ChildItem -Path $Tools -Filter 'Godot*_mono_win64.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1 }
   if ($found) { return $found.FullName }
   return $null
 }
@@ -56,8 +59,10 @@ New-Item -ItemType Directory -Force -Path $Output | Out-Null
 Push-Location $Project
 try {
   dotnet build -c Release
-  & $godot --headless --path $Project --editor --quit
-  & $godot --headless --path $Project --export-release 'Windows Desktop' (Join-Path $Output 'ThoseWhoRemainOffline.exe')
+  & $godot --headless --verbose --path $Project --editor --quit
+  if ($LASTEXITCODE -ne 0) { throw "Godot import/editor pass failed with exit code $LASTEXITCODE" }
+  & $godot --headless --verbose --path $Project --export-release 'Windows Desktop' (Join-Path $Output 'ThoseWhoRemainOffline.exe')
+  if ($LASTEXITCODE -ne 0) { throw "Godot Windows export failed with exit code $LASTEXITCODE" }
 } finally { Pop-Location }
 if (!(Test-Path (Join-Path $Output 'ThoseWhoRemainOffline.exe'))) { throw 'Godot export did not produce ThoseWhoRemainOffline.exe' }
 Write-Host 'Windows export completed.'

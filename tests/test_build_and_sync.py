@@ -7,7 +7,10 @@ def test_workflow_pins_dotnet():
  assert "dotnet-version: '8.0.425'" in (ROOT/'.github/workflows/windows-build.yml').read_text()
  assert json.loads((ROOT/'global.json').read_text())['sdk']['version']=='8.0.425'
 def test_build_script_pins_godot():
- assert '4.7.2' in (ROOT/'build/Windows/build.ps1').read_text()
+ script=(ROOT/'build/Windows/build.ps1').read_text()
+ assert '4.7.2' in script
+ assert '_mono_win64_console.exe' in script
+ assert 'Godot Windows export failed with exit code' in script
  assert '<ImplicitUsings>enable</ImplicitUsings>' in (ROOT/'src/Twr.Godot/Twr.Godot.csproj').read_text()
 def test_expected_executable_path(): assert 'ThoseWhoRemainOffline.exe' in (ROOT/'src/Twr.Godot/export_presets.cfg').read_text()
 def test_project_has_no_network_runtime_api():
