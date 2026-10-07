@@ -2,10 +2,10 @@ from conftest import ROOT
 
 GAME=(ROOT/"src/Twr.Godot/Scripts/GameplayRoot.cs").read_text()
 
-def test_manor_natural_pickups_are_interior_reconstruction_points():
+def test_natural_pickups_use_selected_map_layout_points():
     assert "SpawnNaturalPickups()" in GAME
-    assert "no natural item spawns" in GAME
-    assert "new Vector3(-7, 0.35f, 18)" in GAME
+    assert "_mapLayout.PickupPoints" in GAME
+    assert "exact retail item spawn transforms are not recovered" in GAME
 
 def test_radio_supply_drop_lands_before_eight_pickups_spawn():
     assert "SpawnSupplyDrop()" in GAME

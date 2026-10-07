@@ -32,24 +32,35 @@ public partial class Bootstrap : Node
         };
         _menu.AddChild(background);
 
-        var title = MakeLabel(70, 70, 1100, 70, 42, "THOSE WHO REMAIN - OFFLINE");
-        _menu.AddChild(title);
-        _menu.AddChild(MakeLabel(74, 145, 1110, 55, 20, "REGULAR  |  15 WAVES  |  FULLY LOCAL SINGLE PLAYER"));
-        _menu.AddChild(MakeLabel(74, 225, 1070, 115, 18,
-            "Current playable vertical slice: Manor reconstruction blockout.\n" +
-            "Map measurements/art remain provisional until stronger source geometry is recovered.\n" +
-            "WASD move | Shift sprint | Space jump | Mouse aim/fire | R reload | 1/2/3 weapons"));
+        _menu.AddChild(MakeLabel(58, 45, 1160, 62, 40, "THOSE WHO REMAIN - OFFLINE"));
+        _menu.AddChild(MakeLabel(60, 106, 1160, 42, 18, "REGULAR  |  15 WAVES  |  LOCAL SINGLE PLAYER"));
+        _menu.AddChild(MakeLabel(60, 150, 1160, 72, 16,
+            "Select a recovered release map. Geometry is an evidence-guided reconstruction blockout\n" +
+            "until original map transforms are recoverable. Gameplay rules remain source-labeled."));
+        _menu.AddChild(MakeLabel(60, 650, 1160, 42, 15,
+            "WASD move | Shift sprint | Space jump | Mouse aim/fire | R reload | 1/2/3 weapons | F hammer"));
 
-        var play = new Button
+        var maps = MapCatalogRuntime.All();
+        for (var i = 0; i < maps.Count; i++)
         {
-            OffsetLeft = 74,
-            OffsetTop = 390,
-            OffsetRight = 390,
-            OffsetBottom = 455,
-            Text = "PLAY MANOR"
-        };
-        play.Pressed += () => StartGame("Manor");
-        _menu.AddChild(play);
+            var map = maps[i];
+            var column = i % 2;
+            var row = i / 2;
+            var left = 64 + column * 590;
+            var top = 240 + row * 76;
+
+            var button = new Button
+            {
+                OffsetLeft = left,
+                OffsetTop = top,
+                OffsetRight = left + 535,
+                OffsetBottom = top + 58,
+                Text = map.Name + "  |  " + map.Skybox
+            };
+            var selected = map.Name;
+            button.Pressed += () => StartGame(selected);
+            _menu.AddChild(button);
+        }
     }
 
     private static Label MakeLabel(float left, float top, float right, float height, int size, string text)

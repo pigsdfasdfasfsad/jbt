@@ -12,6 +12,7 @@ public partial class GameplayRoot : Node3D
 
     private GameplayHud _hud = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
+    private RuntimeMapLayout _mapLayout = null!;
     private FirstPersonPlayer _player = null!;
     private FortificationController _fortifications = null!;
     private readonly List<InfectedAgent> _infected = [];
@@ -34,13 +35,13 @@ public partial class GameplayRoot : Node3D
 
         _rng.Randomize();
         _mapDefinition = MapCatalogRuntime.Get(MapName);
-        BuildManorBlockout();
+        _mapLayout = MapBlockoutBuilder.Build(this, _mapDefinition);
 
         _player = new FirstPersonPlayer
         {
             Name = "Player",
             Runtime = Runtime,
-            Position = new Vector3(0, 1.0f, 18)
+            Position = _mapLayout.PlayerSpawn
         };
         AddChild(_player);
 
@@ -199,9 +200,11 @@ public partial class GameplayRoot : Node3D
         }
     }
 
-    private Vector3 ObjectivePosition(int index) => index == 0
-        ? new Vector3(0, 0, -8)
-        : new Vector3(10, 0, 12);
+    private Vector3 ObjectivePosition(int index)
+    {
+        if (_mapLayout.ObjectivePoints.Count == 0) return Vector3.Zero;
+        return _mapLayout.ObjectivePoints[index % _mapLayout.ObjectivePoints.Count];
+    }
 
     private void OnObjectiveCompleted(ObjectiveRuntime objective)
     {
@@ -238,20 +241,12 @@ public partial class GameplayRoot : Node3D
 
     private void SpawnNaturalPickups()
     {
-        // APPROXIMATED positions: Manor reference confirms no natural item spawns
-        // outside, but exact retail item coordinates are not recovered.
+        // APPROXIMATED coordinates: topology rules come from map references,
+        // while exact retail item spawn transforms are not recovered.
         var types = new[] { "Bandages", "Ammo", "Body Armor", "Medkit", "Ammo", "Bandages" };
-        var points = new[]
-        {
-            new Vector3(-7, 0.35f, 18),
-            new Vector3(7, 0.35f, 18),
-            new Vector3(-7, 0.35f, 4),
-            new Vector3(7, 0.35f, 4),
-            new Vector3(-7, 0.35f, -14),
-            new Vector3(7, 0.35f, -14)
-        };
-        for (var i = 0; i < types.Length; i++)
-            SpawnPickup(types[i], points[i]);
+        var count = Math.Min(types.Length, _mapLayout.PickupPoints.Count);
+        for (var i = 0; i < count; i++)
+            SpawnPickup(types[i], _mapLayout.PickupPoints[i]);
     }
 
     private void SpawnPickup(string type, Vector3 position, int grantCount = 1)
@@ -381,15 +376,9 @@ public partial class GameplayRoot : Node3D
 
     private Vector3 RandomSpawnPoint()
     {
-        var side = _rng.RandiRange(0, 3);
-        var offset = _rng.RandfRange(-29f, 29f);
-        return side switch
-        {
-            0 => new Vector3(offset, 1, -38),
-            1 => new Vector3(offset, 1, 38),
-            2 => new Vector3(-33, 1, offset),
-            _ => new Vector3(33, 1, offset)
-        };
+        if (_mapLayout.InfectedSpawns.Count == 0) return new Vector3(0,1,-30);
+        var basePoint = _mapLayout.InfectedSpawns[_rng.RandiRange(0, _mapLayout.InfectedSpawns.Count - 1)];
+        return basePoint + new Vector3(_rng.RandfRange(-2.5f,2.5f), 0, _rng.RandfRange(-2.5f,2.5f));
     }
 
     private void OnInfectedDied(InfectedAgent infected, InfectedDeathContext context)
@@ -477,57 +466,4 @@ public partial class GameplayRoot : Node3D
             default: return "RESULTS";
         }
     }
-
-    private void BuildManorBlockout()
-    {
-        // APPROXIMATED geometry. Manor topology follows surviving references,
-        // but measurements are not source-surveyed.
-        AddChild(new DirectionalLight3D
-        {
-            RotationDegrees = new Vector3(-55, -25, 0),
-            LightEnergy = 1.15f,
-            ShadowEnabled = true
-        });
-
-        StaticBox("Ground", new Vector3(0, -0.5f, 0), new Vector3(72, 1, 84), new Color(0.12f, 0.13f, 0.12f));
-        StaticBox("NorthWall", new Vector3(0, 3, -42), new Vector3(72, 6, 1), new Color(0.19f, 0.18f, 0.17f));
-        StaticBox("SouthWall", new Vector3(0, 3, 42), new Vector3(72, 6, 1), new Color(0.19f, 0.18f, 0.17f));
-        StaticBox("WestWall", new Vector3(-36, 3, 0), new Vector3(1, 6, 84), new Color(0.19f, 0.18f, 0.17f));
-        StaticBox("EastWall", new Vector3(36, 3, 0), new Vector3(1, 6, 84), new Color(0.19f, 0.18f, 0.17f));
-
-        DecorativeBox("WestWing", new Vector3(-20, 2.5f, -6), new Vector3(18, 5, 48), new Color(0.22f, 0.20f, 0.18f));
-        DecorativeBox("EastWing", new Vector3(20, 2.5f, -6), new Vector3(18, 5, 48), new Color(0.22f, 0.20f, 0.18f));
-        DecorativeBox("FrontHall", new Vector3(0, 2.5f, 29), new Vector3(26, 5, 10), new Color(0.25f, 0.22f, 0.19f));
-
-        for (var z = -24; z <= 18; z += 14)
-        {
-            DecorativeBox($"CourtyardCoverL{z}", new Vector3(-6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
-            DecorativeBox($"CourtyardCoverR{z}", new Vector3(6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
-        }
-    }
-
-    private void StaticBox(string name, Vector3 position, Vector3 size, Color color)
-    {
-        var body = new StaticBody3D { Name = name, Position = position };
-        body.AddChild(new CollisionShape3D { Shape = new BoxShape3D { Size = size } });
-        body.AddChild(BoxMeshFor(size, color));
-        AddChild(body);
-    }
-
-    private void DecorativeBox(string name, Vector3 position, Vector3 size, Color color)
-    {
-        var mesh = BoxMeshFor(size, color);
-        mesh.Name = name;
-        mesh.Position = position;
-        AddChild(mesh);
-    }
-
-    private static MeshInstance3D BoxMeshFor(Vector3 size, Color color) => new()
-    {
-        Mesh = new BoxMesh
-        {
-            Size = size,
-            Material = new StandardMaterial3D { AlbedoColor = color, Roughness = 0.95f }
-        }
-    };
 }

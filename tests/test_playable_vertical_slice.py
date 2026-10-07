@@ -27,7 +27,7 @@ def test_wave_loop_is_timed_and_continuously_spawns():
     assert "RegularWaveRules.MaxAlive" in game
     assert "AdvanceWave()" in game
 
-def test_manor_geometry_is_not_misrepresented_as_verified():
-    game = text("src/Twr.Godot/Scripts/GameplayRoot.cs")
-    assert "APPROXIMATED geometry" in game
-    assert "measurements are not source-surveyed" in game
+def test_map_geometry_is_not_misrepresented_as_verified():
+    builder = text("src/Twr.Godot/Scripts/MapBlockoutBuilder.cs")
+    assert "APPROXIMATED geometry" in builder
+    assert "not source-surveyed" in builder

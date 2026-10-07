@@ -1,0 +1,260 @@
+using Godot;
+
+namespace Twr.Godot;
+
+public sealed record RuntimeMapLayout(
+    Vector3 PlayerSpawn,
+    IReadOnlyList<Vector3> InfectedSpawns,
+    IReadOnlyList<Vector3> PickupPoints,
+    IReadOnlyList<Vector3> ObjectivePoints);
+
+public static class MapBlockoutBuilder
+{
+    public static RuntimeMapLayout Build(Node3D root, RuntimeMapDefinition map)
+    {
+        AddEnvironment(root, map.Skybox);
+
+        // APPROXIMATED geometry: topology/landmark choices follow surviving
+        // map references, but dimensions and exact coordinates are not source-surveyed.
+        return map.Name switch
+        {
+            "Ranch" => BuildRanch(root),
+            "Mill" => BuildMill(root),
+            "Bypass" => BuildBypass(root),
+            "Cabin" => BuildCabin(root),
+            "Cargo" => BuildCargo(root),
+            "District" => BuildDistrict(root),
+            "Expressway" => BuildExpressway(root),
+            "Prison" => BuildPrison(root),
+            "Laboratory" => BuildLaboratory(root),
+            _ => BuildManor(root)
+        };
+    }
+
+    private static RuntimeMapLayout BuildRanch(Node3D root)
+    {
+        BaseArena(root, 96, 82, new Color(0.34f, 0.29f, 0.14f));
+        StaticBox(root, "House", new Vector3(-20, 2.5f, -5), new Vector3(22, 5, 18), new Color(0.40f, 0.32f, 0.23f));
+        StaticBox(root, "Barn", new Vector3(20, 3.5f, -12), new Vector3(22, 7, 24), new Color(0.34f, 0.12f, 0.08f));
+        StaticBox(root, "Stable", new Vector3(21, 2.2f, 19), new Vector3(20, 4.4f, 10), new Color(0.30f, 0.22f, 0.14f));
+        StaticBox(root, "Storehouse", new Vector3(-24, 2.2f, 20), new Vector3(14, 4.4f, 12), new Color(0.29f, 0.24f, 0.17f));
+        DecorativeBox(root, "Greenhouse", new Vector3(-4, 1.3f, 25), new Vector3(10, 2.6f, 7), new Color(0.33f, 0.48f, 0.30f));
+        return Layout(new Vector3(0, 1, 8),
+            EdgeSpawns(43, 36),
+            Points((-16,8),(14,7),(-21,25),(20,22),(-12,-19),(12,-22)),
+            Points((0,-2),(7,18)));
+    }
+
+    private static RuntimeMapLayout BuildMill(Node3D root)
+    {
+        BaseArena(root, 110, 86, new Color(0.69f, 0.72f, 0.75f));
+        DecorativeBox(root, "FrozenLake", new Vector3(-27, 0.02f, 0), new Vector3(46, 0.04f, 78), new Color(0.50f, 0.68f, 0.78f));
+        StaticBox(root, "Sawmill", new Vector3(18, 3, -10), new Vector3(30, 6, 26), new Color(0.34f, 0.28f, 0.20f));
+        StaticBox(root, "Warehouse", new Vector3(23, 2.8f, 22), new Vector3(27, 5.6f, 18), new Color(0.31f, 0.32f, 0.34f));
+        StaticBox(root, "Office", new Vector3(13, 2.3f, -31), new Vector3(18, 4.6f, 10), new Color(0.36f, 0.38f, 0.40f));
+        StaticBox(root, "Tunnel", new Vector3(48, 2.8f, 5), new Vector3(8, 5.6f, 18), new Color(0.18f, 0.19f, 0.20f));
+        return Layout(new Vector3(24, 1, 3),
+            Points((-50,-29),(-50,0),(-50,29),(50,4),(33,-39)),
+            Points((15,-2),(26,20),(17,-29),(30,-15),(20,30),(3,12)),
+            Points((13,8),(28,-23)));
+    }
+
+    private static RuntimeMapLayout BuildBypass(Node3D root)
+    {
+        BaseArena(root, 116, 86, new Color(0.25f, 0.25f, 0.23f));
+        StaticBox(root, "Tunnel", new Vector3(-48, 3, 0), new Vector3(14, 6, 22), new Color(0.14f, 0.15f, 0.16f));
+        StaticBox(root, "PlazaNorth", new Vector3(4, 2.7f, -25), new Vector3(42, 5.4f, 14), new Color(0.38f, 0.34f, 0.28f));
+        StaticBox(root, "PlazaSouth", new Vector3(6, 2.7f, 25), new Vector3(42, 5.4f, 14), new Color(0.34f, 0.32f, 0.28f));
+        StaticBox(root, "CivilianBarracks", new Vector3(36, 2.4f, 8), new Vector3(20, 4.8f, 16), new Color(0.27f, 0.31f, 0.24f));
+        DecorativeBox(root, "ArchBridge", new Vector3(30, 1.2f, -9), new Vector3(40, 2.4f, 6), new Color(0.28f, 0.29f, 0.30f));
+        return Layout(new Vector3(0, 1, 0),
+            Points((-55,0),(-35,-39),(-35,39),(54,-22),(54,22)),
+            Points((-8,-21),(5,21),(35,8),(25,-8),(-35,4),(16,31)),
+            Points((-20,0),(19,0)));
+    }
+
+    private static RuntimeMapLayout BuildCabin(Node3D root)
+    {
+        BaseArena(root, 76, 76, new Color(0.10f, 0.12f, 0.09f));
+        StaticBox(root, "CabinHouse", new Vector3(0, 3, 0), new Vector3(34, 6, 30), new Color(0.25f, 0.18f, 0.13f));
+        for (var i = -32; i <= 32; i += 8)
+        {
+            DecorativeBox(root, "ForestN" + i, new Vector3(i, 3, -34), new Vector3(1.2f, 6, 1.2f), new Color(0.10f, 0.20f, 0.10f));
+            DecorativeBox(root, "ForestS" + i, new Vector3(i, 3, 34), new Vector3(1.2f, 6, 1.2f), new Color(0.10f, 0.20f, 0.10f));
+        }
+        return Layout(new Vector3(0, 1, 18),
+            EdgeSpawns(34,34),
+            Points((-12,12),(10,10),(-10,-10),(10,-11),(0,4)),
+            Points((-8,2),(8,-4)));
+    }
+
+    private static RuntimeMapLayout BuildCargo(Node3D root)
+    {
+        BaseArena(root, 68, 126, new Color(0.20f, 0.23f, 0.24f));
+        StaticBox(root, "WestDock", new Vector3(-22, 0.8f, 4), new Vector3(14, 1.6f, 98), new Color(0.32f, 0.31f, 0.28f));
+        StaticBox(root, "EastDock", new Vector3(22, 0.8f, 4), new Vector3(14, 1.6f, 98), new Color(0.32f, 0.31f, 0.28f));
+        StaticBox(root, "CargoShip", new Vector3(0, 2.0f, 18), new Vector3(20, 4, 62), new Color(0.20f, 0.24f, 0.27f));
+        for (var z = -34; z <= 34; z += 17)
+            DecorativeBox(root, "Container" + z, new Vector3(-22, 2.0f, z), new Vector3(8, 4, 12), new Color(0.45f, 0.19f, 0.12f));
+        return Layout(new Vector3(0, 2.1f, 38),
+            Points((-23,-58),(0,-58),(23,-58),(-32,-45),(32,-45)),
+            Points((-22,35),(22,34),(0,38),(-21,18),(21,10),(0,8)),
+            Points((0,-8),(0,27)));
+    }
+
+    private static RuntimeMapLayout BuildDistrict(Node3D root)
+    {
+        BaseArena(root, 92, 92, new Color(0.19f, 0.22f, 0.16f));
+        StaticBox(root, "Cafe", new Vector3(-27, 2.7f, -25), new Vector3(22, 5.4f, 18), new Color(0.34f, 0.24f, 0.18f));
+        StaticBox(root, "Foxoil", new Vector3(27, 2.2f, -25), new Vector3(22, 4.4f, 16), new Color(0.28f, 0.31f, 0.20f));
+        StaticBox(root, "MovieTheater", new Vector3(-27, 3.2f, 25), new Vector3(24, 6.4f, 21), new Color(0.24f, 0.18f, 0.22f));
+        StaticBox(root, "BookStore", new Vector3(25, 3.4f, 24), new Vector3(20, 6.8f, 20), new Color(0.27f, 0.22f, 0.17f));
+        StaticBox(root, "ConvenienceStore", new Vector3(30, 2.3f, 3), new Vector3(17, 4.6f, 13), new Color(0.31f, 0.30f, 0.22f));
+        DecorativeBox(root, "CrossroadNS", Vector3.Zero, new Vector3(10, 0.08f, 86), new Color(0.11f, 0.11f, 0.11f));
+        DecorativeBox(root, "CrossroadEW", Vector3.Zero, new Vector3(86, 0.08f, 10), new Color(0.11f, 0.11f, 0.11f));
+        return Layout(new Vector3(0, 1, 0),
+            EdgeSpawns(42,42),
+            Points((-14,-8),(12,-9),(-12,10),(12,11),(30,7),(-29,2)),
+            Points((-5,0),(8,0)));
+    }
+
+    private static RuntimeMapLayout BuildExpressway(Node3D root)
+    {
+        BaseArena(root, 58, 132, new Color(0.24f, 0.25f, 0.26f));
+        DecorativeBox(root, "Highway", Vector3.Zero, new Vector3(48, 0.10f, 124), new Color(0.12f, 0.12f, 0.13f));
+        for (var z = -42; z <= 42; z += 14)
+            DecorativeBox(root, "Vehicle" + z, new Vector3((z / 14 % 2 == 0) ? -8 : 8, 0.75f, z), new Vector3(4, 1.5f, 7), new Color(0.28f, 0.28f, 0.30f));
+        StaticBox(root, "ScreeningLeft", new Vector3(-15, 1.6f, 34), new Vector3(4, 3.2f, 24), new Color(0.42f, 0.42f, 0.40f));
+        StaticBox(root, "ScreeningRight", new Vector3(15, 1.6f, 34), new Vector3(4, 3.2f, 24), new Color(0.42f, 0.42f, 0.40f));
+        return Layout(new Vector3(0, 1, 12),
+            Points((-18,-61),(18,-61),(-18,61),(18,61)),
+            Points((-11,25),(9,27),(-10,-8),(10,-18),(0,42),(0,-40)),
+            Points((0,30),(0,-20)));
+    }
+
+    private static RuntimeMapLayout BuildPrison(Node3D root)
+    {
+        BaseArena(root, 106, 94, new Color(0.22f, 0.23f, 0.20f));
+        StaticBox(root, "CellBlockA", new Vector3(-25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f));
+        StaticBox(root, "CellBlockB", new Vector3(25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f));
+        StaticBox(root, "Isolation", new Vector3(0, 4.5f, -35), new Vector3(28, 9, 14), new Color(0.24f, 0.25f, 0.25f));
+        StaticBox(root, "MessHall", new Vector3(-28, 2.7f, 32), new Vector3(28, 5.4f, 18), new Color(0.34f, 0.32f, 0.27f));
+        StaticBox(root, "Warehouse", new Vector3(30, 2.7f, 33), new Vector3(24, 5.4f, 17), new Color(0.28f, 0.29f, 0.27f));
+        DecorativeBox(root, "BasketballCourt", new Vector3(0, 0.05f, 24), new Vector3(20, 0.1f, 18), new Color(0.24f, 0.31f, 0.34f));
+        return Layout(new Vector3(0, 1, 15),
+            Points((-49,-35),(0,-44),(49,-35),(-49,20),(49,20),(0,-32)),
+            Points((-7,20),(7,20),(-27,28),(29,30),(-20,-2),(20,-2)),
+            Points((0,24),(0,-18)));
+    }
+
+    private static RuntimeMapLayout BuildLaboratory(Node3D root)
+    {
+        BaseArena(root, 108, 98, new Color(0.19f, 0.21f, 0.22f));
+        StaticBox(root, "Reception", new Vector3(0, 2.2f, 39), new Vector3(30, 4.4f, 12), new Color(0.39f, 0.42f, 0.44f));
+        DecorativeBox(root, "BridgeWest", new Vector3(-10, 1.0f, 24), new Vector3(7, 2, 20), new Color(0.34f, 0.37f, 0.39f));
+        DecorativeBox(root, "BridgeEast", new Vector3(10, 1.0f, 24), new Vector3(7, 2, 20), new Color(0.34f, 0.37f, 0.39f));
+        StaticBox(root, "Research", new Vector3(-16, 4, -3), new Vector3(35, 8, 42), new Color(0.36f, 0.39f, 0.41f));
+        StaticBox(root, "ParkingGarage", new Vector3(28, 4, 0), new Vector3(28, 8, 46), new Color(0.27f, 0.29f, 0.30f));
+        StaticBox(root, "ServerRoom", new Vector3(-18, 3.2f, -34), new Vector3(28, 6.4f, 18), new Color(0.18f, 0.24f, 0.29f));
+        DecorativeBox(root, "HospitalWard", new Vector3(17, 0.45f, -30), new Vector3(28, 0.9f, 18), new Color(0.58f, 0.62f, 0.61f));
+        return Layout(new Vector3(0, 1, 39),
+            Points((-45,42),(45,42),(-42,-20),(42,-20),(0,-45),(25,-42)),
+            Points((0,34),(-7,16),(8,16),(16,-28),(-16,-28),(28,5)),
+            Points((0,10),(-5,-24)));
+    }
+
+    private static RuntimeMapLayout BuildManor(Node3D root)
+    {
+        BaseArena(root, 78, 90, new Color(0.12f, 0.13f, 0.12f));
+        StaticBox(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
+        StaticBox(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
+        StaticBox(root, "FrontHall", new Vector3(0, 2.7f, 31), new Vector3(28, 5.4f, 11), new Color(0.25f, 0.22f, 0.19f));
+        for (var z = -25; z <= 18; z += 14)
+        {
+            DecorativeBox(root, "CourtyardCoverL" + z, new Vector3(-6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
+            DecorativeBox(root, "CourtyardCoverR" + z, new Vector3(6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
+        }
+        return Layout(new Vector3(0, 1, 20),
+            EdgeSpawns(36,42),
+            Points((-7,18),(7,18),(-7,4),(7,4),(-7,-14),(7,-14)),
+            Points((0,-8),(10,12)));
+    }
+
+    private static RuntimeMapLayout Layout(Vector3 player, IReadOnlyList<Vector3> infected, IReadOnlyList<Vector3> pickups, IReadOnlyList<Vector3> objectives) =>
+        new(player, infected, pickups, objectives);
+
+    private static IReadOnlyList<Vector3> EdgeSpawns(float x, float z) =>
+        Points((-x,-z),(0,-z),(x,-z),(-x,0),(x,0),(-x,z),(0,z),(x,z));
+
+    private static IReadOnlyList<Vector3> Points(params (float X,float Z)[] values) =>
+        values.Select(v => new Vector3(v.X, 1f, v.Z)).ToArray();
+
+    private static void BaseArena(Node3D root, float width, float depth, Color ground)
+    {
+        StaticBox(root, "Ground", new Vector3(0,-0.5f,0), new Vector3(width,1,depth), ground);
+        var wall = new Color(0.15f,0.16f,0.16f);
+        StaticBox(root, "NorthBoundary", new Vector3(0,2.5f,-depth*0.5f), new Vector3(width,5,1), wall);
+        StaticBox(root, "SouthBoundary", new Vector3(0,2.5f,depth*0.5f), new Vector3(width,5,1), wall);
+        StaticBox(root, "WestBoundary", new Vector3(-width*0.5f,2.5f,0), new Vector3(1,5,depth), wall);
+        StaticBox(root, "EastBoundary", new Vector3(width*0.5f,2.5f,0), new Vector3(1,5,depth), wall);
+    }
+
+    private static void AddEnvironment(Node3D root, string skybox)
+    {
+        var color = skybox switch
+        {
+            "Night" => new Color(0.015f,0.02f,0.05f),
+            "Stormy Night" => new Color(0.025f,0.035f,0.055f),
+            "Snowy" => new Color(0.45f,0.50f,0.56f),
+            "Sunrise" => new Color(0.42f,0.27f,0.20f),
+            "Sunset" => new Color(0.34f,0.20f,0.17f),
+            "Cloudy Sunset" => new Color(0.30f,0.24f,0.24f),
+            "Cloudy" => new Color(0.30f,0.33f,0.36f),
+            _ => new Color(0.14f,0.16f,0.18f)
+        };
+
+        root.AddChild(new WorldEnvironment
+        {
+            Environment = new global::Godot.Environment
+            {
+                BackgroundMode = global::Godot.Environment.BGMode.Color,
+                BackgroundColor = color,
+                AmbientLightSource = global::Godot.Environment.AmbientSource.Color,
+                AmbientLightColor = color.Lightened(0.25f),
+                AmbientLightEnergy = 0.75f
+            }
+        });
+
+        root.AddChild(new DirectionalLight3D
+        {
+            RotationDegrees = new Vector3(-55,-25,0),
+            LightEnergy = skybox.Contains("Night", StringComparison.Ordinal) ? 0.45f : 1.05f,
+            ShadowEnabled = true
+        });
+    }
+
+    private static void StaticBox(Node3D root, string name, Vector3 position, Vector3 size, Color color)
+    {
+        var body = new StaticBody3D { Name = name, Position = position };
+        body.AddChild(new CollisionShape3D { Shape = new BoxShape3D { Size = size } });
+        body.AddChild(BoxMeshFor(size,color));
+        root.AddChild(body);
+    }
+
+    private static void DecorativeBox(Node3D root, string name, Vector3 position, Vector3 size, Color color)
+    {
+        var mesh = BoxMeshFor(size,color);
+        mesh.Name = name;
+        mesh.Position = position;
+        root.AddChild(mesh);
+    }
+
+    private static MeshInstance3D BoxMeshFor(Vector3 size, Color color) => new()
+    {
+        Mesh = new BoxMesh
+        {
+            Size = size,
+            Material = new StandardMaterial3D { AlbedoColor = color, Roughness = 0.95f }
+        }
+    };
+}
