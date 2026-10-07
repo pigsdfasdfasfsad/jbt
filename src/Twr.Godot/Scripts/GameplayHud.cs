@@ -6,6 +6,7 @@ namespace Twr.Godot;
 
 public partial class GameplayHud : CanvasLayer
 {
+    public LocalSessionNode? Runtime {get;set;}
     private Label _top = null!;
     private Label _health = null!;
     private Label _ammo = null!;
@@ -13,6 +14,9 @@ public partial class GameplayHud : CanvasLayer
     private Label _banner = null!;
     private Label _objective = null!;
     private Label _utility = null!;
+    private ColorRect _damageFlash = null!;
+    private ColorRect _lowHealth = null!;
+    private double _damageFlashSeconds;
 
     public override void _Ready()
     {
@@ -26,6 +30,26 @@ public partial class GameplayHud : CanvasLayer
         _objective.HorizontalAlignment = HorizontalAlignment.Center;
         _utility = MakeLabel(250, 195, 780, 36, 17);
         _utility.HorizontalAlignment = HorizontalAlignment.Center;
+
+        // APPROXIMATED base presentation: original post-processing stack is not
+        // recovered. Perk reduction percentages applied to these effects are exact.
+        _lowHealth = new ColorRect
+        {
+            Color = new Color(0.45f,0.0f,0.0f,0.0f),
+            AnchorRight = 1,
+            AnchorBottom = 1,
+            MouseFilter = Control.MouseFilterEnum.Ignore
+        };
+        AddChild(_lowHealth);
+
+        _damageFlash = new ColorRect
+        {
+            Color = new Color(0.72f,0.03f,0.02f,0.0f),
+            AnchorRight = 1,
+            AnchorBottom = 1,
+            MouseFilter = Control.MouseFilterEnum.Ignore
+        };
+        AddChild(_damageFlash);
 
         var crosshair = MakeLabel(620, 342, 40, 40, 26);
         crosshair.Text = "+";
@@ -74,6 +98,31 @@ public partial class GameplayHud : CanvasLayer
         }
 
         _credits.Text = $"LEVEL {player.Level}  XP {player.Xp:N0}/{ProgressionRules.RequiredForNextLevel(player.Level):N0}  CREDITS ${player.Credits:N0}  [1/2/3] WEAPONS [5/6/7/G] GRENADES [F] HAMMER";
+
+        var healthRatio=player.MaxHealth<=0 ? 1f : player.Health/player.MaxHealth;
+        var baseLowAlpha=healthRatio<0.35f ? Math.Clamp((0.35f-healthRatio)/0.35f*0.45f,0f,0.45f) : 0f;
+        if(Runtime?.HasPerk("Hardened Sight")==true) baseLowAlpha*=0.5f;
+        _lowHealth.Color=new Color(0.45f,0f,0f,baseLowAlpha);
+    }
+
+    public override void _Process(double delta)
+    {
+        if(_damageFlashSeconds<=0)
+        {
+            _damageFlash.Color=new Color(0.72f,0.03f,0.02f,0f);
+            return;
+        }
+
+        _damageFlashSeconds=Math.Max(0,_damageFlashSeconds-delta);
+        var alpha=0.42f*(float)Math.Clamp(_damageFlashSeconds/0.22,0,1);
+        if(Runtime?.HasPerk("Bruiser")==true)alpha*=0.35f;
+        _damageFlash.Color=new Color(0.72f,0.03f,0.02f,alpha);
+    }
+
+    public void FlashDamage()
+    {
+        // APPROXIMATED base flash duration. Bruiser's 65% reduction is VERIFIED.
+        _damageFlashSeconds=0.22;
     }
 
     public void SetBanner(string text) => _banner.Text = text;

@@ -7,6 +7,7 @@ public partial class FortificationActor : Node3D
     public RuntimeFortificationDefinition Definition { get; set; } =
         new("Unknown", 1, 1, null, null, null);
     public float DamageMultiplier {get;set;}=1f;
+    public float RangeMultiplier {get;set;}=1f;
     public FirstPersonPlayer? Player {get;set;}
     public LocalSessionNode? Runtime {get;set;}
 
@@ -161,7 +162,9 @@ public partial class FortificationActor : Node3D
         var trigger = FindNearest(2.0f);
         if (trigger is null) return;
 
-        var radius = Definition.Radius!.Value;
+        // STRONGLY INFERRED: the Clap Bomb exposes Radius but no separate range stat.
+        // Enhanced Electronics therefore applies its exact +40% to this radius.
+        var radius = Definition.Radius!.Value * RangeMultiplier;
         foreach (var infected in EnumerateInfected())
             if (GlobalPosition.DistanceTo(infected.GlobalPosition) <= radius)
                 infected.ApplyDamage(Definition.Damage!.Value*DamageMultiplier, false, "Explosion");

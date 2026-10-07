@@ -54,8 +54,9 @@ public partial class GameplayRoot : Node3D
         };
         AddChild(_player);
 
-        _hud = new GameplayHud { Name = "HUD" };
+        _hud = new GameplayHud { Name = "HUD", Runtime = Runtime };
         AddChild(_hud);
+        Runtime.PresentationEvent += OnPresentationEvent;
         _hud.SetBanner($"WAVE {Runtime.Match?.Wave ?? 1} BEGINS IN");
 
         _fortifications = new FortificationController
@@ -115,6 +116,17 @@ public partial class GameplayRoot : Node3D
         _hud.UpdateState(Runtime.Player, Runtime.Match, StageName(), _stageTime, _player.EquippedWeaponName,_player.HeldThrowableName);
     }
 
+    public override void _ExitTree()
+    {
+        if(Runtime is not null)
+            Runtime.PresentationEvent -= OnPresentationEvent;
+    }
+
+    private void OnPresentationEvent(string eventName)
+    {
+        if(eventName=="PlayerDamagedEvent")
+            _hud.FlashDamage();
+    }
     public override void _UnhandledInput(InputEvent @event)
     {
         if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;

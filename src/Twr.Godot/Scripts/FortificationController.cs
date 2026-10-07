@@ -113,6 +113,7 @@ public partial class FortificationController : Node
             Name = $"Deployed_{definition.Name}_{_deployed.Count}",
             Definition = definition,
             DamageMultiplier = FortificationDamageMultiplier(definition),
+            RangeMultiplier = FortificationRangeMultiplier(definition),
             Player = Player,
             Runtime = Runtime,
             GlobalPosition = Player.GlobalPosition + forward * 3.0f + Vector3.Down * 0.8f
@@ -132,6 +133,12 @@ public partial class FortificationController : Node
         return multiplier;
     }
 
+    private float FortificationRangeMultiplier(RuntimeFortificationDefinition definition)
+    {
+        if(Runtime?.HasPerk("Enhanced Electronics")==true && definition.Name=="Clap Bomb")
+            return 1.4f;
+        return 1f;
+    }
     private void Cycle(int direction)
     {
         var available = AvailableDefinitions();
