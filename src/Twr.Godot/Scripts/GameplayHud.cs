@@ -51,9 +51,10 @@ public partial class GameplayHud : CanvasLayer
         _top.Text = $"REGULAR  |  {match.MapName.ToUpperInvariant()}  |  WAVE {match.Wave}/15  |  {stage}  {FormatTime(seconds)}";
         _health.Text = $"HEALTH  {Math.Ceiling(player.Health):0} / {player.MaxHealth:0}   ARMOR {Math.Ceiling(player.ArmorDurability):0}";
 
-        if (weaponName == StarterLoadoutService.TwoByFour)
+        var spec = RuntimeWeaponCatalog.Get(weaponName);
+        if (spec.IsMelee)
         {
-            _ammo.Text = "2x4   MELEE";
+            _ammo.Text = $"{weaponName.ToUpperInvariant()}   MELEE";
         }
         else
         {
@@ -62,7 +63,7 @@ public partial class GameplayHud : CanvasLayer
             _ammo.Text = $"{weaponName.ToUpperInvariant()}   {loaded} / {reserve}";
         }
 
-        _credits.Text = $"CREDITS ${player.Credits:N0}    XP {player.Xp:N0}    [1] SAWN OFF  [2] GLOCK  [3] 2x4";
+        _credits.Text = $"CREDITS ${player.Credits:N0}    XP {player.Xp:N0}    [1] PRIMARY  [2] SECONDARY  [3] MELEE  [F] HAMMER";
     }
 
     public void SetBanner(string text) => _banner.Text = text;

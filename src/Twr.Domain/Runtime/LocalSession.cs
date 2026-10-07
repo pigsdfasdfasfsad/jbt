@@ -31,6 +31,12 @@ public sealed class LocalSession
     public LocalSession(IProfileStore profiles)
     {
         Profile = profiles.Load();
+        Profile.Unlocks.Add(StarterLoadoutService.SawnOff);
+        Profile.Unlocks.Add(StarterLoadoutService.Glock17);
+        Profile.Unlocks.Add(StarterLoadoutService.TwoByFour);
+        Profile.Loadout.TryAdd("Primary", StarterLoadoutService.SawnOff);
+        Profile.Loadout.TryAdd("Secondary", StarterLoadoutService.Glock17);
+        Profile.Loadout.TryAdd("Melee", StarterLoadoutService.TwoByFour);
         State.Player.Level = Profile.Level;
         State.Player.Xp = Profile.Xp;
         State.Player.Credits = Profile.Credits;
@@ -82,6 +88,9 @@ public sealed class LocalSession
                 break;
             case ReloadWeaponCommand x:
                 _ammo.Reload(State.Player, x.WeaponId, x.MagazineCapacity, now);
+                break;
+            case ConfigureWeaponAmmoCommand x:
+                _ammo.Configure(State.Player, x.WeaponId, x.Magazine, x.Reserve, now);
                 break;
             case GrantAmmoCommand x:
                 _ammo.GrantReserve(State.Player, x.WeaponId, x.Amount, x.MaxReserve, now);

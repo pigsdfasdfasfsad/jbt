@@ -13,11 +13,11 @@ def test_all_three_starter_weapons_are_runtime_wired():
 
 def test_weapon_switching_is_keyboard_wired():
     s=read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
-    assert "Key.Key1" in s and "SawnOff" in s
-    assert "Key.Key2" in s and "Glock17" in s
-    assert "Key.Key3" in s and "TwoByFour" in s
-    assert "StarterWeaponKind.Shotgun" in s
-    assert "StarterWeaponKind.Melee" in s
+    assert "Key.Key1" in s and "Equip(_primaryWeapon)" in s
+    assert "Key.Key2" in s and "Equip(_secondaryWeapon)" in s
+    assert "Key.Key3" in s and "Equip(_meleeWeapon)" in s
+    assert "RuntimeWeaponCatalog.Get" in s
+    assert "spec.IsShotgun" in s and "spec.IsMelee" in s
 
 def test_starter_loadout_preserves_source_ammo_pools():
     s=read("src/Twr.Domain/Services/StarterLoadoutService.cs")

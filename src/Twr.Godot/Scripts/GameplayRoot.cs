@@ -389,14 +389,22 @@ public partial class GameplayRoot : Node3D
         var reward = InfectedCatalog.Reward(infected.InfectedType);
         Runtime?.AwardKill(infected.InfectedType, reward.Credits, reward.Xp);
 
-        if (context.Headshot)
+        var specialKill = context.Headshot ? "Headshot" : context.DamageKind switch
+        {
+            "Explosion" => "Explosion",
+            "Fire" => "Fire",
+            "Decapitation" => "Decapitation",
+            "BarbedWire" => "BarbedWire",
+            _ => null
+        };
+        if (specialKill is not null)
         {
             var bonus = InfectedCatalog.BonusReward(infected.InfectedType);
-            Runtime?.AwardKill(infected.InfectedType + ":Headshot", bonus.Credits, bonus.Xp);
+            Runtime?.AwardKill(infected.InfectedType + ":" + specialKill, bonus.Credits, bonus.Xp);
         }
 
         if (infected.InfectedType == "Burster" &&
-            !context.Headshot && context.DamageKind != "SlowTrap" &&
+            !context.Headshot && context.DamageKind != "SlowTrap" && context.DamageKind != "BarbedWire" &&
             context.DamageKind != "Fire" && context.DamageKind != "Decapitation")
         {
             SpawnBursterHazard(infected.GlobalPosition);

@@ -104,7 +104,7 @@ public partial class FortificationActor : Node3D
 
             // APPROXIMATED: source confirms slowing + damage, but exact amount
             // and slow factor/rate are not recovered.
-            infected.ApplyDamage(5f, false, "SlowTrap");
+            infected.ApplyDamage(5f, false, "BarbedWire");
             infected.ApplySlow(0.55f, 0.65);
             touched = true;
         }

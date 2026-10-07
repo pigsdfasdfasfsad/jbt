@@ -85,14 +85,12 @@ public partial class PickupActor : Node3D
             case "Ammo":
             {
                 var weapon = Player.EquippedWeaponName;
-                if (weapon == StarterLoadoutService.TwoByFour)
+                var spec = RuntimeWeaponCatalog.Get(weapon);
+                if (spec.IsMelee || spec.Reserve <= 0)
                     return false;
 
                 var before = state.ReserveAmmo.GetValueOrDefault(weapon);
-                if (weapon == StarterLoadoutService.SawnOff)
-                    Runtime.GrantAmmo(weapon, 8, 32);
-                else
-                    Runtime.GrantAmmo(weapon, 18, 136); // APPROXIMATED: no recovered Glock AmmoPickup field.
+                Runtime.GrantAmmo(weapon, spec.AmmoPickup, spec.Reserve);
                 return state.ReserveAmmo.GetValueOrDefault(weapon) > before;
             }
             default:

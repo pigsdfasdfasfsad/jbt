@@ -38,6 +38,8 @@ public partial class LocalSessionNode : Node
     public void HealPlayer(float amount,bool full=false) => Submit(new HealPlayerCommand(amount,full));
     public void EquipBodyArmor() => Submit(new EquipBodyArmorCommand());
     public void GrantAmmo(string weapon,int amount,int maxReserve) => Submit(new GrantAmmoCommand(weapon,amount,maxReserve));
+    public void ConfigureWeaponAmmo(string weapon,int magazine,int reserve) =>
+        Submit(new ConfigureWeaponAmmoCommand(weapon,magazine,reserve));
     public void GrantItem(string item,int amount=1) => Submit(new GrantItemCommand(item,amount));
     public bool ConsumeItem(string item,int amount=1)
     {
@@ -78,6 +80,7 @@ public partial class LocalSessionNode : Node
 
     public PlayerState? Player => Session?.State.Player;
     public MatchState? Match => Session?.State.Match;
+    public Profile? Profile => Session?.Profile;
 
     [Signal]
     public delegate void PresentationEventEventHandler(string eventName);

@@ -40,4 +40,13 @@ public sealed class AmmoService(EventStream events)
         events.Publish(new AmmoChangedEvent(weapon,player.Ammo.GetValueOrDefault(weapon),now));
         return true;
     }
+    public void Configure(PlayerState player,string weapon,int magazine,int reserve,DateTimeOffset now)
+    {
+        if(string.IsNullOrWhiteSpace(weapon) || magazine<0 || reserve<0)
+            throw new ArgumentOutOfRangeException(nameof(magazine));
+        player.Ammo[weapon]=magazine;
+        player.ReserveAmmo[weapon]=reserve;
+        events.Publish(new AmmoChangedEvent(weapon,magazine,now));
+    }
 }
+
