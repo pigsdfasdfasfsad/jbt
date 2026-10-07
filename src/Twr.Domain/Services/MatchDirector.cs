@@ -17,5 +17,5 @@ public sealed class MatchDirector(EventStream events)
         m.Wave++;m.Phase=MatchPhase.Wave;events.Publish(new WaveStartedEvent(m.Wave,now));return true;
     }
     public void Fail(MatchState m){if(m.Phase!=MatchPhase.Results)m.Phase=MatchPhase.Results;}
-    public bool IsMapComplete(MatchState m)=>m.Wave==ReleaseRules.MaxWaves && m.Phase == MatchPhase.CompletionPending;
+    public bool IsMapComplete(MatchState m)=>m.Wave == ReleaseRules.MaxWaves && m.Phase == MatchPhase.CompletionPending;
 }

@@ -206,14 +206,17 @@ public partial class GameplayRoot : Node3D
         _infected.Clear();
     }
 
-    private string StageName() => _stage switch
+    private string StageName()
     {
-        Stage.Countdown => "COUNTDOWN",
-        Stage.Wave => "WAVE",
-        Stage.WaveEnd => "WAVE END",
-        Stage.Intermission => "INTERMISSION",
-        _ => "RESULTS"
-    };
+        switch (_stage)
+        {
+            case Stage.Countdown: return "COUNTDOWN";
+            case Stage.Wave: return "WAVE";
+            case Stage.WaveEnd: return "WAVE END";
+            case Stage.Intermission: return "INTERMISSION";
+            default: return "RESULTS";
+        }
+    }
 
     private void BuildManorBlockout()
     {
