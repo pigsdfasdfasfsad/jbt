@@ -6,15 +6,15 @@ PHASE = ROOT / "src/Twr.Domain/Model/MatchPhase.cs"
 
 def test_wave_fifteen_requires_explicit_completion_boundary():
     s = DIRECTOR.read_text()
-    assert "match.Phase = MatchPhase.CompletionPending" in s
-    assert "match.Phase == MatchPhase.CompletionPending" in s
-    assert "match.Wave == ReleaseRules.MaxWaves" in s
+    assert "m.Phase = MatchPhase.CompletionPending" in s
+    assert "m.Phase == MatchPhase.CompletionPending" in s
+    assert "m.Wave == ReleaseRules.MaxWaves" in s
     assert "CompletionPending" in PHASE.read_text()
 
 def test_wave_sixteen_is_not_created():
     s = DIRECTOR.read_text()
-    terminal = s.index("if (match.Wave >= ReleaseRules.MaxWaves)")
-    increment = s.index("match.Wave++;")
+    terminal = s.index("if(m.Wave>=ReleaseRules.MaxWaves)")
+    increment = s.index("m.Wave++;")
     assert terminal < increment
 
 def test_regular_wave_duration_and_final_scale_are_recovered_contracts():

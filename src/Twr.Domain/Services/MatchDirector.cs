@@ -6,17 +6,17 @@ namespace Twr.Domain.Services;
 
 public sealed class MatchDirector(EventStream events)
 {
-    public void Start(MatchState match, string map, DateTimeOffset now)
+    public void Start(MatchState m, string map, DateTimeOffset now)
     {
         if (!ReleaseRules.Maps.Contains(map, StringComparer.Ordinal))
             throw new ArgumentException("Map outside locked release set", nameof(map));
 
-        match.MapName = map;
-        match.Wave = 1;
-        match.Phase = MatchPhase.Wave;
-        match.CompletionAwarded = false;
-        match.SaveCommitted = false;
-        match.CompletedObjectives.Clear();
+        m.MapName = map;
+        m.Wave = 1;
+        m.Phase = MatchPhase.Wave;
+        m.CompletionAwarded = false;
+        m.SaveCommitted = false;
+        m.CompletedObjectives.Clear();
         events.Publish(new WaveStartedEvent(1, now));
     }
 
@@ -25,24 +25,24 @@ public sealed class MatchDirector(EventStream events)
     /// Waves 1-14 advance. Finishing Wave 15 enters a private completion-pending
     /// state so LocalSession can grant/persist the reward before Results is visible.
     /// </summary>
-    public bool Advance(MatchState match, DateTimeOffset now)
+    public bool Advance(MatchState m, DateTimeOffset now)
     {
-        if (match.Phase is MatchPhase.Results or MatchPhase.CompletionPending)
+        if (m.Phase is MatchPhase.Results or MatchPhase.CompletionPending)
             return false;
 
-        if (match.Wave >= ReleaseRules.MaxWaves)
+        if(m.Wave>=ReleaseRules.MaxWaves)
         {
-            match.Phase = MatchPhase.CompletionPending;
+            m.Phase = MatchPhase.CompletionPending;
             return false;
         }
 
-        match.Wave++;
-        match.Phase = MatchPhase.Wave;
-        events.Publish(new WaveStartedEvent(match.Wave, now));
+        m.Wave++;
+        m.Phase = MatchPhase.Wave;
+        events.Publish(new WaveStartedEvent(m.Wave, now));
         return true;
     }
 
-    public bool IsMapComplete(MatchState match) =>
-        match.Wave == ReleaseRules.MaxWaves &&
-        match.Phase == MatchPhase.CompletionPending;
+    public bool IsMapComplete(MatchState m) =>
+        m.Wave == ReleaseRules.MaxWaves &&
+        m.Phase == MatchPhase.CompletionPending;
 }
