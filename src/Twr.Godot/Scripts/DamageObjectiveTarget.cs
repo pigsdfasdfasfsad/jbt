@@ -7,10 +7,10 @@ public partial class DamageObjectiveTarget : StaticBody3D
     public Action<float>? ProgressChanged { get; set; }
     public Action<Vector3>? Destroyed { get; set; }
 
-    // APPROXIMATED health scale: source documents only a percentage-to-zero
-    // objective meter, not a numeric tanker HP value.
-    public float MaxHealth { get; set; } = 1000f;
-    public float Health { get; private set; } = 1000f;
+    // DERIVED, NOT DOCUMENTED: one RPG-7 (~500) equals the documented 20%
+    // contribution threshold, so 500 / 2500 = 20%; five shots is "a few".
+    public float MaxHealth { get; set; } = 2500f;
+    public float Health { get; private set; } = 2500f;
 
     public override void _Ready()
     {

@@ -4,7 +4,8 @@ def read(path): return (ROOT/path).read_text()
 
 def test_damage_objective_uses_percentage_health_scale_and_documented_immunities():
     target=read("src/Twr.Godot/Scripts/DamageObjectiveTarget.cs")
-    assert "APPROXIMATED health scale" in target
+    assert "DERIVED, NOT DOCUMENTED" in target
+    assert "2500f" in target
     assert 'damageKind is "Melee" or "Fire"' in target
     objective=read("src/Twr.Godot/Scripts/ObjectiveRuntime.cs")
     assert 'case "Damage":' in objective
@@ -14,7 +15,9 @@ def test_tanker_explosion_does_not_pay_infected_kill_bonus():
     game=read("src/Twr.Godot/Scripts/GameplayRoot.cs")
     assert 'context.DamageKind == "ObjectiveExplosion"' in game
     objective=read("src/Twr.Godot/Scripts/ObjectiveRuntime.cs")
-    assert 'infected.ApplyDamage(9999f, false, "ObjectiveExplosion")' in objective
+    assert 'const float blastRadius=60f;' in objective
+    assert 'const float blastDamage=400f;' in objective
+    assert 'infected.ApplyDamage(blastDamage,false,"ObjectiveExplosion")' in objective
 
 def test_map_specific_objective_pool_comes_from_recovered_catalog():
     game=read("src/Twr.Godot/Scripts/GameplayRoot.cs")

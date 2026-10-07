@@ -12,6 +12,7 @@ public partial class ObjectiveRuntime : Node3D
     public Action<string>? StatusChanged { get; set; }
 
     private readonly List<Node3D> _items = [];
+    private readonly RandomNumberGenerator _rng = new();
     private CharacterBody3D? _escort;
     private DamageObjectiveTarget? _damageTarget;
     private Node3D? _escortDestination;
@@ -22,6 +23,8 @@ public partial class ObjectiveRuntime : Node3D
     private bool _interactWasDown;
     private double _secureProgress;
     private float _escortStartDistance;
+    private float _escortSpeed;
+    private bool _escortInjured;
 
     // FITTED reconstruction from recovered objective directive: solo secure fill
     // uses 1/60 per second; the original retail source did not expose the fill rate.
@@ -29,11 +32,14 @@ public partial class ObjectiveRuntime : Node3D
     // RECOVERED objective reconstruction values.
     private const float SecureRadius = 14.0f;
     private const float SecureYBand = 8.0f;
-    // APPROXIMATED: retail escort speed is not recovered.
-    private const float EscortSpeed = 2.4f;
+    // RECOVERED reconstruction values from the objective directive.
+    private const float EscortSpeedHealthy = 10f;
+    private const float EscortSpeedInjured = 7f;
+    private const float EscortProximity = 45f;
 
     public override void _Ready()
     {
+        _rng.Randomize();
         BuildObjective();
         PublishStatus();
     }
@@ -73,10 +79,10 @@ public partial class ObjectiveRuntime : Node3D
             return;
         }
 
-        if (Player.GlobalPosition.DistanceTo(_escort.GlobalPosition) <= 8f)
+        if (Player.GlobalPosition.DistanceTo(_escort.GlobalPosition) <= EscortProximity)
         {
             var direction = remaining.Normalized();
-            _escort.Velocity = new Vector3(direction.X * EscortSpeed, _escort.Velocity.Y, direction.Z * EscortSpeed);
+            _escort.Velocity = new Vector3(direction.X * _escortSpeed, _escort.Velocity.Y, direction.Z * _escortSpeed);
             if (!_escort.IsOnFloor())
                 _escort.Velocity += Vector3.Down * 20f * (float)delta;
             _escort.MoveAndSlide();
@@ -108,11 +114,7 @@ public partial class ObjectiveRuntime : Node3D
                 ]);
                 break;
             case "Repair":
-                BuildFillItems([
-                    "Spark Plug A", "Spark Plug B", "Spark Plug C", "Spark Plug D",
-                    "Wheel A", "Wheel B",
-                    "Jerry Can A", "Jerry Can B", "Jerry Can C", "Jerry Can D"
-                ]);
+                BuildRepair();
                 break;
             case "Escort":
                 BuildEscort();
@@ -123,6 +125,22 @@ public partial class ObjectiveRuntime : Node3D
         }
     }
 
+    private void BuildRepair()
+    {
+        // RECOVERED reconstruction variants:
+        // Small Silverado = 4 plugs + 2 wheels + 4 cans (10 total).
+        // Large Tundra    = 4 plugs + 2 wheels + 6 cans (12 total).
+        var large=_rng.RandiRange(1,2)==2;
+        var items=new List<string>
+        {
+            "Spark Plug A","Spark Plug B","Spark Plug C","Spark Plug D",
+            "Wheel A","Wheel B",
+            "Jerry Can A","Jerry Can B","Jerry Can C","Jerry Can D"
+        };
+        if(large){items.Add("Jerry Can E");items.Add("Jerry Can F");}
+        SetMeta("RepairVariant",large ? "Large" : "Small");
+        BuildFillItems(items.ToArray());
+    }
     private void BuildDamageTarget()
     {
         _damageTarget = new DamageObjectiveTarget
@@ -133,14 +151,15 @@ public partial class ObjectiveRuntime : Node3D
         _damageTarget.ProgressChanged = _ => PublishStatus();
         _damageTarget.Destroyed = position =>
         {
-            // APPROXIMATED blast radius/damage: source states a large high-damage
-            // explosion but does not provide numeric values.
-            const float blastRadius = 18f;
-            foreach (var node in GetTree().GetNodesInGroup("infected"))
+            // DERIVED reconstruction constants from the objective directive;
+            // neither blast radius nor blast damage is documented retail data.
+            const float blastRadius=60f;
+            const float blastDamage=400f;
+            foreach(var node in GetTree().GetNodesInGroup("infected"))
             {
-                if (node is InfectedAgent infected && GodotObject.IsInstanceValid(infected) &&
-                    infected.GlobalPosition.DistanceTo(position) <= blastRadius)
-                    infected.ApplyDamage(9999f, false, "ObjectiveExplosion");
+                if(node is InfectedAgent infected && GodotObject.IsInstanceValid(infected) &&
+                   infected.GlobalPosition.DistanceTo(position)<=blastRadius)
+                    infected.ApplyDamage(blastDamage,false,"ObjectiveExplosion");
             }
             Complete();
         };
@@ -163,6 +182,10 @@ public partial class ObjectiveRuntime : Node3D
 
     private void BuildEscort()
     {
+        _escortInjured=_rng.RandiRange(1,2)==1;
+        _escortSpeed=_escortInjured ? EscortSpeedInjured : EscortSpeedHealthy;
+        SetMeta("EscortVariant",_escortInjured ? "Injured" : "Healthy");
+
         _escort = new CharacterBody3D
         {
             Name = "EscortSurvivor",
@@ -182,7 +205,12 @@ public partial class ObjectiveRuntime : Node3D
             {
                 Radius = 0.42f,
                 Height = 1.8f,
-                Material = new StandardMaterial3D { AlbedoColor = new Color(0.23f, 0.45f, 0.72f) }
+                Material = new StandardMaterial3D
+                {
+                    AlbedoColor = _escortInjured
+                        ? new Color(0.48f,0.24f,0.22f)
+                        : new Color(0.23f,0.45f,0.72f)
+                }
             }
         });
         AddChild(_escort);
@@ -270,7 +298,7 @@ public partial class ObjectiveRuntime : Node3D
             "Radio" or "Unpack" => $"{Family.ToUpperInvariant()}  STAY IN SECURE ZONE  {Math.Round(_secureProgress * 100):0}%",
             "Load" or "Repair" => $"{Family.ToUpperInvariant()}  {_deposited}/{_required} INSERTED" + (_carrying ? "  |  CARRYING ITEM" : ""),
             "Escort" when _escort is not null && _escortDestination is not null && _escortStartDistance > 0 =>
-                $"ESCORT  {Math.Clamp((1f - _escort.GlobalPosition.DistanceTo(_escortDestination.GlobalPosition) / _escortStartDistance) * 100f, 0f, 100f):0}%",
+                $"ESCORT {(_escortInjured ? "INJURED" : "HEALTHY")}  {Math.Clamp((1f - _escort.GlobalPosition.DistanceTo(_escortDestination.GlobalPosition) / _escortStartDistance) * 100f, 0f, 100f):0}%",
             "Damage" when _damageTarget is not null =>
                 $"DAMAGE TANKER  {Math.Ceiling((_damageTarget.Health / _damageTarget.MaxHealth) * 100f):0}%",
             _ => Family.ToUpperInvariant()

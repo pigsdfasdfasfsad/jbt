@@ -20,7 +20,9 @@ def test_radio_completion_defers_drop_when_wave_has_under_twenty_seconds():
     assert "_supplyQueuedForNextWave=true" in GAME
     assert "_queuedSupplySeconds=3.0" in GAME
 
-def test_unpack_spawns_exactly_eight_with_variant_marked_approximate():
-    assert "for (var i = 0; i < 8; i++)" in GAME
-    assert "both Unpack variants produce exactly eight pickups" in GAME
-    assert "APPROXIMATED: absent source for variant scheduling" in GAME
+def test_unpack_spawns_recovered_random_ammo_or_medical_variant():
+    assert "_rng.RandiRange(1,2)==1" in GAME
+    assert "_rng.RandiRange(0,8)" in GAME
+    assert "for(var i=0;i<8;i++)" in GAME
+    assert 'ammoVariant ? "Ammo" : (i<bandages ? "Bandages" : "Medkit")' in GAME
+    assert "uniform 0..8 split" in GAME

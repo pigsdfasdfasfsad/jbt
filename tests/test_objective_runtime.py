@@ -18,7 +18,9 @@ def test_secure_and_escort_mechanics_are_present():
     assert "SecureSeconds = 60.0" in s
     assert "FITTED reconstruction" in s
     assert "EscortSurvivor" in s
-    assert "APPROXIMATED: retail escort speed" in s
+    assert "EscortSpeedHealthy = 10f" in s
+    assert "EscortSpeedInjured = 7f" in s
+    assert "EscortProximity = 45f" in s
 
 def test_wave_objectives_feed_survival_bonus_count():
     s=read("src/Twr.Godot/Scripts/GameplayRoot.cs")
@@ -27,3 +29,10 @@ def test_wave_objectives_feed_survival_bonus_count():
     assert "AwardWaveSurvival(survivedWave, _completedObjectivesThisWave, 1)" in s
     assert "one or two objectives every wave" in s
     assert "_rng.RandiRange(1, 2)" in s
+
+def test_repair_has_recovered_small_and_large_part_quotas():
+    s=read("src/Twr.Godot/Scripts/ObjectiveRuntime.cs")
+    assert "Small Silverado = 4 plugs + 2 wheels + 4 cans" in s
+    assert "Large Tundra    = 4 plugs + 2 wheels + 6 cans" in s
+    assert '"Jerry Can E"' in s and '"Jerry Can F"' in s
+    assert 'SetMeta("RepairVariant",large ? "Large" : "Small")' in s

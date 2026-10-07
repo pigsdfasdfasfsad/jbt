@@ -480,13 +480,15 @@ public partial class GameplayRoot : Node3D
 
     private void SpawnUnpackContents(Vector3 center)
     {
-        // VERIFIED: both Unpack variants produce exactly eight pickups.
-        // APPROXIMATED: absent source for variant scheduling, alternate by wave.
-        var ammoVariant = (Runtime?.Match?.Wave ?? 1) % 2 == 1;
-        for (var i = 0; i < 8; i++)
+        // RECOVERED reconstruction contract: random Ammo or Medical variant,
+        // always exactly eight payload pickups. The Medical Bandage/Medkit ratio
+        // is explicitly undocumented; the directive uses a uniform 0..8 split.
+        var ammoVariant=_rng.RandiRange(1,2)==1;
+        var bandages=ammoVariant ? 0 : _rng.RandiRange(0,8);
+        for(var i=0;i<8;i++)
         {
-            var type = ammoVariant ? "Ammo" : (i % 2 == 0 ? "Bandages" : "Medkit");
-            SpawnPickup(type, RingPoint(center, i, 8, 2.5f));
+            var type=ammoVariant ? "Ammo" : (i<bandages ? "Bandages" : "Medkit");
+            SpawnPickup(type,RingPoint(center,i,8,2.5f));
         }
     }
 
