@@ -1,0 +1,1 @@
+using Godot; namespace Twr.Godot; public partial class SettingsController : Control { public void SetMasterVolume(float linear){AudioServer.SetBusVolumeDb(AudioServer.GetBusIndex("Master"),Mathf.LinearToDb(Mathf.Clamp(linear,0,1)));} }

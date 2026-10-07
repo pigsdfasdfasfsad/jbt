@@ -7,14 +7,24 @@
 **/bin/
 **/obj/
 
+# Python
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+
 # IDE
 .vscode/
 .idea/
 *.user
 *.suo
 
+# Tool bootstrap/cache
+.tools/
+
 # Builds / packages
 build/output/
+release/package/
 release/*.zip
 release/*.exe
 release/*.pck
@@ -24,7 +34,11 @@ private-evidence/
 raw-evidence/
 *.rbxlx
 *.rbxl
+*.zip
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Generated Godot runtime-content mirror
+src/Twr.Godot/Content/

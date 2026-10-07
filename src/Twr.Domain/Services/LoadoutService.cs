@@ -1,0 +1,1 @@
+using Twr.Domain.Model; namespace Twr.Domain.Services; public sealed class LoadoutService { public void Equip(Profile p,string slot,string item)=>p.Loadout[slot]=item; public string? Get(Profile p,string slot)=>p.Loadout.GetValueOrDefault(slot); }

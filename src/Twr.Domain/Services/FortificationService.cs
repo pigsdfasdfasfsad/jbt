@@ -1,0 +1,1 @@
+namespace Twr.Domain.Services; public sealed class FortificationService { private readonly Dictionary<string,int> _placed=new(); public int Count(string name)=>_placed.GetValueOrDefault(name); public void Place(string name)=>_placed[name]=Count(name)+1; }

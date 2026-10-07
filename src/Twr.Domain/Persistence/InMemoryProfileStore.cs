@@ -1,0 +1,1 @@
+using Twr.Domain.Model; namespace Twr.Domain.Persistence; public sealed class InMemoryProfileStore : IProfileStore { private Profile _p=new(); public Profile Load()=>_p; public void Save(Profile profile)=>_p=profile; }

@@ -1,0 +1,1 @@
+using Godot; namespace Twr.Godot; public partial class ResultsController : Control { [Export] public LocalSessionNode? Runtime {get;set;} public void ContinueToLobby()=>Runtime?.Session?.ReturnToLobby(DateTimeOffset.UtcNow); }
