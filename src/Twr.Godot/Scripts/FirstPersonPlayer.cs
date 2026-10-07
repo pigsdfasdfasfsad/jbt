@@ -155,7 +155,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var origin = _camera.GlobalPosition;
         var end = origin + (-_camera.GlobalTransform.Basis.Z * Range);
         var query = PhysicsRayQueryParameters3D.Create(origin, end);
-        query.Exclude = new Godot.Collections.Array<Rid> { GetRid() };
+        query.Exclude = new global::Godot.Collections.Array<Rid> { GetRid() };
         var hit = GetWorld3D().DirectSpaceState.IntersectRay(query);
 
         if (hit.Count > 0 && hit["collider"].AsGodotObject() is InfectedAgent infected)
