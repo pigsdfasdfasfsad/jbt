@@ -13,6 +13,8 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         ShowMenu();
+        if (OS.GetCmdlineUserArgs().Contains("--smoke-play", StringComparer.Ordinal))
+            StartGame("Manor");
         GD.Print("TWR Offline: playable Regular-mode reconstruction runtime initialized.");
     }
 

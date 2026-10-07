@@ -73,6 +73,14 @@ try {
   $exportOutput | ForEach-Object { Write-Host $_ }
   if ($exportCode -ne 0) { throw "Godot Windows export failed with exit code $exportCode" }
   if ($exportOutput | Where-Object { "$_" -match '(^|\\s)ERROR:' }) { throw 'Godot Windows export reported ERROR output.' }
+
+  # Launch the actual main scene and enter the playable Manor slice. This catches
+  # startup/_Ready/runtime faults that import and export alone cannot detect.
+  $smokeOutput = & $godot --headless --verbose --path $Project --quit-after 120 -- --smoke-play 2>&1
+  $smokeCode = $LASTEXITCODE
+  $smokeOutput | ForEach-Object { Write-Host $_ }
+  if ($smokeCode -ne 0) { throw "Godot playable smoke pass failed with exit code $smokeCode" }
+  if ($smokeOutput | Where-Object { "$_" -match '(^|\\s)ERROR:' }) { throw 'Godot playable smoke pass reported ERROR output.' }
 } finally { Pop-Location }
 if (!(Test-Path (Join-Path $Output 'ThoseWhoRemainOffline.exe'))) { throw 'Godot export did not produce ThoseWhoRemainOffline.exe' }
 Write-Host 'Windows export completed.'
