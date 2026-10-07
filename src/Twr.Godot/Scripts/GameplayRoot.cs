@@ -101,7 +101,7 @@ public partial class GameplayRoot : Node3D
         _stage = Stage.Wave;
         _stageTime = RegularWaveRules.WaveDurationSeconds;
         _spawnTimer = 0;
-        _hud.SetBanner(Runtime.Match.Wave == ReleaseRules.MaxWaves ? "FINAL WAVE" : $"WAVE {Runtime.Match.Wave}");
+        var currentWave = Runtime.Match.Wave;\n        _hud.SetBanner(currentWave == ReleaseRules.MaxWaves ? "FINAL WAVE" : $"WAVE {currentWave}");
     }
 
     private void EndWave()
