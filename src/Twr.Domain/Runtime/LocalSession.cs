@@ -24,6 +24,7 @@ public sealed class LocalSession
     private readonly StarterLoadoutService _starterLoadout = new();
     private readonly KillRewardService _killRewards;
     private readonly WaveRewardService _waveRewards;
+    private readonly ProgressionService _progression;
 
     public GameState State { get; } = new();
     public Profile Profile { get; private set; }
@@ -50,6 +51,7 @@ public sealed class LocalSession
         _save = new(profiles, _events);
         _killRewards = new(_events);
         _waveRewards = new(new ReceiptLedger(), _events);
+        _progression = new(_events);
     }
 
     public void Enqueue(IGameCommand command) => _commands.Enqueue(command);
@@ -139,6 +141,9 @@ public sealed class LocalSession
             default:
                 throw new NotSupportedException(command.GetType().Name);
         }
+
+        if (_progression.Apply(State.Player,now)>0)
+            PersistProfile("LevelUp",now);
 
         if (_match.IsMapComplete(State.Match) && !State.Match.CompletionAwarded)
         {

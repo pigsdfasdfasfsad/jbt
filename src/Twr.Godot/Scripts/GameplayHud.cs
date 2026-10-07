@@ -63,7 +63,7 @@ public partial class GameplayHud : CanvasLayer
             _ammo.Text = $"{weaponName.ToUpperInvariant()}   {loaded} / {reserve}";
         }
 
-        _credits.Text = $"CREDITS ${player.Credits:N0}    XP {player.Xp:N0}    [1] PRIMARY  [2] SECONDARY  [3] MELEE  [F] HAMMER";
+        _credits.Text = $"LEVEL {player.Level}  XP {player.Xp:N0}/{ProgressionRules.RequiredForNextLevel(player.Level):N0}  CREDITS ${player.Credits:N0}    [1] PRIMARY  [2] SECONDARY  [3] MELEE  [F] HAMMER";
     }
 
     public void SetBanner(string text) => _banner.Text = text;
