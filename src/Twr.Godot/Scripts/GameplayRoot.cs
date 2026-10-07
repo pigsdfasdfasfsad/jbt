@@ -101,7 +101,8 @@ public partial class GameplayRoot : Node3D
         _stage = Stage.Wave;
         _stageTime = RegularWaveRules.WaveDurationSeconds;
         _spawnTimer = 0;
-        var currentWave = Runtime.Match.Wave;\n        _hud.SetBanner(currentWave == ReleaseRules.MaxWaves ? "FINAL WAVE" : $"WAVE {currentWave}");
+        var currentWave = Runtime.Match.Wave;
+        _hud.SetBanner(currentWave == ReleaseRules.MaxWaves ? "FINAL WAVE" : $"WAVE {currentWave}");
     }
 
     private void EndWave()
@@ -109,7 +110,9 @@ public partial class GameplayRoot : Node3D
         if (Runtime?.Match is null) return;
         _stage = Stage.WaveEnd;
         _stageTime = RegularWaveRules.WaveEndSeconds;
-        _hud.SetBanner($"WAVE {Runtime.Match.Wave} SURVIVED");
+        var survivedWave = Runtime.Match.Wave;
+        Runtime.AwardWaveSurvival(survivedWave, 0, 1);
+        _hud.SetBanner($"WAVE {survivedWave} SURVIVED");
 
         // APPROXIMATED boundary behavior: surviving infected are cleared for
         // intermission until exact retail teardown behavior is recovered.

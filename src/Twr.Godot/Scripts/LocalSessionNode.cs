@@ -36,6 +36,8 @@ public partial class LocalSessionNode : Node
     public void AdvanceWave() => Submit(new AdvanceWaveCommand());
     public void DamagePlayer(float amount, string source) => Submit(new DamagePlayerCommand(amount, source));
     public void AwardKill(string infectedType, int credits, int xp) => Submit(new AwardKillCommand(infectedType, credits, xp));
+    public void AwardWaveSurvival(int wave, int completedObjectives, int playerCount) =>
+        Submit(new AwardWaveSurvivalCommand(wave, completedObjectives, playerCount));
     public void FailMatch(string reason) => Submit(new FailMatchCommand(reason));
 
     public bool SpendAmmo(string weapon, int amount)
