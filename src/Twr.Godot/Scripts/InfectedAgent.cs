@@ -13,9 +13,12 @@ public partial class InfectedAgent : CharacterBody3D
     public Action<InfectedAgent>? Died { get; set; }
 
     private double _attackCooldown;
+    private float _slowFactor = 1f;
+    private double _slowTime;
 
     public override void _Ready()
     {
+        AddToGroup("infected");
         CollisionLayer = 2;
         CollisionMask = 1;
 
@@ -42,6 +45,8 @@ public partial class InfectedAgent : CharacterBody3D
     public override void _PhysicsProcess(double delta)
     {
         _attackCooldown = Math.Max(0, _attackCooldown - delta);
+        _slowTime = Math.Max(0, _slowTime - delta);
+        if (_slowTime <= 0) _slowFactor = 1f;
 
         if (Target is null || Runtime?.Player is null || !Runtime.Player.IsAlive)
         {
@@ -60,8 +65,8 @@ public partial class InfectedAgent : CharacterBody3D
         if (distance > 1.55f)
         {
             var direction = flat.LengthSquared() > 0.001f ? flat.Normalized() : Vector3.Zero;
-            velocity.X = direction.X * MoveSpeed;
-            velocity.Z = direction.Z * MoveSpeed;
+            velocity.X = direction.X * MoveSpeed * _slowFactor;
+            velocity.Z = direction.Z * MoveSpeed * _slowFactor;
             if (direction.LengthSquared() > 0.001f) LookAt(GlobalPosition + direction, Vector3.Up);
         }
         else
@@ -78,6 +83,13 @@ public partial class InfectedAgent : CharacterBody3D
 
         Velocity = velocity;
         MoveAndSlide();
+    }
+
+    public void ApplySlow(float factor, double seconds)
+    {
+        if (factor <= 0 || factor >= 1 || seconds <= 0) return;
+        _slowFactor = Math.Min(_slowFactor, factor);
+        _slowTime = Math.Max(_slowTime, seconds);
     }
 
     public void ApplyDamage(float amount)

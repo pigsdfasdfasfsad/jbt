@@ -12,6 +12,7 @@ public partial class GameplayHud : CanvasLayer
     private Label _credits = null!;
     private Label _banner = null!;
     private Label _objective = null!;
+    private Label _utility = null!;
 
     public override void _Ready()
     {
@@ -23,6 +24,8 @@ public partial class GameplayHud : CanvasLayer
         _banner.HorizontalAlignment = HorizontalAlignment.Center;
         _objective = MakeLabel(250, 150, 780, 42, 20);
         _objective.HorizontalAlignment = HorizontalAlignment.Center;
+        _utility = MakeLabel(250, 195, 780, 36, 17);
+        _utility.HorizontalAlignment = HorizontalAlignment.Center;
 
         var crosshair = MakeLabel(620, 342, 40, 40, 26);
         crosshair.Text = "+";
@@ -64,6 +67,7 @@ public partial class GameplayHud : CanvasLayer
 
     public void SetBanner(string text) => _banner.Text = text;
     public void SetObjective(string text) => _objective.Text = text;
+    public void SetUtility(string text) => _utility.Text = text;
 
     private static string FormatTime(double seconds)
     {

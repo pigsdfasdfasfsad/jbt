@@ -12,6 +12,7 @@ public partial class GameplayRoot : Node3D
 
     private GameplayHud _hud = null!;
     private FirstPersonPlayer _player = null!;
+    private FortificationController _fortifications = null!;
     private readonly List<InfectedAgent> _infected = [];
     private readonly List<ObjectiveRuntime> _objectives = [];
     private readonly List<PickupActor> _pickups = [];
@@ -44,6 +45,16 @@ public partial class GameplayRoot : Node3D
         _hud = new GameplayHud { Name = "HUD" };
         AddChild(_hud);
         _hud.SetBanner($"WAVE {Runtime.Match?.Wave ?? 1} BEGINS IN");
+
+        _fortifications = new FortificationController
+        {
+            Name = "Fortifications",
+            Player = _player,
+            Runtime = Runtime
+        };
+        _fortifications.StatusChanged = status => _hud.SetUtility(status);
+        AddChild(_fortifications);
+
         SpawnNaturalPickups();
     }
 
@@ -127,6 +138,7 @@ public partial class GameplayRoot : Node3D
         // intermission until exact retail teardown behavior is recovered.
         ClearInfected();
         ClearObjectives();
+        _fortifications.ClearDeployed();
     }
 
     private void AdvanceAfterWave()
@@ -391,6 +403,7 @@ public partial class GameplayRoot : Node3D
         _finished = true;
         _stage = Stage.Results;
         ClearInfected();
+        _fortifications.ClearDeployed();
         Input.MouseMode = Input.MouseModeEnum.Visible;
         _hud.SetBanner($"{title}  -  PRESS ENTER TO RETURN");
     }

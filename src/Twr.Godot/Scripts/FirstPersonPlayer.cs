@@ -7,6 +7,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
 {
     public LocalSessionNode? Runtime { get; set; }
     public string EquippedWeaponName => _equippedWeapon;
+    public bool HammerMode { get; private set; }
+    public Vector3 AimOrigin => _camera.GlobalPosition;
+    public Vector3 AimDirection => -_camera.GlobalTransform.Basis.Z;
 
     private Camera3D _camera = null!;
     private MeshInstance3D _viewModel = null!;
@@ -131,9 +134,19 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         if (@event is InputEventMouseButton mouse && mouse.Pressed && mouse.ButtonIndex == MouseButton.Left)
         {
-            if (Input.MouseMode != Input.MouseModeEnum.Captured) Input.MouseMode = Input.MouseModeEnum.Captured;
-            else TryUseWeapon();
+            if (Input.MouseMode != Input.MouseModeEnum.Captured)
+                Input.MouseMode = Input.MouseModeEnum.Captured;
+            else if (!HammerMode)
+                TryUseWeapon();
         }
+    }
+
+    public void SetHammerMode(bool enabled)
+    {
+        HammerMode = enabled;
+        _viewModel.Visible = !enabled;
+        _reloadTimer = 0;
+        _reloadWeapon = null;
     }
 
     private void Equip(string weapon)
