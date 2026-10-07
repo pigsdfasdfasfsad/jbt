@@ -160,7 +160,7 @@ public partial class InfectedAgent : CharacterBody3D
     public void ApplyDamage(float amount, bool headshot = false, string damageKind = "Generic")
     {
         if (amount <= 0 || Health <= 0) return;
-        var applied = headshot ? amount * 2.5f : amount;
+        var applied = headshot ? amount * 2.5f : amount; // VERIFIED head multiplier.
         Health = Math.Max(0, Health - applied);
         if (Health > 0) return;
         Died?.Invoke(this, new InfectedDeathContext(headshot, damageKind));
