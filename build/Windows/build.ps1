@@ -10,6 +10,7 @@ $DotnetVersion = '8.0.425'
 $Tools = Join-Path $Repo '.tools\godot'
 $Output = Join-Path $Repo 'build\output'
 $Project = Join-Path $Repo 'src\Twr.Godot'
+$Solution = Join-Path $Project 'Those Who Remain Offline.sln'
 
 function Find-Godot {
   $candidates = @(
@@ -53,16 +54,25 @@ if ($BootstrapToolchain) {
 
 $godot = Find-Godot
 if (-not $godot) { throw 'Pinned Godot 4.7.2 .NET executable not found. Use -BootstrapToolchain.' }
+if (!(Test-Path $Solution)) { throw "Godot C# solution missing: $Solution" }
 if ((dotnet --version) -ne $DotnetVersion) { Write-Warning "Expected .NET $DotnetVersion; found $(dotnet --version). CI pins the expected SDK." }
 if (-not $SkipTests) { python (Join-Path $Repo 'tools\validation\run_all.py') }
 New-Item -ItemType Directory -Force -Path $Output | Out-Null
 Push-Location $Project
 try {
-  dotnet build -c Release
-  & $godot --headless --verbose --path $Project --editor --quit
-  if ($LASTEXITCODE -ne 0) { throw "Godot import/editor pass failed with exit code $LASTEXITCODE" }
-  & $godot --headless --verbose --path $Project --export-release 'Windows Desktop' (Join-Path $Output 'ThoseWhoRemainOffline.exe')
-  if ($LASTEXITCODE -ne 0) { throw "Godot Windows export failed with exit code $LASTEXITCODE" }
+  dotnet build $Solution -c Release
+
+  $importOutput = & $godot --headless --verbose --path $Project --editor --quit 2>&1
+  $importCode = $LASTEXITCODE
+  $importOutput | ForEach-Object { Write-Host $_ }
+  if ($importCode -ne 0) { throw "Godot import/editor pass failed with exit code $importCode" }
+  if ($importOutput | Where-Object { "$_" -match '(^|\\s)ERROR:' }) { throw 'Godot import/editor pass reported ERROR output.' }
+
+  $exportOutput = & $godot --headless --verbose --path $Project --export-release 'Windows Desktop' (Join-Path $Output 'ThoseWhoRemainOffline.exe') 2>&1
+  $exportCode = $LASTEXITCODE
+  $exportOutput | ForEach-Object { Write-Host $_ }
+  if ($exportCode -ne 0) { throw "Godot Windows export failed with exit code $exportCode" }
+  if ($exportOutput | Where-Object { "$_" -match '(^|\\s)ERROR:' }) { throw 'Godot Windows export reported ERROR output.' }
 } finally { Pop-Location }
 if (!(Test-Path (Join-Path $Output 'ThoseWhoRemainOffline.exe'))) { throw 'Godot export did not produce ThoseWhoRemainOffline.exe' }
 Write-Host 'Windows export completed.'

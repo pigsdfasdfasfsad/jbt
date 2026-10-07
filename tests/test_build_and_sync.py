@@ -11,7 +11,13 @@ def test_build_script_pins_godot():
  assert '4.7.2' in script
  assert '_mono_win64_console.exe' in script
  assert 'Godot Windows export failed with exit code' in script
+ assert 'Godot Windows export reported ERROR output.' in script
  assert '<ImplicitUsings>enable</ImplicitUsings>' in (ROOT/'src/Twr.Godot/Twr.Godot.csproj').read_text()
+
+def test_godot_solution_is_tracked_and_references_runtime_projects():
+ solution=(ROOT/'src/Twr.Godot/Those Who Remain Offline.sln').read_text()
+ assert 'Twr.Godot.csproj' in solution
+ assert '..\\Twr.Domain\\Twr.Domain.csproj' in solution
 def test_expected_executable_path(): assert 'ThoseWhoRemainOffline.exe' in (ROOT/'src/Twr.Godot/export_presets.cfg').read_text()
 def test_project_has_no_network_runtime_api():
  text='\n'.join(p.read_text(errors='replace').lower() for p in (ROOT/'src').rglob('*') if p.is_file() and p.suffix in {'.cs','.godot','.tscn','.cfg','.csproj'})
