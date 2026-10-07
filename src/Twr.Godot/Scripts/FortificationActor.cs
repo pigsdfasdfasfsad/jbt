@@ -6,6 +6,7 @@ public partial class FortificationActor : Node3D
 {
     public RuntimeFortificationDefinition Definition { get; set; } =
         new("Unknown", 1, 1, null, null, null);
+    public float DamageMultiplier { get; set; } = 1f;
 
     private double _timer;
     private int _remainingShots = 21;
@@ -65,12 +66,12 @@ public partial class FortificationActor : Node3D
         var radius = Definition.Radius!.Value;
         foreach (var infected in EnumerateInfected())
             if (GlobalPosition.DistanceTo(infected.GlobalPosition) <= radius)
-                infected.ApplyDamage(Definition.Damage!.Value, false, "Explosive");
+                infected.ApplyDamage(Definition.Damage!.Value * DamageMultiplier, false, "Explosion");
 
         foreach (var node in GetTree().GetNodesInGroup("damage_objective"))
             if (node is DamageObjectiveTarget tanker &&
                 GlobalPosition.DistanceTo(tanker.GlobalPosition) <= radius)
-                tanker.ApplyDamage(Definition.Damage!.Value, "Explosive");
+                tanker.ApplyDamage(Definition.Damage!.Value * DamageMultiplier, "Explosive");
 
         QueueFree();
     }
@@ -81,7 +82,7 @@ public partial class FortificationActor : Node3D
         var target = FindNearest(55f);
         if (target is null) return;
 
-        target.ApplyDamage(Definition.Damage!.Value);
+        target.ApplyDamage(Definition.Damage!.Value * DamageMultiplier);
         _remainingShots--;
 
         // Source animation timeline totals 0.225s; whether retail fire cadence

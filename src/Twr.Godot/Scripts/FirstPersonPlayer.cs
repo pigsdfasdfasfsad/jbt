@@ -388,10 +388,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
             if (collider is not InfectedAgent infected)
                 return;
 
+            var localHit = infected.ToLocal(hitPosition);
             var headshot = false;
             if (allowHeadshot)
             {
-                var localHit = infected.ToLocal(hitPosition);
                 // APPROXIMATED geometric boundary; the x2.5 multiplier itself is VERIFIED.
                 headshot = localHit.Y >= 0.45f;
             }
