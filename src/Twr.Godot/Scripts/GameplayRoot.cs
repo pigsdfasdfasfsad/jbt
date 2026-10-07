@@ -12,6 +12,8 @@ public partial class GameplayRoot : Node3D
     private GameplayHud _hud = null!;
     private FirstPersonPlayer _player = null!;
     private readonly List<InfectedAgent> _infected = [];
+    private readonly List<ObjectiveRuntime> _objectives = [];
+    private int _completedObjectivesThisWave;
     private readonly RandomNumberGenerator _rng = new();
     private Stage _stage = Stage.Countdown;
     private double _stageTime = RegularWaveRules.CountdownSeconds;
@@ -101,6 +103,8 @@ public partial class GameplayRoot : Node3D
         _stage = Stage.Wave;
         _stageTime = RegularWaveRules.WaveDurationSeconds;
         _spawnTimer = 0;
+        _completedObjectivesThisWave = 0;
+        SpawnWaveObjectives();
         var currentWave = Runtime.Match.Wave;
         _hud.SetBanner(currentWave == ReleaseRules.MaxWaves ? "FINAL WAVE" : $"WAVE {currentWave}");
     }
@@ -111,12 +115,13 @@ public partial class GameplayRoot : Node3D
         _stage = Stage.WaveEnd;
         _stageTime = RegularWaveRules.WaveEndSeconds;
         var survivedWave = Runtime.Match.Wave;
-        Runtime.AwardWaveSurvival(survivedWave, 0, 1);
+        Runtime.AwardWaveSurvival(survivedWave, _completedObjectivesThisWave, 1);
         _hud.SetBanner($"WAVE {survivedWave} SURVIVED");
 
         // APPROXIMATED boundary behavior: surviving infected are cleared for
         // intermission until exact retail teardown behavior is recovered.
         ClearInfected();
+        ClearObjectives();
     }
 
     private void AdvanceAfterWave()
@@ -141,6 +146,65 @@ public partial class GameplayRoot : Node3D
         _stage = Stage.Countdown;
         _stageTime = RegularWaveRules.CountdownSeconds;
         _hud.SetBanner($"WAVE {Runtime.Match.Wave} BEGINS IN");
+    }
+
+
+    private void SpawnWaveObjectives()
+    {
+        if (Runtime?.Match is null) return;
+
+        ClearObjectives();
+        var families = new[] { "Radio", "Load", "Unpack", "Repair", "Escort" };
+        var wave = Runtime.Match.Wave;
+
+        // VERIFIED: Regular allows a maximum of one or two objectives per wave.
+        // APPROXIMATED scheduling: one objective normally, two every third wave.
+        var count = wave % 3 == 0 ? 2 : 1;
+        for (var i = 0; i < count; i++)
+        {
+            var family = families[(wave - 1 + i * 2) % families.Length];
+            var objective = new ObjectiveRuntime
+            {
+                Name = $"Objective_{wave}_{family}_{i}",
+                ObjectiveId = $"{MapName}:Wave{wave}:{family}:{i}",
+                Family = family,
+                Player = _player,
+                Runtime = Runtime,
+                Position = ObjectivePosition(i)
+            };
+            objective.StatusChanged = status => _hud.SetObjective(status);
+            objective.Completed = OnObjectiveCompleted;
+            _objectives.Add(objective);
+            AddChild(objective);
+        }
+    }
+
+    private Vector3 ObjectivePosition(int index) => index == 0
+        ? new Vector3(0, 0, -8)
+        : new Vector3(10, 0, 12);
+
+    private void OnObjectiveCompleted(ObjectiveRuntime objective)
+    {
+        _completedObjectivesThisWave++;
+        _objectives.Remove(objective);
+
+        if (objective.Family == "Radio")
+            _hud.SetBanner("SUPPLY HELICOPTER EN ROUTE");
+        else if (objective.Family == "Unpack")
+            _hud.SetBanner("SUPPLY CRATE UNPACKED");
+
+        objective.QueueFree();
+        if (_objectives.Count == 0)
+            _hud.SetObjective("ALL WAVE OBJECTIVES COMPLETE");
+    }
+
+    private void ClearObjectives()
+    {
+        foreach (var objective in _objectives.ToArray())
+            if (GodotObject.IsInstanceValid(objective)) objective.QueueFree();
+        _objectives.Clear();
+        if (GodotObject.IsInstanceValid(_hud))
+            _hud.SetObjective("");
     }
 
     private void SpawnInfected(int wave)
