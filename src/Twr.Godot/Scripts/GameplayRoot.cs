@@ -371,6 +371,7 @@ public partial class GameplayRoot : Node3D
             Position = RandomSpawnPoint()
         };
         infected.Died = OnInfectedDied;
+        infected.SpecialAttackRequested = OnInfectedSpecialAttack;
         _infected.Add(infected);
         AddChild(infected);
     }
@@ -399,6 +400,45 @@ public partial class GameplayRoot : Node3D
             var bonus = InfectedCatalog.BonusReward(infected.InfectedType);
             Runtime?.AwardKill(infected.InfectedType + ":Headshot", bonus.Credits, bonus.Xp);
         }
+
+        if (infected.InfectedType == "Burster" &&
+            !context.Headshot && context.DamageKind != "SlowTrap" &&
+            context.DamageKind != "Fire" && context.DamageKind != "Decapitation")
+        {
+            SpawnBursterHazard(infected.GlobalPosition);
+        }
+    }
+
+    private void OnInfectedSpecialAttack(InfectedAgent infected)
+    {
+        if (infected.InfectedType != "Bloater") return;
+        AddChild(new SporeProjectileRuntime
+        {
+            Name = "BloaterSpore",
+            Runtime = Runtime,
+            Target = _player,
+            Damage = 26.4f,
+            Radius = 15f,
+            GlobalPosition = infected.GlobalPosition + Vector3.Up * 1.2f
+        });
+    }
+
+    private void SpawnBursterHazard(Vector3 position)
+    {
+        const float blastRadius = 20f;
+        if (Runtime?.Player?.IsAlive == true && _player.GlobalPosition.DistanceTo(position) <= blastRadius)
+            Runtime.DamagePlayer(27.5f, "Burster detonation");
+
+        AddChild(new SporeCloudRuntime
+        {
+            Name = "BursterSporeCloud",
+            Runtime = Runtime,
+            Target = _player,
+            Radius = blastRadius,
+            TickDamage = 5f,
+            DurationSeconds = 4.0,
+            GlobalPosition = position
+        });
     }
 
     private void Finish(bool won, string title)
