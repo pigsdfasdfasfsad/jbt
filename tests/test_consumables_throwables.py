@@ -9,7 +9,7 @@ def test_energy_drink_and_gas_mask_match_source_durations_and_wave_rules():
     assert "State.Player.GasMaskActive=false" in session
     assert "State.Player.EnergyDrinkSeconds=0" in session
     player=read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
-    assert "APPROXIMATED magnitude" in player
+    assert "FITTED TestPlace reconstruction" in player\n    assert "1.25f" in player
 
 def test_gas_mask_blocks_spore_gas_but_not_cluster_splash():
     cloud=read("src/Twr.Godot/Scripts/SporeCloudRuntime.cs")
@@ -31,8 +31,12 @@ def test_molotov_and_nerve_gas_lingering_rules_are_distinct():
     assert 'ThrowableType=="Molotov" ? 32.0 : 34.0' in p
     assert 'if(infected.InfectedType=="Hazmat")continue;' in h
     assert 'infected.ApplyDamage(MolotovTickDamage,false,"Fire")' in h
-    assert "infected.ApplySlow(NerveGasSlowFactor,0.7)" in h
-    assert "FITTED reconstruction values" in h
+    assert "infected.ApplySlow(NerveGasSlowFactor,2.5)" in h
+    assert "MolotovTickDamage=18f" in h
+    assert "NerveGasSlowFactor=0.35f" in h
+    assert "EffectiveRadius => Radius*0.5f" in h
+    assert "_tick=1.0" in h
+    assert "RECOVERED from the TestPlace server reconstruction" in h
 
 def test_pc_grenade_controls_and_carry_caps_are_wired():
     player=read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")

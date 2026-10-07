@@ -19,7 +19,8 @@ public sealed class HealingService(EventStream events)
 
     public bool EquipBodyArmor(PlayerState player,DateTimeOffset now)
     {
-        if(player.ArmorDurability>0)return false;
+        if(player.ArmorKind=="Juggernaut" && player.ArmorDurability>0)return false;
+        if(player.ArmorDurability>15)return false; // VERIFIED Interact.CheckCanPick gate.
         player.ArmorDurability=40;
         player.ArmorKind="Body";
         events.Publish(new ArmorChangedEvent(player.ArmorDurability,now));

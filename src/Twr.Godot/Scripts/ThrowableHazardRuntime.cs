@@ -10,10 +10,10 @@ public partial class ThrowableHazardRuntime : Node3D
 
     private double _tick;
 
-    // FITTED reconstruction values. Source proves the effects/durations but
-    // does not give Molotov tick damage or Nerve Gas slow magnitude.
-    private const float MolotovTickDamage=12f;
-    private const float NerveGasSlowFactor=0.55f;
+    // RECOVERED from the TestPlace server reconstruction shared hazard loop.
+    private const float MolotovTickDamage=18f;
+    private const float NerveGasSlowFactor=0.35f;
+    private float EffectiveRadius => Radius*0.5f;
 
     public override void _Ready()
     {
@@ -22,8 +22,8 @@ public partial class ThrowableHazardRuntime : Node3D
             Position=new Vector3(0,0.06f,0),
             Mesh=new CylinderMesh
             {
-                TopRadius=Radius,
-                BottomRadius=Radius,
+                TopRadius=EffectiveRadius,
+                BottomRadius=EffectiveRadius,
                 Height=0.12f,
                 Material=new StandardMaterial3D
                 {
@@ -46,17 +46,17 @@ public partial class ThrowableHazardRuntime : Node3D
         _tick-=delta;
         if(_tick<=0)
         {
-            _tick=0.5; // FITTED cadence; source does not quantify lingering tick rate.
+            _tick=1.0; // RECOVERED TestPlace hazard cadence.
             foreach(var node in GetTree().GetNodesInGroup("infected"))
             {
                 if(node is not InfectedAgent infected || !GodotObject.IsInstanceValid(infected))continue;
-                if(infected.GlobalPosition.DistanceTo(GlobalPosition)>Radius)continue;
+                if(infected.GlobalPosition.DistanceTo(GlobalPosition)>EffectiveRadius)continue;
                 if(infected.InfectedType=="Hazmat")continue;
 
                 if(HazardType=="Molotov")
                     infected.ApplyDamage(MolotovTickDamage,false,"Fire");
                 else
-                    infected.ApplySlow(NerveGasSlowFactor,0.7);
+                    infected.ApplySlow(NerveGasSlowFactor,2.5);
             }
         }
 

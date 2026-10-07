@@ -124,8 +124,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
         if (world.LengthSquared() > 0.001f) world = world.Normalized();
 
         var sprintMultiplier = Runtime.HasPerk("Speed Demon") ? 1.12f : 1f;
-        // APPROXIMATED magnitude: duration is source-backed; speed percentage is not.
-        var drinkMultiplier = Runtime.Player.EnergyDrinkSeconds>0 ? 1.15f : 1f;
+        // FITTED TestPlace reconstruction: shared speed authority uses 1.25x
+        // while the 30s/40s duration is source-backed by item/perk evidence.
+        var drinkMultiplier = Runtime.Player.EnergyDrinkSeconds>0 ? 1.25f : 1f;
         var speed = (Input.IsKeyPressed(Key.Shift) ? SprintSpeed * sprintMultiplier : WalkSpeed) * drinkMultiplier;
         var velocity = Velocity;
         velocity.X = world.X * speed;

@@ -5,6 +5,8 @@ def read(path): return (ROOT/path).read_text()
 def test_documented_healing_and_armor_values_are_authoritative():
     h=read("src/Twr.Domain/Services/HealingService.cs")
     assert "player.ArmorDurability=40" in h
+    assert "player.ArmorDurability>15" in h
+    assert 'player.ArmorKind=="Juggernaut"' in h
     d=read("src/Twr.Domain/Services/DamageService.cs")
     assert "healthDamage=raw*0.5f" in d
     assert "APPROXIMATED" in d
