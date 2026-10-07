@@ -15,7 +15,7 @@ def test_wave_reward_is_idempotent_per_map_and_wave():
     assert "receipts.TryIssue" in SERVICE
 
 def test_playable_loop_awards_survival_before_advancing():
-    assert "Runtime.AwardWaveSurvival(survivedWave, 0, 1)" in GAME
+    assert "Runtime.AwardWaveSurvival(survivedWave, _completedObjectivesThisWave, 1)" in GAME
     assert GAME.index("AwardWaveSurvival") < GAME.index("Runtime?.AdvanceWave()")
 
 def test_proposed_completion_xp_is_not_applied_by_runtime():
