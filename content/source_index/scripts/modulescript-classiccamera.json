@@ -1,0 +1,37 @@
+{
+  "bytes": 3459,
+  "errors": 7,
+  "file": "ModuleScript.ClassicCamera.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "setmetatable_result1_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.GetCameraToggleOffset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.SetCameraMovementMode",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.Update",
+      "",
+      ""
+    ]
+  ],
+  "lines": 78,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\"))",
+    "script.Parent:WaitForChild(\"CameraInput\"))",
+    "script.Parent:WaitForChild(\"CameraUtils\"))",
+    "script.Parent:WaitForChild(\"BaseCamera\"))"
+  ],
+  "warnings": 0
+}

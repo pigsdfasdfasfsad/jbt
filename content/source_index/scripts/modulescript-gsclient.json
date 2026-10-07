@@ -1,0 +1,42 @@
+{
+  "bytes": 1068,
+  "errors": 0,
+  "file": "ModuleScript.GSClient.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr_2.SpawnGS",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.DespawnGS",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.GetGS",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ]
+  ],
+  "lines": 38,
+  "remotes": [
+    "OnClientEvent",
+    "OnClientEvent"
+  ],
+  "requires": [
+    "script.Parent.Parent.Modules.GermanShepard)"
+  ],
+  "warnings": 0
+}

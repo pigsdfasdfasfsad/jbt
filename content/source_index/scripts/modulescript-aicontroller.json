@@ -1,0 +1,224 @@
+{
+  "bytes": 33652,
+  "errors": 35,
+  "file": "ModuleScript.AIController.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "RigSetup_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "RigSetup",
+      ""
+    ],
+    [
+      "module_upvr.RigBody",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Dress",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetKeyToBody",
+      "",
+      ""
+    ],
+    [
+      "HandleDeath_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "HandleDeath",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "CreatePathVisuals_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "CreatePathVisuals",
+      ""
+    ],
+    [
+      "module_upvr.PlayAnimation",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2, arg3"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "",
+      "",
+      "arg1_5, arg2, arg3"
+    ],
+    [
+      "CreateBody_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "CreateBody",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_7, arg2, arg3, arg4, arg5, arg6"
+    ],
+    [
+      "",
+      "",
+      "arg1_8"
+    ],
+    [
+      "",
+      "",
+      "arg1_9, arg2, arg3, arg4, arg5"
+    ],
+    [
+      "",
+      "",
+      "arg1_10"
+    ],
+    [
+      "PlayLocalEffectSound_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "PlayLocalEffectSound",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_12, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1_13, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1_14, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1_15"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_16, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1_17, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1_18, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1_19, arg2"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_20"
+    ],
+    [
+      "INLINED_3",
+      "",
+      ""
+    ]
+  ],
+  "lines": 932,
+  "remotes": [],
+  "requires": [
+    "game.ReplicatedStorage.SharedModules.AIAnimations)",
+    "script.Parent.Parent.Client.Sounds)",
+    "game.ReplicatedStorage.Modules[\"Hit Sounds\"])",
+    "script.Parent.Parent.Client.Effects)",
+    "ReplicatedStorage_upvr.Modules[\"AI Sounds\"])",
+    "game.ReplicatedStorage.Modules[\"AI Sounds\"])",
+    "game.ReplicatedStorage.Modules[\"Infected Info\"])",
+    "game.ReplicatedStorage.SharedModules.Utilities.Compress)",
+    "ReplicatedStorage_upvr.SharedModules.Utilities.Chunk)",
+    "arg1.SharedModules.Utilities.AI)",
+    "arg1.SharedModules.Utilities.Model)"
+  ],
+  "warnings": 11
+}

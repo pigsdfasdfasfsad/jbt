@@ -1,0 +1,89 @@
+{
+  "bytes": 7027,
+  "errors": 0,
+  "file": "ModuleScript.TransparencyController.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.HasToolAncestor",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.IsValidPartToModify",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.CachePartsRecursive",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.TeardownTransparency",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetupTransparency",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "",
+      "",
+      "arg1_5"
+    ],
+    [
+      "module_upvr.Enable",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetSubject",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ]
+  ],
+  "lines": 216,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"CameraUtils\"))"
+  ],
+  "warnings": 1
+}

@@ -1,0 +1,17 @@
+{
+  "bytes": 9671,
+  "errors": 14,
+  "file": "ModuleScript.Footsteps.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.Update",
+      "",
+      ""
+    ]
+  ],
+  "lines": 267,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

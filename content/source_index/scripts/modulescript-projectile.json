@@ -1,0 +1,45 @@
+{
+  "bytes": 3218,
+  "errors": 6,
+  "file": "ModuleScript.Projectile.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_2_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "module_2_upvr.End",
+      "",
+      ""
+    ],
+    [
+      "DestroyBonds",
+      "",
+      ""
+    ],
+    [
+      "Destroy_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "Destroy",
+      ""
+    ],
+    [
+      "module_2_upvr.new",
+      "",
+      ""
+    ]
+  ],
+  "lines": 105,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Parent.Parent.Client.Effects)",
+    "script.Parent.Parent.Parent.Client.Bullets)"
+  ],
+  "warnings": 0
+}

@@ -1,0 +1,52 @@
+{
+  "bytes": 1669,
+  "errors": 0,
+  "file": "ModuleScript.Compress.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "CompressAngle",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "DecompressAngle",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "CompressPos",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "DecompressPos",
+      ""
+    ]
+  ],
+  "lines": 37,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

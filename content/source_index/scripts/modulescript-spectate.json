@@ -1,0 +1,106 @@
+{
+  "bytes": 6322,
+  "errors": 17,
+  "file": "ModuleScript.Spectate.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.UpdateAngle",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.ChangeZoom",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetRightDown",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.RightDown",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.AddNum",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetSpectating",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetFreecam",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Spectating",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Freecam",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.ChangeFOV",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.ChangeSpeed",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.ChangeRotSpeed",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetFOV",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetSpeed",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetRotateSpeed",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetSpectatablePlayers",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.UpdateFreeCamOrbs",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetCamera",
+      "",
+      ""
+    ]
+  ],
+  "lines": 203,
+  "remotes": [
+    "FireServer"
+  ],
+  "requires": [
+    "script.Parent.Gui).UpdateSpectateInfo(arg1, var5_upvw)"
+  ],
+  "warnings": 2
+}

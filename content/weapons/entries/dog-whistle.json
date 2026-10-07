@@ -1,0 +1,266 @@
+{
+  "animation_durations": {
+    "Equip": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.4
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.4
+    },
+    "Sprint": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.4
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.4
+    },
+    "UnSprint": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.3
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.3
+    },
+    "UseUtility": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.1,
+        0.65,
+        0.25
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 1.0
+    }
+  },
+  "animations": {
+    "Equip": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "HeadTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            },
+            "LeftWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.LeftCF"
+              },
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Start": {
+                "expression": "CFrame.new(0, -2, 0) * module.Stats.GripCF"
+              },
+              "To": {
+                "expression": "module.Stats.GripCF"
+              }
+            },
+            "RightWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.RightCF"
+              },
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "TorsoTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1501815802"
+          },
+          "Time": 0.4
+        }
+      ]
+    },
+    "Sprint": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "Sprint": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "module.Stats.SprintCF"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1501816468"
+          },
+          "Time": 0.4
+        }
+      ]
+    },
+    "UnSprint": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "Sprint": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1501816722"
+          },
+          "Time": 0.3
+        }
+      ]
+    },
+    "UseUtility": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "LeftWeld": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "OffsetEnd": {
+                "expression": "CFrame.new(-1.45528412, -0.33631897, 0.00262212753, 0.449602365, -0.513835788, -0.730632782, -0.88400656, -0.138746828, -0.446406037, 0.128006041, 0.846592426, -0.51661557)"
+              },
+              "OffsetStart": {
+                "expression": "module.Stats.LeftCF"
+              },
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Start": {
+                "expression": "module.Stats.GripCF"
+              },
+              "To": {
+                "expression": "CFrame.new(0.0336837769, -0.293709755, -0.570532084, 0.800765276, -0.598645568, -0.0198087525, 0.595705628, 0.799412608, -0.0779114068, 0.0624755286, 0.0505889058, 0.996761143)"
+              }
+            },
+            "RightWeld": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "OffsetEnd": {
+                "expression": "CFrame.new(0.164169312, -0.944885254, -0.0489442348, 0.979610026, -0.00546385907, -0.200826868, -0.0668694749, -0.951497674, -0.300298154, -0.189446509, 0.307604402, -0.932462811)"
+              },
+              "OffsetStart": {
+                "expression": "module.Stats.RightCF"
+              },
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            }
+          },
+          "Sound": {
+            "Sound": "rbxassetid://9120675904",
+            "Volume": 0.5
+          },
+          "Time": 0.1
+        },
+        {
+          "Time": 0.65
+        },
+        {
+          "AV": {
+            "LeftWeld": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "OffsetEnd": {
+                "expression": "module.Stats.LeftCF"
+              },
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "module.Stats.GripCF"
+              }
+            },
+            "RightWeld": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "OffsetEnd": {
+                "expression": "module.Stats.RightCF"
+              },
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            }
+          },
+          "DoneFuncInfo": {
+            "called": false
+          },
+          "Time": 0.25
+        }
+      ]
+    }
+  },
+  "format": "twr-weapon-normalized-v1",
+  "kind": "equipment",
+  "name": "Dog Whistle",
+  "source_file": "extracted/04-scripts/scripts/ModuleScript.Dog Whistle.Source.txt",
+  "stats": {
+    "Dimensions": {
+      "expression": "Vector3.new(0.12399, 0.12399, 0.39836)"
+    },
+    "EventLocked": "Christmas",
+    "GripCF": {
+      "expression": "CFrame.new(0.459915161, -0.815514565, -1.43797541, 0.882416368, -0.366499603, -0.294987917, 0.392877191, 0.229106203, 0.89059341, -0.258819044, -0.901769102, 0.346156508)"
+    },
+    "Icon": "rbxassetid://78440036144127",
+    "LeftCF": {
+      "expression": "CFrame.new(-1.66537476, -0.318424225, 0.126939774, 0.577386856, -0.702615261, -0.415879071, -0.527866662, -0.709828734, 0.466368377, -0.622880936, -0.0497462451, -0.78073293)"
+    },
+    "LoadoutOffset": {
+      "expression": "CFrame.new(0, -0.0771484375, 0.000259399414, 0.0758809149, 0, 0.997116923, 0, -1, 0, 0.997116923, -0, -0.0758809149)"
+    },
+    "RightCF": {
+      "expression": "CFrame.new(0.164176941, -0.944896698, -0.0489521027, 0.979611039, -0.00546328723, -0.200827181, -0.0668696314, -0.951497912, -0.300299227, -0.18944633, 0.307605654, -0.932463408)"
+    },
+    "Slot": "Utility",
+    "SprintCF": {
+      "expression": "CFrame.new(0, -0.2, 0)"
+    },
+    "UseList": [
+      "FETCH AMMO",
+      "FETCH MEDICAL",
+      "FETCH ARMOR",
+      "FETCH GAS MASK",
+      "FETCH ENERGY DRINK"
+    ],
+    "UtilityImage": "rbxassetid://89596739047959",
+    "WeaponType": "Utility"
+  }
+}

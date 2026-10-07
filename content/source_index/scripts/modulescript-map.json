@@ -1,0 +1,69 @@
+{
+  "bytes": 4824,
+  "errors": 0,
+  "file": "ModuleScript.Map.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.UpdateClientMap",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateLighting",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateGlass",
+      "",
+      ""
+    ],
+    [
+      "TagIgnore",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateLOD",
+      "",
+      ""
+    ],
+    [
+      "Unmaterial_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "Unmaterial",
+      ""
+    ],
+    [
+      "module.RecordParts",
+      "",
+      ""
+    ],
+    [
+      "Record_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "Record",
+      ""
+    ],
+    [
+      "module.UpdateMaterials",
+      "",
+      ""
+    ]
+  ],
+  "lines": 153,
+  "remotes": [],
+  "requires": [
+    "game.ReplicatedStorage.Modules[\"Collision Group\"])"
+  ],
+  "warnings": 0
+}

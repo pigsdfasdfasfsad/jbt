@@ -1,0 +1,42 @@
+{
+  "bytes": 886,
+  "errors": 0,
+  "file": "ModuleScript.Table.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "GetRandom",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "QuickRemove",
+      ""
+    ],
+    [
+      "module_3_upvr.Copy",
+      "",
+      ""
+    ],
+    [
+      "module_3_upvr.Scramble",
+      "",
+      ""
+    ]
+  ],
+  "lines": 34,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

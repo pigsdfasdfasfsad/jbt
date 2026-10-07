@@ -1,0 +1,13 @@
+{
+  "bytes": 50,
+  "errors": 0,
+  "file": "LocalScript.Runner.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [],
+  "lines": 1,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"Client\"))"
+  ],
+  "warnings": 0
+}

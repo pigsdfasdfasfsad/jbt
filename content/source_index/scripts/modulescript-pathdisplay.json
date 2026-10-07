@@ -1,0 +1,64 @@
+{
+  "bytes": 5547,
+  "errors": 9,
+  "file": "ModuleScript.PathDisplay.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "retrieveFromPool",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "returnToPool",
+      ""
+    ],
+    [
+      "renderPoint_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "renderPoint",
+      ""
+    ],
+    [
+      "module_upvr.setCurrentPoints",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.clearRenderedPath",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.renderPath",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ]
+  ],
+  "lines": 161,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserRaycastUpdateAPI\")"
+  ],
+  "warnings": 1
+}

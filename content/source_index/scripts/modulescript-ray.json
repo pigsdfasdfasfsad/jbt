@@ -1,0 +1,32 @@
+{
+  "bytes": 1445,
+  "errors": 0,
+  "file": "ModuleScript.Ray.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1, arg2, arg3, arg4, arg5, arg6"
+    ],
+    [
+      "",
+      "Cast",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2, arg3"
+    ],
+    [
+      "",
+      "CastWithParams",
+      ""
+    ]
+  ],
+  "lines": 37,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

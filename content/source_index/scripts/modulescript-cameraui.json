@@ -1,0 +1,22 @@
+{
+  "bytes": 814,
+  "errors": 0,
+  "file": "ModuleScript.CameraUI.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.setCameraModeToastEnabled",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.setCameraModeToastOpen",
+      "",
+      ""
+    ]
+  ],
+  "lines": 33,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

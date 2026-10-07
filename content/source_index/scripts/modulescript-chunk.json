@@ -1,0 +1,77 @@
+{
+  "bytes": 3115,
+  "errors": 0,
+  "file": "ModuleScript.Chunk.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "GetXZSurroundingChunks",
+      ""
+    ],
+    [
+      "getAllChunks",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "GetSurroundingChunks",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "",
+      "getAllChunks",
+      ""
+    ],
+    [
+      "module.GetChunk",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ],
+    [
+      "INLINED_3",
+      "",
+      ""
+    ],
+    [
+      "INLINED_4",
+      "",
+      ""
+    ],
+    [
+      "module.GetChunkCoords",
+      "",
+      ""
+    ]
+  ],
+  "lines": 108,
+  "remotes": [],
+  "requires": [],
+  "warnings": 1
+}

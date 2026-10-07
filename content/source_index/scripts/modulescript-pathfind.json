@@ -1,0 +1,37 @@
+{
+  "bytes": 1643,
+  "errors": 0,
+  "file": "ModuleScript.Pathfind.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1, arg2, arg3"
+    ],
+    [
+      "",
+      "FindPathAsyncWithPath",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module_3.FindPathAsync",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 60,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

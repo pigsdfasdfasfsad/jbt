@@ -1,0 +1,34 @@
+{
+  "bytes": 2068,
+  "errors": 4,
+  "file": "ModuleScript.Effect.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 58,
+  "remotes": [],
+  "requires": [
+    "arg1.SharedModules.Utilities.Table)"
+  ],
+  "warnings": 0
+}

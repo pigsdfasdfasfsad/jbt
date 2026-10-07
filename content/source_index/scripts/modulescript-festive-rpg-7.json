@@ -1,0 +1,32 @@
+{
+  "bytes": 18267,
+  "errors": 0,
+  "file": "ModuleScript.Festive RPG-7.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.LauncherFlash",
+      "",
+      ""
+    ],
+    [
+      "module.AnimUpdate",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ]
+  ],
+  "lines": 639,
+  "remotes": [],
+  "requires": [],
+  "warnings": 1
+}

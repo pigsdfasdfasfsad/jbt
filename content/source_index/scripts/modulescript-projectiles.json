@@ -1,0 +1,82 @@
+{
+  "bytes": 6916,
+  "errors": 7,
+  "file": "ModuleScript.Projectiles.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.Add",
+      "",
+      ""
+    ],
+    [
+      "GetSurfaceCF",
+      "",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "linePlaneIntersection",
+      ""
+    ],
+    [
+      "fromAxisAngle_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "fromAxisAngle",
+      ""
+    ],
+    [
+      "getLowerPos",
+      "",
+      ""
+    ],
+    [
+      "getEffectPoints",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2_2"
+    ],
+    [
+      "module.Reset",
+      "",
+      ""
+    ],
+    [
+      "module.RemoveProjectile",
+      "",
+      ""
+    ],
+    [
+      "module.lm",
+      "",
+      ""
+    ],
+    [
+      "module.Update",
+      "",
+      ""
+    ]
+  ],
+  "lines": 200,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Bullets)",
+    "game.ReplicatedStorage.SharedModules.Utilities.Ray)",
+    "script.Parent.Effects)",
+    "script.Parent.Sounds)"
+  ],
+  "warnings": 3
+}

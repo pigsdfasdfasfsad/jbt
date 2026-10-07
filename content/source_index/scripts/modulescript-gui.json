@@ -1,0 +1,163 @@
+{
+  "bytes": 14042,
+  "errors": 0,
+  "file": "ModuleScript.Gui.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "UpdatePlayerData",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "RemoveCarryingItem",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "GetCurrentInteractPrompt",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "RemoveInteractPrompt",
+      ""
+    ],
+    [
+      "module.PromptInteract",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "module.IsChatting",
+      "",
+      ""
+    ],
+    [
+      "module.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "",
+      "",
+      "arg1_5, arg2"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_6, arg2"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_7, arg2"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_8, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1_9, arg2"
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 422,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Parent.Client.Gui)",
+    "game:GetService(\"ReplicatedStorage\"):WaitForChild(\"Modules\"):WaitForChild(\"String Manipulation\"))",
+    "arg1.Modules.Marker)",
+    "arg1.SharedModules.Utilities.ObjectiveItem)",
+    "script.Parent.Parent:WaitForChild(\"Client\"))"
+  ],
+  "warnings": 0
+}

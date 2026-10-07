@@ -1,0 +1,57 @@
+{
+  "bytes": 1064,
+  "errors": 0,
+  "file": "ModuleScript.BaseOcclusion.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1, ..."
+    ],
+    [
+      "",
+      "__call",
+      ""
+    ],
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.CharacterAdded",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.CharacterRemoving",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.OnCameraSubjectChanged",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetOcclusionMode",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Enable",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Update",
+      "",
+      ""
+    ]
+  ],
+  "lines": 34,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

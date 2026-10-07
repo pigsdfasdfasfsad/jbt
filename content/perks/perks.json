@@ -1,0 +1,155 @@
+{
+  "count": 21,
+  "format": "twr-perks-v1",
+  "perks": [
+    {
+      "Desc": "Lowers low health effect by 50%.",
+      "Icon": "rbxassetid://2600767053",
+      "Level": 10,
+      "category": "Survivalist",
+      "name": "Hardened Sight"
+    },
+    {
+      "Desc": "Lowers all damage effects by 65%",
+      "Icon": "rbxassetid://2600767158",
+      "Level": 20,
+      "category": "Survivalist",
+      "name": "Bruiser"
+    },
+    {
+      "Desc": "Bandages heal 30% more.",
+      "Icon": "rbxassetid://2600767687",
+      "Level": 30,
+      "category": "Survivalist",
+      "name": "Medic"
+    },
+    {
+      "Desc": "Energy Drink effects last 10 seconds longer.",
+      "Icon": "rbxassetid://2600768023",
+      "Level": 45,
+      "category": "Survivalist",
+      "name": "Caffeinated"
+    },
+    {
+      "Desc": "When under 35% health, health regenerates slowly to 35%.",
+      "Icon": "rbxassetid://2600768196",
+      "Level": 60,
+      "category": "Survivalist",
+      "name": "Adrenaline Rush"
+    },
+    {
+      "Desc": "Sprint speed increases by 12%.",
+      "Icon": "rbxassetid://2600768578",
+      "Level": 85,
+      "category": "Survivalist",
+      "name": "Speed Demon"
+    },
+    {
+      "Desc": "Revive a teammate if they die. Single use per teammate per wave.",
+      "Icon": "rbxassetid://2600768700",
+      "Level": 100,
+      "category": "Survivalist",
+      "name": "Guardian Angel"
+    },
+    {
+      "Desc": "Carry 1 extra Clap Bomb.",
+      "Icon": "rbxassetid://2600781777",
+      "Level": 10,
+      "category": "Craftsman",
+      "name": "Play Maker"
+    },
+    {
+      "Desc": "One less hammer swing to deploy the 50 cal.",
+      "Icon": "rbxassetid://2600781898",
+      "Level": 20,
+      "category": "Craftsman",
+      "name": "Efficiency"
+    },
+    {
+      "Desc": "Increases Clap Bomb range by 40%.",
+      "Icon": "rbxassetid://2600782323",
+      "Level": 30,
+      "category": "Craftsman",
+      "name": "Enhanced Electronics"
+    },
+    {
+      "Desc": "Carry 2 extra Barbed Wire.",
+      "Icon": "rbxassetid://2600782504",
+      "Level": 45,
+      "category": "Craftsman",
+      "name": "Fortifier"
+    },
+    {
+      "Desc": "Explosive forts do 35% more damage.",
+      "Icon": "rbxassetid://2600783167",
+      "Level": 60,
+      "category": "Craftsman",
+      "name": "Pyrotechnic"
+    },
+    {
+      "Desc": "Build speed increases by 40%.",
+      "Icon": "rbxassetid://2600782950",
+      "Level": 85,
+      "category": "Craftsman",
+      "name": "Carpenter"
+    },
+    {
+      "Desc": "Spawn in with a full set of makeshift armor. This new armor is twice as durable as regular armor.",
+      "Icon": "rbxassetid://2600783301",
+      "Level": 100,
+      "category": "Craftsman",
+      "name": "Juggernaut"
+    },
+    {
+      "Desc": "Equip speed increases by 30%.",
+      "Icon": "rbxassetid://2600785683",
+      "Level": 10,
+      "category": "Marksman",
+      "name": "Dexterous"
+    },
+    {
+      "Desc": "Rate of fire increases by 35% for pump action, bolt action, and semi-automatic weapons.",
+      "Icon": "rbxassetid://2600785784",
+      "Level": 20,
+      "category": "Marksman",
+      "name": "Trigger Finger"
+    },
+    {
+      "Desc": "Aiming speed increases by 40%.",
+      "Icon": "rbxassetid://2600786648",
+      "Level": 30,
+      "category": "Marksman",
+      "name": "Eagle Eyes"
+    },
+    {
+      "Desc": "Upper body shots on infected deal 20% more damage.",
+      "Icon": "rbxassetid://2600786347",
+      "Level": 45,
+      "category": "Marksman",
+      "name": "Heavy Hitter"
+    },
+    {
+      "Desc": "Recoil reduced by 50%.",
+      "Icon": "rbxassetid://2600786228",
+      "Level": 60,
+      "category": "Marksman",
+      "name": "Steady Hand"
+    },
+    {
+      "Desc": "Reloading is 20% faster.",
+      "Icon": "rbxassetid://2600786860",
+      "Level": 85,
+      "category": "Marksman",
+      "name": "Brisk"
+    },
+    {
+      "Desc": "Unlock the Barrett M82A1. You can only use the Barrett M82A1 while this perk is equipped.",
+      "Icon": "rbxassetid://2600786956",
+      "Level": 100,
+      "category": "Marksman",
+      "name": "Overwatch"
+    }
+  ],
+  "source": "extracted/04-scripts/scripts/ModuleScript.Perks.Source.txt",
+  "source_sha256": "d9a832648a6393cdd6fa71d178408b78cce1589120cf62e0c08e19f5eee50519"
+}

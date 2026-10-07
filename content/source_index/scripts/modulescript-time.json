@@ -1,0 +1,32 @@
+{
+  "bytes": 806,
+  "errors": 0,
+  "file": "ModuleScript.Time.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "module_upvr.GetWeekRange",
+      "",
+      ""
+    ]
+  ],
+  "lines": 20,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

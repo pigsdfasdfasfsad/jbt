@@ -1,0 +1,79 @@
+{
+  "bytes": 4700,
+  "errors": 0,
+  "file": "ModuleScript.CharacterUtil.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "getLocalPlayer",
+      ""
+    ],
+    [
+      "module_upvr_2.onLocalPlayer",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.getCharacter",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.onCharacter",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "module_upvr_2.getChild",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.onChild",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "",
+      "",
+      "arg1_5"
+    ],
+    [
+      "module_upvr_2._getOrCreateBoundEvent",
+      "",
+      ""
+    ]
+  ],
+  "lines": 130,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"ConnectionUtil\")).new();"
+  ],
+  "warnings": 0
+}

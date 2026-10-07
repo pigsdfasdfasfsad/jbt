@@ -1,0 +1,74 @@
+{
+  "bytes": 15639,
+  "errors": 10,
+  "file": "ModuleScript.Minigun.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "localOffset",
+      ""
+    ],
+    [
+      "bezierPos_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "bezierPos",
+      ""
+    ],
+    [
+      "buildArcTable_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "buildArcTable",
+      ""
+    ],
+    [
+      "getTAtDistance_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "getTAtDistance",
+      ""
+    ],
+    [
+      "module_2_upvr.CheckMinigunMag",
+      "",
+      ""
+    ],
+    [
+      "module_2_upvr.AnimUpdate",
+      "",
+      ""
+    ],
+    [
+      "module_2_upvr.EquipSetup",
+      "",
+      ""
+    ],
+    [
+      "module_2_upvr.EquipUnsetup",
+      "",
+      ""
+    ]
+  ],
+  "lines": 521,
+  "remotes": [],
+  "requires": [
+    "game.ReplicatedStorage.Modules.WeldModel)"
+  ],
+  "warnings": 2
+}

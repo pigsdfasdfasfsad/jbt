@@ -1,0 +1,16 @@
+{
+  "bytes": 1015,
+  "errors": 0,
+  "file": "weapon select.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [],
+  "lines": 18,
+  "remotes": [
+    "FireServer",
+    "FireServer",
+    "FireServer",
+    "FireServer"
+  ],
+  "requires": [],
+  "warnings": 0
+}

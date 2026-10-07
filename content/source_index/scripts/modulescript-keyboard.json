@@ -1,0 +1,27 @@
+{
+  "bytes": 1651,
+  "errors": 6,
+  "file": "ModuleScript.Keyboard.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.Touch",
+      "",
+      ""
+    ],
+    [
+      "module.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ]
+  ],
+  "lines": 45,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

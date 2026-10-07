@@ -1,0 +1,17 @@
+{
+  "bytes": 930,
+  "errors": 0,
+  "file": "ModuleScript.Bonuses.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1, arg2, arg3, arg4, arg5, arg6"
+    ]
+  ],
+  "lines": 25,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

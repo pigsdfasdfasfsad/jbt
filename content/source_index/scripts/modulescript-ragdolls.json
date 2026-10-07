@@ -1,0 +1,89 @@
+{
+  "bytes": 20166,
+  "errors": 4,
+  "file": "ModuleScript.Ragdolls.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "MakeLimbBoxes",
+      "",
+      ""
+    ],
+    [
+      "SetNetworkOwner",
+      "",
+      ""
+    ],
+    [
+      "Launch_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "Launch",
+      ""
+    ],
+    [
+      "ColorSkin",
+      "",
+      ""
+    ],
+    [
+      "INLINED_4",
+      "",
+      ""
+    ],
+    [
+      "module.RagdollInfected",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 553,
+  "remotes": [],
+  "requires": [
+    "game.ReplicatedStorage.Modules.WeldModel)",
+    "script.Parent.Effects)",
+    "script.Parent.Sounds)",
+    "game.ReplicatedStorage.Modules[\"AI Sounds\"])",
+    "game.ReplicatedStorage.Modules[\"Hit Sounds\"])",
+    "game.ReplicatedStorage.Modules[\"Collision Group\"])"
+  ],
+  "warnings": 7
+}

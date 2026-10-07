@@ -1,0 +1,35 @@
+{
+  "bytes": 712,
+  "errors": 0,
+  "file": "ModuleScript.PlayerModule.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetCameras",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetControls",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetClickToMoveController",
+      "",
+      ""
+    ]
+  ],
+  "lines": 21,
+  "remotes": [],
+  "requires": [
+    "script:WaitForChild(\"CameraModule\"))",
+    "script:WaitForChild(\"ControlModule\"))"
+  ],
+  "warnings": 0
+}

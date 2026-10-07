@@ -1,0 +1,79 @@
+{
+  "bytes": 6678,
+  "errors": 0,
+  "file": "ModuleScript.Gamepad.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "setmetatable_result1_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.Enable",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.GetHighestPriorityGamepad",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.BindContextActions",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2, arg3"
+    ],
+    [
+      "",
+      "",
+      "arg1_3, arg2, arg3"
+    ],
+    [
+      "setmetatable_result1_upvr.UnbindContextActions",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.OnNewGamepadConnected",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.OnCurrentGamepadDisconnected",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.ConnectGamepadConnectionListeners",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "",
+      "",
+      "arg1_5"
+    ],
+    [
+      "setmetatable_result1_upvr.DisconnectGamepadConnectionListeners",
+      "",
+      ""
+    ]
+  ],
+  "lines": 191,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"BaseCharacterController\"))"
+  ],
+  "warnings": 0
+}

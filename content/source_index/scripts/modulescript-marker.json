@@ -1,0 +1,37 @@
+{
+  "bytes": 3733,
+  "errors": 8,
+  "file": "ModuleScript.Marker.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "findClosestBorderPoint",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.End",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ]
+  ],
+  "lines": 100,
+  "remotes": [],
+  "requires": [],
+  "warnings": 2
+}

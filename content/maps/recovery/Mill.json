@@ -1,0 +1,22 @@
+{
+  "authority_order": [
+    "original .rbxlx",
+    "embedded script/data",
+    "RemoteSpy",
+    "recovered original scripts",
+    "recordings",
+    "images",
+    "compiled docs",
+    "TestPlace",
+    "inference",
+    "approximation"
+  ],
+  "format": "twr-map-recovery-status-v1",
+  "historical_ir_bytes_recovered": false,
+  "historical_ir_reported": true,
+  "map": "Mill",
+  "outline": "docs/assets/maps/mill-outline.png",
+  "preview": "docs/maps/previews/mill.png",
+  "regeneration_blocker": "Original twr places.zip raw bytes are present in Project storage but could not be materialized into this recovery runtime. Do not substitute TestPlace geometry.",
+  "release_included": true
+}

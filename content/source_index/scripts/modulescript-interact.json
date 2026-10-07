@@ -1,0 +1,68 @@
+{
+  "bytes": 7625,
+  "errors": 26,
+  "file": "ModuleScript.Interact.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "CheckCanPick",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.ReturnCanPick",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Reset",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2_2"
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "module_upvr.ReturnTarget",
+      "",
+      ""
+    ]
+  ],
+  "lines": 207,
+  "remotes": [],
+  "requires": [
+    "game.ReplicatedStorage.Modules.FortificationsInfo)",
+    "script.Parent.Bullets)",
+    "script.Parent.Gui)",
+    "script.Parent).Interact()",
+    "script.Parent).Interact()"
+  ],
+  "warnings": 0
+}

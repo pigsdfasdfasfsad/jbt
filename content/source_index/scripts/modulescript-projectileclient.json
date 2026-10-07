@@ -1,0 +1,64 @@
+{
+  "bytes": 3666,
+  "errors": 1,
+  "file": "ModuleScript.ProjectileClient.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.EndProjectile",
+      "",
+      ""
+    ],
+    [
+      "module.CreateProjectile",
+      "",
+      ""
+    ],
+    [
+      "module.GetCurID",
+      "",
+      ""
+    ],
+    [
+      "module.Update",
+      "",
+      ""
+    ],
+    [
+      "module.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "",
+      "",
+      "arg1_5, arg2, ..."
+    ],
+    [
+      "",
+      "",
+      "arg1_6, arg2"
+    ]
+  ],
+  "lines": 121,
+  "remotes": [],
+  "requires": [
+    "arg1.Modules.Other.Projectile).new(arg2, arg4, ...)"
+  ],
+  "warnings": 0
+}

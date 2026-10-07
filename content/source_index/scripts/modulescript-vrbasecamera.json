@@ -1,0 +1,137 @@
+{
+  "bytes": 13443,
+  "errors": 21,
+  "file": "ModuleScript.VRBaseCamera.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.Reset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GetModuleName",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GamepadZoomPress",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GamepadReset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.ResetZoom",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.OnEnabledChanged",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2"
+    ],
+    [
+      "setmetatable_result1_2_upvr.OnCurrentCameraChanged",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.OnHeadScaleChanged",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GetVRFocus",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.StartFadeFromBlack",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.UpdateFadeFromBlack",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.StartVREdgeBlur",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "setmetatable_result1_2_upvr.UpdateEdgeBlur",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GetCameraHeight",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GetSubjectCFrame",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GetSubjectPosition",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.getRotation",
+      "",
+      ""
+    ]
+  ],
+  "lines": 358,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"CameraInput\"))",
+    "script.Parent:WaitForChild(\"BaseCamera\"))",
+    "script.Parent:WaitForChild(\"ZoomController\"))",
+    "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserCameraInputDt\")"
+  ],
+  "warnings": 4
+}

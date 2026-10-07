@@ -1,0 +1,226 @@
+{
+  "count": 10,
+  "excluded": [
+    "Stadium",
+    "Carnival"
+  ],
+  "format": "twr-map-catalog-v1",
+  "maps": [
+    {
+      "dossier": "docs/maps/RANCH.md",
+      "location": "Oakwood County, Texas — Fortson Ranch",
+      "max_waves": 15,
+      "name": "Ranch",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/ranch.png",
+      "release_mode": "Regular",
+      "skybox": "Sunrise",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/MILL.md",
+      "location": "Canada — Milton Moose lumberyard",
+      "max_waves": 15,
+      "name": "Mill",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Damage",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/mill.png",
+      "release_mode": "Regular",
+      "skybox": "Snowy",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/BYPASS.md",
+      "location": "Chapel County, USA",
+      "max_waves": 15,
+      "name": "Bypass",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Damage",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/bypass.png",
+      "release_mode": "Regular",
+      "skybox": "Cloudy Sunset",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/CABIN.md",
+      "location": "Forest location; exact region undocumented",
+      "max_waves": 15,
+      "name": "Cabin",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/cabin.png",
+      "release_mode": "Regular",
+      "skybox": "Night",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/CARGO.md",
+      "location": "Indianapolis, Indiana, USA",
+      "max_waves": 15,
+      "name": "Cargo",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Damage",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/cargo.png",
+      "release_mode": "Regular",
+      "skybox": "Night",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/DISTRICT.md",
+      "location": "Region undocumented; occurs long after initial outbreak",
+      "max_waves": 15,
+      "name": "District",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Damage",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/district.png",
+      "release_mode": "Regular",
+      "skybox": "Sunset",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/EXPRESSWAY.md",
+      "location": "Indianapolis, Indiana, USA",
+      "max_waves": 15,
+      "name": "Expressway",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Damage",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/expressway.png",
+      "release_mode": "Regular",
+      "skybox": "Cloudy",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/PRISON.md",
+      "location": "Iowa, USA — Iowa State Penitentiary",
+      "max_waves": 15,
+      "name": "Prison",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Damage",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/prison.png",
+      "release_mode": "Regular",
+      "skybox": "Sunrise",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/LABORATORY.md",
+      "location": "Alyth Corporation facility; region undocumented",
+      "max_waves": 15,
+      "name": "Laboratory",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/laboratory.png",
+      "release_mode": "Regular",
+      "skybox": "Night",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    },
+    {
+      "dossier": "docs/maps/MANOR.md",
+      "location": "Eastern France",
+      "max_waves": 15,
+      "name": "Manor",
+      "objectives": [
+        "Load",
+        "Repair",
+        "Radio",
+        "Unpack",
+        "Escort"
+      ],
+      "preview": "docs/maps/previews/manor.png",
+      "release_mode": "Regular",
+      "skybox": "Stormy Night",
+      "static_ir": {
+        "current_recovery": "bytes_not_recovered",
+        "historical_checkpoint": "present",
+        "source_required_for_regeneration": "original twr places.zip .rbxlx member"
+      }
+    }
+  ]
+}

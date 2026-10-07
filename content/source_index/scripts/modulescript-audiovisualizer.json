@@ -1,0 +1,37 @@
+{
+  "bytes": 2177,
+  "errors": 12,
+  "file": "ModuleScript.AudioVisualizer.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "UpdateAppearance_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "UpdateAppearance",
+      ""
+    ],
+    [
+      "GenerateRandomNumber",
+      "",
+      ""
+    ],
+    [
+      "module.Update",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 63,
+  "remotes": [],
+  "requires": [],
+  "warnings": 1
+}

@@ -1,0 +1,52 @@
+{
+  "bytes": 5615,
+  "errors": 10,
+  "file": "ModuleScript.Bullet.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.End",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "INLINED_3",
+      "",
+      ""
+    ],
+    [
+      "INLINED_4",
+      "",
+      ""
+    ]
+  ],
+  "lines": 170,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Parent.Parent.Client.Sounds)",
+    "game.ReplicatedStorage.Modules[\"AI Sounds\"])",
+    "script.Parent.Parent.Parent.Client.Effects)",
+    "game.ReplicatedStorage.Modules[\"Hit Sounds\"])"
+  ],
+  "warnings": 3
+}

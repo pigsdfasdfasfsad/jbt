@@ -1,0 +1,34 @@
+{
+  "bytes": 1394,
+  "errors": 0,
+  "file": "ModuleScript.Sound.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.AddSoundToObj",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "..."
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2"
+    ]
+  ],
+  "lines": 43,
+  "remotes": [],
+  "requires": [
+    "arg1.SharedModules.Utilities.ObjectiveItem)"
+  ],
+  "warnings": 0
+}

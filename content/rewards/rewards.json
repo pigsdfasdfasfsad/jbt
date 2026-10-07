@@ -1,0 +1,110 @@
+{
+  "format": "twr-reward-evidence-v1",
+  "map_completion": {
+    "MapCompletionXpBonus": 300,
+    "historical_engineering_report_prior_value": "player level × 300",
+    "historical_retail_proven": false,
+    "interpretation": "XP per player level; completion XP = max(1, level) * MapCompletionXpBonus",
+    "one_time_receipt": "MapCompletion",
+    "save_immediately_after_reward": true,
+    "status": "Proposed"
+  },
+  "source_confirmed_wave_reward_analysis": {
+    "argument_semantics": "wave, completed objectives, player count, scaling wave strongly inferred; original caller missing",
+    "arithmetic_confidence": "source-confirmed literal",
+    "bases": {
+      "Classic": 1900,
+      "Endless": 525,
+      "Hardcore": 1000,
+      "Regular": 1500
+    },
+    "examples": [
+      {
+        "argument_wave": 1,
+        "function_credit_component": 1500,
+        "function_xp_component": 190,
+        "mode": "Regular",
+        "players": 1
+      },
+      {
+        "argument_wave": 10,
+        "function_credit_component": 15000,
+        "function_xp_component": 281,
+        "mode": "Regular",
+        "players": 1
+      },
+      {
+        "argument_wave": 1,
+        "function_credit_component": 1900,
+        "function_xp_component": 190,
+        "mode": "Classic",
+        "players": 1
+      },
+      {
+        "argument_wave": 10,
+        "function_credit_component": 19000,
+        "function_xp_component": 281,
+        "mode": "Classic",
+        "players": 1
+      },
+      {
+        "argument_wave": 1,
+        "function_credit_component": 1000,
+        "function_xp_component": 190,
+        "mode": "Hardcore",
+        "players": 1
+      },
+      {
+        "argument_wave": 10,
+        "function_credit_component": 10000,
+        "function_xp_component": 281,
+        "mode": "Hardcore",
+        "players": 1
+      },
+      {
+        "argument_wave": 1,
+        "function_credit_component": 525,
+        "function_xp_component": 190,
+        "mode": "Endless",
+        "players": 1
+      },
+      {
+        "argument_wave": 20,
+        "function_credit_component": 10500,
+        "function_xp_component": 316,
+        "mode": "Endless",
+        "players": 1
+      },
+      {
+        "argument_wave": 27,
+        "function_credit_component": 14175,
+        "function_xp_component": 333,
+        "mode": "Endless",
+        "players": 1
+      },
+      {
+        "argument_wave": 40,
+        "function_credit_component": 14175,
+        "function_xp_component": 333,
+        "mode": "Endless",
+        "players": 1
+      }
+    ],
+    "formulas": {
+      "credits": "floor(w * p^0.055 * base + 0.5), w=min(w,27) in Endless",
+      "endless_fifth": "round_0.01(1.0298915058042881 ^ (clamp(q,0,20)-1))",
+      "non_endless_fifth_literal": "round_0.01(1.75 ^ ((1/(N-1)) ^ (q-1)))",
+      "non_endless_fifth_proposed": "round_0.01(1.75 ^ ((q-1)/(N-1)))",
+      "objective_extra_credits": "200*k except Endless0",
+      "objective_extra_xp": "400*k except Endless0",
+      "xp": "floor(190 * w^0.17 + 0.5), w=min(w,27) in Endless"
+    },
+    "source": "ModuleScript.Bonuses.Source.txt lines14to24",
+    "unused_table": {
+      "Classic": 10000,
+      "Endless": 5000,
+      "Hardcore": 22000,
+      "Regular": 6000
+    }
+  }
+}

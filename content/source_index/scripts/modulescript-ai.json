@@ -1,0 +1,214 @@
+{
+  "bytes": 21881,
+  "errors": 1,
+  "file": "ModuleScript.AI.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "DressHeadGear_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "DressHeadGear",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "MakeLimbBoxes",
+      ""
+    ],
+    [
+      "ColorSkin_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "ColorSkin",
+      ""
+    ],
+    [
+      "INLINED_3",
+      "",
+      ""
+    ],
+    [
+      "ColorBrickColor_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "ColorBrickColor",
+      ""
+    ],
+    [
+      "DestroyHeadAndJoints_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "DestroyHeadAndJoints",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "EscortCharDress",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "BloaterDress",
+      ""
+    ],
+    [
+      "module_upvr.GenericDress",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "GenericHeadshotModel",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "BloaterHeadshotModel",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "Headshot",
+      ""
+    ],
+    [
+      "INLINED_4",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "GenericDecapModel",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "BloaterDecapModel",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "Decapitation",
+      ""
+    ],
+    [
+      "INLINED_5",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2, arg3"
+    ],
+    [
+      "",
+      "BursterDeath",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2, arg3, arg4"
+    ],
+    [
+      "",
+      "GenericDeath",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetGenericSounds",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetFire",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.RemoveFire",
+      "",
+      ""
+    ]
+  ],
+  "lines": 713,
+  "remotes": [],
+  "requires": [
+    "ReplicatedStorage_upvr:WaitForChild(\"SharedModules\"):WaitForChild(\"Utilities\"):WaitForChild(\"Model\"))"
+  ],
+  "warnings": 1
+}

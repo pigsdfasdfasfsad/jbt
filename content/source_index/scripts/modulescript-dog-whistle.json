@@ -1,0 +1,29 @@
+{
+  "bytes": 5106,
+  "errors": 0,
+  "file": "ModuleScript.Dog Whistle.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.UseUtilityCheckPass",
+      "",
+      ""
+    ],
+    [
+      "module.UseErrorMsg",
+      "",
+      ""
+    ],
+    [
+      "tbl_3.func",
+      "",
+      ""
+    ]
+  ],
+  "lines": 187,
+  "remotes": [
+    "FireServer"
+  ],
+  "requires": [],
+  "warnings": 0
+}

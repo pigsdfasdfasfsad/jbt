@@ -1,0 +1,78 @@
+{
+  "format": "twr-remotes-recovery-v1",
+  "historical_runtime_normalization": {
+    "current_runtime_call_count": null,
+    "database_bytes_recovered": false,
+    "note": "RemoteSpy ZIP raw bytes could not be materialized into the current recovery runtime, so 14,363 is retained only as a historical report count.",
+    "reported_calls": 14363
+  },
+  "script_static_scan": {
+    "actions": [
+      {
+        "methods": [
+          "FireServer"
+        ],
+        "name": "CallA10",
+        "occurrences": 1,
+        "sources": [
+          "ModuleScript.CAS Radio.Source.txt"
+        ]
+      },
+      {
+        "methods": [
+          "FireServer"
+        ],
+        "name": "GSCommand",
+        "occurrences": 1,
+        "sources": [
+          "ModuleScript.Dog Whistle.Source.txt"
+        ]
+      },
+      {
+        "methods": [
+          "FireServer"
+        ],
+        "name": "GlobalReplicate",
+        "occurrences": 1,
+        "sources": [
+          "ModuleScript.Spectate.Source.txt"
+        ]
+      },
+      {
+        "methods": [
+          "FireServer"
+        ],
+        "name": "aa",
+        "occurrences": 1,
+        "sources": [
+          "ModuleScript.Bullets.Source.txt"
+        ]
+      },
+      {
+        "methods": [
+          "Fire"
+        ],
+        "name": "offtrack",
+        "occurrences": 2,
+        "sources": [
+          "ModuleScript.VRNavigation.Source.txt"
+        ]
+      },
+      {
+        "methods": [
+          "Fire"
+        ],
+        "name": "targetPoint",
+        "occurrences": 2,
+        "sources": [
+          "ModuleScript.VRNavigation.Source.txt"
+        ]
+      }
+    ],
+    "literal_call_occurrences": 8,
+    "note": "Static literal first-argument remote/action names only. This is not RemoteSpy runtime-call data.",
+    "source": "scripts.zip static source scan",
+    "unique_actions": 6
+  },
+  "transport_policy": "Standalone uses typed in-process commands/events, not Roblox networking."
+}

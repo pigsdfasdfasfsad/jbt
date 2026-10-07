@@ -1,0 +1,37 @@
+{
+  "bytes": 749,
+  "errors": 0,
+  "file": "ModuleScript.Animate.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Play",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Pause",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Stop",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ]
+  ],
+  "lines": 33,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

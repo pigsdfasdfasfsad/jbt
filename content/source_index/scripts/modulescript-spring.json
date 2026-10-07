@@ -1,0 +1,52 @@
+{
+  "bytes": 5331,
+  "errors": 0,
+  "file": "ModuleScript.Spring.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.GetPosAtTime",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetVelAtTime",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetAccAtTime",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Compress",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.UpdateGA",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Reset",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ]
+  ],
+  "lines": 105,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

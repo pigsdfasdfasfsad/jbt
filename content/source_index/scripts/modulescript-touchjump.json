@@ -1,0 +1,91 @@
+{
+  "bytes": 6843,
+  "errors": 0,
+  "file": "ModuleScript.TouchJump.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "setmetatable_result1_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr._reset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.EnableButton",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.UpdateEnabled",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr._setupConfigurations",
+      "",
+      ""
+    ],
+    [
+      "update_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "update",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "",
+      "",
+      "arg1_4, arg2"
+    ],
+    [
+      "setmetatable_result1_upvr.Enable",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.Create",
+      "",
+      ""
+    ],
+    [
+      "ResizeJumpButton",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_5"
+    ]
+  ],
+  "lines": 195,
+  "remotes": [],
+  "requires": [
+    "CommonUtils:WaitForChild(\"CharacterUtil\"))",
+    "script.Parent:WaitForChild(\"BaseCharacterController\"))",
+    "CommonUtils:WaitForChild(\"ConnectionUtil\"))"
+  ],
+  "warnings": 1
+}

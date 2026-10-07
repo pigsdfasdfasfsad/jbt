@@ -1,0 +1,47 @@
+{
+  "bytes": 779,
+  "errors": 0,
+  "file": "ModuleScript.Ease.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2, arg3, arg4"
+    ]
+  ],
+  "lines": 26,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

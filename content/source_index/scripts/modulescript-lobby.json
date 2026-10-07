@@ -1,0 +1,86 @@
+{
+  "bytes": 7899,
+  "errors": 0,
+  "file": "ModuleScript.Lobby.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "GetRels",
+      "",
+      ""
+    ],
+    [
+      "SetParts",
+      "",
+      ""
+    ],
+    [
+      "module.SetRightDown",
+      "",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "GetPoint",
+      ""
+    ],
+    [
+      "module.SetGoalCam",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateCamera",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "module.SetCamera",
+      "",
+      ""
+    ],
+    [
+      "DestroyHandles",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateLoadoutModels",
+      "",
+      ""
+    ],
+    [
+      "module.RemoveLoadoutModelSlot",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateAngle",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateModelTilts",
+      "",
+      ""
+    ]
+  ],
+  "lines": 239,
+  "remotes": [],
+  "requires": [
+    "game.ReplicatedStorage.Modules.Ease)",
+    "script.Parent.Animate)",
+    "game.ReplicatedStorage.Modules[\"Weapon Modules\"][i_6])"
+  ],
+  "warnings": 2
+}

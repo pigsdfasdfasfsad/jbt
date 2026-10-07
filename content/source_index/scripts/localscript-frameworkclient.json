@@ -1,0 +1,53 @@
+{
+  "bytes": 3326,
+  "errors": 0,
+  "file": "LocalScript.FrameworkClient.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "loadModules",
+      "",
+      ""
+    ],
+    [
+      "tbl_upvr_2.Fire",
+      "",
+      ""
+    ],
+    [
+      "Connect",
+      "",
+      ""
+    ],
+    [
+      "var44_upvr.Connect",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "..."
+    ],
+    [
+      "var44_upvr.OnClientInvoke",
+      "",
+      ""
+    ]
+  ],
+  "lines": 112,
+  "remotes": [
+    "FireServer",
+    "OnClientEvent"
+  ],
+  "requires": [
+    "v), tbl_upvr)",
+    "v_2)"
+  ],
+  "warnings": 0
+}

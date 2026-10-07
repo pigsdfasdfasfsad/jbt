@@ -1,0 +1,35 @@
+{
+  "bytes": 1754,
+  "errors": 6,
+  "file": "ModuleScript.LegacyCamera.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "setmetatable_result1_2_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GetModuleName",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.SetCameraToSubjectDistance",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.Update",
+      "",
+      ""
+    ]
+  ],
+  "lines": 42,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"BaseCamera\"))",
+    "script.Parent:WaitForChild(\"CameraInput\"))"
+  ],
+  "warnings": 0
+}

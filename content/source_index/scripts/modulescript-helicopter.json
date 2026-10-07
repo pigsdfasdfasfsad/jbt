@@ -1,0 +1,50 @@
+{
+  "bytes": 5884,
+  "errors": 0,
+  "file": "ModuleScript.Helicopter.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "GetMass",
+      "",
+      ""
+    ],
+    [
+      "Launch_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "Launch",
+      ""
+    ],
+    [
+      "module.Reset",
+      "",
+      ""
+    ],
+    [
+      "module.Spawn",
+      "",
+      ""
+    ],
+    [
+      "module.DestroyCargo",
+      "",
+      ""
+    ],
+    [
+      "module.Update",
+      "",
+      ""
+    ]
+  ],
+  "lines": 157,
+  "remotes": [],
+  "requires": [
+    "game.ReplicatedStorage.Modules.WeldModel)",
+    "game.ReplicatedStorage.Modules[\"Collision Group\"])"
+  ],
+  "warnings": 0
+}

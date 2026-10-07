@@ -1,0 +1,1170 @@
+{
+  "animation_durations": {
+    "Aim": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.5
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.5
+    },
+    "AimFire": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.075,
+        0.2
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.275
+    },
+    "BasicEquip": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.5
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.5
+    },
+    "Equip": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.34,
+        0.19125,
+        0.2125,
+        0.15,
+        0.2,
+        0.25
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 1.34375
+    },
+    "Fire": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.075,
+        0.2
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.275
+    },
+    "Reload": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.175,
+        0.06999999999999999,
+        0.21,
+        0.034999999999999996,
+        0.105,
+        0.085,
+        0.25,
+        0.15,
+        0.2,
+        0
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 1.28
+    },
+    "Sliding": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.15,
+        0.15,
+        0.2,
+        0.25
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.75
+    },
+    "Sprint": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.4
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.4
+    },
+    "UnAim": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.25
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.25
+    },
+    "UnSprint": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.3
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.3
+    }
+  },
+  "animations": {
+    "Aim": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "Aim": {
+              "Ease": "SlowDown2",
+              "Lerp": true,
+              "To": {
+                "expression": "module.Stats.AimCF"
+              }
+            },
+            "CamAim": {
+              "Ease": "SlowDown2",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.25000000000000006, 0.4330127018922193, 0)"
+              }
+            },
+            "HeadAimCF": {
+              "Ease": "SlowDown2",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.Angles(0, 0, -0.5235987755982988)"
+              }
+            },
+            "RightAimCF": {
+              "Ease": "SlowDown2",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.15, 0, 0.15) * CFrame.Angles(0, 0, -0.2617993877991494) * CFrame.Angles(0.17453292519943295, 0, 0)"
+              }
+            }
+          },
+          "FOV": {
+            "Ease": "SlowDown2",
+            "To": {
+              "expression": "module.Stats.FOV"
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1442507249"
+          },
+          "Time": 0.5
+        }
+      ]
+    },
+    "AimFire": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "Fire": {
+              "Ease": "Linear",
+              "Lerp": true,
+              "Start": {
+                "expression": "CFrame.new()"
+              },
+              "To": {
+                "expression": "CFrame.new(0, 0, 0.15) * CFrame.Angles(0.06981317007977318, 0, 0)"
+              }
+            }
+          },
+          "Time": 0.075
+        },
+        {
+          "AV": {
+            "Fire": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            }
+          },
+          "Time": 0.2
+        }
+      ]
+    },
+    "BasicEquip": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "HeadTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.Angles(0, 0.6981317007977318, 0)"
+              }
+            },
+            "LeftWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.LeftCF"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Start": {
+                "expression": "module.Stats.GripCF * CFrame.new(0, -1.5, 0) * CFrame.Angles(-0.7853981633974483, 0, 0)"
+              },
+              "To": {
+                "expression": "module.Stats.GripCF"
+              }
+            },
+            "RightWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.RightCF"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "TorsoTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.Angles(0, -0.6981317007977318, 0)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Pump": {
+              "Lerp": false,
+              "MotorHierarchy": [
+                "Pump",
+                "PumpHandle",
+                "Handle",
+                "PumpHandleMotor"
+              ],
+              "Start": {
+                "expression": "module.Stats.Rels.PumpHandleRel"
+              },
+              "To": {
+                "expression": "module.Stats.Rels.PumpHandleRel * CFrame.Angles((math.pi/2), 0, 0)"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1501815802"
+          },
+          "Time": 0.5
+        }
+      ]
+    },
+    "Equip": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "HeadTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.Angles(0, 0.6981317007977318, 0)"
+              }
+            },
+            "LeftWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "CFrame.new(-0.557110786, -0.498234749, -0.450195313, 0.927417636, -0.372291982, 0.0359904543, -0.170147195, -0.505623102, -0.845810175, 0.333085001, 0.778294027, -0.532267511)"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Start": {
+                "expression": "module.Stats.GripCF * CFrame.new(0, -1, 0) * CFrame.Angles((-math.pi/2), 0, 0)"
+              },
+              "Time": 0.425,
+              "To": {
+                "expression": "CFrame.new(0.803505898, -1.24822664, -0.853931427, 0.969846308, 0.19856593, 0.141314164, -0.173647881, 0.969845593, -0.171009496, -0.171009988, 0.141314477, 0.975079954)"
+              }
+            },
+            "RightWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.RightCF"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "TorsoTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.Angles(0, -0.6981317007977318, 0)"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1501815802"
+          },
+          "Time": 0.34
+        },
+        {
+          "AV": {
+            "LeftWeld": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "OffsetEnd": {
+                "expression": "CFrame.new(-0.742190361, -0.981215477, -0.35647583, 0.956385374, -0.251064599, -0.149302036, -0.138911843, 0.0587170422, -0.988565147, 0.256959915, 0.966188192, 0.0212803036)"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Handle"
+              ],
+              "Time": 0.1275
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Time": 0.2125,
+              "To": {
+                "expression": "CFrame.new(0.885261536, -1.17266417, -0.517513275, 0.959753871, 0.257374704, 0.112352826, -0.214971662, 0.930764616, -0.29576689, -0.180695236, 0.259713978, 0.948630035)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Pump": {
+              "Ease": "Linear",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Pump",
+                "PumpHandle",
+                "Handle",
+                "PumpHandleMotor"
+              ],
+              "Start": {
+                "expression": "module.Stats.Rels.PumpHandleRel"
+              },
+              "Time": 0.1275,
+              "To": {
+                "expression": "module.Stats.Rels.PumpHandleRel * CFrame.Angles((math.pi/2), 0, 0)"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://2130061818"
+          },
+          "Time": 0.19125
+        },
+        {
+          "AV": {
+            "LeftWeld": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "OffsetEnd": {
+                "expression": "CFrame.new(-0.433086395, -0.77137661, 0.543151855, 0.939689994, -0.30998072, 0.144550771, 0.00000112131238, -0.422626019, -0.9063043, 0.342027664, 0.851645052, -0.397136986)"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Pump",
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Time": 0.31875,
+              "To": {
+                "expression": "CFrame.new(0.617137909, -1.14588308, -0.898506165, 0.964684427, -0.242110491, 0.103765085, 0.256585002, 0.952796578, -0.162321955, -0.0595669523, 0.183214664, 0.981266737)"
+              }
+            }
+          },
+          "Time": 0.2125
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.59062767, -1.14665294, -0.775085449, 0.961638868, -0.192815557, 0.195123091, 0.227994546, 0.957320035, -0.177642703, -0.152542979, 0.215315133, 0.964556873)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Pump": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Pump",
+                "Handle",
+                "PumpMotor"
+              ],
+              "Start": {
+                "expression": "module.Stats.Rels.PumpRel"
+              },
+              "To": {
+                "expression": "module.Stats.Rels.PumpRel * CFrame.new(0, 0, 0.45)"
+              }
+            },
+            "Slide": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Slide",
+                "Handle",
+                "SlideMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.SlideRel * CFrame.new(0, 0, 0.3)"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://2129211768"
+          },
+          "Time": 0.15
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.630062103, -1.1480248, -0.796470642, 0.976240158, -0.208498791, 0.0590471663, 0.215298176, 0.964157879, -0.155069798, -0.0245989878, 0.164097846, 0.986138701)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Pump": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Pump",
+                "Handle",
+                "PumpMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.PumpRel"
+              }
+            },
+            "Slide": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Slide",
+                "Handle",
+                "SlideMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.SlideRel"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://2129211645"
+          },
+          "Time": 0.2
+        },
+        {
+          "AV": {
+            "LeftWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.LeftCF"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "module.Stats.GripCF"
+              }
+            }
+          },
+          "Time": 0.25
+        }
+      ]
+    },
+    "Fire": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "Fire": {
+              "Ease": "Linear",
+              "Lerp": true,
+              "Start": {
+                "expression": "CFrame.new()"
+              },
+              "To": {
+                "expression": "CFrame.new(0, 0, 0.3) * CFrame.Angles(0.13962634015954636, 0, 0)"
+              }
+            }
+          },
+          "Time": 0.075
+        },
+        {
+          "AV": {
+            "Fire": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            }
+          },
+          "Time": 0.2
+        }
+      ]
+    },
+    "Reload": {
+      "CanCancel": true,
+      "Cancelled": false,
+      "CurrentTime": 0,
+      "NormalRecoverLength": 0,
+      "Number": 1,
+      "PullBack": [
+        7,
+        9
+      ],
+      "Repeat": [
+        1,
+        6
+      ],
+      "Sequence": [
+        {
+          "AV": {
+            "LeftWeld": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "OffsetEnd": {
+                "expression": "CFrame.new(-1.23194408, -1.47100925, 0.45633316, 0.873979688, -0.442574263, -0.200718537, -0.280761421, -0.122727677, -0.951898813, 0.396652102, 0.888294101, -0.231519282)"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Time": 0.385,
+              "To": {
+                "expression": "CFrame.new(0.753204346, -1.28042793, -0.975479126, 0.914581299, 0.379408956, 0.139965504, -0.343014568, 0.911126971, -0.228448987, -0.214201853, 0.160924956, 0.963442326)"
+              }
+            }
+          },
+          "DissappearMag": {
+            "MagHiearchy": [
+              "Mag"
+            ]
+          },
+          "Time": 0.175
+        },
+        {
+          "AV": {
+            "LeftWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "CFrame.new(-0.600667953, -0.687297821, 0.581424713, 0.873978615, -0.454878658, 0.171016946, -0.0868269876, -0.492414594, -0.866019189, 0.478144765, 0.742033362, -0.469855487)"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Mag",
+                "Handle"
+              ]
+            }
+          },
+          "AppearMag": {
+            "MagHiearchy": [
+              "Mag"
+            ]
+          },
+          "ModelMotor": {
+            "Mag": {
+              "Lerp": false,
+              "MotorHierarchy": [
+                "Mag",
+                "Handle",
+                "MagMotor"
+              ],
+              "To": {
+                "expression": "CFrame.new(-0.562588692, -1.18682098, -0.345191956, 0.930830777, 0.31587109, 0.18379277, -0.352344066, 0.909173191, 0.221942276, -0.0969942659, -0.271348923, 0.95758146)"
+              }
+            }
+          },
+          "Time": 0.06999999999999999
+        },
+        {
+          "ModelMotor": {
+            "Mag": {
+              "Ease": "Linear",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Mag",
+                "Handle",
+                "MagMotor"
+              ],
+              "To": {
+                "expression": "CFrame.new(0, -0.1, 0.1) * CFrame.Angles(0.08726646259971647, 0, 0) * CFrame.new(0, 0.174713135, -0.621063232, 1.00000012, 0.00000374764204, -0.00000312924385, -0.000004645437, 0.906308413, -0.422617495, 0.00000131130219, 0.422617495, 0.906308413)"
+              }
+            }
+          },
+          "Time": 0.21
+        },
+        {
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://573598797"
+          },
+          "Time": 0.034999999999999996
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Time": 0.175,
+              "To": {
+                "expression": "CFrame.new(0.798912048, -1.23281765, -0.856601715, 0.914583802, 0.390161306, 0.106363632, -0.343011886, 0.8877514, -0.306991369, -0.214200795, 0.244285107, 0.945752323)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Mag": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Mag",
+                "Handle",
+                "MagMotor"
+              ],
+              "To": {
+                "expression": "CFrame.new(0, 0.249998927, -0.800010681, 1, 0, 0, 0, 1, 0, 0, 0, 1)"
+              }
+            }
+          },
+          "Time": 0.105
+        },
+        {
+          "AddAmmo": true,
+          "Time": 0.085
+        },
+        {
+          "AV": {
+            "LeftWeld": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "OffsetEnd": {
+                "expression": "CFrame.new(-0.433086395, -0.77137661, 0.543151855, 0.939689994, -0.30998072, 0.144550771, 0.00000112131238, -0.422626019, -0.9063043, 0.342027664, 0.851645052, -0.397136986)"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Pump",
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.617137909, -1.14588308, -0.898506165, 0.964684427, -0.242110491, 0.103765085, 0.256585002, 0.952796578, -0.162321955, -0.0595669523, 0.183214664, 0.981266737)"
+              }
+            }
+          },
+          "Time": 0.25
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.59062767, -1.14665294, -0.775085449, 0.961638868, -0.192815557, 0.195123091, 0.227994546, 0.957320035, -0.177642703, -0.152542979, 0.215315133, 0.964556873)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Mag": {
+              "Lerp": false,
+              "MotorHierarchy": [
+                "Mag",
+                "Handle",
+                "MagMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.MagRel"
+              }
+            },
+            "Pump": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Pump",
+                "Handle",
+                "PumpMotor"
+              ],
+              "Start": {
+                "expression": "module.Stats.Rels.PumpRel"
+              },
+              "To": {
+                "expression": "module.Stats.Rels.PumpRel * CFrame.new(0, 0, 0.45)"
+              }
+            },
+            "Slide": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Slide",
+                "Handle",
+                "SlideMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.SlideRel * CFrame.new(0, 0, 0.3)"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://2129211768"
+          },
+          "Time": 0.15
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.630062103, -1.1480248, -0.796470642, 0.976240158, -0.208498791, 0.0590471663, 0.215298176, 0.964157879, -0.155069798, -0.0245989878, 0.164097846, 0.986138701)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Pump": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Pump",
+                "Handle",
+                "PumpMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.PumpRel"
+              }
+            },
+            "Slide": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Slide",
+                "Handle",
+                "SlideMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.SlideRel"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://2129211645"
+          },
+          "Time": 0.2
+        },
+        {
+          "array": [
+            {
+              "ModelMotor": {
+                "Mag": {
+                  "Lerp": false,
+                  "MotorHierarchy": [
+                    "Mag",
+                    "Handle",
+                    "MagMotor"
+                  ],
+                  "To": {
+                    "expression": "module.Stats.Rels.MagRel"
+                  }
+                }
+              },
+              "Time": 0
+            }
+          ],
+          "fields": {
+            "AV": {
+              "LeftWeld": {
+                "Ease": "SlowDown",
+                "Lerp": true,
+                "OffsetEnd": {
+                  "expression": "module.Stats.LeftCF"
+                },
+                "Setted": false,
+                "TargetHierarchy": [
+                  "Handle"
+                ]
+              },
+              "Main": {
+                "Ease": "SlowDown",
+                "Lerp": true,
+                "To": {
+                  "expression": "module.Stats.GripCF"
+                }
+              }
+            },
+            "Time": 0.35
+          }
+        }
+      ]
+    },
+    "Sliding": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "LeftWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "CFrame.new(-0.433086395, -0.77137661, 0.543151855, 0.939689994, -0.30998072, 0.144550771, 0.00000112131238, -0.422626019, -0.9063043, 0.342027664, 0.851645052, -0.397136986)"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Pump",
+                "Handle"
+              ]
+            }
+          },
+          "Time": 0.15
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.59062767, -1.14665294, -0.775085449, 0.961638868, -0.192815557, 0.195123091, 0.227994546, 0.957320035, -0.177642703, -0.152542979, 0.215315133, 0.964556873)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Pump": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Pump",
+                "Handle",
+                "PumpMotor"
+              ],
+              "Start": {
+                "expression": "module.Stats.Rels.PumpRel"
+              },
+              "To": {
+                "expression": "module.Stats.Rels.PumpRel * CFrame.new(0, 0, 0.45)"
+              }
+            },
+            "Slide": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Slide",
+                "Handle",
+                "SlideMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.SlideRel * CFrame.new(0, 0, 0.3)"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://2129211768"
+          },
+          "Time": 0.15
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0.630062103, -1.1480248, -0.796470642, 0.976240158, -0.208498791, 0.0590471663, 0.215298176, 0.964157879, -0.155069798, -0.0245989878, 0.164097846, 0.986138701)"
+              }
+            }
+          },
+          "ModelMotor": {
+            "Pump": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Pump",
+                "Handle",
+                "PumpMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.PumpRel"
+              }
+            },
+            "Slide": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "MotorHierarchy": [
+                "Slide",
+                "Handle",
+                "SlideMotor"
+              ],
+              "To": {
+                "expression": "module.Stats.Rels.SlideRel"
+              }
+            }
+          },
+          "Shell": {
+            "Exist": false,
+            "Shells": [
+              {
+                "Dir": {
+                  "expression": "Vector3.new(0.70710, 0.70710, 0)"
+                },
+                "Name": "12 Gauge Shell",
+                "Offset": {
+                  "expression": "CFrame.new(0, 0, 0.3):inverse() * CFrame.new(0.05, 0, 0)"
+                },
+                "Vel": 10
+              }
+            ]
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://2129211645"
+          },
+          "Time": 0.2
+        },
+        {
+          "AV": {
+            "LeftWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.LeftCF"
+              },
+              "Setted": false,
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "module.Stats.GripCF"
+              }
+            }
+          },
+          "Time": 0.25
+        }
+      ]
+    },
+    "Sprint": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "HeadTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            },
+            "Sprint": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "module.Stats.SprintCF"
+              }
+            },
+            "TorsoTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1501816468"
+          },
+          "Time": 0.4
+        }
+      ]
+    },
+    "UnAim": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "Aim": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            },
+            "CamAim": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0, 0.5, 0)"
+              }
+            },
+            "HeadAimCF": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            },
+            "RightAimCF": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            }
+          },
+          "FOV": {
+            "Ease": "SlowDown",
+            "To": 70
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1442507761"
+          },
+          "Time": 0.25
+        }
+      ]
+    },
+    "UnSprint": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "HeadTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.Angles(0, 0.6981317007977318, 0)"
+              }
+            },
+            "Sprint": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            },
+            "TorsoTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.Angles(0, -0.6981317007977318, 0)"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1501816722"
+          },
+          "Time": 0.3
+        }
+      ]
+    }
+  },
+  "format": "twr-weapon-normalized-v1",
+  "kind": "weapon",
+  "name": "Serbu Super Shorty",
+  "source_file": "extracted/04-scripts/scripts/ModuleScript.Serbu Super Shorty.Source.txt",
+  "stats": {
+    "AmmoPickup": 4,
+    "CanChamber": true,
+    "CanPull": true,
+    "Damage": 15,
+    "Dimensions": {
+      "expression": "Vector3.new(0.16432, 0.82607, 1.95758)"
+    },
+    "Distance": 1000,
+    "FOV": 60,
+    "Flashes": [
+      "rbxassetid://186089129",
+      "rbxassetid://186089172",
+      "rbxassetid://186089144",
+      "rbxassetid://186089159"
+    ],
+    "GripCF": {
+      "expression": "CFrame.new(0.745446444, -1.1658814, -0.895900726, 1, 0, 0, 0, 1, 0, 0, 0, 1)"
+    },
+    "HorizontalRecoil": 0.13962634015954636,
+    "Icon": "rbxassetid://2130040847",
+    "LeftCF": {
+      "expression": "CFrame.new(-0.433093309, -0.548933744, -0.893146515, 0.939692497, -0.309976637, 0.144542426, -2.32695257e-07, -0.422613978, -0.906309783, 0.342020512, 0.851652503, -0.397127181)"
+    },
+    "Level": 10,
+    "LoadoutOffset": {
+      "expression": "CFrame.new(0.0249009132, -0.117300034, 0.621703625, 1, 4.37112e-08, 8.74229187e-08, -3.59252113e-08, 0.996190965, -0.0871566534, -9.09000519e-08, 0.0871574581, 0.996195197)"
+    },
+    "Mag": 3,
+    "MaxPen": 1,
+    "Pool": 20,
+    "Price": 3200,
+    "RPM": 90,
+    "RecoilShake": 0.3,
+    "ReloadType": "Increment",
+    "Rels": {
+      "MagRel": {
+        "expression": "game.ReplicatedStorage.Models.Tools[\"Serbu Super Shorty\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Tools[\"Serbu Super Shorty\"].Mag.Handle.CFrame)"
+      },
+      "PumpHandleRel": {
+        "expression": "game.ReplicatedStorage.Models.Tools[\"Serbu Super Shorty\"].Pump.Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Tools[\"Serbu Super Shorty\"].Pump.PumpHandle.Handle.CFrame)"
+      },
+      "PumpRel": {
+        "expression": "game.ReplicatedStorage.Models.Tools[\"Serbu Super Shorty\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Tools[\"Serbu Super Shorty\"].Pump.Handle.CFrame)"
+      },
+      "SlideRel": {
+        "expression": "game.ReplicatedStorage.Models.Tools[\"Serbu Super Shorty\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Tools[\"Serbu Super Shorty\"].Slide.Handle.CFrame)"
+      }
+    },
+    "RightCF": {
+      "expression": "CFrame.new(0.15455389, -0.0841188431, 0.545902252, 1, 0, 0, 0, 0, -1, 0, 1, 0)"
+    },
+    "Slot": "Secondary",
+    "Sound": "rbxassetid://2129211893",
+    "Spread": 5,
+    "SprintCF": {
+      "expression": "CFrame.new(-0.3, -0.2, 0.1) * CFrame.Angles(0, 0.2617993877991494, 0) * CFrame.Angles(-0.17453292519943295, 0, 0)"
+    },
+    "Type": "Shotgun",
+    "VerticleRecoil": 0.17453292519943295,
+    "Volume": 1.5,
+    "WeaponType": "Gun"
+  }
+}

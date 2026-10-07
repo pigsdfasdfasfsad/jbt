@@ -1,0 +1,57 @@
+{
+  "bytes": 2606,
+  "errors": 0,
+  "file": "ModuleScript.Tween.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.TweenObject",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module.PlayTweens",
+      "",
+      ""
+    ],
+    [
+      "module.PauseTweens",
+      "",
+      ""
+    ],
+    [
+      "module.StopTweens",
+      "",
+      ""
+    ],
+    [
+      "module.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2, arg3, arg4"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 87,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

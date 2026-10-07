@@ -1,0 +1,76 @@
+{
+  "bytes": 3851,
+  "errors": 0,
+  "file": "ModuleScript.ConnectionUtil.spec.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 110,
+  "remotes": [],
+  "requires": [
+    "CorePackages.Packages.Dev.JestGlobals)",
+    "script.Parent.ConnectionUtil)",
+    "CorePackages.Workspace.Packages.AppCommonLib).Signal"
+  ],
+  "warnings": 0
+}

@@ -1,0 +1,108 @@
+{
+  "bytes": 16347,
+  "errors": 6,
+  "file": "ModuleScript.VRVehicleCamera.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "pitchVelocity",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "yawVelocity",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1, arg2"
+    ],
+    [
+      "setmetatable_result1_upvr.Reset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr._StepRotation",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr._GetThirdPersonLocalOffset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr._GetFirstPersonLocalOffset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.addDrift",
+      "",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "NormalizeAngle",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.UpdateRotationCamera",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.UpdateStepRotation",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.UpdateComfortCamera",
+      "",
+      ""
+    ]
+  ],
+  "lines": 351,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"VRBaseCamera\"))",
+    "script.Parent:WaitForChild(\"CameraUtils\"))",
+    "script.Parent.VehicleCamera:FindFirstChild(\"VehicleCameraConfig\"))",
+    "script.Parent.VehicleCamera:FindFirstChild(\"VehicleCameraCore\"))",
+    "script.Parent:WaitForChild(\"CameraInput\"))"
+  ],
+  "warnings": 3
+}

@@ -1,0 +1,69 @@
+{
+  "bytes": 4389,
+  "errors": 0,
+  "file": "ModuleScript.ZoomController.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "updateBounds",
+      "",
+      ""
+    ],
+    [
+      "var6_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "var6_upvr.Step",
+      "",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "stepTargetZoom",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "module.Update",
+      "",
+      ""
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ],
+    [
+      "module.GetZoomRadius",
+      "",
+      ""
+    ],
+    [
+      "module.SetZoomParameters",
+      "",
+      ""
+    ],
+    [
+      "module.ReleaseSpring",
+      "",
+      ""
+    ]
+  ],
+  "lines": 145,
+  "remotes": [],
+  "requires": [
+    "script:WaitForChild(\"Popper\"))"
+  ],
+  "warnings": 0
+}

@@ -1,0 +1,162 @@
+{
+  "animation_durations": {
+    "Equip": {
+      "runtime_total_unverified": true,
+      "segments": [
+        0.4
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 0.4
+    },
+    "Revive": {
+      "runtime_total_unverified": true,
+      "segments": [
+        2.4,
+        0.05,
+        0.15,
+        0.05,
+        0.4
+      ],
+      "source_confirmed_timeline": true,
+      "sum_segment_seconds": 3.05
+    }
+  },
+  "animations": {
+    "Equip": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "AV": {
+            "HeadTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            },
+            "LeftWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.LeftCF"
+              },
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "Start": {
+                "expression": "CFrame.new(0, -2, 0) * module.Stats.GripCF"
+              },
+              "To": {
+                "expression": "module.Stats.GripCF"
+              }
+            },
+            "RightWeld": {
+              "Lerp": false,
+              "OffsetEnd": {
+                "expression": "module.Stats.RightCF"
+              },
+              "TargetHierarchy": [
+                "Handle"
+              ]
+            },
+            "TorsoTilt": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new()"
+              }
+            }
+          },
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://1501815802"
+          },
+          "Time": 0.4
+        }
+      ]
+    },
+    "Revive": {
+      "CurrentTime": 0,
+      "Number": 1,
+      "Sequence": [
+        {
+          "Sound": {
+            "Played": false,
+            "Sound": "rbxassetid://2599930961",
+            "Volume": 2
+          },
+          "Time": 2.4
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "Linear",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0, 0, -0.6) * module.Stats.GripCF"
+              }
+            }
+          },
+          "Time": 0.05
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "module.Stats.GripCF"
+              }
+            }
+          },
+          "Time": 0.15
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "Linear",
+              "Lerp": true,
+              "To": {
+                "expression": "CFrame.new(0, 0, -0.6) * module.Stats.GripCF"
+              }
+            }
+          },
+          "Time": 0.05
+        },
+        {
+          "AV": {
+            "Main": {
+              "Ease": "SlowDown",
+              "Lerp": true,
+              "To": {
+                "expression": "module.Stats.GripCF"
+              }
+            }
+          },
+          "Time": 0.4
+        }
+      ]
+    }
+  },
+  "format": "twr-weapon-normalized-v1",
+  "kind": "equipment",
+  "name": "Defibrillator",
+  "source_file": "extracted/04-scripts/scripts/ModuleScript.Defibrillator.Source.txt",
+  "stats": {
+    "GripCF": {
+      "expression": "CFrame.new(0, 0, 0.1) * CFrame.new(-0.000415802002, -0.979491472, -1.39814758)"
+    },
+    "LeftCF": {
+      "expression": "CFrame.new(-0.749729156, -0.320591688, 0.698020935, 0.984824061, -0.170963407, 0.0298812129, -0.0153932096, -0.257535905, -0.96614629, 0.172871098, 0.951023757, -0.256259263)"
+    },
+    "RightCF": {
+      "expression": "CFrame.new(0.750240326, -0.320354462, 0.698204041, 0.984791338, 0.171056703, -0.0304261371, 0.0148988543, -0.257621557, -0.96613121, -0.173101619, 0.950984061, -0.256252021)"
+    },
+    "Slot": "Defibrillator",
+    "WeaponType": null
+  }
+}

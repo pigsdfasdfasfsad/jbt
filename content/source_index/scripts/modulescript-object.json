@@ -1,0 +1,22 @@
+{
+  "bytes": 342,
+  "errors": 0,
+  "file": "ModuleScript.Object.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 17,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

@@ -1,0 +1,42 @@
+{
+  "bytes": 1171,
+  "errors": 0,
+  "file": "ModuleScript.Chat Color.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "LoadChatColorModule",
+      "",
+      ""
+    ],
+    [
+      "GetId_upvw",
+      "",
+      ""
+    ],
+    [
+      "",
+      "GetId",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "Get",
+      ""
+    ],
+    [
+      "module.GetColor",
+      "",
+      ""
+    ]
+  ],
+  "lines": 36,
+  "remotes": [],
+  "requires": [],
+  "warnings": 1
+}

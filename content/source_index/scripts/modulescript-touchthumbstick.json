@@ -1,0 +1,84 @@
+{
+  "bytes": 8316,
+  "errors": 0,
+  "file": "ModuleScript.TouchThumbstick.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "setmetatable_result1_2_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.Enable",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.OnInputEnded",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.Create",
+      "",
+      ""
+    ],
+    [
+      "ResizeThumbstick",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "DoMove",
+      ""
+    ],
+    [
+      "MoveStick_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "MoveStick",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "",
+      "",
+      "arg1_5, arg2_2"
+    ],
+    [
+      "",
+      "",
+      "arg1_6, arg2_3"
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 219,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"BaseCharacterController\"))"
+  ],
+  "warnings": 0
+}

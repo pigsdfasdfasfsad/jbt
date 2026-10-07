@@ -1,0 +1,106 @@
+{
+  "bytes": 5690,
+  "errors": 0,
+  "file": "ModuleScript.Poppercam.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "cframeToAxis",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "axisToCFrame",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "extractRotation",
+      ""
+    ],
+    [
+      "new",
+      "",
+      ""
+    ],
+    [
+      "tbl_upvr.Step",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "",
+      "extrapolate",
+      ""
+    ],
+    [
+      "tbl_upvr.Reset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.GetOcclusionMode",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.Enable",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.CharacterAdded",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.CharacterRemoving",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_2_upvr.OnCameraSubjectChanged",
+      "",
+      ""
+    ]
+  ],
+  "lines": 111,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"BaseOcclusion\"))",
+    "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserFixCameraFPError\")",
+    "script.Parent:WaitForChild(\"ZoomController\"))"
+  ],
+  "warnings": 0
+}

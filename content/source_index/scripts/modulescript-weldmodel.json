@@ -1,0 +1,17 @@
+{
+  "bytes": 734,
+  "errors": 0,
+  "file": "ModuleScript.WeldModel.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.Weld",
+      "",
+      ""
+    ]
+  ],
+  "lines": 25,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

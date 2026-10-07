@@ -1,0 +1,17 @@
+{
+  "bytes": 439,
+  "errors": 1,
+  "file": "ModuleScript.Specific Perks.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.Check",
+      "",
+      ""
+    ]
+  ],
+  "lines": 19,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

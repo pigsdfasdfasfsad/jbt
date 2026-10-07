@@ -1,0 +1,47 @@
+{
+  "bytes": 2226,
+  "errors": 0,
+  "file": "ModuleScript.Model.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.SetCollisionGroup",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetMassless",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Weld",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.CutVelocity",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetMass",
+      "",
+      ""
+    ],
+    [
+      "launch_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "launch",
+      ""
+    ]
+  ],
+  "lines": 83,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

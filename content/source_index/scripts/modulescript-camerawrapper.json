@@ -1,0 +1,54 @@
+{
+  "bytes": 1870,
+  "errors": 0,
+  "file": "ModuleScript.CameraWrapper.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "module_upvr._connectCallbacks",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Enable",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Disable",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Connect",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Disconnect",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.getCamera",
+      "",
+      ""
+    ]
+  ],
+  "lines": 64,
+  "remotes": [],
+  "requires": [
+    "script.Parent.ConnectionUtil)"
+  ],
+  "warnings": 0
+}

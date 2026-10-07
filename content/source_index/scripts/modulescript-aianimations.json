@@ -1,0 +1,37 @@
+{
+  "bytes": 3977,
+  "errors": 0,
+  "file": "ModuleScript.AIAnimations.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_2_upvr.Get",
+      "",
+      ""
+    ],
+    [
+      "module_2_upvr.LoadAll",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module_2_upvr.GetAnimNum",
+      "",
+      ""
+    ],
+    [
+      "module_2_upvr.GetAnimName",
+      "",
+      ""
+    ]
+  ],
+  "lines": 139,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

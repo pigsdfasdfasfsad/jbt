@@ -1,0 +1,39 @@
+{
+  "bytes": 1218,
+  "errors": 0,
+  "file": "ModuleScript.BaseCharacterController.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr_2.new",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.GetMoveVector",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.IsMoveVectorCameraRelative",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.GetIsJumping",
+      "",
+      ""
+    ],
+    [
+      "module_upvr_2.Enable",
+      "",
+      ""
+    ]
+  ],
+  "lines": 32,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"ConnectionUtil\"))"
+  ],
+  "warnings": 0
+}

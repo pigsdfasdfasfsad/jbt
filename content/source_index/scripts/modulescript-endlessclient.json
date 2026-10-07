@@ -1,0 +1,52 @@
+{
+  "bytes": 8089,
+  "errors": 2,
+  "file": "ModuleScript.EndlessClient.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "Tag",
+      "",
+      ""
+    ],
+    [
+      "SlowDown",
+      "",
+      ""
+    ],
+    [
+      "module.NewMap",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ]
+  ],
+  "lines": 249,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

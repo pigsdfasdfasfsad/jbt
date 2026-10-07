@@ -1,0 +1,37 @@
+{
+  "bytes": 2209,
+  "errors": 4,
+  "file": "ModuleScript.Role Tags.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.SetTag",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetTag",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Check",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetTagColor",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetAllTags",
+      "",
+      ""
+    ]
+  ],
+  "lines": 88,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

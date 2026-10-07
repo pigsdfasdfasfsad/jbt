@@ -1,0 +1,56 @@
+{
+  "bytes": 7683,
+  "errors": 7,
+  "file": "ModuleScript.A10Client.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.GetCurSound",
+      "",
+      ""
+    ],
+    [
+      "module.PlayRadioSound",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module.Brt",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "GetNewF",
+      ""
+    ],
+    [
+      "module.Update",
+      "",
+      ""
+    ]
+  ],
+  "lines": 267,
+  "remotes": [],
+  "requires": [
+    "game.ReplicatedStorage.SharedModules.Utilities.Chunk)",
+    "script.Parent.Animate)",
+    "game.ReplicatedStorage.SharedModules.Utilities.Ray)"
+  ],
+  "warnings": 3
+}

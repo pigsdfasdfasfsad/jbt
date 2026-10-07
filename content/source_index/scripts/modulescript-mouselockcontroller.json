@@ -1,0 +1,104 @@
+{
+  "bytes": 6731,
+  "errors": 8,
+  "file": "ModuleScript.MouseLockController.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetIsMouseLocked",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetBindableToggleEvent",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetMouseLockOffset",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.UpdateMouseLockAvailability",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.OnBoundKeysObjectChanged",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.OnMouseLockToggled",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.DoMouseLockSwitch",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.BindContextActions",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2, arg3"
+    ],
+    [
+      "module_upvr.UnbindContextActions",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.IsMouseLocked",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.EnableMouseLock",
+      "",
+      ""
+    ]
+  ],
+  "lines": 183,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"CameraUtils\"))"
+  ],
+  "warnings": 2
+}

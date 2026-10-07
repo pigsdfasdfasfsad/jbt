@@ -1,0 +1,84 @@
+{
+  "bytes": 7468,
+  "errors": 7,
+  "file": "ModuleScript.Sounds.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.UpdateSounds",
+      "",
+      ""
+    ],
+    [
+      "module.AddEffect",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateMusic",
+      "",
+      ""
+    ],
+    [
+      "module.AddMusic",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module.UpdateVolume",
+      "",
+      ""
+    ],
+    [
+      "module.HeartbeatIn",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module.HeatbeatOut",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "module.PlaySoundAtPos",
+      "",
+      ""
+    ],
+    [
+      "module.PlayInfectedSound",
+      "",
+      ""
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ]
+  ],
+  "lines": 240,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Spectate)"
+  ],
+  "warnings": 1
+}

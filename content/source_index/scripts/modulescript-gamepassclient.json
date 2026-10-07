@@ -1,0 +1,68 @@
+{
+  "bytes": 2011,
+  "errors": 0,
+  "file": "ModuleScript.GamepassClient.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.GetGamepassToPrice",
+      "",
+      ""
+    ],
+    [
+      "module.GetDevProductToPrice",
+      "",
+      ""
+    ],
+    [
+      "module.OwnsGamepass",
+      "",
+      ""
+    ],
+    [
+      "module.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "",
+      "",
+      "arg1_3"
+    ],
+    [
+      "",
+      "",
+      "arg1_4"
+    ],
+    [
+      "",
+      "",
+      "arg1_5"
+    ],
+    [
+      "module.Initiate",
+      "",
+      ""
+    ]
+  ],
+  "lines": 71,
+  "remotes": [],
+  "requires": [
+    "script.Parent.Parent.Client.Gui).CanBuySkins()",
+    "script.Parent.Parent.Client.Gui).UpdateGamepassPrices(var3_upvw)",
+    "script.Parent.Parent.Client.Gui).UpdateDevProductPrices(var4_upvw)",
+    "arg1.SharedModules.GamepassInfo)[tostring(v)]] = true",
+    "arg1.SharedModules.GamepassInfo)[tostring(arg1_5)]] = true"
+  ],
+  "warnings": 0
+}

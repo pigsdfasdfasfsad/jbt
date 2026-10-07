@@ -1,0 +1,24 @@
+{
+  "bytes": 518,
+  "errors": 0,
+  "file": "ModuleScript.Input.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.GetModule",
+      "",
+      ""
+    ],
+    [
+      "module.Run",
+      "",
+      ""
+    ]
+  ],
+  "lines": 24,
+  "remotes": [],
+  "requires": [
+    "v)"
+  ],
+  "warnings": 0
+}

@@ -1,0 +1,32 @@
+{
+  "bytes": 1005,
+  "errors": 0,
+  "file": "ModuleScript.ObjectiveItem.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "",
+      "",
+      "arg1"
+    ],
+    [
+      "",
+      "GetItemInfo",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "GetItemPickupSounds",
+      ""
+    ]
+  ],
+  "lines": 43,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

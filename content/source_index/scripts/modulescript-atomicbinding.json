@@ -1,0 +1,82 @@
+{
+  "bytes": 6390,
+  "errors": 10,
+  "file": "ModuleScript.AtomicBinding.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "parsePath_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "parsePath",
+      ""
+    ],
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "isManifestResolved",
+      ""
+    ],
+    [
+      "unbindNodeDescend_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "unbindNodeDescend",
+      ""
+    ],
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "module_upvr._startBoundFn",
+      "",
+      ""
+    ],
+    [
+      "module_upvr._stopBoundFn",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.bindRoot",
+      "",
+      ""
+    ],
+    [
+      "processNode_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "processNode",
+      ""
+    ],
+    [
+      "module_upvr.unbindRoot",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.destroy",
+      "",
+      ""
+    ]
+  ],
+  "lines": 222,
+  "remotes": [],
+  "requires": [],
+  "warnings": 4
+}

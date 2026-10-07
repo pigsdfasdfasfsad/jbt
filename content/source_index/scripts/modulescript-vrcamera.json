@@ -1,0 +1,65 @@
+{
+  "bytes": 13957,
+  "errors": 8,
+  "file": "ModuleScript.VRCamera.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "setmetatable_result1_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.Reset",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.GetAvatarFeetWorldYValue",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.UpdateFirstPersonTransform",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.UpdateImmersionCamera",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.UpdateThirdPersonComfortTransform",
+      "",
+      ""
+    ],
+    [
+      "INLINED_2",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.UpdateThirdPersonFollowTransform",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.LeaveFirstPerson",
+      "",
+      ""
+    ]
+  ],
+  "lines": 311,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"VRBaseCamera\"))",
+    "Players_upvr.LocalPlayer:WaitForChild(\"PlayerScripts\").PlayerModule:WaitForChild(\"ControlModule\"))"
+  ],
+  "warnings": 2
+}

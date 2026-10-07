@@ -1,0 +1,13 @@
+{
+  "bytes": 56,
+  "errors": 0,
+  "file": "LocalScript.PlayerScriptsLoader.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [],
+  "lines": 1,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"PlayerModule\"))"
+  ],
+  "warnings": 0
+}

@@ -1,0 +1,27 @@
+{
+  "bytes": 17057,
+  "errors": 0,
+  "file": "ModuleScript.RPG-7.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.LauncherFlash",
+      "",
+      ""
+    ],
+    [
+      "flash",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 599,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

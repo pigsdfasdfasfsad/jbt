@@ -1,0 +1,17 @@
+{
+  "bytes": 339,
+  "errors": 0,
+  "file": "ModuleScript.Collision Group.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.Set",
+      "",
+      ""
+    ]
+  ],
+  "lines": 15,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

@@ -1,0 +1,37 @@
+{
+  "bytes": 3502,
+  "errors": 6,
+  "file": "ModuleScript.World Effects.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.ResetHeli",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.GetEffectObjects",
+      "",
+      ""
+    ],
+    [
+      "Check_upvr",
+      "",
+      ""
+    ],
+    [
+      "",
+      "Check",
+      ""
+    ],
+    [
+      "module_upvr.UpdateObjects",
+      "",
+      ""
+    ]
+  ],
+  "lines": 114,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

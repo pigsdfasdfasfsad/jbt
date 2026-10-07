@@ -1,0 +1,27 @@
+{
+  "bytes": 489,
+  "errors": 0,
+  "file": "ModuleScript.Mouse.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module.GetPosition",
+      "",
+      ""
+    ],
+    [
+      "module.Run",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      ""
+    ]
+  ],
+  "lines": 18,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

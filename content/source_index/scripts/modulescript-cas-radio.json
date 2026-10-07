@@ -1,0 +1,66 @@
+{
+  "bytes": 10480,
+  "errors": 0,
+  "file": "ModuleScript.CAS Radio.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "_",
+      "",
+      ""
+    ],
+    [
+      "",
+      "randOffset",
+      ""
+    ],
+    [
+      "module.AnimUpdate",
+      "",
+      ""
+    ],
+    [
+      "module.UseErrorMsg",
+      "",
+      ""
+    ],
+    [
+      "module.UseUtilityCheckPass",
+      "",
+      ""
+    ],
+    [
+      "func",
+      "",
+      ""
+    ],
+    [
+      "func",
+      "",
+      ""
+    ],
+    [
+      "func",
+      "",
+      ""
+    ],
+    [
+      "func",
+      "",
+      ""
+    ],
+    [
+      "tbl_13.func",
+      "",
+      ""
+    ]
+  ],
+  "lines": 378,
+  "remotes": [
+    "FireServer"
+  ],
+  "requires": [
+    "game.ReplicatedStorage.AudioVisualizer)"
+  ],
+  "warnings": 0
+}

@@ -1,0 +1,87 @@
+{
+  "bytes": 10759,
+  "errors": 0,
+  "file": "ModuleScript.OrbitalCamera.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "setmetatable_result1_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.LoadOrCreateNumberValueParameter",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2"
+    ],
+    [
+      "setmetatable_result1_upvr.SetAndBoundsCheckAzimuthValues",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.SetAndBoundsCheckElevationValues",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.SetAndBoundsCheckDistanceValues",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.LoadNumberValueParameters",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.GetModuleName",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.SetInitialOrientation",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.GetCameraToSubjectDistance",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.SetCameraToSubjectDistance",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.CalculateNewLookVector",
+      "",
+      ""
+    ],
+    [
+      "setmetatable_result1_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "INLINED",
+      "",
+      ""
+    ]
+  ],
+  "lines": 240,
+  "remotes": [],
+  "requires": [
+    "script.Parent:WaitForChild(\"BaseCamera\"))",
+    "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserFixOrbitalCameraAzimuth\")",
+    "script.Parent:WaitForChild(\"CameraUtils\"))",
+    "script.Parent:WaitForChild(\"CameraInput\"))"
+  ],
+  "warnings": 1
+}

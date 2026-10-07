@@ -1,0 +1,10 @@
+{
+  "asset_ids": 3604,
+  "conflict_records": 26,
+  "distinct_hashes": 7698,
+  "feature_traces": 65,
+  "format": "twr-recovery-source-counts-v1",
+  "source_archives_verified": 6,
+  "source_files_verified": 8033,
+  "weapon_and_equipment_definitions": 98
+}

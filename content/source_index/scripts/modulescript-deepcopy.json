@@ -1,0 +1,17 @@
+{
+  "bytes": 304,
+  "errors": 0,
+  "file": "ModuleScript.DeepCopy.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.Copy",
+      "",
+      ""
+    ]
+  ],
+  "lines": 15,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

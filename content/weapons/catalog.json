@@ -1,0 +1,500 @@
+{
+  "active_weapon_count": 91,
+  "equipment": [
+    {
+      "name": "CAS Radio",
+      "path": "entries/cas-radio.json",
+      "slot": "Utility"
+    },
+    {
+      "name": "Defibrillator",
+      "path": "entries/defibrillator.json",
+      "slot": "Defibrillator"
+    },
+    {
+      "name": "Dog Whistle",
+      "path": "entries/dog-whistle.json",
+      "slot": "Utility"
+    },
+    {
+      "name": "Frag",
+      "path": "entries/frag.json",
+      "slot": null
+    },
+    {
+      "name": "Hammer",
+      "path": "entries/hammer.json",
+      "slot": "Hammer"
+    },
+    {
+      "name": "Molotov",
+      "path": "entries/molotov.json",
+      "slot": null
+    },
+    {
+      "name": "Nerve Gas",
+      "path": "entries/nerve-gas.json",
+      "slot": null
+    }
+  ],
+  "equipment_count": 7,
+  "format": "twr-weapon-catalog-v1",
+  "source": "evidence/catalog/weapon_catalog.json.gz",
+  "weapons": [
+    {
+      "name": "2x4",
+      "path": "entries/2x4.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "2x4 w- Barbed Wire",
+      "path": "entries/2x4-w-barbed-wire.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "AA-12",
+      "path": "entries/aa-12.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Aero Survival Rifle",
+      "path": "entries/aero-survival-rifle.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "AK-47",
+      "path": "entries/ak-47.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "AR-57",
+      "path": "entries/ar-57.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "AS VAL",
+      "path": "entries/as-val.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "ASh-12",
+      "path": "entries/ash-12.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "AUG",
+      "path": "entries/aug.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Barrett M82A1",
+      "path": "entries/barrett-m82a1.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Baseball Bat",
+      "path": "entries/baseball-bat.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "Benelli M4",
+      "path": "entries/benelli-m4.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Butcher Knife",
+      "path": "entries/butcher-knife.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "Candy Cane Sword",
+      "path": "entries/candy-cane-sword.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "CBJ-MS",
+      "path": "entries/cbj-ms.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "CMMG Mk47 Mutant",
+      "path": "entries/cmmg-mk47-mutant.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Colt Python",
+      "path": "entries/colt-python.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Crowbar",
+      "path": "entries/crowbar.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "CZ Scorpion EVO Micro K",
+      "path": "entries/cz-scorpion-evo-micro-k.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Desert Eagle",
+      "path": "entries/desert-eagle.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Festive RPG-7",
+      "path": "entries/festive-rpg-7.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Fire Axe",
+      "path": "entries/fire-axe.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "Flamethrower",
+      "path": "entries/flamethrower.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "FN FAL",
+      "path": "entries/fn-fal.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Frying Pan",
+      "path": "entries/frying-pan.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "G36C",
+      "path": "entries/g36c.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Gepard PDW",
+      "path": "entries/gepard-pdw.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Glock 17",
+      "path": "entries/glock-17.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Golf Club",
+      "path": "entries/golf-club.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "HK P30L",
+      "path": "entries/hk-p30l.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Ingram MAC-10",
+      "path": "entries/ingram-mac-10.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "KAC PDW",
+      "path": "entries/kac-pdw.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Katana",
+      "path": "entries/katana.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "Kriss Vector",
+      "path": "entries/kriss-vector.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "LH9 MKII",
+      "path": "entries/lh9-mkii.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "LWRC IC-PSD",
+      "path": "entries/lwrc-ic-psd.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "M1 Garand",
+      "path": "entries/m1-garand.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "M110 SASS",
+      "path": "entries/m110-sass.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "M14",
+      "path": "entries/m14.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "M16A1",
+      "path": "entries/m16a1.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "M1911A1",
+      "path": "entries/m1911a1.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "M320",
+      "path": "entries/m320.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "M4A1",
+      "path": "entries/m4a1.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "M60",
+      "path": "entries/m60.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Makarov",
+      "path": "entries/makarov.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Maxim 9",
+      "path": "entries/maxim-9.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "MG 42",
+      "path": "entries/mg-42.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Minigun",
+      "path": "entries/minigun.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "MK18",
+      "path": "entries/mk18.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Mosin Nagant",
+      "path": "entries/mosin-nagant.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Mossberg 500",
+      "path": "entries/mossberg-500.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "MP-443 Grach",
+      "path": "entries/mp-443-grach.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "MP5A2",
+      "path": "entries/mp5a2.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "MP7",
+      "path": "entries/mp7.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Obrez Mosin",
+      "path": "entries/obrez-mosin.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "OTs-14 Groza",
+      "path": "entries/ots-14-groza.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "P320",
+      "path": "entries/p320.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "P90",
+      "path": "entries/p90.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "PB 6P9",
+      "path": "entries/pb-6p9.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Pool Cue",
+      "path": "entries/pool-cue.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "PP-91 Kedr",
+      "path": "entries/pp-91-kedr.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "PPSh-41",
+      "path": "entries/ppsh-41.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "RPG-7",
+      "path": "entries/rpg-7.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "RPK",
+      "path": "entries/rpk.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Ruger 10-22",
+      "path": "entries/ruger-10-22.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Sabre",
+      "path": "entries/sabre.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "SAP-6",
+      "path": "entries/sap-6.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Sawn Off Shotgun",
+      "path": "entries/sawn-off-shotgun.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "SCAR-H",
+      "path": "entries/scar-h.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Serbu Super Shorty",
+      "path": "entries/serbu-super-shorty.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Shovel",
+      "path": "entries/shovel.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "SKO Shorty",
+      "path": "entries/sko-shorty.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Sledge Hammer",
+      "path": "entries/sledge-hammer.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "SPAS-12",
+      "path": "entries/spas-12.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Spiked Baseball Bat",
+      "path": "entries/spiked-baseball-bat.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "Sten Mk V",
+      "path": "entries/sten-mk-v.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "SVD",
+      "path": "entries/svd.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Taurus Judge",
+      "path": "entries/taurus-judge.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Taurus Model 66",
+      "path": "entries/taurus-model-66.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "TEC-9",
+      "path": "entries/tec-9.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Thompson M1",
+      "path": "entries/thompson-m1.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "TP9SFx",
+      "path": "entries/tp9sfx.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Umbrella",
+      "path": "entries/umbrella.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "UMP-45",
+      "path": "entries/ump-45.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Uzi",
+      "path": "entries/uzi.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "VSS",
+      "path": "entries/vss.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Walther P38",
+      "path": "entries/walther-p38.json",
+      "slot": "Secondary"
+    },
+    {
+      "name": "Winchester Model 1892",
+      "path": "entries/winchester-model-1892.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Winchester Model 70",
+      "path": "entries/winchester-model-70.json",
+      "slot": "Primary"
+    },
+    {
+      "name": "Wrench",
+      "path": "entries/wrench.json",
+      "slot": "Melee"
+    },
+    {
+      "name": "XD-9",
+      "path": "entries/xd-9.json",
+      "slot": "Secondary"
+    }
+  ]
+}

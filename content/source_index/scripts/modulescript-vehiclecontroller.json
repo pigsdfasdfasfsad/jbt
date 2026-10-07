@@ -1,0 +1,87 @@
+{
+  "bytes": 4896,
+  "errors": 9,
+  "file": "ModuleScript.VehicleController.Source.txt",
+  "format": "twr-script-metadata-v1",
+  "functions": [
+    [
+      "module_upvr.new",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.BindContextActions",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "arg1_2, arg2, arg3"
+    ],
+    [
+      "",
+      "",
+      "arg1_3, arg2, arg3"
+    ],
+    [
+      "",
+      "",
+      "arg1_4, arg2, arg3"
+    ],
+    [
+      "",
+      "",
+      "arg1_5, arg2, arg3"
+    ],
+    [
+      "module_upvr.Enable",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.OnThrottleAccel",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.OnThrottleDeccel",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.OnSteerRight",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.OnSteerLeft",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.Update",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.ComputeThrottle",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.ComputeSteer",
+      "",
+      ""
+    ],
+    [
+      "module_upvr.SetupAutoPilot",
+      "",
+      ""
+    ]
+  ],
+  "lines": 149,
+  "remotes": [],
+  "requires": [],
+  "warnings": 0
+}

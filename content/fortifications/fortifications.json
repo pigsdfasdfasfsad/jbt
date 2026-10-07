@@ -1,0 +1,41 @@
+{
+  "authority": "recovered original TWR script",
+  "format": "twr-fortification-source-normalization-v1",
+  "fortifications": [
+    {
+      "count": 1,
+      "damage": 75,
+      "fireSound": "rbxassetid://1494276636",
+      "icon": "rbxassetid://1585266923",
+      "maxPen": 5,
+      "name": "50 Cal",
+      "sound": "rbxassetid://1496699084",
+      "swings": 3
+    },
+    {
+      "count": 2,
+      "name": "Barbed Wire",
+      "sound": "rbxassetid://1496729847",
+      "swings": 2
+    },
+    {
+      "count": 1,
+      "damage": 420,
+      "name": "Clap Bomb",
+      "radius": 25,
+      "sound": "rbxassetid://1496566264",
+      "swings": 1
+    },
+    {
+      "count": 1,
+      "damage": 375,
+      "name": "Jack",
+      "radius": 35,
+      "sound": "rbxassetid://1496900777",
+      "swings": 1
+    }
+  ],
+  "source_file": "ModuleScript.FortificationsInfo.Source.txt",
+  "source_sha256": "367ddb87306d39db7b8de3236e988a500d0c6e11acf21028b18b6ce542175d20",
+  "static_only": true
+}
