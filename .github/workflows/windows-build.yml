@@ -35,6 +35,10 @@ jobs:
         with:
           dotnet-version: '8.0.425'
 
+      - name: Install validation dependencies
+        shell: pwsh
+        run: python -m pip install -e .[test]
+
       - name: Validate evidence/content/domain contracts
         shell: pwsh
         run: python tools/validation/run_all.py

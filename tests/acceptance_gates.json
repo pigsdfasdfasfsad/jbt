@@ -1,0 +1,23 @@
+[
+  {"id":"TWR-GATE-001","name":"Offline runtime"},
+  {"id":"TWR-GATE-002","name":"Regular-only mode"},
+  {"id":"TWR-GATE-003","name":"Exactly fifteen waves"},
+  {"id":"TWR-GATE-004","name":"Wave fifteen completes and no wave sixteen"},
+  {"id":"TWR-GATE-005","name":"Enemy Juggernaut disabled"},
+  {"id":"TWR-GATE-006","name":"Normal melee movement stun disabled"},
+  {"id":"TWR-GATE-007","name":"Map completion reward is idempotent"},
+  {"id":"TWR-GATE-008","name":"Completion save precedes results continuation"},
+  {"id":"TWR-GATE-009","name":"Results return to lobby"},
+  {"id":"TWR-GATE-010","name":"Ten-map release whitelist"},
+  {"id":"TWR-GATE-011","name":"Stadium and Carnival excluded"},
+  {"id":"TWR-GATE-012","name":"Local-authoritative command/event boundary"},
+  {"id":"TWR-GATE-013","name":"Presentation does not own authoritative state"},
+  {"id":"TWR-GATE-014","name":"RBXLX conversion is static only"},
+  {"id":"TWR-GATE-015","name":"Immutable evidence excluded from Git runtime tree"},
+  {"id":"TWR-GATE-016","name":"Recovered weapon catalog has 91 weapons"},
+  {"id":"TWR-GATE-017","name":"Recovered perk catalog has 21 perks"},
+  {"id":"TWR-GATE-018","name":"Six source archive hashes verified"},
+  {"id":"TWR-GATE-019","name":"Ten clean map reconstruction previews present"},
+  {"id":"TWR-GATE-020","name":"Pinned Windows build toolchain"},
+  {"id":"TWR-GATE-021","name":"RemoteSpy evidence translates to local semantics, not Roblox transport"}
+]
