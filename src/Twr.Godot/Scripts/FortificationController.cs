@@ -88,7 +88,7 @@ public partial class FortificationController : Node
         if (Runtime.Player.Inventory.GetValueOrDefault(definition.Name) <= 0)
             return;
 
-        var swingSeconds=Runtime.HasPerk("Carpenter") ? SwingSeconds*0.6 : SwingSeconds;
+        var swingSeconds=Runtime.HasPerk("Carpenter") ? SwingSeconds/1.4 : SwingSeconds;
         _swingCooldown=swingSeconds;
         _swingsCompleted++;
         var requiredSwings=Math.Max(1,definition.Swings -

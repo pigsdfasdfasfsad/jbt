@@ -19,6 +19,13 @@ public sealed record RuntimeWeaponDefinition(
     bool RangeVerified,
     float Spread,
     int MaxPen,
+    float AimFov,
+    float HorizontalRecoil,
+    float VerticalRecoil,
+    float RecoilShake,
+    double AimSeconds,
+    double UnAimSeconds,
+    double EquipSeconds,
     double ReloadSeconds,
     double ActionSeconds,
     bool Bladed,
@@ -120,9 +127,16 @@ public static class RuntimeWeaponCatalog
             var range = Float(stats, "Distance", Float(stats, "Range", weaponType == "Melee" ? 4.5f : 1000f));
             var spread = Float(stats, "Spread", 0);
             var maxPen = Int(stats, "MaxPen", 0);
+            var aimFov = Float(stats, "FOV", 60f);
+            var horizontalRecoil = Float(stats, "HorizontalRecoil", 0f);
+            var verticalRecoil = Float(stats, "VerticleRecoil", 0f);
+            var recoilShake = Float(stats, "RecoilShake", 0f);
             var bladed = Bool(stats, "Bladed", false);
             var projectileType = OptionalString(stats, "ProjectileType");
 
+            var aimSeconds = Duration(root, "Aim", 0.5);
+            var unAimSeconds = Duration(root, "UnAim", 0.25);
+            var equipSeconds = Duration(root, "Equip", Duration(root, "BasicEquip", 0.5));
             var reloadSeconds = Duration(root, "Reload", 0);
             var actionSeconds = weaponType == "Melee"
                 ? Duration(root, "Swing", 0.7)
@@ -132,7 +146,9 @@ public static class RuntimeWeaponCatalog
             result[name] = new RuntimeWeaponDefinition(
                 name, slot, weaponType, type, damage, level, price,
                 magazine, reserve, ammoPickup, ammoPickupVerified, rpm,
-                range, rangeVerified, spread, maxPen, reloadSeconds,
+                range, rangeVerified, spread, maxPen, aimFov,
+                horizontalRecoil, verticalRecoil, recoilShake,
+                aimSeconds, unAimSeconds, equipSeconds, reloadSeconds,
                 actionSeconds, bladed, projectileType);
         }
 

@@ -22,7 +22,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private bool _jumpRequested;
     private double _actionCooldown;
     private double _reloadTimer;
+    private double _equipTimer;
     private double _adrenalineTick;
+    private bool _aiming;
+    private Vector3 _hipViewPosition;
+    private Vector3 _hipViewRotation;
     private string? _reloadWeapon;
     private string _primaryWeapon = StarterLoadoutService.SawnOff;
     private string _secondaryWeapon = StarterLoadoutService.Glock17;
@@ -82,6 +86,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public override void _PhysicsProcess(double delta)
     {
         _actionCooldown = Math.Max(0, _actionCooldown - delta);
+        _equipTimer = Math.Max(0, _equipTimer - delta);
 
         if (_reloadTimer > 0)
         {
@@ -137,6 +142,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         MoveAndSlide();
 
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
+        UpdateAim(delta,spec);
         if (!HammerMode && _heldThrowable is null && spec.IsAutomatic &&
             Input.MouseMode == Input.MouseModeEnum.Captured &&
             Input.IsMouseButtonPressed(MouseButton.Left))
@@ -238,6 +244,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _reloadTimer = 0;
         _reloadWeapon = null;
         _actionCooldown = 0;
+        _aiming=false;
+        _camera.Fov=60;
+        var spec=RuntimeWeaponCatalog.Get(weapon);
+        var equipSpeed=Runtime?.HasPerk("Dexterous")==true ? 1.3 : 1.0;
+        _equipTimer=Math.Max(0.01,spec.EquipSeconds/equipSpeed);
         ApplyViewModel();
     }
 
@@ -272,6 +283,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
                 ? new Vector3(0.18f, 0.20f, 0.95f)
                 : new Vector3(0.16f, 0.18f, 0.62f);
         }
+
+        _hipViewPosition=_viewModel.Position;
+        _hipViewRotation=_viewModel.Rotation;
     }
 
     private void SelectThrowable(string type)
@@ -332,14 +346,14 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var reserve = Runtime.Player.ReserveAmmo.GetValueOrDefault(spec.Name);
         if (loaded >= spec.Magazine || reserve <= 0) return;
 
-        var reloadMultiplier = Runtime?.HasPerk("Brisk") == true ? 0.8 : 1.0;
-        _reloadTimer = Math.Max(0.05, spec.ReloadSeconds * reloadMultiplier);
+        var reloadSpeed = Runtime?.HasPerk("Brisk") == true ? 1.2 : 1.0;
+        _reloadTimer = Math.Max(0.05, spec.ReloadSeconds / reloadSpeed);
         _reloadWeapon = spec.Name;
     }
 
     private void TryUseWeapon()
     {
-        if (_actionCooldown > 0 || _reloadTimer > 0 || Runtime?.Player is null || !Runtime.Player.IsAlive) return;
+        if (_actionCooldown > 0 || _reloadTimer > 0 || _equipTimer > 0 || Runtime?.Player is null || !Runtime.Player.IsAlive) return;
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
 
         if (spec.IsMelee)
@@ -357,6 +371,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         if (!Runtime.SpendAmmo(spec.Name, 1)) return;
         _actionCooldown = FireInterval(spec);
+        ApplyRecoil(spec);
 
         if (spec.IsLauncher)
         {
@@ -417,6 +432,47 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var amount=Math.Min(1f,35f-Runtime.Player.Health);
         if(amount>0)Runtime.HealPlayer(amount);
         _adrenalineTick=1.0;
+    }
+
+    private void UpdateAim(double delta,RuntimeWeaponDefinition spec)
+    {
+        if(_heldThrowable is not null || HammerMode)
+        {
+            _aiming=false;
+            _camera.Fov=Mathf.MoveToward(_camera.Fov,60f,(float)(120.0*delta));
+            return;
+        }
+
+        var wantsAim = !spec.IsMelee && _equipTimer<=0 && _reloadTimer<=0 &&
+            Input.MouseMode==Input.MouseModeEnum.Captured &&
+            Input.IsMouseButtonPressed(MouseButton.Right);
+        _aiming=wantsAim;
+
+        var aimSpeed=Runtime?.HasPerk("Eagle Eyes")==true ? 1.4 : 1.0;
+        var seconds=Math.Max(0.01,(_aiming ? spec.AimSeconds : spec.UnAimSeconds)/aimSpeed);
+        var desiredFov=_aiming ? Math.Clamp(spec.AimFov,5f,60f) : 60f;
+        var fullTravel=Math.Max(1f,Math.Abs(60f-Math.Clamp(spec.AimFov,5f,60f)));
+        _camera.Fov=Mathf.MoveToward(_camera.Fov,desiredFov,(float)(fullTravel/seconds*delta));
+
+        // APPROXIMATED Godot viewmodel alignment. The source AimCF transforms
+        // are Roblox CFrames and cannot be transferred directly.
+        var desiredPosition=_aiming
+            ? new Vector3(0,-0.18f,_hipViewPosition.Z)
+            : _hipViewPosition;
+        var blend=(float)Math.Clamp(delta/seconds,0.0,1.0);
+        _viewModel.Position=_viewModel.Position.Lerp(desiredPosition,blend);
+        if(!_aiming)
+            _viewModel.Rotation=_viewModel.Rotation.Lerp(_hipViewRotation,blend);
+    }
+
+    private void ApplyRecoil(RuntimeWeaponDefinition spec)
+    {
+        if(spec.VerticalRecoil<=0 && spec.HorizontalRecoil<=0)return;
+        var multiplier=Runtime?.HasPerk("Steady Hand")==true ? 0.5f : 1f;
+        var horizontal=_rng.RandfRange(-spec.HorizontalRecoil,spec.HorizontalRecoil)*multiplier;
+        _pitch=Mathf.Clamp(_pitch-spec.VerticalRecoil*multiplier,-1.45f,1.45f);
+        RotateY(horizontal);
+        _camera.Rotation=new Vector3(_pitch,0,0);
     }
 
     private void FireLauncher(RuntimeWeaponDefinition spec)

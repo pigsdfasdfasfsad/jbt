@@ -21,7 +21,7 @@ def test_core_solo_perk_effects_are_wired():
 
 def test_fortification_perk_modifiers_match_documented_percentages():
     controller=read("src/Twr.Godot/Scripts/FortificationController.cs")
-    assert 'HasPerk("Carpenter") ? SwingSeconds*0.6' in controller
+    assert 'HasPerk("Carpenter") ? SwingSeconds/1.4' in controller
     assert 'HasPerk("Efficiency") && definition.Name=="50 Cal"' in controller
     assert 'multiplier*=1.35f' in controller
     actor=read("src/Twr.Godot/Scripts/FortificationActor.cs")
