@@ -29,5 +29,6 @@ def test_deployed_50cal_receives_player_and_runtime_references():
 def test_mount_locks_normal_player_movement_and_weapon_input():
     player=read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
     assert "public bool MountedMode" in player
-    assert "MountedMode" in player\n    assert "Velocity=Vector3.Zero" in player
+    assert "MountedMode" in player
+    assert "Velocity=Vector3.Zero" in player
     assert "SetMountedAim" in player
