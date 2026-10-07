@@ -75,7 +75,7 @@ public partial class GameplayRoot : Node3D
 
         if (_finished)
         {
-            _hud.UpdateState(Runtime.Player, Runtime.Match, "RESULTS", 0, _player.EquippedWeaponName);
+            _hud.UpdateState(Runtime.Player, Runtime.Match, "RESULTS", 0, _player.EquippedWeaponName,_player.HeldThrowableName);
             return;
         }
 
@@ -103,7 +103,7 @@ public partial class GameplayRoot : Node3D
                 break;
         }
 
-        _hud.UpdateState(Runtime.Player, Runtime.Match, StageName(), _stageTime, _player.EquippedWeaponName);
+        _hud.UpdateState(Runtime.Player, Runtime.Match, StageName(), _stageTime, _player.EquippedWeaponName,_player.HeldThrowableName);
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -307,10 +307,12 @@ public partial class GameplayRoot : Node3D
     {
         // APPROXIMATED coordinates: topology rules come from map references,
         // while exact retail item spawn transforms are not recovered.
-        var types = new[] { "Bandages", "Ammo", "Body Armor", "Medkit", "Ammo", "Bandages" };
-        var count = Math.Min(types.Length, _mapLayout.PickupPoints.Count);
-        for (var i = 0; i < count; i++)
-            SpawnPickup(types[i], _mapLayout.PickupPoints[i]);
+        var pool=new[] { "Bandages","Ammo","Body Armor","Medkit","Energy Drink","Gas Mask","Frag","Molotov","Nerve Gas" };
+        foreach(var point in _mapLayout.PickupPoints)
+        {
+            var type=pool[_rng.RandiRange(0,pool.Length-1)];
+            SpawnPickup(type,point);
+        }
     }
 
     private void SpawnPickup(string type, Vector3 position, int grantCount = 1)

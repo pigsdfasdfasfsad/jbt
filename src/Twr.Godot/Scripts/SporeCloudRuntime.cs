@@ -41,6 +41,7 @@ public partial class SporeCloudRuntime : Node3D
         {
             _tickTimer = 0.5; // VERIFIED spore gas tick interval.
             if (Target is not null && Runtime?.Player?.IsAlive == true &&
+                !Runtime.Player.GasMaskActive &&
                 Target.GlobalPosition.DistanceTo(GlobalPosition) <= Radius)
             {
                 Runtime.DamagePlayer(TickDamage, "Spore gas", true);

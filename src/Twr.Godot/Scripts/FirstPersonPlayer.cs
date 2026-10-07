@@ -9,8 +9,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public string EquippedWeaponName => _equippedWeapon;
     public string PrimaryWeaponName => _primaryWeapon;
     public string SecondaryWeaponName => _secondaryWeapon;
+    public string? HeldThrowableName => _heldThrowable;
     public bool HammerMode { get; private set; }
-    public bool MountedMode { get; private set; }
+    public bool MountedMode {get;private set;}
     public Vector3 AimOrigin => _camera.GlobalPosition;
     public Vector3 AimDirection => -_camera.GlobalTransform.Basis.Z;
 
@@ -27,6 +28,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private string _secondaryWeapon = StarterLoadoutService.Glock17;
     private string _meleeWeapon = StarterLoadoutService.TwoByFour;
     private string _equippedWeapon = StarterLoadoutService.Glock17;
+    private string? _heldThrowable;
 
     private const float WalkSpeed = 17f;
     private const float SprintSpeed = 24f; // APPROXIMATED: retail absolute sprint speed is not recovered
@@ -98,9 +100,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
             MoveAndSlide();
             return;
         }
-        if (MountedMode)
+
+        if(MountedMode)
         {
-            Velocity = Vector3.Zero;
+            Velocity=Vector3.Zero;
             return;
         }
 
@@ -116,7 +119,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
         if (world.LengthSquared() > 0.001f) world = world.Normalized();
 
         var sprintMultiplier = Runtime.HasPerk("Speed Demon") ? 1.12f : 1f;
-        var speed = Input.IsKeyPressed(Key.Shift) ? SprintSpeed * sprintMultiplier : WalkSpeed;
+        // APPROXIMATED magnitude: duration is source-backed; speed percentage is not.
+        var drinkMultiplier = Runtime.Player.EnergyDrinkSeconds>0 ? 1.15f : 1f;
+        var speed = (Input.IsKeyPressed(Key.Shift) ? SprintSpeed * sprintMultiplier : WalkSpeed) * drinkMultiplier;
         var velocity = Velocity;
         velocity.X = world.X * speed;
         velocity.Z = world.Z * speed;
@@ -132,7 +137,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         MoveAndSlide();
 
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
-        if (!HammerMode && spec.IsAutomatic &&
+        if (!HammerMode && _heldThrowable is null && spec.IsAutomatic &&
             Input.MouseMode == Input.MouseModeEnum.Captured &&
             Input.IsMouseButtonPressed(MouseButton.Left))
             TryUseWeapon();
@@ -148,7 +153,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
             return;
         }
 
-        if (MountedMode) return;
+        if(MountedMode)return;
 
         if (@event is InputEventKey key && key.Pressed && !key.Echo)
         {
@@ -157,6 +162,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
             else if (key.Keycode == Key.Key1) Equip(_primaryWeapon);
             else if (key.Keycode == Key.Key2) Equip(_secondaryWeapon);
             else if (key.Keycode == Key.Key3) Equip(_meleeWeapon);
+            else if (key.Keycode == Key.Key5) SelectThrowable("Frag");
+            else if (key.Keycode == Key.Key6) SelectThrowable("Molotov");
+            else if (key.Keycode == Key.Key7) SelectThrowable("Nerve Gas");
+            else if (key.Keycode == Key.G) CycleThrowable();
             else if (key.Keycode == Key.Escape) Input.MouseMode = Input.MouseModeEnum.Visible;
         }
 
@@ -164,6 +173,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
         {
             if (Input.MouseMode != Input.MouseModeEnum.Captured)
                 Input.MouseMode = Input.MouseModeEnum.Captured;
+            else if (!HammerMode && _heldThrowable is not null)
+                TryThrowThrowable();
             else if (!HammerMode)
                 TryUseWeapon();
         }
@@ -173,6 +184,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     {
         MountedMode=enabled;
         HammerMode=false;
+        _heldThrowable=null;
         _reloadTimer=0;
         _reloadWeapon=null;
         _viewModel.Visible=!enabled;
@@ -188,9 +200,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
         if(!MountedMode)return;
         _camera.Fov=aiming ? 60 : 70;
     }
+
     public void SetHammerMode(bool enabled)
     {
         HammerMode = enabled;
+        if(enabled)_heldThrowable=null;
         _viewModel.Visible = !enabled;
         _reloadTimer = 0;
         _reloadWeapon = null;
@@ -219,6 +233,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     private void Equip(string weapon)
     {
+        _heldThrowable=null;
         _equippedWeapon = weapon;
         _reloadTimer = 0;
         _reloadWeapon = null;
@@ -257,6 +272,54 @@ public partial class FirstPersonPlayer : CharacterBody3D
                 ? new Vector3(0.18f, 0.20f, 0.95f)
                 : new Vector3(0.16f, 0.18f, 0.62f);
         }
+    }
+
+    private void SelectThrowable(string type)
+    {
+        if(Runtime?.Player is null || Runtime.Player.Inventory.GetValueOrDefault(type)<=0)return;
+        HammerMode=false;
+        _heldThrowable=type;
+        _reloadTimer=0;
+        _reloadWeapon=null;
+        _actionCooldown=0;
+        _viewModel.Visible=true;
+        var box=(BoxMesh)_viewModel.Mesh;
+        box.Size=new Vector3(0.22f,0.30f,0.22f);
+        _viewModel.Position=new Vector3(0.32f,-0.25f,-0.58f);
+        _viewModel.RotationDegrees=Vector3.Zero;
+    }
+
+    private void CycleThrowable()
+    {
+        if(Runtime?.Player is null)return;
+        var order=new[]{"Frag","Molotov","Nerve Gas"};
+        var available=order.Where(x=>Runtime.Player.Inventory.GetValueOrDefault(x)>0).ToArray();
+        if(available.Length==0){_heldThrowable=null;ApplyViewModel();return;}
+
+        if(_heldThrowable is null){SelectThrowable(available[0]);return;}
+        var current=Array.IndexOf(available,_heldThrowable);
+        SelectThrowable(available[(current+1+available.Length)%available.Length]);
+    }
+
+    private void TryThrowThrowable()
+    {
+        if(_heldThrowable is null || Runtime is null || _actionCooldown>0)return;
+        var type=_heldThrowable;
+        if(!Runtime.ConsumeItem(type)){_heldThrowable=null;ApplyViewModel();return;}
+
+        var projectile=new ThrowableProjectileRuntime
+        {
+            Name=type.Replace(" ","")+"Projectile",
+            ThrowableType=type,
+            Owner=this,
+            Direction=AimDirection
+        };
+        GetParent()?.AddChild(projectile);
+        projectile.GlobalPosition=AimOrigin+AimDirection*0.55f;
+
+        _actionCooldown=type=="Molotov" ? 0.4 : 0.7;
+        _heldThrowable=null;
+        ApplyViewModel();
     }
 
     private void BeginReload()

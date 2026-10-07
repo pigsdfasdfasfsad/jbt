@@ -36,6 +36,15 @@ public partial class FortificationController : Node
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        if(@event is InputEventKey switchKey && switchKey.Pressed && !switchKey.Echo &&
+           _hammerMode && switchKey.Keycode is Key.Key1 or Key.Key2 or Key.Key3 or Key.Key5 or Key.Key6 or Key.Key7 or Key.G)
+        {
+            _hammerMode=false;
+            _swingsCompleted=0;
+            Player?.SetHammerMode(false);
+            PublishStatus();
+        }
+
         if (@event is InputEventKey key && key.Pressed && !key.Echo && key.Keycode == Key.F)
         {
             _hammerMode = !_hammerMode;

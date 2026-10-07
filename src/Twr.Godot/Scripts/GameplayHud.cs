@@ -46,24 +46,34 @@ public partial class GameplayHud : CanvasLayer
         return label;
     }
 
-    public void UpdateState(PlayerState player, MatchState match, string stage, double seconds, string weaponName)
+    public void UpdateState(PlayerState player, MatchState match, string stage, double seconds, string weaponName, string? throwableName=null)
     {
         _top.Text = $"REGULAR  |  {match.MapName.ToUpperInvariant()}  |  WAVE {match.Wave}/15  |  {stage}  {FormatTime(seconds)}";
-        _health.Text = $"HEALTH  {Math.Ceiling(player.Health):0} / {player.MaxHealth:0}   ARMOR {Math.Ceiling(player.ArmorDurability):0}";
+        var armorLabel=player.ArmorKind=="Juggernaut" ? "JUG" : "ARMOR";
+        _health.Text = $"HEALTH {Math.Ceiling(player.Health):0}/{player.MaxHealth:0}  {armorLabel} {Math.Ceiling(player.ArmorDurability):0}" +
+            (player.GasMaskActive ? "  MASK" : "") +
+            (player.EnergyDrinkSeconds>0 ? $"  DRINK {Math.Ceiling(player.EnergyDrinkSeconds):0}s" : "");
 
-        var spec = RuntimeWeaponCatalog.Get(weaponName);
-        if (spec.IsMelee)
+        if(throwableName is not null)
         {
-            _ammo.Text = $"{weaponName.ToUpperInvariant()}   MELEE";
+            _ammo.Text=$"{throwableName.ToUpperInvariant()}  x{player.Inventory.GetValueOrDefault(throwableName)}";
         }
         else
         {
-            var loaded = player.Ammo.GetValueOrDefault(weaponName);
-            var reserve = player.ReserveAmmo.GetValueOrDefault(weaponName);
-            _ammo.Text = $"{weaponName.ToUpperInvariant()}   {loaded} / {reserve}";
+            var spec = RuntimeWeaponCatalog.Get(weaponName);
+            if (spec.IsMelee)
+            {
+                _ammo.Text = $"{weaponName.ToUpperInvariant()}   MELEE";
+            }
+            else
+            {
+                var loaded = player.Ammo.GetValueOrDefault(weaponName);
+                var reserve = player.ReserveAmmo.GetValueOrDefault(weaponName);
+                _ammo.Text = $"{weaponName.ToUpperInvariant()}   {loaded} / {reserve}";
+            }
         }
 
-        _credits.Text = $"LEVEL {player.Level}  XP {player.Xp:N0}/{ProgressionRules.RequiredForNextLevel(player.Level):N0}  CREDITS ${player.Credits:N0}    [1] PRIMARY  [2] SECONDARY  [3] MELEE  [F] HAMMER";
+        _credits.Text = $"LEVEL {player.Level}  XP {player.Xp:N0}/{ProgressionRules.RequiredForNextLevel(player.Level):N0}  CREDITS ${player.Credits:N0}  [1/2/3] WEAPONS [5/6/7/G] GRENADES [F] HAMMER";
     }
 
     public void SetBanner(string text) => _banner.Text = text;

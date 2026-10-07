@@ -17,7 +17,12 @@ public partial class LocalSessionNode : Node
         Session = new LocalSession(new JsonProfileStore(save));
     }
 
-    public override void _Process(double delta) => Pump();
+    public override void _Process(double delta)
+    {
+        if(Session is null)return;
+        Session.Enqueue(new AdvanceStatusEffectsCommand(delta));
+        Pump();
+    }
 
     private void Pump()
     {
@@ -36,6 +41,20 @@ public partial class LocalSessionNode : Node
     public void AdvanceWave() => Submit(new AdvanceWaveCommand());
     public void DamagePlayer(float amount,string source,bool bypassArmor=false) => Submit(new DamagePlayerCommand(amount,source,bypassArmor));
     public void HealPlayer(float amount,bool full=false) => Submit(new HealPlayerCommand(amount,full));
+    public bool ActivateEnergyDrink()
+    {
+        if(Session is null)return false;
+        var before=Session.State.Player.EnergyDrinkSeconds;
+        Submit(new ActivateEnergyDrinkCommand());
+        return Session.State.Player.EnergyDrinkSeconds>before;
+    }
+    public bool ActivateGasMask()
+    {
+        if(Session is null)return false;
+        var before=Session.State.Player.GasMaskActive;
+        Submit(new ActivateGasMaskCommand());
+        return !before && Session.State.Player.GasMaskActive;
+    }
     public void EquipBodyArmor() => Submit(new EquipBodyArmorCommand());
     public void GrantAmmo(string weapon,int amount,int maxReserve) => Submit(new GrantAmmoCommand(weapon,amount,maxReserve));
     public void ConfigureWeaponAmmo(string weapon,int magazine,int reserve) =>

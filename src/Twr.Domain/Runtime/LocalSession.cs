@@ -27,6 +27,7 @@ public sealed class LocalSession
     private readonly ProgressionService _progression;
     private readonly ArmoryService _armory;
     private readonly PerkService _perks;
+    private readonly ConsumableService _consumables;
 
     public GameState State { get; } = new();
     public Profile Profile { get; private set; }
@@ -56,6 +57,7 @@ public sealed class LocalSession
         _progression = new(_events);
         _armory = new(_events);
         _perks = new(_events);
+        _consumables = new(_events);
     }
 
     public void Enqueue(IGameCommand command) => _commands.Enqueue(command);

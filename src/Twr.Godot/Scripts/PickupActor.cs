@@ -82,6 +82,10 @@ public partial class PickupActor : Node3D
                 Runtime.EquipBodyArmor();
                 return state.ArmorDurability > before;
             }
+            case "Energy Drink":
+                return Runtime.ActivateEnergyDrink();
+            case "Gas Mask":
+                return Runtime.ActivateGasMask();
             case "Ammo":
             {
                 // VERIFIED: one Ammo pickup supplies both primary and
@@ -106,6 +110,7 @@ public partial class PickupActor : Node3D
                     "Barbed Wire" => Runtime.HasPerk("Fortifier") ? 4 : 2,
                     "Jack" => 1,
                     "50 Cal" => 1,
+                    "Frag" or "Molotov" or "Nerve Gas" => 1,
                     _ => int.MaxValue
                 };
                 return Runtime.GrantItem(PickupType,GrantCount,maxCount);
@@ -119,6 +124,11 @@ public partial class PickupActor : Node3D
         "Medkit" => new Color(0.72f, 0.12f, 0.12f),
         "Body Armor" => new Color(0.12f, 0.35f, 0.78f),
         "Ammo" => new Color(0.68f, 0.56f, 0.18f),
+        "Energy Drink" => new Color(0.20f,0.62f,0.86f),
+        "Gas Mask" => new Color(0.16f,0.18f,0.16f),
+        "Frag" => new Color(0.18f,0.25f,0.15f),
+        "Molotov" => new Color(0.82f,0.31f,0.05f),
+        "Nerve Gas" => new Color(0.09f,0.16f,0.10f),
         _ => new Color(0.42f, 0.42f, 0.42f)
     };
 }
