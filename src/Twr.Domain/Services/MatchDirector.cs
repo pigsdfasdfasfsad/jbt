@@ -13,7 +13,7 @@ public sealed class MatchDirector(EventStream events)
     public bool Advance(MatchState m,DateTimeOffset now)
     {
         if(m.Phase is MatchPhase.Results or MatchPhase.CompletionPending)return false;
-        if(m.Wave>=ReleaseRules.MaxWaves){m.Phase=MatchPhase.CompletionPending;return false;}
+        if(m.Wave>=ReleaseRules.MaxWaves){m.Phase = MatchPhase.CompletionPending;return false;}
         m.Wave++;m.Phase=MatchPhase.Wave;events.Publish(new WaveStartedEvent(m.Wave,now));return true;
     }
     public void Fail(MatchState m){if(m.Phase!=MatchPhase.Results)m.Phase=MatchPhase.Results;}

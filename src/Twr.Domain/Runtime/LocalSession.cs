@@ -36,6 +36,10 @@ public sealed class LocalSession
         while(_commands.TryDequeue(out var command)&&command is not null)Handle(command,now);
         return _events.Drain();
     }
+    private void PersistProfile(string reason,DateTimeOffset now)
+    {
+        Profile.Xp=State.Player.Xp;Profile.Credits=State.Player.Credits;Profile.Level=State.Player.Level;_save.Save(Profile,reason,now);
+    }
     private void Handle(IGameCommand command,DateTimeOffset now)
     {
         switch(command)
@@ -59,10 +63,6 @@ public sealed class LocalSession
             PersistProfile("MapCompletion",now);State.Match.SaveCommitted=true;State.Match.Phase=MatchPhase.Results;
             _events.Publish(new MatchCompletedEvent(State.Match.MapName,State.Match.Wave,xp,now));
         }
-    }
-    private void PersistProfile(string reason,DateTimeOffset now)
-    {
-        Profile.Xp=State.Player.Xp;Profile.Credits=State.Player.Credits;Profile.Level=State.Player.Level;_save.Save(Profile,reason,now);
     }
     public void ReturnToLobby(DateTimeOffset now)
     {
