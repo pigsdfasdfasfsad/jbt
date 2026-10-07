@@ -26,6 +26,8 @@ public partial class GameplayRoot : Node3D
     private Stage _stage = Stage.Countdown;
     private double _stageTime = RegularWaveRules.CountdownSeconds;
     private double _spawnTimer;
+    private bool _supplyQueuedForNextWave;
+    private double _queuedSupplySeconds=-1;
 
     // FITTED reconstruction: source proves repeated item spawning and separate
     // item/fortification spawn groups, but gives no Regular interval in seconds.
@@ -97,6 +99,15 @@ public partial class GameplayRoot : Node3D
                 if (_stageTime <= 0) StartWave();
                 break;
             case Stage.Wave:
+                if(_queuedSupplySeconds>=0)
+                {
+                    _queuedSupplySeconds-=delta;
+                    if(_queuedSupplySeconds<=0)
+                    {
+                        _queuedSupplySeconds=-1;
+                        SpawnSupplyDrop();
+                    }
+                }
                 _spawnTimer -= delta;
                 if (_spawnTimer <= 0 && _infected.Count < RegularWaveRules.MaxAlive(Runtime.Match.Wave))
                 {
@@ -207,6 +218,11 @@ public partial class GameplayRoot : Node3D
         _stageTime = RegularWaveRules.WaveDurationSeconds;
         _spawnTimer = 0;
         _completedObjectivesThisWave = 0;
+        if(_supplyQueuedForNextWave)
+        {
+            _supplyQueuedForNextWave=false;
+            _queuedSupplySeconds=3.0;
+        }
         SpawnWaveObjectives();
         var currentWave = Runtime.Match.Wave;
         _hud.SetBanner(currentWave == ReleaseRules.MaxWaves ? "FINAL WAVE" : $"WAVE {currentWave}");
@@ -263,9 +279,8 @@ public partial class GameplayRoot : Node3D
         if (families.Length == 0) return;
         var wave = Runtime.Match.Wave;
 
-        // VERIFIED: Regular allows a maximum of one or two objectives per wave.
-        // APPROXIMATED scheduling: one objective normally, two every third wave.
-        var count = wave % 3 == 0 ? 2 : 1;
+        // RECOVERED rule: Regular starts one or two objectives every wave.
+        var count = _rng.RandiRange(1, 2);
         for (var i = 0; i < count; i++)
         {
             var family = families[(wave - 1 + i * 2) % families.Length];
@@ -299,8 +314,18 @@ public partial class GameplayRoot : Node3D
         var completionPosition = objective.GlobalPosition;
         if (objective.Family == "Radio")
         {
-            _hud.SetBanner("SUPPLY HELICOPTER EN ROUTE");
-            SpawnSupplyDrop();
+            // RECOVERED bug/behavior: if Radio finishes with under ~20 seconds
+            // left, the helicopter is deferred into the next wave.
+            if(_stage==Stage.Wave && _stageTime<20)
+            {
+                _supplyQueuedForNextWave=true;
+                _hud.SetBanner("SUPPLY DROP QUEUED FOR NEXT WAVE");
+            }
+            else
+            {
+                _hud.SetBanner("SUPPLY HELICOPTER EN ROUTE");
+                SpawnSupplyDrop();
+            }
         }
         else if (objective.Family == "Unpack")
         {
@@ -419,23 +444,33 @@ public partial class GameplayRoot : Node3D
 
     private void SpawnSupplyContents(Vector3 center)
     {
-        // CONTESTED evidence: one source says exactly eight total; another says
-        // four item pickups plus four fortification pickups. The 4+4 split is
-        // used here as the stronger reconstruction fit while preserving total=8.
-        var itemTypes = new[] { "Medkit", "Ammo", "Body Armor", "Bandages" };
-        for (var i = 0; i < 4; i++)
-            SpawnPickup(itemTypes[i], RingPoint(center, i, 8, 2.3f));
-
-        var forts = LoadFortificationCatalog();
-        for (var i = 0; i < 4; i++)
+        // RECOVERED payload contract: exactly four Regular slots and four Fort
+        // slots. Regular pool is Medkit/Ammo/Body Armor. Fort pool includes
+        // 50 Cal/Barbed Wire/Clap Bomb/Jack, with 0..4 50 Cals per drop.
+        var regularPool=new[] { "Medkit","Ammo","Body Armor" };
+        for(var i=0;i<4;i++)
         {
-            if (forts.Count == 0)
+            var kind=regularPool[_rng.RandiRange(0,regularPool.Length-1)];
+            SpawnPickup(kind,RingPoint(center,i,8,2.3f));
+        }
+
+        var forts=LoadFortificationCatalog();
+        var nonFifty=forts.Where(x=>x.Name!="50 Cal").ToArray();
+        var fifty=forts.FirstOrDefault(x=>x.Name=="50 Cal");
+        var nFifty=_rng.RandiRange(0,4);
+        for(var i=0;i<4;i++)
+        {
+            FortPickup fort;
+            if(i<nFifty && !string.IsNullOrWhiteSpace(fifty.Name))
+                fort=fifty;
+            else if(nonFifty.Length>0)
+                fort=nonFifty[_rng.RandiRange(0,nonFifty.Length-1)];
+            else
             {
-                SpawnPickup("Ammo", RingPoint(center, i + 4, 8, 2.3f));
+                SpawnPickup("Ammo",RingPoint(center,i+4,8,2.3f));
                 continue;
             }
-            var fort = forts[_rng.RandiRange(0, forts.Count - 1)];
-            SpawnPickup(fort.Name, RingPoint(center, i + 4, 8, 2.3f), fort.Count);
+            SpawnPickup(fort.Name,RingPoint(center,i+4,8,2.3f),fort.Count);
         }
     }
 

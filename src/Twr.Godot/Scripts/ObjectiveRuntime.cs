@@ -23,9 +23,13 @@ public partial class ObjectiveRuntime : Node3D
     private double _secureProgress;
     private float _escortStartDistance;
 
-    // APPROXIMATED interaction pacing: source documents the mechanics and
-    // contribution thresholds but not solo completion seconds or escort speed.
-    private const double SecureSeconds = 15.0;
+    // FITTED reconstruction from recovered objective directive: solo secure fill
+    // uses 1/60 per second; the original retail source did not expose the fill rate.
+    private const double SecureSeconds = 60.0;
+    // RECOVERED objective reconstruction values.
+    private const float SecureRadius = 14.0f;
+    private const float SecureYBand = 8.0f;
+    // APPROXIMATED: retail escort speed is not recovered.
     private const float EscortSpeed = 2.4f;
 
     public override void _Ready()
@@ -47,7 +51,7 @@ public partial class ObjectiveRuntime : Node3D
         {
             case "Radio":
             case "Unpack":
-                TickSecure(delta, interactDown);
+                TickSecure(delta);
                 break;
             case "Load":
             case "Repair":
@@ -188,12 +192,14 @@ public partial class ObjectiveRuntime : Node3D
         _escortStartDistance = _escort.GlobalPosition.DistanceTo(_escortDestination.GlobalPosition);
     }
 
-    private void TickSecure(double delta, bool interactDown)
+    private void TickSecure(double delta)
     {
         if (Player is null)
             return;
 
-        if (Player.GlobalPosition.DistanceTo(GlobalPosition) <= 3.25f && interactDown)
+        var d=Player.GlobalPosition-GlobalPosition;
+        var horizontal=new Vector2(d.X,d.Z).Length();
+        if (Math.Abs(d.Y) < SecureYBand && horizontal <= SecureRadius)
         {
             _secureProgress = Math.Min(1.0, _secureProgress + delta / SecureSeconds);
             PublishStatus();
@@ -261,7 +267,7 @@ public partial class ObjectiveRuntime : Node3D
 
         var status = Family switch
         {
-            "Radio" or "Unpack" => $"{Family.ToUpperInvariant()}  HOLD E IN RING  {Math.Round(_secureProgress * 100):0}%",
+            "Radio" or "Unpack" => $"{Family.ToUpperInvariant()}  STAY IN SECURE ZONE  {Math.Round(_secureProgress * 100):0}%",
             "Load" or "Repair" => $"{Family.ToUpperInvariant()}  {_deposited}/{_required} INSERTED" + (_carrying ? "  |  CARRYING ITEM" : ""),
             "Escort" when _escort is not null && _escortDestination is not null && _escortStartDistance > 0 =>
                 $"ESCORT  {Math.Clamp((1f - _escort.GlobalPosition.DistanceTo(_escortDestination.GlobalPosition) / _escortStartDistance) * 100f, 0f, 100f):0}%",
@@ -277,8 +283,8 @@ public partial class ObjectiveRuntime : Node3D
         Position = new Vector3(0, 0.05f, 0),
         Mesh = new CylinderMesh
         {
-            TopRadius = 3.0f,
-            BottomRadius = 3.0f,
+            TopRadius = SecureRadius,
+            BottomRadius = SecureRadius,
             Height = 0.08f,
             Material = new StandardMaterial3D
             {
