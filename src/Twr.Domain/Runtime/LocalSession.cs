@@ -112,6 +112,15 @@ public sealed class LocalSession
             case HealPlayerCommand x:
                 _healing.Apply(State.Player, x.Amount, x.Full, now);
                 break;
+            case ActivateEnergyDrinkCommand:
+                _consumables.UseEnergyDrink(State.Player,Profile.EquippedPerks.Contains("Caffeinated"),now);
+                break;
+            case ActivateGasMaskCommand:
+                _consumables.UseGasMask(State.Player,now);
+                break;
+            case AdvanceStatusEffectsCommand x:
+                _consumables.Advance(State.Player,x.DeltaSeconds,now);
+                break;
             case EquipBodyArmorCommand:
                 _healing.EquipBodyArmor(State.Player, now);
                 break;
