@@ -66,21 +66,29 @@ try {
   $importCode = $LASTEXITCODE
   $importOutput | ForEach-Object { Write-Host $_ }
   if ($importCode -ne 0) { throw "Godot import/editor pass failed with exit code $importCode" }
-  if ($importOutput | Where-Object { "$_" -match '(^|\\s)ERROR:' }) { throw 'Godot import/editor pass reported ERROR output.' }
+  if ($importOutput | Where-Object { "$_" -match '(^|\s)ERROR:' }) { throw 'Godot import/editor pass reported ERROR output.' }
 
-  $exportOutput = & $godot --headless --verbose --path $Project --export-release 'Windows Desktop' (Join-Path $Output 'ThoseWhoRemainOffline.exe') 2>&1
+  $exportExe = Join-Path $Output 'ThoseWhoRemainOffline.exe'
+  $exportOutput = & $godot --headless --verbose --path $Project --export-release 'Windows Desktop' $exportExe 2>&1
   $exportCode = $LASTEXITCODE
   $exportOutput | ForEach-Object { Write-Host $_ }
   if ($exportCode -ne 0) { throw "Godot Windows export failed with exit code $exportCode" }
-  if ($exportOutput | Where-Object { "$_" -match '(^|\\s)ERROR:' }) { throw 'Godot Windows export reported ERROR output.' }
+  if ($exportOutput | Where-Object { "$_" -match '(^|\s)ERROR:' }) { throw 'Godot Windows export reported ERROR output.' }
+  if (!(Test-Path $exportExe)) { throw 'Godot export did not produce ThoseWhoRemainOffline.exe' }
 
-  # Launch the actual main scene and enter the playable Manor slice. This catches
-  # startup/_Ready/runtime faults that import and export alone cannot detect.
-  $smokeOutput = & $godot --headless --verbose --path $Project --quit-after 120 -- --smoke-play 2>&1
-  $smokeCode = $LASTEXITCODE
+  # Smoke-test the exported artifact itself. A normal source-tree launch looks
+  # for the editor Debug assembly, while this workflow intentionally builds Release.
+  $smokeStdout = Join-Path $Output 'smoke.stdout.txt'
+  $smokeStderr = Join-Path $Output 'smoke.stderr.txt'
+  Remove-Item $smokeStdout,$smokeStderr -Force -ErrorAction SilentlyContinue
+  $smoke = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','120','--','--smoke-play') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $smokeStdout -RedirectStandardError $smokeStderr
+
+  $smokeOutput = @()
+  if (Test-Path $smokeStdout) { $smokeOutput += Get-Content $smokeStdout }
+  if (Test-Path $smokeStderr) { $smokeOutput += Get-Content $smokeStderr }
   $smokeOutput | ForEach-Object { Write-Host $_ }
-  if ($smokeCode -ne 0) { throw "Godot playable smoke pass failed with exit code $smokeCode" }
-  if ($smokeOutput | Where-Object { "$_" -match '(^|\\s)ERROR:' }) { throw 'Godot playable smoke pass reported ERROR output.' }
+  if ($smoke.ExitCode -ne 0) { throw "Exported playable smoke pass failed with exit code $($smoke.ExitCode)" }
+  if ($smokeOutput | Where-Object { "$_" -match '(^|\s)ERROR:' }) { throw 'Exported playable smoke pass reported ERROR output.' }
 } finally { Pop-Location }
-if (!(Test-Path (Join-Path $Output 'ThoseWhoRemainOffline.exe'))) { throw 'Godot export did not produce ThoseWhoRemainOffline.exe' }
-Write-Host 'Windows export completed.'
+
+Write-Host 'Windows export and playable smoke pass completed.'
