@@ -16,6 +16,19 @@ public static class InfectedCatalog
         new("Bloater", 487.5, 60, 7, true)
     ];
 
+    public static (int Credits, int Xp) BonusReward(string name) => name switch
+    {
+        "Bolter" => (8, 4),
+        "Civilian" => (5, 3),
+        "Sprinter" => (5, 3),
+        "Military" => (13, 7),
+        "Hazmat" => (38, 15),
+        "Riot" => (25, 13),
+        "Burster" => (25, 13),
+        "Bloater" => (50, 25),
+        _ => (0, 0)
+    };
+
     public static (int Credits, int Xp) Reward(string name) => name switch
     {
         "Bolter" => (15, 8),

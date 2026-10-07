@@ -10,7 +10,7 @@ public partial class InfectedAgent : CharacterBody3D
     public float Health { get; set; } = 65;
     public float Damage { get; set; } = 8;
     public float MoveSpeed { get; set; } = 15;
-    public Action<InfectedAgent>? Died { get; set; }
+    public Action<InfectedAgent, InfectedDeathContext>? Died { get; set; }
 
     private double _attackCooldown;
     private float _slowFactor = 1f;
@@ -92,12 +92,13 @@ public partial class InfectedAgent : CharacterBody3D
         _slowTime = Math.Max(_slowTime, seconds);
     }
 
-    public void ApplyDamage(float amount)
+    public void ApplyDamage(float amount, bool headshot = false, string damageKind = "Generic")
     {
         if (amount <= 0 || Health <= 0) return;
-        Health = Math.Max(0, Health - amount);
+        var applied = headshot ? amount * 2.5f : amount; // VERIFIED head multiplier.
+        Health = Math.Max(0, Health - applied);
         if (Health > 0) return;
-        Died?.Invoke(this);
+        Died?.Invoke(this, new InfectedDeathContext(headshot, damageKind));
         QueueFree();
     }
 

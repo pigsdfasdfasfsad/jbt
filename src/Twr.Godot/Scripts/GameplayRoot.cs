@@ -388,11 +388,17 @@ public partial class GameplayRoot : Node3D
         };
     }
 
-    private void OnInfectedDied(InfectedAgent infected)
+    private void OnInfectedDied(InfectedAgent infected, InfectedDeathContext context)
     {
         _infected.Remove(infected);
         var reward = InfectedCatalog.Reward(infected.InfectedType);
         Runtime?.AwardKill(infected.InfectedType, reward.Credits, reward.Xp);
+
+        if (context.Headshot)
+        {
+            var bonus = InfectedCatalog.BonusReward(infected.InfectedType);
+            Runtime?.AwardKill(infected.InfectedType + ":Headshot", bonus.Credits, bonus.Xp);
+        }
     }
 
     private void Finish(bool won, string title)
