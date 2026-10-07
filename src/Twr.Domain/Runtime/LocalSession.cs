@@ -25,6 +25,7 @@ public sealed class LocalSession
     private readonly KillRewardService _killRewards;
     private readonly WaveRewardService _waveRewards;
     private readonly ProgressionService _progression;
+    private readonly ArmoryService _armory;
 
     public GameState State { get; } = new();
     public Profile Profile { get; private set; }
@@ -52,6 +53,7 @@ public sealed class LocalSession
         _killRewards = new(_events);
         _waveRewards = new(new ReceiptLedger(), _events);
         _progression = new(_events);
+        _armory = new(_events);
     }
 
     public void Enqueue(IGameCommand command) => _commands.Enqueue(command);
@@ -126,6 +128,14 @@ public sealed class LocalSession
             case CompleteObjectiveCommand x:
                 if (_objectives.Complete(State.Match, State.Player, x.ObjectiveId, x.Family, now))
                     PersistProfile($"Objective:{x.ObjectiveId}", now);
+                break;
+            case PurchaseWeaponCommand x:
+                if (_armory.Purchase(Profile,State.Player,x.WeaponId,x.RequiredLevel,x.Price,now))
+                    PersistProfile("WeaponPurchase:" + x.WeaponId,now);
+                break;
+            case SetLoadoutCommand x:
+                if (_armory.Equip(Profile,x.Slot,x.WeaponId,now))
+                    PersistProfile("Loadout:" + x.Slot,now);
                 break;
             case PurchaseCommand x:
                 _economy.Purchase(State.Player, x.ItemId, x.Price, now);

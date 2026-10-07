@@ -54,6 +54,19 @@ public partial class LocalSessionNode : Node
     public void EndWaveCleanup() => Submit(new EndWaveCleanupCommand());
     public void CompleteObjective(string objectiveId, string family) =>
         Submit(new CompleteObjectiveCommand(objectiveId, family));
+    public bool PurchaseWeapon(string weapon,int requiredLevel,int price)
+    {
+        if(Session is null)return false;
+        var before=Session.Profile.Unlocks.Contains(weapon);
+        Submit(new PurchaseWeaponCommand(weapon,requiredLevel,price));
+        return !before && Session.Profile.Unlocks.Contains(weapon);
+    }
+    public bool SetLoadout(string slot,string weapon)
+    {
+        if(Session is null)return false;
+        Submit(new SetLoadoutCommand(slot,weapon));
+        return Session.Profile.Loadout.GetValueOrDefault(slot)==weapon;
+    }
     public void FailMatch(string reason) => Submit(new FailMatchCommand(reason));
 
     public bool SpendAmmo(string weapon, int amount)

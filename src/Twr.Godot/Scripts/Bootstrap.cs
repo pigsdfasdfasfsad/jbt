@@ -6,6 +6,7 @@ public partial class Bootstrap : Node
 {
     private LocalSessionNode _runtime = null!;
     private CanvasLayer? _menu;
+    private CanvasLayer? _armory;
     private GameplayRoot? _game;
 
     public override void _Ready()
@@ -24,21 +25,26 @@ public partial class Bootstrap : Node
         _menu = new CanvasLayer { Name = "MainMenu" };
         AddChild(_menu);
 
-        var background = new ColorRect
-        {
-            Color = new Color(0.025f, 0.027f, 0.03f),
-            AnchorRight = 1,
-            AnchorBottom = 1
-        };
-        _menu.AddChild(background);
-
-        _menu.AddChild(MakeLabel(58, 45, 1160, 62, 40, "THOSE WHO REMAIN - OFFLINE"));
-        _menu.AddChild(MakeLabel(60, 106, 1160, 42, 18, "REGULAR  |  15 WAVES  |  LOCAL SINGLE PLAYER"));
-        _menu.AddChild(MakeLabel(60, 150, 1160, 72, 16,
+        AddBackground(_menu);
+        _menu.AddChild(MakeLabel(58, 38, 1160, 62, 40, "THOSE WHO REMAIN - OFFLINE"));
+        _menu.AddChild(MakeLabel(60, 98, 850, 38, 18, "REGULAR  |  15 WAVES  |  LOCAL SINGLE PLAYER"));
+        _menu.AddChild(MakeLabel(60, 142, 1160, 66, 16,
             "Select a recovered release map. Geometry is an evidence-guided reconstruction blockout\n" +
             "until original map transforms are recoverable. Gameplay rules remain source-labeled."));
+        _menu.AddChild(MakeLabel(60, 210, 850, 36, 15, ProfileStatusText()));
         _menu.AddChild(MakeLabel(60, 650, 1160, 42, 15,
             "WASD move | Shift sprint | Space jump | Mouse aim/fire | R reload | 1/2/3 weapons | F hammer"));
+
+        var armory = new Button
+        {
+            OffsetLeft = 930,
+            OffsetTop = 95,
+            OffsetRight = 1190,
+            OffsetBottom = 145,
+            Text = "ARMORY / LOADOUT"
+        };
+        armory.Pressed += ShowArmory;
+        _menu.AddChild(armory);
 
         var maps = MapCatalogRuntime.All();
         for (var i = 0; i < maps.Count; i++)
@@ -47,20 +53,154 @@ public partial class Bootstrap : Node
             var column = i % 2;
             var row = i / 2;
             var left = 64 + column * 590;
-            var top = 240 + row * 76;
+            var top = 270 + row * 70;
 
             var button = new Button
             {
                 OffsetLeft = left,
                 OffsetTop = top,
                 OffsetRight = left + 535,
-                OffsetBottom = top + 58,
+                OffsetBottom = top + 54,
                 Text = map.Name + "  |  " + map.Skybox
             };
             var selected = map.Name;
             button.Pressed += () => StartGame(selected);
             _menu.AddChild(button);
         }
+    }
+
+    private void ShowArmory()
+    {
+        _menu?.QueueFree();
+        _menu = null;
+        _armory?.QueueFree();
+
+        Input.MouseMode = Input.MouseModeEnum.Visible;
+        _armory = new CanvasLayer { Name = "Armory" };
+        AddChild(_armory);
+        AddBackground(_armory);
+
+        _armory.AddChild(MakeLabel(58, 34, 1160, 58, 36, "ARMORY / LOADOUT"));
+        _armory.AddChild(MakeLabel(60, 92, 1000, 42, 16, ProfileStatusText()));
+        _armory.AddChild(MakeLabel(60, 128, 1000, 44, 14,
+            "Recovered at-level prices are used. Inflated early-purchase prices are not reconstructed because the source lacks a universal price schedule."));
+
+        var back = new Button
+        {
+            OffsetLeft = 1010,
+            OffsetTop = 42,
+            OffsetRight = 1200,
+            OffsetBottom = 88,
+            Text = "BACK"
+        };
+        back.Pressed += () =>
+        {
+            _armory?.QueueFree();
+            _armory = null;
+            ShowMenu();
+        };
+        _armory.AddChild(back);
+
+        var scroll = new ScrollContainer
+        {
+            OffsetLeft = 60,
+            OffsetTop = 185,
+            OffsetRight = 1210,
+            OffsetBottom = 685
+        };
+        _armory.AddChild(scroll);
+
+        var list = new VBoxContainer
+        {
+            CustomMinimumSize = new Vector2(1100, 0)
+        };
+        list.AddThemeConstantOverride("separation", 5);
+        scroll.AddChild(list);
+
+        foreach (var spec in RuntimeWeaponCatalog.All())
+        {
+            var button = new Button
+            {
+                CustomMinimumSize = new Vector2(1080, 44),
+                Text = ArmoryButtonText(spec),
+                Alignment = HorizontalAlignment.Left,
+                Disabled = !CanInteractWithArmoryWeapon(spec)
+            };
+            var selected = spec;
+            button.Pressed += () => HandleArmoryWeapon(selected);
+            list.AddChild(button);
+        }
+    }
+
+    private bool CanInteractWithArmoryWeapon(RuntimeWeaponDefinition spec)
+    {
+        var profile = _runtime.Profile;
+        var player = _runtime.Player;
+        if (profile is null || player is null) return false;
+        if (profile.Unlocks.Contains(spec.Name)) return true;
+        return spec.Price > 0 && spec.Level < 999 &&
+            player.Level >= spec.Level && player.Credits >= spec.Price;
+    }
+
+    private string ArmoryButtonText(RuntimeWeaponDefinition spec)
+    {
+        var profile = _runtime.Profile;
+        var player = _runtime.Player;
+        if (profile is null || player is null) return spec.Name;
+
+        var owned = profile.Unlocks.Contains(spec.Name);
+        var equipped = profile.Loadout.GetValueOrDefault(spec.Slot) == spec.Name;
+        var state = equipped ? "[EQUIPPED]" : owned ? "[OWNED]" :
+            spec.Price <= 0 || spec.Level >= 999 ? "[SPECIAL / UNAVAILABLE]" :
+            player.Level < spec.Level ? "[LOCKED]" :
+            player.Credits < spec.Price ? "[NEED CREDITS]" : "[BUY]";
+
+        var price = spec.Price > 0 ? "  $" + spec.Price.ToString("N0") : "";
+        var level = spec.Level < 999 ? "  LVL " + spec.Level : "";
+        return state + "  " + spec.Slot.ToUpperInvariant() + "  |  " + spec.Name + level + price;
+    }
+
+    private void HandleArmoryWeapon(RuntimeWeaponDefinition spec)
+    {
+        var profile = _runtime.Profile;
+        var player = _runtime.Player;
+        if (profile is null || player is null) return;
+
+        if (!profile.Unlocks.Contains(spec.Name))
+        {
+            if (spec.Price <= 0 || spec.Level >= 999 || player.Level < spec.Level || player.Credits < spec.Price)
+                return;
+            if (!_runtime.PurchaseWeapon(spec.Name, spec.Level, spec.Price))
+                return;
+        }
+
+        _runtime.SetLoadout(spec.Slot, spec.Name);
+        _armory?.QueueFree();
+        _armory = null;
+        ShowArmory();
+    }
+
+    private string ProfileStatusText()
+    {
+        var profile = _runtime.Profile;
+        var player = _runtime.Player;
+        if (profile is null || player is null) return "PROFILE LOADING";
+
+        var primary = profile.Loadout.GetValueOrDefault("Primary") ?? "None";
+        var secondary = profile.Loadout.GetValueOrDefault("Secondary") ?? "None";
+        var melee = profile.Loadout.GetValueOrDefault("Melee") ?? "None";
+        return "LEVEL " + player.Level + "  |  CREDITS $" + player.Credits.ToString("N0") +
+            "  |  PRIMARY " + primary + "  |  SECONDARY " + secondary + "  |  MELEE " + melee;
+    }
+
+    private static void AddBackground(CanvasLayer layer)
+    {
+        layer.AddChild(new ColorRect
+        {
+            Color = new Color(0.025f, 0.027f, 0.03f),
+            AnchorRight = 1,
+            AnchorBottom = 1
+        });
     }
 
     private static Label MakeLabel(float left, float top, float right, float height, int size, string text)
@@ -81,6 +221,8 @@ public partial class Bootstrap : Node
     {
         _menu?.QueueFree();
         _menu = null;
+        _armory?.QueueFree();
+        _armory = null;
 
         _runtime.StartMap(map);
         _game = new GameplayRoot
