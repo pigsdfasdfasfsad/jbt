@@ -11,6 +11,7 @@ public partial class GameplayRoot : Node3D
     public Action? ExitRequested { get; set; }
 
     private GameplayHud _hud = null!;
+    private RuntimeMapDefinition _mapDefinition = null!;
     private FirstPersonPlayer _player = null!;
     private FortificationController _fortifications = null!;
     private readonly List<InfectedAgent> _infected = [];
@@ -32,6 +33,7 @@ public partial class GameplayRoot : Node3D
             throw new InvalidOperationException("GameplayRoot requires an initialized LocalSessionNode.");
 
         _rng.Randomize();
+        _mapDefinition = MapCatalogRuntime.Get(MapName);
         BuildManorBlockout();
 
         _player = new FirstPersonPlayer
@@ -171,7 +173,8 @@ public partial class GameplayRoot : Node3D
         if (Runtime?.Match is null) return;
 
         ClearObjectives();
-        var families = new[] { "Radio", "Load", "Unpack", "Repair", "Escort" };
+        var families = _mapDefinition.Objectives.ToArray();
+        if (families.Length == 0) return;
         var wave = Runtime.Match.Wave;
 
         // VERIFIED: Regular allows a maximum of one or two objectives per wave.
@@ -392,6 +395,8 @@ public partial class GameplayRoot : Node3D
     private void OnInfectedDied(InfectedAgent infected, InfectedDeathContext context)
     {
         _infected.Remove(infected);
+        if (context.DamageKind == "ObjectiveExplosion") return;
+
         var reward = InfectedCatalog.Reward(infected.InfectedType);
         Runtime?.AwardKill(infected.InfectedType, reward.Credits, reward.Xp);
 

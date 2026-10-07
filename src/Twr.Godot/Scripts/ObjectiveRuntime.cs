@@ -13,6 +13,7 @@ public partial class ObjectiveRuntime : Node3D
 
     private readonly List<Node3D> _items = [];
     private CharacterBody3D? _escort;
+    private DamageObjectiveTarget? _damageTarget;
     private Node3D? _escortDestination;
     private int _required;
     private int _deposited;
@@ -112,9 +113,35 @@ public partial class ObjectiveRuntime : Node3D
             case "Escort":
                 BuildEscort();
                 break;
+            case "Damage":
+                BuildDamageTarget();
+                break;
         }
     }
 
+    private void BuildDamageTarget()
+    {
+        _damageTarget = new DamageObjectiveTarget
+        {
+            Name = "FuelTanker",
+            Position = Vector3.Zero
+        };
+        _damageTarget.ProgressChanged = _ => PublishStatus();
+        _damageTarget.Destroyed = position =>
+        {
+            // APPROXIMATED blast radius/damage: source states a large high-damage
+            // explosion but does not provide numeric values.
+            const float blastRadius = 18f;
+            foreach (var node in GetTree().GetNodesInGroup("infected"))
+            {
+                if (node is InfectedAgent infected && GodotObject.IsInstanceValid(infected) &&
+                    infected.GlobalPosition.DistanceTo(position) <= blastRadius)
+                    infected.ApplyDamage(9999f, false, "ObjectiveExplosion");
+            }
+            Complete();
+        };
+        AddChild(_damageTarget);
+    }
     private void BuildFillItems(string[] names)
     {
         _required = names.Length;
@@ -238,6 +265,8 @@ public partial class ObjectiveRuntime : Node3D
             "Load" or "Repair" => $"{Family.ToUpperInvariant()}  {_deposited}/{_required} INSERTED" + (_carrying ? "  |  CARRYING ITEM" : ""),
             "Escort" when _escort is not null && _escortDestination is not null && _escortStartDistance > 0 =>
                 $"ESCORT  {Math.Clamp((1f - _escort.GlobalPosition.DistanceTo(_escortDestination.GlobalPosition) / _escortStartDistance) * 100f, 0f, 100f):0}%",
+            "Damage" when _damageTarget is not null =>
+                $"DAMAGE TANKER  {Math.Ceiling((_damageTarget.Health / _damageTarget.MaxHealth) * 100f):0}%",
             _ => Family.ToUpperInvariant()
         };
         StatusChanged?.Invoke(status);

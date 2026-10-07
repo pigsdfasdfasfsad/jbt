@@ -245,13 +245,22 @@ public partial class FirstPersonPlayer : CharacterBody3D
         query.Exclude = new global::Godot.Collections.Array<Rid> { GetRid() };
         var hit = GetWorld3D().DirectSpaceState.IntersectRay(query);
 
-        if (hit.Count > 0 && hit["collider"].AsGodotObject() is InfectedAgent infected)
+        if (hit.Count <= 0) return;
+
+        var collider = hit["collider"].AsGodotObject();
+        var kind = StarterWeaponCatalog.Get(_equippedWeapon).Kind == StarterWeaponKind.Melee ? "Melee" : "Bullet";
+        if (collider is DamageObjectiveTarget tanker)
+        {
+            tanker.ApplyDamage(damage, kind);
+            return;
+        }
+
+        if (collider is InfectedAgent infected)
         {
             var hitPosition = hit["position"].AsVector3();
             var localHit = infected.ToLocal(hitPosition);
             // APPROXIMATED geometric boundary; the x2.5 multiplier itself is VERIFIED.
             var headshot = localHit.Y >= 0.45f;
-            var kind = StarterWeaponCatalog.Get(_equippedWeapon).Kind == StarterWeaponKind.Melee ? "Melee" : "Bullet";
             infected.ApplyDamage(damage, headshot, kind);
         }
     }

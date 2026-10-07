@@ -65,7 +65,12 @@ public partial class FortificationActor : Node3D
         var radius = Definition.Radius!.Value;
         foreach (var infected in EnumerateInfected())
             if (GlobalPosition.DistanceTo(infected.GlobalPosition) <= radius)
-                infected.ApplyDamage(Definition.Damage!.Value);
+                infected.ApplyDamage(Definition.Damage!.Value, false, "Explosive");
+
+        foreach (var node in GetTree().GetNodesInGroup("damage_objective"))
+            if (node is DamageObjectiveTarget tanker &&
+                GlobalPosition.DistanceTo(tanker.GlobalPosition) <= radius)
+                tanker.ApplyDamage(Definition.Damage!.Value, "Explosive");
 
         QueueFree();
     }
@@ -99,7 +104,7 @@ public partial class FortificationActor : Node3D
 
             // APPROXIMATED: source confirms slowing + damage, but exact amount
             // and slow factor/rate are not recovered.
-            infected.ApplyDamage(5f);
+            infected.ApplyDamage(5f, false, "SlowTrap");
             infected.ApplySlow(0.55f, 0.65);
             touched = true;
         }
