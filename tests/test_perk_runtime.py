@@ -24,7 +24,9 @@ def test_fortification_perk_modifiers_match_documented_percentages():
     assert 'HasPerk("Carpenter") ? SwingSeconds*0.6' in controller
     assert 'HasPerk("Efficiency") && definition.Name=="50 Cal"' in controller
     assert 'multiplier*=1.35f' in controller
-    assert 'multiplier*=1.2f' in controller
+    actor=read("src/Twr.Godot/Scripts/FortificationActor.cs")
+    assert 'HasPerk("Heavy Hitter")' in actor
+    assert "damageMultiplier*=1.2f" in actor
 
 def test_barbed_wire_uses_documented_15_damage():
     actor=read("src/Twr.Godot/Scripts/FortificationActor.cs")

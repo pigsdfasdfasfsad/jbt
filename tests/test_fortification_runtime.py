@@ -21,4 +21,5 @@ def test_unrecovered_fortification_rates_are_labeled_approximate():
     controller=read("src/Twr.Godot/Scripts/FortificationController.cs")
     actor=read("src/Twr.Godot/Scripts/FortificationActor.cs")
     assert "APPROXIMATED: exact base hammer swing cadence" in controller
-    assert "APPROXIMATED: source confirms slowing + damage" in actor
+    assert 'ApplyDamage(15f, false, "BarbedWire")' in actor
+    assert "APPROXIMATED: source confirms slowing but not magnitude/duration" in actor

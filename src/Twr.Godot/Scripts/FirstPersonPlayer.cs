@@ -10,6 +10,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public string PrimaryWeaponName => _primaryWeapon;
     public string SecondaryWeaponName => _secondaryWeapon;
     public bool HammerMode { get; private set; }
+    public bool MountedMode { get; private set; }
     public Vector3 AimOrigin => _camera.GlobalPosition;
     public Vector3 AimDirection => -_camera.GlobalTransform.Basis.Z;
 
@@ -97,6 +98,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
             MoveAndSlide();
             return;
         }
+        if (MountedMode)
+        {
+            Velocity = Vector3.Zero;
+            return;
+        }
 
         TickAdrenaline(delta);
 
@@ -142,6 +148,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
             return;
         }
 
+        if (MountedMode) return;
+
         if (@event is InputEventKey key && key.Pressed && !key.Echo)
         {
             if (key.Keycode == Key.Space) _jumpRequested = true;
@@ -161,6 +169,25 @@ public partial class FirstPersonPlayer : CharacterBody3D
         }
     }
 
+    public void SetMountedMode(bool enabled)
+    {
+        MountedMode=enabled;
+        HammerMode=false;
+        _reloadTimer=0;
+        _reloadWeapon=null;
+        _viewModel.Visible=!enabled;
+        if(!enabled)
+        {
+            _camera.Fov=60;
+            ApplyViewModel();
+        }
+    }
+
+    public void SetMountedAim(bool aiming)
+    {
+        if(!MountedMode)return;
+        _camera.Fov=aiming ? 60 : 70;
+    }
     public void SetHammerMode(bool enabled)
     {
         HammerMode = enabled;

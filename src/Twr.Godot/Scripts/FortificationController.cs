@@ -104,6 +104,8 @@ public partial class FortificationController : Node
             Name = $"Deployed_{definition.Name}_{_deployed.Count}",
             Definition = definition,
             DamageMultiplier = FortificationDamageMultiplier(definition),
+            Player = Player,
+            Runtime = Runtime,
             GlobalPosition = Player.GlobalPosition + forward * 3.0f + Vector3.Down * 0.8f
         };
         _deployed.Add(actor);
@@ -117,8 +119,7 @@ public partial class FortificationController : Node
         if(Runtime?.HasPerk("Pyrotechnic")==true &&
            definition.Name is "Clap Bomb" or "Jack")
             multiplier*=1.35f;
-        if(Runtime?.HasPerk("Heavy Hitter")==true && definition.Name=="50 Cal")
-            multiplier*=1.2f;
+
         return multiplier;
     }
 
