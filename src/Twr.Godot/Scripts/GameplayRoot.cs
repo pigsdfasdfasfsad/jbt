@@ -20,11 +20,18 @@ public partial class GameplayRoot : Node3D
     private readonly List<ObjectiveRuntime> _objectives = [];
     private readonly List<PickupActor> _pickups = [];
     private readonly List<SupplyDropRuntime> _supplyDrops = [];
+    private readonly List<NaturalRespawn> _naturalRespawns = [];
     private int _completedObjectivesThisWave;
     private readonly RandomNumberGenerator _rng = new();
     private Stage _stage = Stage.Countdown;
     private double _stageTime = RegularWaveRules.CountdownSeconds;
     private double _spawnTimer;
+
+    // FITTED reconstruction: source proves repeated item spawning and separate
+    // item/fortification spawn groups, but gives no Regular interval in seconds.
+    private const double NaturalRespawnMinSeconds=35.0;
+    private const double NaturalRespawnMaxSeconds=55.0;
+    private readonly record struct NaturalRespawn(Vector3 Position,string Group,double Remaining);
     private bool _finished;
     private PauseOverlayRuntime? _pauseOverlay;
 
@@ -66,6 +73,8 @@ public partial class GameplayRoot : Node3D
     public override void _Process(double delta)
     {
         if (Runtime?.Player is null || Runtime.Match is null) return;
+
+        if(!_finished) TickNaturalRespawns(delta);
 
         if (!_finished && !Runtime.Player.IsAlive)
         {
@@ -306,16 +315,58 @@ public partial class GameplayRoot : Node3D
     private void SpawnNaturalPickups()
     {
         // APPROXIMATED coordinates: topology rules come from map references,
-        // while exact retail item spawn transforms are not recovered.
-        var pool=new[] { "Bandages","Ammo","Body Armor","Medkit","Energy Drink","Gas Mask","Frag","Molotov","Nerve Gas" };
+        // while exact retail spawn-group transforms are not recovered.
         foreach(var point in _mapLayout.PickupPoints)
+            SpawnNaturalAt(point,"Item");
+
+        // VERIFIED grouping rule: fortification spawn areas are separate and
+        // never naturally produce the 50 Cal. Their exact map anchors are lost.
+        var fortCount=Math.Min(3,_mapLayout.PickupPoints.Count);
+        for(var i=0;i<fortCount;i++)
         {
-            var type=pool[_rng.RandiRange(0,pool.Length-1)];
-            SpawnPickup(type,point);
+            var basePoint=_mapLayout.PickupPoints[i];
+            var offset=new Vector3(i%2==0 ? 1.8f : -1.8f,0,(i%3-1)*1.2f);
+            SpawnNaturalAt(basePoint+offset,"Fortification");
         }
     }
 
-    private void SpawnPickup(string type, Vector3 position, int grantCount = 1)
+    private void SpawnNaturalAt(Vector3 position,string group)
+    {
+        if(group=="Fortification")
+        {
+            var forts=new[]{"Barbed Wire","Clap Bomb","Jack"};
+            SpawnPickup(forts[_rng.RandiRange(0,forts.Length-1)],position,1,true,group);
+            return;
+        }
+
+        var items=new[]{"Bandages","Ammo","Body Armor","Medkit","Energy Drink","Gas Mask","Frag","Molotov","Nerve Gas"};
+        SpawnPickup(items[_rng.RandiRange(0,items.Length-1)],position,1,true,group);
+    }
+
+    private void TickNaturalRespawns(double delta)
+    {
+        for(var i=_naturalRespawns.Count-1;i>=0;i--)
+        {
+            var entry=_naturalRespawns[i];
+            var remaining=entry.Remaining-delta;
+            if(remaining>0)
+            {
+                _naturalRespawns[i]=entry with { Remaining=remaining };
+                continue;
+            }
+
+            _naturalRespawns.RemoveAt(i);
+            SpawnNaturalAt(entry.Position,entry.Group);
+        }
+    }
+
+    private void ScheduleNaturalRespawn(Vector3 position,string group)
+    {
+        var seconds=_rng.RandfRange((float)NaturalRespawnMinSeconds,(float)NaturalRespawnMaxSeconds);
+        _naturalRespawns.Add(new NaturalRespawn(position,group,seconds));
+    }
+
+    private void SpawnPickup(string type, Vector3 position, int grantCount = 1, bool natural=false, string naturalGroup="")
     {
         var pickup = new PickupActor
         {
@@ -326,7 +377,11 @@ public partial class GameplayRoot : Node3D
             Runtime = Runtime,
             Position = position
         };
-        pickup.Collected = collected => _pickups.Remove(collected);
+        pickup.Collected = collected =>
+        {
+            _pickups.Remove(collected);
+            if(natural)ScheduleNaturalRespawn(position,naturalGroup);
+        };
         _pickups.Add(pickup);
         AddChild(pickup);
     }
