@@ -79,11 +79,14 @@ public partial class FortificationController : Node
         if (Runtime.Player.Inventory.GetValueOrDefault(definition.Name) <= 0)
             return;
 
-        _swingCooldown = SwingSeconds;
+        var swingSeconds=Runtime.HasPerk("Carpenter") ? SwingSeconds*0.6 : SwingSeconds;
+        _swingCooldown=swingSeconds;
         _swingsCompleted++;
-        StatusChanged?.Invoke($"HAMMER | {definition.Name} | {_swingsCompleted}/{definition.Swings}");
+        var requiredSwings=Math.Max(1,definition.Swings -
+            (Runtime.HasPerk("Efficiency") && definition.Name=="50 Cal" ? 1 : 0));
+        StatusChanged?.Invoke($"HAMMER | {definition.Name} | {_swingsCompleted}/{requiredSwings}");
 
-        if (_swingsCompleted < Math.Max(1, definition.Swings))
+        if(_swingsCompleted<requiredSwings)
             return;
 
         _swingsCompleted = 0;
@@ -100,11 +103,23 @@ public partial class FortificationController : Node
         {
             Name = $"Deployed_{definition.Name}_{_deployed.Count}",
             Definition = definition,
+            DamageMultiplier = FortificationDamageMultiplier(definition),
             GlobalPosition = Player.GlobalPosition + forward * 3.0f + Vector3.Down * 0.8f
         };
         _deployed.Add(actor);
         AddChild(actor);
         PublishStatus();
+    }
+
+    private float FortificationDamageMultiplier(RuntimeFortificationDefinition definition)
+    {
+        var multiplier=1f;
+        if(Runtime?.HasPerk("Pyrotechnic")==true &&
+           definition.Name is "Clap Bomb" or "Jack")
+            multiplier*=1.35f;
+        if(Runtime?.HasPerk("Heavy Hitter")==true && definition.Name=="50 Cal")
+            multiplier*=1.2f;
+        return multiplier;
     }
 
     private void Cycle(int direction)

@@ -7,6 +7,7 @@ public partial class Bootstrap : Node
     private LocalSessionNode _runtime = null!;
     private CanvasLayer? _menu;
     private CanvasLayer? _armory;
+    private PerkMenuRuntime? _perkMenu;
     private GameplayRoot? _game;
 
     public override void _Ready()
@@ -46,6 +47,17 @@ public partial class Bootstrap : Node
         armory.Pressed += ShowArmory;
         _menu.AddChild(armory);
 
+        var perks = new Button
+        {
+            OffsetLeft = 930,
+            OffsetTop = 150,
+            OffsetRight = 1190,
+            OffsetBottom = 200,
+            Text = "PERKS"
+        };
+        perks.Pressed += ShowPerks;
+        _menu.AddChild(perks);
+
         var maps = MapCatalogRuntime.All();
         for (var i = 0; i < maps.Count; i++)
         {
@@ -67,6 +79,25 @@ public partial class Bootstrap : Node
             button.Pressed += () => StartGame(selected);
             _menu.AddChild(button);
         }
+    }
+
+    private void ShowPerks()
+    {
+        _menu?.QueueFree();
+        _menu=null;
+        _perkMenu?.QueueFree();
+        _perkMenu=new PerkMenuRuntime
+        {
+            Name="PerkMenu",
+            Runtime=_runtime
+        };
+        _perkMenu.CloseRequested=()=>
+        {
+            _perkMenu?.QueueFree();
+            _perkMenu=null;
+            ShowMenu();
+        };
+        AddChild(_perkMenu);
     }
 
     private void ShowArmory()
@@ -223,6 +254,8 @@ public partial class Bootstrap : Node
         _menu = null;
         _armory?.QueueFree();
         _armory = null;
+        _perkMenu?.QueueFree();
+        _perkMenu = null;
 
         _runtime.StartMap(map);
         _game = new GameplayRoot

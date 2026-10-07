@@ -67,7 +67,7 @@ public partial class PickupActor : Node3D
             case "Bandages":
             {
                 var before = state.Health;
-                Runtime.HealPlayer(20);
+                Runtime.HealPlayer(Runtime.HasPerk("Medic") ? 26 : 20);
                 return state.Health > before;
             }
             case "Medkit":
@@ -99,8 +99,17 @@ public partial class PickupActor : Node3D
                 return changed;
             }
             default:
-                Runtime.GrantItem(PickupType, GrantCount);
-                return true;
+            {
+                var maxCount=PickupType switch
+                {
+                    "Clap Bomb" => Runtime.HasPerk("Play Maker") ? 2 : 1,
+                    "Barbed Wire" => Runtime.HasPerk("Fortifier") ? 4 : 2,
+                    "Jack" => 1,
+                    "50 Cal" => 1,
+                    _ => int.MaxValue
+                };
+                return Runtime.GrantItem(PickupType,GrantCount,maxCount);
+            }
         }
     }
 

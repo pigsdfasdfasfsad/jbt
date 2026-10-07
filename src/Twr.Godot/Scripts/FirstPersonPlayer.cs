@@ -20,6 +20,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private bool _jumpRequested;
     private double _actionCooldown;
     private double _reloadTimer;
+    private double _adrenalineTick;
     private string? _reloadWeapon;
     private string _primaryWeapon = StarterLoadoutService.SawnOff;
     private string _secondaryWeapon = StarterLoadoutService.Glock17;
@@ -97,6 +98,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
             return;
         }
 
+        TickAdrenaline(delta);
+
         var x = (Input.IsKeyPressed(Key.D) ? 1f : 0f) - (Input.IsKeyPressed(Key.A) ? 1f : 0f);
         var z = (Input.IsKeyPressed(Key.S) ? 1f : 0f) - (Input.IsKeyPressed(Key.W) ? 1f : 0f);
         var local = new Vector3(x, 0, z);
@@ -106,7 +109,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
         world.Y = 0;
         if (world.LengthSquared() > 0.001f) world = world.Normalized();
 
-        var speed = Input.IsKeyPressed(Key.Shift) ? SprintSpeed : WalkSpeed;
+        var sprintMultiplier = Runtime.HasPerk("Speed Demon") ? 1.12f : 1f;
+        var speed = Input.IsKeyPressed(Key.Shift) ? SprintSpeed * sprintMultiplier : WalkSpeed;
         var velocity = Velocity;
         velocity.X = world.X * speed;
         velocity.Z = world.Z * speed;
@@ -238,7 +242,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var reserve = Runtime.Player.ReserveAmmo.GetValueOrDefault(spec.Name);
         if (loaded >= spec.Magazine || reserve <= 0) return;
 
-        _reloadTimer = Math.Max(0.05, spec.ReloadSeconds);
+        var reloadMultiplier = Runtime?.HasPerk("Brisk") == true ? 0.8 : 1.0;
+        _reloadTimer = Math.Max(0.05, spec.ReloadSeconds * reloadMultiplier);
         _reloadWeapon = spec.Name;
     }
 
@@ -261,9 +266,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         }
 
         if (!Runtime.SpendAmmo(spec.Name, 1)) return;
-        _actionCooldown = spec.IsLauncher
-            ? Math.Max(0.05, spec.ActionSeconds)
-            : spec.Rpm > 0 ? 60.0 / spec.Rpm : Math.Max(0.05, spec.ActionSeconds);
+        _actionCooldown = FireInterval(spec);
 
         if (spec.IsLauncher)
         {
@@ -285,6 +288,45 @@ public partial class FirstPersonPlayer : CharacterBody3D
         }
 
         FireHitscan(spec, -_camera.GlobalTransform.Basis.Z, spec.Range, spec.Damage, "Bullet", true);
+    }
+
+
+    private double FireInterval(RuntimeWeaponDefinition spec)
+    {
+        var interval=spec.IsLauncher
+            ? Math.Max(0.05,spec.ActionSeconds)
+            : spec.Rpm>0 ? 60.0/spec.Rpm : Math.Max(0.05,spec.ActionSeconds);
+
+        if(Runtime?.HasPerk("Trigger Finger")==true && TriggerFingerEligible(spec))
+            interval/=1.35; // VERIFIED +35% fire rate.
+        return interval;
+    }
+
+    private static bool TriggerFingerEligible(RuntimeWeaponDefinition spec)
+    {
+        if(spec.IsAutomatic || spec.IsMelee || spec.IsLauncher || spec.IsFlamethrower)return false;
+        return spec.Type.Contains("Semi",StringComparison.OrdinalIgnoreCase) ||
+               spec.Type.Contains("Pump",StringComparison.OrdinalIgnoreCase) ||
+               spec.Type.Contains("Bolt",StringComparison.OrdinalIgnoreCase) ||
+               spec.Type.Equals("Shotgun",StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void TickAdrenaline(double delta)
+    {
+        if(Runtime?.Player is null || !Runtime.HasPerk("Adrenaline Rush") ||
+           Runtime.Player.Health>=35f || Runtime.Player.Health<=0)
+        {
+            _adrenalineTick=0;
+            return;
+        }
+
+        _adrenalineTick-=delta;
+        if(_adrenalineTick>0)return;
+
+        // APPROXIMATED rate: source defines "slowly" and a 35% ceiling but no rate.
+        var amount=Math.Min(1f,35f-Runtime.Player.Health);
+        if(amount>0)Runtime.HealPlayer(amount);
+        _adrenalineTick=1.0;
     }
 
     private void FireLauncher(RuntimeWeaponDefinition spec)
@@ -354,8 +396,14 @@ public partial class FirstPersonPlayer : CharacterBody3D
                 headshot = localHit.Y >= 0.45f;
             }
 
+            var appliedDamage=damage;
+            // VERIFIED effect: Heavy Hitter adds 20% to upper-body firearm hits.
+            // APPROXIMATED boundary: reconstructed capsule has no authored limbs.
+            if(Runtime?.HasPerk("Heavy Hitter")==true && damageKind=="Bullet" && localHit.Y>=-0.35f)
+                appliedDamage*=1.2f;
+
             var kind = spec.Bladed && headshot ? "Decapitation" : damageKind;
-            infected.ApplyDamage(damage, headshot, kind);
+            infected.ApplyDamage(appliedDamage, headshot, kind);
 
             if (collider is not CollisionObject3D collision || penetration >= spec.MaxPen)
                 return;

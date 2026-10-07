@@ -114,7 +114,7 @@ public sealed class LocalSession
                 _healing.EquipBodyArmor(State.Player, now);
                 break;
             case GrantItemCommand x:
-                _inventory.Grant(State.Player, x.ItemId, x.Amount, now);
+                _inventory.Grant(State.Player, x.ItemId, x.Amount, x.MaxCount, now);
                 break;
             case ConsumeItemCommand x:
                 _inventory.Consume(State.Player, x.ItemId, x.Amount, now);

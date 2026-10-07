@@ -27,4 +27,4 @@ def test_explosive_fortifications_can_damage_tanker_and_slow_trap_suppresses_bur
     fort=read("src/Twr.Godot/Scripts/FortificationActor.cs")
     assert 'GetNodesInGroup("damage_objective")' in fort
     assert 'tanker.ApplyDamage(Definition.Damage!.Value, "Explosive")' in fort
-    assert 'infected.ApplyDamage(5f, false, "BarbedWire")' in fort
+    assert 'infected.ApplyDamage(15f, false, "BarbedWire")' in fort

@@ -40,7 +40,13 @@ public partial class LocalSessionNode : Node
     public void GrantAmmo(string weapon,int amount,int maxReserve) => Submit(new GrantAmmoCommand(weapon,amount,maxReserve));
     public void ConfigureWeaponAmmo(string weapon,int magazine,int reserve) =>
         Submit(new ConfigureWeaponAmmoCommand(weapon,magazine,reserve));
-    public void GrantItem(string item,int amount=1) => Submit(new GrantItemCommand(item,amount));
+    public bool GrantItem(string item,int amount=1,int maxCount=int.MaxValue)
+    {
+        if(Session is null)return false;
+        var before=Session.State.Player.Inventory.GetValueOrDefault(item);
+        Submit(new GrantItemCommand(item,amount,maxCount));
+        return Session.State.Player.Inventory.GetValueOrDefault(item)>before;
+    }
     public bool ConsumeItem(string item,int amount=1)
     {
         if(Session is null)return false;
