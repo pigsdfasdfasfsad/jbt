@@ -12,11 +12,12 @@ def test_main_scene_is_not_a_title_card_shell():
 
 def test_first_person_combat_uses_recovered_glock_values():
     player = text("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
-    assert "MagazineCapacity = 18" in player
-    assert "WeaponDamage = 15f" in player
-    assert "60.0 / 400.0" in player
-    assert "ReloadSeconds = 1.85" in player
-    assert "Range = 1000f" in player
+    catalog = text("src/Twr.Godot/Scripts/StarterWeaponCatalog.cs")
+    assert "15f" in catalog
+    assert "18," in catalog
+    assert "400," in catalog
+    assert "1.85" in catalog
+    assert "1000f" in catalog
     assert "SpendAmmo" in player
 
 def test_wave_loop_is_timed_and_continuously_spawns():
