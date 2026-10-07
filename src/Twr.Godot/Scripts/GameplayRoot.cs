@@ -29,10 +29,11 @@ public partial class GameplayRoot : Node3D
     private bool _supplyQueuedForNextWave;
     private double _queuedSupplySeconds=-1;
 
-    // FITTED reconstruction: source proves repeated item spawning and separate
-    // item/fortification spawn groups, but gives no Regular interval in seconds.
-    private const double NaturalRespawnMinSeconds=35.0;
-    private const double NaturalRespawnMaxSeconds=55.0;
+    // FITTED in the recovered TestPlace directive: Regular restocks item and
+    // fortification markers every 20 seconds. The original retail source did
+    // not expose this interval directly.
+    private const double NaturalRespawnMinSeconds=20.0;
+    private const double NaturalRespawnMaxSeconds=20.0;
     private readonly record struct NaturalRespawn(Vector3 Position,string Group,double Remaining);
     private bool _finished;
     private PauseOverlayRuntime? _pauseOverlay;
@@ -353,12 +354,15 @@ public partial class GameplayRoot : Node3D
     {
         // APPROXIMATED coordinates: topology rules come from map references,
         // while exact retail spawn-group transforms are not recovered.
-        foreach(var point in _mapLayout.PickupPoints)
-            SpawnNaturalAt(point,"Item");
+        // Recovered reconstruction cadence starts each wave/map with a small
+        // opening batch rather than filling every available marker.
+        var itemCount=Math.Min(4,_mapLayout.PickupPoints.Count);
+        for(var i=0;i<itemCount;i++)
+            SpawnNaturalAt(_mapLayout.PickupPoints[i],"Item");
 
         // VERIFIED grouping rule: fortification spawn areas are separate and
         // never naturally produce the 50 Cal. Their exact map anchors are lost.
-        var fortCount=Math.Min(3,_mapLayout.PickupPoints.Count);
+        var fortCount=Math.Min(2,_mapLayout.PickupPoints.Count);
         for(var i=0;i<fortCount;i++)
         {
             var basePoint=_mapLayout.PickupPoints[i];
