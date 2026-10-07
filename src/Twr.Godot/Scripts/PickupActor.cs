@@ -8,6 +8,7 @@ public partial class PickupActor : Node3D
     public string PickupType { get; set; } = "Bandages";
     public FirstPersonPlayer? Player { get; set; }
     public LocalSessionNode? Runtime { get; set; }
+    public int GrantCount { get; set; } = 1;
     public Action<PickupActor>? Collected { get; set; }
 
     private bool _interactWasDown;
@@ -95,7 +96,7 @@ public partial class PickupActor : Node3D
                 return state.ReserveAmmo.GetValueOrDefault(weapon) > before;
             }
             default:
-                Runtime.GrantItem(PickupType, 1);
+                Runtime.GrantItem(PickupType, GrantCount);
                 return true;
         }
     }

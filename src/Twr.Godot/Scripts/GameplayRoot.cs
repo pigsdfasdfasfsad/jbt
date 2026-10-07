@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Godot;
 using Twr.Domain.Model;
 
@@ -13,6 +14,8 @@ public partial class GameplayRoot : Node3D
     private FirstPersonPlayer _player = null!;
     private readonly List<InfectedAgent> _infected = [];
     private readonly List<ObjectiveRuntime> _objectives = [];
+    private readonly List<PickupActor> _pickups = [];
+    private readonly List<SupplyDropRuntime> _supplyDrops = [];
     private int _completedObjectivesThisWave;
     private readonly RandomNumberGenerator _rng = new();
     private Stage _stage = Stage.Countdown;
@@ -41,6 +44,7 @@ public partial class GameplayRoot : Node3D
         _hud = new GameplayHud { Name = "HUD" };
         AddChild(_hud);
         _hud.SetBanner($"WAVE {Runtime.Match?.Wave ?? 1} BEGINS IN");
+        SpawnNaturalPickups();
     }
 
     public override void _Process(double delta)
@@ -188,10 +192,17 @@ public partial class GameplayRoot : Node3D
         _completedObjectivesThisWave++;
         _objectives.Remove(objective);
 
+        var completionPosition = objective.GlobalPosition;
         if (objective.Family == "Radio")
+        {
             _hud.SetBanner("SUPPLY HELICOPTER EN ROUTE");
+            SpawnSupplyDrop();
+        }
         else if (objective.Family == "Unpack")
+        {
             _hud.SetBanner("SUPPLY CRATE UNPACKED");
+            SpawnUnpackContents(completionPosition);
+        }
 
         objective.QueueFree();
         if (_objectives.Count == 0)
@@ -205,6 +216,123 @@ public partial class GameplayRoot : Node3D
         _objectives.Clear();
         if (GodotObject.IsInstanceValid(_hud))
             _hud.SetObjective("");
+    }
+
+    private readonly record struct FortPickup(string Name, int Count);
+
+    private void SpawnNaturalPickups()
+    {
+        // APPROXIMATED positions: Manor reference confirms no natural item spawns
+        // outside, but exact retail item coordinates are not recovered.
+        var types = new[] { "Bandages", "Ammo", "Body Armor", "Medkit", "Ammo", "Bandages" };
+        var points = new[]
+        {
+            new Vector3(-7, 0.35f, 18),
+            new Vector3(7, 0.35f, 18),
+            new Vector3(-7, 0.35f, 4),
+            new Vector3(7, 0.35f, 4),
+            new Vector3(-7, 0.35f, -14),
+            new Vector3(7, 0.35f, -14)
+        };
+        for (var i = 0; i < types.Length; i++)
+            SpawnPickup(types[i], points[i]);
+    }
+
+    private void SpawnPickup(string type, Vector3 position, int grantCount = 1)
+    {
+        var pickup = new PickupActor
+        {
+            Name = $"Pickup_{type}_{_pickups.Count}",
+            PickupType = type,
+            GrantCount = Math.Max(1, grantCount),
+            Player = _player,
+            Runtime = Runtime,
+            Position = position
+        };
+        pickup.Collected = collected => _pickups.Remove(collected);
+        _pickups.Add(pickup);
+        AddChild(pickup);
+    }
+
+    private void SpawnSupplyDrop()
+    {
+        var destination = new Vector3(_rng.RandfRange(-8f, 8f), 0.3f, _rng.RandfRange(-20f, 20f));
+        var pallet = new SupplyDropRuntime
+        {
+            Name = $"SupplyDrop_{Runtime?.Match?.Wave ?? 0}",
+            Position = destination + Vector3.Up * 15f,
+            GroundY = destination.Y
+        };
+        pallet.Landed = position =>
+        {
+            _supplyDrops.Remove(pallet);
+            SpawnSupplyContents(position);
+            _hud.SetBanner("SUPPLY DROP LANDED");
+        };
+        _supplyDrops.Add(pallet);
+        AddChild(pallet);
+    }
+
+    private void SpawnSupplyContents(Vector3 center)
+    {
+        // CONTESTED evidence: one source says exactly eight total; another says
+        // four item pickups plus four fortification pickups. The 4+4 split is
+        // used here as the stronger reconstruction fit while preserving total=8.
+        var itemTypes = new[] { "Medkit", "Ammo", "Body Armor", "Bandages" };
+        for (var i = 0; i < 4; i++)
+            SpawnPickup(itemTypes[i], RingPoint(center, i, 8, 2.3f));
+
+        var forts = LoadFortificationCatalog();
+        for (var i = 0; i < 4; i++)
+        {
+            if (forts.Count == 0)
+            {
+                SpawnPickup("Ammo", RingPoint(center, i + 4, 8, 2.3f));
+                continue;
+            }
+            var fort = forts[_rng.RandiRange(0, forts.Count - 1)];
+            SpawnPickup(fort.Name, RingPoint(center, i + 4, 8, 2.3f), fort.Count);
+        }
+    }
+
+    private void SpawnUnpackContents(Vector3 center)
+    {
+        // VERIFIED: both Unpack variants produce exactly eight pickups.
+        // APPROXIMATED: absent source for variant scheduling, alternate by wave.
+        var ammoVariant = (Runtime?.Match?.Wave ?? 1) % 2 == 1;
+        for (var i = 0; i < 8; i++)
+        {
+            var type = ammoVariant ? "Ammo" : (i % 2 == 0 ? "Bandages" : "Medkit");
+            SpawnPickup(type, RingPoint(center, i, 8, 2.5f));
+        }
+    }
+
+    private List<FortPickup> LoadFortificationCatalog()
+    {
+        var result = new List<FortPickup>();
+        try
+        {
+            var json = Godot.FileAccess.GetFileAsString("res://Content/fortifications/fortifications.json");
+            using var document = JsonDocument.Parse(json);
+            foreach (var entry in document.RootElement.GetProperty("fortifications").EnumerateArray())
+            {
+                var name = entry.GetProperty("name").GetString();
+                var count = entry.GetProperty("count").GetInt32();
+                if (!string.IsNullOrWhiteSpace(name) && count > 0)
+                    result.Add(new FortPickup(name, count));
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PushWarning($"Fortification catalog unavailable for supply drop: {ex.Message}");
+        }
+        return result;
+    }
+
+    private static Vector3 RingPoint(Vector3 center, int index, int count, float radius)
+    {
+        var angle = Mathf.Tau * index / count;
+        return center + new Vector3(Mathf.Cos(angle) * radius, 0.25f, Mathf.Sin(angle) * radius);
     }
 
     private void SpawnInfected(int wave)

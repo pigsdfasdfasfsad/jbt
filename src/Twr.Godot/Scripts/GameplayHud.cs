@@ -46,7 +46,7 @@ public partial class GameplayHud : CanvasLayer
     public void UpdateState(PlayerState player, MatchState match, string stage, double seconds, string weaponName)
     {
         _top.Text = $"REGULAR  |  {match.MapName.ToUpperInvariant()}  |  WAVE {match.Wave}/15  |  {stage}  {FormatTime(seconds)}";
-        _health.Text = $"HEALTH  {Math.Ceiling(player.Health):0} / {player.MaxHealth:0}";
+        _health.Text = $"HEALTH  {Math.Ceiling(player.Health):0} / {player.MaxHealth:0}   ARMOR {Math.Ceiling(player.ArmorDurability):0}";
 
         if (weaponName == StarterLoadoutService.TwoByFour)
         {
