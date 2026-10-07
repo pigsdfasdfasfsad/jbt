@@ -89,6 +89,23 @@ try {
   $smokeOutput | ForEach-Object { Write-Host $_ }
   if ($smoke.ExitCode -ne 0) { throw "Exported playable smoke pass failed with exit code $($smoke.ExitCode)" }
   if ($smokeOutput | Where-Object { "$_" -match '(^|\s)ERROR:' }) { throw 'Exported playable smoke pass reported ERROR output.' }
+
+  # Full release contract smoke: drive every release map through all 15 domain
+  # waves inside the exported executable and require committed completion state.
+  $fullStdout = Join-Path $Output 'completion-smoke.stdout.txt'
+  $fullStderr = Join-Path $Output 'completion-smoke.stderr.txt'
+  Remove-Item $fullStdout,$fullStderr -Force -ErrorAction SilentlyContinue
+  $full = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','600','--','--smoke-complete') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $fullStdout -RedirectStandardError $fullStderr
+
+  $fullOutput = @()
+  if (Test-Path $fullStdout) { $fullOutput += Get-Content $fullStdout }
+  if (Test-Path $fullStderr) { $fullOutput += Get-Content $fullStderr }
+  $fullOutput | ForEach-Object { Write-Host $_ }
+  if ($full.ExitCode -ne 0) { throw "Exported 15-wave completion smoke failed with exit code $($full.ExitCode)" }
+  if ($fullOutput | Where-Object { "$_" -match '(^|\s)ERROR:' }) { throw 'Exported 15-wave completion smoke reported ERROR output.' }
+  if (-not ($fullOutput | Where-Object { "$_" -match 'TWR_SMOKE_COMPLETE_OK maps=10 waves=150' })) {
+    throw 'Exported 15-wave completion smoke did not report the required completion marker.'
+  }
 } finally { Pop-Location }
 
 Write-Host 'Windows export and playable smoke pass completed.'

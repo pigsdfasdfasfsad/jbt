@@ -1,4 +1,5 @@
 using Godot;
+using Twr.Domain.Model;
 
 namespace Twr.Godot;
 
@@ -14,12 +15,46 @@ public partial class Bootstrap : Node
     {
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
+        var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-complete",StringComparer.Ordinal))
+        {
+            RunFullCompletionSmoke();
+            return;
+        }
+
         ShowMenu();
-        if (OS.GetCmdlineUserArgs().Contains("--smoke-play", StringComparer.Ordinal))
+        if (args.Contains("--smoke-play", StringComparer.Ordinal))
             StartGame("Manor");
         GD.Print("TWR Offline: playable Regular-mode reconstruction runtime initialized.");
     }
 
+    private void RunFullCompletionSmoke()
+    {
+        var completed=0;
+        foreach(var map in ReleaseRules.Maps)
+        {
+            _runtime.StartMap(map);
+            for(var expectedWave=1;expectedWave<=ReleaseRules.MaxWaves;expectedWave++)
+            {
+                if(_runtime.Match?.Wave!=expectedWave)
+                    throw new InvalidOperationException($"Smoke wave mismatch {map}: expected {expectedWave}, got {_runtime.Match?.Wave}");
+                _runtime.AwardWaveSurvival(expectedWave,0,1);
+                _runtime.AdvanceWave();
+            }
+
+            if(_runtime.Match is null || _runtime.Match.Wave!=ReleaseRules.MaxWaves ||
+               _runtime.Match.Phase!=MatchPhase.Results || !_runtime.Match.SaveCommitted ||
+               !_runtime.Match.CompletionAwarded)
+                throw new InvalidOperationException("Completion smoke failed for " + map);
+
+            GD.Print($"TWR_SMOKE_MAP_OK map={map} wave={_runtime.Match.Wave} save={_runtime.Match.SaveCommitted}");
+            _runtime.ReturnToLobby();
+            completed++;
+        }
+
+        GD.Print($"TWR_SMOKE_COMPLETE_OK maps={completed} waves={completed*ReleaseRules.MaxWaves}");
+        GetTree().Quit(0);
+    }
     private void ShowMenu()
     {
         Input.MouseMode = Input.MouseModeEnum.Visible;
