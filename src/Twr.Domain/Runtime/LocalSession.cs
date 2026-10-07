@@ -35,7 +35,7 @@ public sealed class LocalSession
         _match = new(_events);
         _damage = new(new DamagePolicy(), _events);
         _ammo = new(_events);
-        _objectives = new(_events);
+        _objectives = new(new ObjectiveRewardPolicy(), _events);
         _economy = new(_events);
         _save = new(profiles, _events);
         _killRewards = new(_events);
@@ -87,7 +87,8 @@ public sealed class LocalSession
                     PersistProfile($"Wave{x.Wave}Survival", now);
                 break;
             case CompleteObjectiveCommand x:
-                _objectives.Complete(State.Match, x.ObjectiveId, now);
+                if (_objectives.Complete(State.Match, State.Player, x.ObjectiveId, x.Family, now))
+                    PersistProfile($"Objective:{x.ObjectiveId}", now);
                 break;
             case PurchaseCommand x:
                 _economy.Purchase(State.Player, x.ItemId, x.Price, now);
