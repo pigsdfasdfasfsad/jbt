@@ -34,10 +34,10 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildRanch(Node3D root)
     {
         BaseArena(root, 96, 82, new Color(0.34f, 0.29f, 0.14f));
-        StaticBox(root, "House", new Vector3(-20, 2.5f, -5), new Vector3(22, 5, 18), new Color(0.40f, 0.32f, 0.23f));
-        StaticBox(root, "Barn", new Vector3(20, 3.5f, -12), new Vector3(22, 7, 24), new Color(0.34f, 0.12f, 0.08f));
-        StaticBox(root, "Stable", new Vector3(21, 2.2f, 19), new Vector3(20, 4.4f, 10), new Color(0.30f, 0.22f, 0.14f));
-        StaticBox(root, "Storehouse", new Vector3(-24, 2.2f, 20), new Vector3(14, 4.4f, 12), new Color(0.29f, 0.24f, 0.17f));
+        InteriorShell(root, "House", new Vector3(-20, 2.5f, -5), new Vector3(22, 5, 18), new Color(0.40f, 0.32f, 0.23f));
+        InteriorShell(root, "Barn", new Vector3(20, 3.5f, -12), new Vector3(22, 7, 24), new Color(0.34f, 0.12f, 0.08f));
+        InteriorShell(root, "Stable", new Vector3(21, 2.2f, 19), new Vector3(20, 4.4f, 10), new Color(0.30f, 0.22f, 0.14f));
+        InteriorShell(root, "Storehouse", new Vector3(-24, 2.2f, 20), new Vector3(14, 4.4f, 12), new Color(0.29f, 0.24f, 0.17f));
         DecorativeBox(root, "Greenhouse", new Vector3(-4, 1.3f, 25), new Vector3(10, 2.6f, 7), new Color(0.33f, 0.48f, 0.30f));
         return Layout(new Vector3(0, 1, 8),
             EdgeSpawns(43, 36),
@@ -49,10 +49,10 @@ public static class MapBlockoutBuilder
     {
         BaseArena(root, 110, 86, new Color(0.69f, 0.72f, 0.75f));
         DecorativeBox(root, "FrozenLake", new Vector3(-27, 0.02f, 0), new Vector3(46, 0.04f, 78), new Color(0.50f, 0.68f, 0.78f));
-        StaticBox(root, "Sawmill", new Vector3(18, 3, -10), new Vector3(30, 6, 26), new Color(0.34f, 0.28f, 0.20f));
-        StaticBox(root, "Warehouse", new Vector3(23, 2.8f, 22), new Vector3(27, 5.6f, 18), new Color(0.31f, 0.32f, 0.34f));
-        StaticBox(root, "Office", new Vector3(13, 2.3f, -31), new Vector3(18, 4.6f, 10), new Color(0.36f, 0.38f, 0.40f));
-        StaticBox(root, "Tunnel", new Vector3(48, 2.8f, 5), new Vector3(8, 5.6f, 18), new Color(0.18f, 0.19f, 0.20f));
+        InteriorShell(root, "Sawmill", new Vector3(18, 3, -10), new Vector3(30, 6, 26), new Color(0.34f, 0.28f, 0.20f));
+        InteriorShell(root, "Warehouse", new Vector3(23, 2.8f, 22), new Vector3(27, 5.6f, 18), new Color(0.31f, 0.32f, 0.34f));
+        InteriorShell(root, "Office", new Vector3(13, 2.3f, -31), new Vector3(18, 4.6f, 10), new Color(0.36f, 0.38f, 0.40f));
+        InteriorShell(root, "Tunnel", new Vector3(48, 2.8f, 5), new Vector3(8, 5.6f, 18), new Color(0.18f, 0.19f, 0.20f));
         return Layout(new Vector3(24, 1, 3),
             Points((-50,-29),(-50,0),(-50,29),(50,4),(33,-39)),
             Points((15,-2),(26,20),(17,-29),(30,-15),(20,30),(3,12)),
@@ -62,10 +62,10 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildBypass(Node3D root)
     {
         BaseArena(root, 116, 86, new Color(0.25f, 0.25f, 0.23f));
-        StaticBox(root, "Tunnel", new Vector3(-48, 3, 0), new Vector3(14, 6, 22), new Color(0.14f, 0.15f, 0.16f));
-        StaticBox(root, "PlazaNorth", new Vector3(4, 2.7f, -25), new Vector3(42, 5.4f, 14), new Color(0.38f, 0.34f, 0.28f));
-        StaticBox(root, "PlazaSouth", new Vector3(6, 2.7f, 25), new Vector3(42, 5.4f, 14), new Color(0.34f, 0.32f, 0.28f));
-        StaticBox(root, "CivilianBarracks", new Vector3(36, 2.4f, 8), new Vector3(20, 4.8f, 16), new Color(0.27f, 0.31f, 0.24f));
+        InteriorShell(root, "Tunnel", new Vector3(-48, 3, 0), new Vector3(14, 6, 22), new Color(0.14f, 0.15f, 0.16f));
+        InteriorShell(root, "PlazaNorth", new Vector3(4, 2.7f, -25), new Vector3(42, 5.4f, 14), new Color(0.38f, 0.34f, 0.28f));
+        InteriorShell(root, "PlazaSouth", new Vector3(6, 2.7f, 25), new Vector3(42, 5.4f, 14), new Color(0.34f, 0.32f, 0.28f));
+        InteriorShell(root, "CivilianBarracks", new Vector3(36, 2.4f, 8), new Vector3(20, 4.8f, 16), new Color(0.27f, 0.31f, 0.24f));
         DecorativeBox(root, "ArchBridge", new Vector3(30, 1.2f, -9), new Vector3(40, 2.4f, 6), new Color(0.28f, 0.29f, 0.30f));
         return Layout(new Vector3(0, 1, 0),
             Points((-55,0),(-35,-39),(-35,39),(54,-22),(54,22)),
@@ -76,7 +76,7 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildCabin(Node3D root)
     {
         BaseArena(root, 76, 76, new Color(0.10f, 0.12f, 0.09f));
-        StaticBox(root, "CabinHouse", new Vector3(0, 3, 0), new Vector3(34, 6, 30), new Color(0.25f, 0.18f, 0.13f));
+        InteriorShell(root, "CabinHouse", new Vector3(0, 3, 0), new Vector3(34, 6, 30), new Color(0.25f, 0.18f, 0.13f));
         for (var i = -32; i <= 32; i += 8)
         {
             DecorativeBox(root, "ForestN" + i, new Vector3(i, 3, -34), new Vector3(1.2f, 6, 1.2f), new Color(0.10f, 0.20f, 0.10f));
@@ -93,7 +93,7 @@ public static class MapBlockoutBuilder
         BaseArena(root, 68, 126, new Color(0.20f, 0.23f, 0.24f));
         StaticBox(root, "WestDock", new Vector3(-22, 0.8f, 4), new Vector3(14, 1.6f, 98), new Color(0.32f, 0.31f, 0.28f));
         StaticBox(root, "EastDock", new Vector3(22, 0.8f, 4), new Vector3(14, 1.6f, 98), new Color(0.32f, 0.31f, 0.28f));
-        StaticBox(root, "CargoShip", new Vector3(0, 2.0f, 18), new Vector3(20, 4, 62), new Color(0.20f, 0.24f, 0.27f));
+        InteriorShell(root, "CargoShip", new Vector3(0, 2.0f, 18), new Vector3(20, 4, 62), new Color(0.20f, 0.24f, 0.27f));
         for (var z = -34; z <= 34; z += 17)
             DecorativeBox(root, "Container" + z, new Vector3(-22, 2.0f, z), new Vector3(8, 4, 12), new Color(0.45f, 0.19f, 0.12f));
         return Layout(new Vector3(0, 2.1f, 38),
@@ -105,11 +105,11 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildDistrict(Node3D root)
     {
         BaseArena(root, 92, 92, new Color(0.19f, 0.22f, 0.16f));
-        StaticBox(root, "Cafe", new Vector3(-27, 2.7f, -25), new Vector3(22, 5.4f, 18), new Color(0.34f, 0.24f, 0.18f));
-        StaticBox(root, "Foxoil", new Vector3(27, 2.2f, -25), new Vector3(22, 4.4f, 16), new Color(0.28f, 0.31f, 0.20f));
-        StaticBox(root, "MovieTheater", new Vector3(-27, 3.2f, 25), new Vector3(24, 6.4f, 21), new Color(0.24f, 0.18f, 0.22f));
-        StaticBox(root, "BookStore", new Vector3(25, 3.4f, 24), new Vector3(20, 6.8f, 20), new Color(0.27f, 0.22f, 0.17f));
-        StaticBox(root, "ConvenienceStore", new Vector3(30, 2.3f, 3), new Vector3(17, 4.6f, 13), new Color(0.31f, 0.30f, 0.22f));
+        InteriorShell(root, "Cafe", new Vector3(-27, 2.7f, -25), new Vector3(22, 5.4f, 18), new Color(0.34f, 0.24f, 0.18f));
+        InteriorShell(root, "Foxoil", new Vector3(27, 2.2f, -25), new Vector3(22, 4.4f, 16), new Color(0.28f, 0.31f, 0.20f));
+        InteriorShell(root, "MovieTheater", new Vector3(-27, 3.2f, 25), new Vector3(24, 6.4f, 21), new Color(0.24f, 0.18f, 0.22f));
+        InteriorShell(root, "BookStore", new Vector3(25, 3.4f, 24), new Vector3(20, 6.8f, 20), new Color(0.27f, 0.22f, 0.17f));
+        InteriorShell(root, "ConvenienceStore", new Vector3(30, 2.3f, 3), new Vector3(17, 4.6f, 13), new Color(0.31f, 0.30f, 0.22f));
         DecorativeBox(root, "CrossroadNS", Vector3.Zero, new Vector3(10, 0.08f, 86), new Color(0.11f, 0.11f, 0.11f));
         DecorativeBox(root, "CrossroadEW", Vector3.Zero, new Vector3(86, 0.08f, 10), new Color(0.11f, 0.11f, 0.11f));
         return Layout(new Vector3(0, 1, 0),
@@ -135,11 +135,11 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildPrison(Node3D root)
     {
         BaseArena(root, 106, 94, new Color(0.22f, 0.23f, 0.20f));
-        StaticBox(root, "CellBlockA", new Vector3(-25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f));
-        StaticBox(root, "CellBlockB", new Vector3(25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f));
-        StaticBox(root, "Isolation", new Vector3(0, 4.5f, -35), new Vector3(28, 9, 14), new Color(0.24f, 0.25f, 0.25f));
-        StaticBox(root, "MessHall", new Vector3(-28, 2.7f, 32), new Vector3(28, 5.4f, 18), new Color(0.34f, 0.32f, 0.27f));
-        StaticBox(root, "Warehouse", new Vector3(30, 2.7f, 33), new Vector3(24, 5.4f, 17), new Color(0.28f, 0.29f, 0.27f));
+        InteriorShell(root, "CellBlockA", new Vector3(-25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f));
+        InteriorShell(root, "CellBlockB", new Vector3(25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f));
+        InteriorShell(root, "Isolation", new Vector3(0, 4.5f, -35), new Vector3(28, 9, 14), new Color(0.24f, 0.25f, 0.25f));
+        InteriorShell(root, "MessHall", new Vector3(-28, 2.7f, 32), new Vector3(28, 5.4f, 18), new Color(0.34f, 0.32f, 0.27f));
+        InteriorShell(root, "Warehouse", new Vector3(30, 2.7f, 33), new Vector3(24, 5.4f, 17), new Color(0.28f, 0.29f, 0.27f));
         DecorativeBox(root, "BasketballCourt", new Vector3(0, 0.05f, 24), new Vector3(20, 0.1f, 18), new Color(0.24f, 0.31f, 0.34f));
         return Layout(new Vector3(0, 1, 15),
             Points((-49,-35),(0,-44),(49,-35),(-49,20),(49,20),(0,-32)),
@@ -150,12 +150,12 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildLaboratory(Node3D root)
     {
         BaseArena(root, 108, 98, new Color(0.19f, 0.21f, 0.22f));
-        StaticBox(root, "Reception", new Vector3(0, 2.2f, 39), new Vector3(30, 4.4f, 12), new Color(0.39f, 0.42f, 0.44f));
+        InteriorShell(root, "Reception", new Vector3(0, 2.2f, 39), new Vector3(30, 4.4f, 12), new Color(0.39f, 0.42f, 0.44f));
         DecorativeBox(root, "BridgeWest", new Vector3(-10, 1.0f, 24), new Vector3(7, 2, 20), new Color(0.34f, 0.37f, 0.39f));
         DecorativeBox(root, "BridgeEast", new Vector3(10, 1.0f, 24), new Vector3(7, 2, 20), new Color(0.34f, 0.37f, 0.39f));
-        StaticBox(root, "Research", new Vector3(-16, 4, -3), new Vector3(35, 8, 42), new Color(0.36f, 0.39f, 0.41f));
-        StaticBox(root, "ParkingGarage", new Vector3(28, 4, 0), new Vector3(28, 8, 46), new Color(0.27f, 0.29f, 0.30f));
-        StaticBox(root, "ServerRoom", new Vector3(-18, 3.2f, -34), new Vector3(28, 6.4f, 18), new Color(0.18f, 0.24f, 0.29f));
+        InteriorShell(root, "Research", new Vector3(-16, 4, -3), new Vector3(35, 8, 42), new Color(0.36f, 0.39f, 0.41f));
+        InteriorShell(root, "ParkingGarage", new Vector3(28, 4, 0), new Vector3(28, 8, 46), new Color(0.27f, 0.29f, 0.30f));
+        InteriorShell(root, "ServerRoom", new Vector3(-18, 3.2f, -34), new Vector3(28, 6.4f, 18), new Color(0.18f, 0.24f, 0.29f));
         DecorativeBox(root, "HospitalWard", new Vector3(17, 0.45f, -30), new Vector3(28, 0.9f, 18), new Color(0.58f, 0.62f, 0.61f));
         return Layout(new Vector3(0, 1, 39),
             Points((-45,42),(45,42),(-42,-20),(42,-20),(0,-45),(25,-42)),
@@ -166,9 +166,9 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildManor(Node3D root)
     {
         BaseArena(root, 78, 90, new Color(0.12f, 0.13f, 0.12f));
-        StaticBox(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
-        StaticBox(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
-        StaticBox(root, "FrontHall", new Vector3(0, 2.7f, 31), new Vector3(28, 5.4f, 11), new Color(0.25f, 0.22f, 0.19f));
+        InteriorShell(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
+        InteriorShell(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
+        InteriorShell(root, "FrontHall", new Vector3(0, 2.7f, 31), new Vector3(28, 5.4f, 11), new Color(0.25f, 0.22f, 0.19f));
         for (var z = -25; z <= 18; z += 14)
         {
             DecorativeBox(root, "CourtyardCoverL" + z, new Vector3(-6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
@@ -233,6 +233,48 @@ public static class MapBlockoutBuilder
         });
     }
 
+    private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color)
+    {
+        // APPROXIMATED reconstruction: exact wall/door transforms are not recovered.
+        // Unlike the earlier solid placeholder, this shell is intentionally traversable.
+        var thickness=0.45f;
+        var bottom=center.Y-size.Y*0.5f;
+        var wallY=bottom+size.Y*0.5f;
+        var door=Math.Min(4.0f,Math.Max(2.8f,size.X*0.25f));
+
+        StaticBox(root,name+"_Floor",new Vector3(center.X,bottom+0.10f,center.Z),
+            new Vector3(size.X,0.20f,size.Z),color.Darkened(0.18f));
+        StaticBox(root,name+"_Roof",new Vector3(center.X,bottom+size.Y-0.10f,center.Z),
+            new Vector3(size.X,0.20f,size.Z),color.Darkened(0.08f));
+
+        StaticBox(root,name+"_WestWall",new Vector3(center.X-size.X*0.5f+thickness*0.5f,wallY,center.Z),
+            new Vector3(thickness,size.Y,size.Z),color);
+        StaticBox(root,name+"_EastWall",new Vector3(center.X+size.X*0.5f-thickness*0.5f,wallY,center.Z),
+            new Vector3(thickness,size.Y,size.Z),color);
+
+        var segment=Math.Max(0.5f,(size.X-door)*0.5f);
+        var xOffset=door*0.5f+segment*0.5f;
+        foreach(var zSign in new[]{-1f,1f})
+        {
+            var z=center.Z+zSign*(size.Z*0.5f-thickness*0.5f);
+            StaticBox(root,name+"_DoorWallL_"+(zSign<0?"N":"S"),
+                new Vector3(center.X-xOffset,wallY,z),new Vector3(segment,size.Y,thickness),color);
+            StaticBox(root,name+"_DoorWallR_"+(zSign<0?"N":"S"),
+                new Vector3(center.X+xOffset,wallY,z),new Vector3(segment,size.Y,thickness),color);
+        }
+
+        if(size.Z>=14f && size.X>=10f)
+        {
+            // One interior divider creates rooms while keeping a central passage.
+            var gap=3.2f;
+            var depthSegment=(size.Z-gap)*0.5f;
+            var zOffset=gap*0.5f+depthSegment*0.5f;
+            StaticBox(root,name+"_DividerN",new Vector3(center.X,wallY,center.Z-zOffset),
+                new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
+            StaticBox(root,name+"_DividerS",new Vector3(center.X,wallY,center.Z+zOffset),
+                new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
+        }
+    }
     private static void StaticBox(Node3D root, string name, Vector3 position, Vector3 size, Color color)
     {
         var body = new StaticBody3D { Name = name, Position = position };
