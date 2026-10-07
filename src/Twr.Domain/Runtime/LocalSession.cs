@@ -16,6 +16,8 @@ public sealed class LocalSession
     private readonly MatchDirector _match;
     private readonly DamageService _damage;
     private readonly AmmoService _ammo;
+    private readonly HealingService _healing;
+    private readonly InventoryService _inventory;
     private readonly ObjectiveService _objectives;
     private readonly EconomyService _economy;
     private readonly SaveCoordinator _save;
@@ -35,6 +37,8 @@ public sealed class LocalSession
         _match = new(_events);
         _damage = new(new DamagePolicy(), _events);
         _ammo = new(_events);
+        _healing = new(_events);
+        _inventory = new(_events);
         _objectives = new(new ObjectiveRewardPolicy(), _events);
         _economy = new(_events);
         _save = new(profiles, _events);
@@ -71,13 +75,28 @@ public sealed class LocalSession
                 _match.Advance(State.Match, now);
                 break;
             case DamagePlayerCommand x:
-                _damage.Apply(State.Player, x.Amount, x.Source, now);
+                _damage.Apply(State.Player, x.Amount, x.Source, now, x.BypassArmor);
                 break;
             case SpendAmmoCommand x:
                 _ammo.Spend(State.Player, x.WeaponId, x.Amount, now);
                 break;
             case ReloadWeaponCommand x:
                 _ammo.Reload(State.Player, x.WeaponId, x.MagazineCapacity, now);
+                break;
+            case GrantAmmoCommand x:
+                _ammo.GrantReserve(State.Player, x.WeaponId, x.Amount, x.MaxReserve, now);
+                break;
+            case HealPlayerCommand x:
+                _healing.Apply(State.Player, x.Amount, x.Full, now);
+                break;
+            case EquipBodyArmorCommand:
+                _healing.EquipBodyArmor(State.Player, now);
+                break;
+            case GrantItemCommand x:
+                _inventory.Grant(State.Player, x.ItemId, x.Amount, now);
+                break;
+            case ConsumeItemCommand x:
+                _inventory.Consume(State.Player, x.ItemId, x.Amount, now);
                 break;
             case AwardKillCommand x:
                 _killRewards.Award(State.Player, x.InfectedType, x.Credits, x.Xp, now);

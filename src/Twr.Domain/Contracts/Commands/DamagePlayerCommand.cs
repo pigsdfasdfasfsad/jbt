@@ -1,1 +1,2 @@
-namespace Twr.Domain.Contracts.Commands; public sealed record DamagePlayerCommand(float Amount, string Source) : Twr.Domain.Contracts.IGameCommand;
+namespace Twr.Domain.Contracts.Commands;
+public sealed record DamagePlayerCommand(float Amount,string Source,bool BypassArmor=false) : Twr.Domain.Contracts.IGameCommand;
