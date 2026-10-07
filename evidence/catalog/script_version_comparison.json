@@ -1,0 +1,1311 @@
+[
+  {
+    "place_path": "/Workspace/Map/Region Corners",
+    "source": "investigation/place_scripts/TestPlace/46057_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/Workspace/Lobby/Lighting",
+    "source": "investigation/place_scripts/TestPlace/46264_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Prison/Lighting",
+    "source": "investigation/place_scripts/TestPlace/48645_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Expressway/Lighting",
+    "source": "investigation/place_scripts/TestPlace/51715_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Cabin/Lighting",
+    "source": "investigation/place_scripts/TestPlace/52323_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Cargo/Lighting",
+    "source": "investigation/place_scripts/TestPlace/54145_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Carnival/Lighting",
+    "source": "investigation/place_scripts/TestPlace/54925_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Ranch/Lighting",
+    "source": "investigation/place_scripts/TestPlace/56059_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/District/Lighting",
+    "source": "investigation/place_scripts/TestPlace/59154_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Laboratory/Lighting",
+    "source": "investigation/place_scripts/TestPlace/60363_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Bypass/Lighting",
+    "source": "investigation/place_scripts/TestPlace/65482_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Test Map/Lighting",
+    "source": "investigation/place_scripts/TestPlace/68521_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Stadium/Lighting",
+    "source": "investigation/place_scripts/TestPlace/68539_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Mill/Lighting",
+    "source": "investigation/place_scripts/TestPlace/70530_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/CMaps/Manor/Lighting",
+    "source": "investigation/place_scripts/TestPlace/73351_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Assets/AI/Infected/Bloater/Top Textures",
+    "source": "investigation/place_scripts/TestPlace/76665_.lua",
+    "lines": 6,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Frag",
+    "source": "investigation/place_scripts/TestPlace/81538_Frag.lua",
+    "lines": 205,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Frag.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Molotov",
+    "source": "investigation/place_scripts/TestPlace/81539_Molotov.lua",
+    "lines": 166,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Molotov.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Nerve Gas",
+    "source": "investigation/place_scripts/TestPlace/81540_Nerve_Gas.lua",
+    "lines": 207,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Nerve Gas.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/AI Sounds",
+    "source": "investigation/place_scripts/TestPlace/81541_AI_Sounds.lua",
+    "lines": 546,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.AI Sounds.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Hit Sounds",
+    "source": "investigation/place_scripts/TestPlace/81542_Hit_Sounds.lua",
+    "lines": 14,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Hit Sounds.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/FortificationsInfo",
+    "source": "investigation/place_scripts/TestPlace/81543_FortificationsInfo.lua",
+    "lines": 412,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.FortificationsInfo.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Hammer",
+    "source": "investigation/place_scripts/TestPlace/81544_Hammer.lua",
+    "lines": 163,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Hammer.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Defibrillator",
+    "source": "investigation/place_scripts/TestPlace/81545_Defibrillator.lua",
+    "lines": 95,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Defibrillator.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/2x4 w/ Barbed Wire",
+    "source": "investigation/place_scripts/TestPlace/81546_2x4_w__Barbed_Wire.lua",
+    "lines": 194,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/2x4",
+    "source": "investigation/place_scripts/TestPlace/81547_2x4.lua",
+    "lines": 191,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.2x4.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/AA-12",
+    "source": "investigation/place_scripts/TestPlace/81548_AA-12.lua",
+    "lines": 685,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.AA-12.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/AK-47",
+    "source": "investigation/place_scripts/TestPlace/81549_AK-47.lua",
+    "lines": 644,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.AK-47.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/AR-57",
+    "source": "investigation/place_scripts/TestPlace/81550_AR-57.lua",
+    "lines": 690,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.AR-57.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/AS VAL",
+    "source": "investigation/place_scripts/TestPlace/81551_AS_VAL.lua",
+    "lines": 673,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.AS VAL.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/ASh-12",
+    "source": "investigation/place_scripts/TestPlace/81552_ASh-12.lua",
+    "lines": 667,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.ASh-12.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/AUG",
+    "source": "investigation/place_scripts/TestPlace/81553_AUG.lua",
+    "lines": 714,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.AUG.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Aero Survival Rifle",
+    "source": "investigation/place_scripts/TestPlace/81554_Aero_Survival_Rifle.lua",
+    "lines": 758,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Aero Survival Rifle.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Barrett M82A1",
+    "source": "investigation/place_scripts/TestPlace/81555_Barrett_M82A1.lua",
+    "lines": 722,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Barrett M82A1.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Baseball Bat",
+    "source": "investigation/place_scripts/TestPlace/81556_Baseball_Bat.lua",
+    "lines": 192,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Baseball Bat.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Benelli M4",
+    "source": "investigation/place_scripts/TestPlace/81557_Benelli_M4.lua",
+    "lines": 655,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Benelli M4.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Butcher Knife",
+    "source": "investigation/place_scripts/TestPlace/81558_Butcher_Knife.lua",
+    "lines": 189,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Butcher Knife.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/CBJ-MS",
+    "source": "investigation/place_scripts/TestPlace/81559_CBJ-MS.lua",
+    "lines": 672,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.CBJ-MS.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/CMMG Mk47 Mutant",
+    "source": "investigation/place_scripts/TestPlace/81560_CMMG_Mk47_Mutant.lua",
+    "lines": 643,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.CMMG Mk47 Mutant.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/CZ Scorpion EVO Micro K",
+    "source": "investigation/place_scripts/TestPlace/81561_CZ_Scorpion_EVO_Micro_K.lua",
+    "lines": 739,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.CZ Scorpion EVO Micro K.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Candy Cane Sword",
+    "source": "investigation/place_scripts/TestPlace/81562_Candy_Cane_Sword.lua",
+    "lines": 218,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Candy Cane Sword.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Colt Python",
+    "source": "investigation/place_scripts/TestPlace/81563_Colt_Python.lua",
+    "lines": 748,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Colt Python.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Crowbar",
+    "source": "investigation/place_scripts/TestPlace/81564_Crowbar.lua",
+    "lines": 188,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Crowbar.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Desert Eagle",
+    "source": "investigation/place_scripts/TestPlace/81565_Desert_Eagle.lua",
+    "lines": 601,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Desert Eagle.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/FN FAL",
+    "source": "investigation/place_scripts/TestPlace/81566_FN_FAL.lua",
+    "lines": 688,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.FN FAL.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Festive RPG-7",
+    "source": "investigation/place_scripts/TestPlace/81567_Festive_RPG-7.lua",
+    "lines": 639,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Festive RPG-7.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Fire Axe",
+    "source": "investigation/place_scripts/TestPlace/81568_Fire_Axe.lua",
+    "lines": 189,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Fire Axe.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Flamethrower",
+    "source": "investigation/place_scripts/TestPlace/81569_Flamethrower.lua",
+    "lines": 754,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Flamethrower.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Frying Pan",
+    "source": "investigation/place_scripts/TestPlace/81570_Frying_Pan.lua",
+    "lines": 188,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Frying Pan.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/G36C",
+    "source": "investigation/place_scripts/TestPlace/81571_G36C.lua",
+    "lines": 730,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.G36C.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Gepard PDW",
+    "source": "investigation/place_scripts/TestPlace/81572_Gepard_PDW.lua",
+    "lines": 671,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Gepard PDW.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Glock 17",
+    "source": "investigation/place_scripts/TestPlace/81573_Glock_17.lua",
+    "lines": 614,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Glock 17.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Golf Club",
+    "source": "investigation/place_scripts/TestPlace/81574_Golf_Club.lua",
+    "lines": 191,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Golf Club.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/HK P30L",
+    "source": "investigation/place_scripts/TestPlace/81575_HK_P30L.lua",
+    "lines": 663,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.HK P30L.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Ingram MAC-10",
+    "source": "investigation/place_scripts/TestPlace/81576_Ingram_MAC-10.lua",
+    "lines": 685,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Ingram MAC-10.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/KAC PDW",
+    "source": "investigation/place_scripts/TestPlace/81577_KAC_PDW.lua",
+    "lines": 641,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.KAC PDW.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Katana",
+    "source": "investigation/place_scripts/TestPlace/81578_Katana.lua",
+    "lines": 219,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Katana.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Kriss Vector",
+    "source": "investigation/place_scripts/TestPlace/81579_Kriss_Vector.lua",
+    "lines": 608,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Kriss Vector.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/LH9 MKII",
+    "source": "investigation/place_scripts/TestPlace/81580_LH9_MKII.lua",
+    "lines": 659,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.LH9 MKII.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/LWRC IC-PSD",
+    "source": "investigation/place_scripts/TestPlace/81581_LWRC_IC-PSD.lua",
+    "lines": 644,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.LWRC IC-PSD.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/M1 Garand",
+    "source": "investigation/place_scripts/TestPlace/81582_M1_Garand.lua",
+    "lines": 759,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.M1 Garand.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/M110 SASS",
+    "source": "investigation/place_scripts/TestPlace/81583_M110_SASS.lua",
+    "lines": 710,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.M110 SASS.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/M14",
+    "source": "investigation/place_scripts/TestPlace/81584_M14.lua",
+    "lines": 707,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.M14.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/M16A1",
+    "source": "investigation/place_scripts/TestPlace/81585_M16A1.lua",
+    "lines": 644,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.M16A1.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/M1911A1",
+    "source": "investigation/place_scripts/TestPlace/81586_M1911A1.lua",
+    "lines": 691,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.M1911A1.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/M320",
+    "source": "investigation/place_scripts/TestPlace/81587_M320.lua",
+    "lines": 582,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.M320.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/M4A1",
+    "source": "investigation/place_scripts/TestPlace/81588_M4A1.lua",
+    "lines": 617,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.M4A1.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/M60",
+    "source": "investigation/place_scripts/TestPlace/81589_M60.lua",
+    "lines": 886,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.M60.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/MG 42",
+    "source": "investigation/place_scripts/TestPlace/81590_MG_42.lua",
+    "lines": 839,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.MG 42.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/MK18",
+    "source": "investigation/place_scripts/TestPlace/81591_MK18.lua",
+    "lines": 618,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.MK18.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/MP-443 Grach",
+    "source": "investigation/place_scripts/TestPlace/81592_MP-443_Grach.lua",
+    "lines": 689,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.MP-443 Grach.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/MP5A2",
+    "source": "investigation/place_scripts/TestPlace/81593_MP5A2.lua",
+    "lines": 726,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.MP5A2.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/MP7",
+    "source": "investigation/place_scripts/TestPlace/81594_MP7.lua",
+    "lines": 659,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.MP7.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Makarov",
+    "source": "investigation/place_scripts/TestPlace/81595_Makarov.lua",
+    "lines": 668,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Makarov.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Maxim 9",
+    "source": "investigation/place_scripts/TestPlace/81596_Maxim_9.lua",
+    "lines": 650,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Maxim 9.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Minigun",
+    "source": "investigation/place_scripts/TestPlace/81597_Minigun.lua",
+    "lines": 521,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Minigun.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Mosin Nagant",
+    "source": "investigation/place_scripts/TestPlace/81598_Mosin_Nagant.lua",
+    "lines": 884,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Mosin Nagant.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Mossberg 500",
+    "source": "investigation/place_scripts/TestPlace/81599_Mossberg_500.lua",
+    "lines": 736,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Mossberg 500.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/OTs-14 Groza",
+    "source": "investigation/place_scripts/TestPlace/81600_OTs-14_Groza.lua",
+    "lines": 621,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.OTs-14 Groza.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Obrez Mosin",
+    "source": "investigation/place_scripts/TestPlace/81601_Obrez_Mosin.lua",
+    "lines": 885,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Obrez Mosin.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/P320",
+    "source": "investigation/place_scripts/TestPlace/81602_P320.lua",
+    "lines": 614,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.P320.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/P90",
+    "source": "investigation/place_scripts/TestPlace/81603_P90.lua",
+    "lines": 674,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.P90.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/PB 6P9",
+    "source": "investigation/place_scripts/TestPlace/81604_PB_6P9.lua",
+    "lines": 668,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.PB 6P9.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/PP-91 Kedr",
+    "source": "investigation/place_scripts/TestPlace/81605_PP-91_Kedr.lua",
+    "lines": 676,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.PP-91 Kedr.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/PPSh-41",
+    "source": "investigation/place_scripts/TestPlace/81606_PPSh-41.lua",
+    "lines": 642,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.PPSh-41.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Pool Cue",
+    "source": "investigation/place_scripts/TestPlace/81607_Pool_Cue.lua",
+    "lines": 191,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Pool Cue.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/RPG-7",
+    "source": "investigation/place_scripts/TestPlace/81608_RPG-7.lua",
+    "lines": 599,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.RPG-7.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/RPK",
+    "source": "investigation/place_scripts/TestPlace/81609_RPK.lua",
+    "lines": 646,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.RPK.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Ruger 10/22",
+    "source": "investigation/place_scripts/TestPlace/81610_Ruger_10_22.lua",
+    "lines": 714,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/SAP-6",
+    "source": "investigation/place_scripts/TestPlace/81611_SAP-6.lua",
+    "lines": 784,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.SAP-6.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/SCAR-H",
+    "source": "investigation/place_scripts/TestPlace/81612_SCAR-H.lua",
+    "lines": 708,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.SCAR-H.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/SKO Shorty",
+    "source": "investigation/place_scripts/TestPlace/81613_SKO_Shorty.lua",
+    "lines": 703,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.SKO Shorty.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/SPAS-12",
+    "source": "investigation/place_scripts/TestPlace/81614_SPAS-12.lua",
+    "lines": 755,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.SPAS-12.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/SVD",
+    "source": "investigation/place_scripts/TestPlace/81615_SVD.lua",
+    "lines": 678,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.SVD.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Sabre",
+    "source": "investigation/place_scripts/TestPlace/81616_Sabre.lua",
+    "lines": 219,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Sabre.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Sawn Off Shotgun",
+    "source": "investigation/place_scripts/TestPlace/81617_Sawn_Off_Shotgun.lua",
+    "lines": 620,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Sawn Off Shotgun.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Serbu Super Shorty",
+    "source": "investigation/place_scripts/TestPlace/81618_Serbu_Super_Shorty.lua",
+    "lines": 716,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Serbu Super Shorty.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Shovel",
+    "source": "investigation/place_scripts/TestPlace/81619_Shovel.lua",
+    "lines": 188,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Shovel.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Sledge Hammer",
+    "source": "investigation/place_scripts/TestPlace/81620_Sledge_Hammer.lua",
+    "lines": 188,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Sledge Hammer.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Spiked Baseball Bat",
+    "source": "investigation/place_scripts/TestPlace/81621_Spiked_Baseball_Bat.lua",
+    "lines": 192,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Spiked Baseball Bat.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Sten Mk V",
+    "source": "investigation/place_scripts/TestPlace/81622_Sten_Mk_V.lua",
+    "lines": 638,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Sten Mk V.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/TEC-9",
+    "source": "investigation/place_scripts/TestPlace/81623_TEC-9.lua",
+    "lines": 671,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.TEC-9.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/TP9SFx",
+    "source": "investigation/place_scripts/TestPlace/81624_TP9SFx.lua",
+    "lines": 655,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.TP9SFx.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Taurus Judge",
+    "source": "investigation/place_scripts/TestPlace/81625_Taurus_Judge.lua",
+    "lines": 749,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Taurus Judge.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Taurus Model 66",
+    "source": "investigation/place_scripts/TestPlace/81626_Taurus_Model_66.lua",
+    "lines": 747,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Taurus Model 66.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Thompson M1",
+    "source": "investigation/place_scripts/TestPlace/81627_Thompson_M1.lua",
+    "lines": 591,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Thompson M1.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/UMP-45",
+    "source": "investigation/place_scripts/TestPlace/81628_UMP-45.lua",
+    "lines": 733,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.UMP-45.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Umbrella",
+    "source": "investigation/place_scripts/TestPlace/81629_Umbrella.lua",
+    "lines": 188,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Umbrella.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Uzi",
+    "source": "investigation/place_scripts/TestPlace/81630_Uzi.lua",
+    "lines": 674,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Uzi.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/VSS",
+    "source": "investigation/place_scripts/TestPlace/81631_VSS.lua",
+    "lines": 675,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.VSS.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Walther P38",
+    "source": "investigation/place_scripts/TestPlace/81632_Walther_P38.lua",
+    "lines": 692,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Walther P38.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Winchester Model 1892",
+    "source": "investigation/place_scripts/TestPlace/81633_Winchester_Model_1892.lua",
+    "lines": 843,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Winchester Model 1892.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Winchester Model 70",
+    "source": "investigation/place_scripts/TestPlace/81634_Winchester_Model_70.lua",
+    "lines": 795,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Winchester Model 70.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/Wrench",
+    "source": "investigation/place_scripts/TestPlace/81635_Wrench.lua",
+    "lines": 188,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Wrench.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Weapon Modules/XD-9",
+    "source": "investigation/place_scripts/TestPlace/81636_XD-9.lua",
+    "lines": 614,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.XD-9.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Bonuses",
+    "source": "investigation/place_scripts/TestPlace/81638_Bonuses.lua",
+    "lines": 114,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Bonuses.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Infected Info",
+    "source": "investigation/place_scripts/TestPlace/81639_Infected_Info.lua",
+    "lines": 200,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Infected Info.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Perks",
+    "source": "investigation/place_scripts/TestPlace/81640_Perks.lua",
+    "lines": 749,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Perks.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/PerkMenu",
+    "source": "investigation/place_scripts/TestPlace/81641_PerkMenu.lua",
+    "lines": 112,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/CollisionGroup",
+    "source": "investigation/place_scripts/TestPlace/81642_CollisionGroup.lua",
+    "lines": 78,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/MapLighting",
+    "source": "investigation/place_scripts/TestPlace/81643_MapLighting.lua",
+    "lines": 271,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/InfectedData",
+    "source": "investigation/place_scripts/TestPlace/81644_InfectedData.lua",
+    "lines": 305,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/GaitTuning",
+    "source": "investigation/place_scripts/TestPlace/81645_GaitTuning.lua",
+    "lines": 201,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Privileged",
+    "source": "investigation/place_scripts/TestPlace/81646_Privileged.lua",
+    "lines": 90,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Skins",
+    "source": "investigation/place_scripts/TestPlace/81647_Skins.lua",
+    "lines": 3392,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Skins.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Shop",
+    "source": "investigation/place_scripts/TestPlace/81648_Shop.lua",
+    "lines": 75,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Shop.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/DevProducts",
+    "source": "investigation/place_scripts/TestPlace/81649_DevProducts.lua",
+    "lines": 53,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.DevProducts.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/Gamepasses",
+    "source": "investigation/place_scripts/TestPlace/81650_Gamepasses.lua",
+    "lines": 54,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Gamepasses.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/GamepassInfo",
+    "source": "investigation/place_scripts/TestPlace/81651_GamepassInfo.lua",
+    "lines": 8,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.GamepassInfo.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/FortificationsInfo",
+    "source": "investigation/place_scripts/TestPlace/81652_FortificationsInfo.lua",
+    "lines": 412,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.FortificationsInfo.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/WeldModel",
+    "source": "investigation/place_scripts/TestPlace/81653_WeldModel.lua",
+    "lines": 25,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.WeldModel.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/CasePools",
+    "source": "investigation/place_scripts/TestPlace/81654_CasePools.lua",
+    "lines": 384,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/SkinOdds",
+    "source": "investigation/place_scripts/TestPlace/81655_SkinOdds.lua",
+    "lines": 76,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/SkinApply",
+    "source": "investigation/place_scripts/TestPlace/81656_SkinApply.lua",
+    "lines": 129,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/WeaponIndex",
+    "source": "investigation/place_scripts/TestPlace/81657_WeaponIndex.lua",
+    "lines": 127,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/Modules/BlockedFeatures",
+    "source": "investigation/place_scripts/TestPlace/81658_BlockedFeatures.lua",
+    "lines": 84,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/SharedModules/Utilities/ObjectiveItem",
+    "source": "investigation/place_scripts/TestPlace/81660_ObjectiveItem.lua",
+    "lines": 43,
+    "exact_normalized_match_to_extracted": true,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.ObjectiveItem.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/AdminConsole",
+    "source": "investigation/place_scripts/TestPlace/81663_AdminConsole.lua",
+    "lines": 526,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Aim",
+    "source": "investigation/place_scripts/TestPlace/81664_Aim.lua",
+    "lines": 133,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Ballistics",
+    "source": "investigation/place_scripts/TestPlace/81665_Ballistics.lua",
+    "lines": 238,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/CameraKick",
+    "source": "investigation/place_scripts/TestPlace/81666_CameraKick.lua",
+    "lines": 127,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Config",
+    "source": "investigation/place_scripts/TestPlace/81667_Config.lua",
+    "lines": 57,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/DamageFX",
+    "source": "investigation/place_scripts/TestPlace/81668_DamageFX.lua",
+    "lines": 202,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Footsteps",
+    "source": "investigation/place_scripts/TestPlace/81669_Footsteps.lua",
+    "lines": 265,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Footsteps.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/GuiAdapt",
+    "source": "investigation/place_scripts/TestPlace/81670_GuiAdapt.lua",
+    "lines": 55,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/HitMarker",
+    "source": "investigation/place_scripts/TestPlace/81671_HitMarker.lua",
+    "lines": 100,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Hud",
+    "source": "investigation/place_scripts/TestPlace/81672_Hud.lua",
+    "lines": 445,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Impacts",
+    "source": "investigation/place_scripts/TestPlace/81673_Impacts.lua",
+    "lines": 265,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/LobbyCamera",
+    "source": "investigation/place_scripts/TestPlace/81674_LobbyCamera.lua",
+    "lines": 332,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/LowHealth",
+    "source": "investigation/place_scripts/TestPlace/81675_LowHealth.lua",
+    "lines": 256,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Movement",
+    "source": "investigation/place_scripts/TestPlace/81676_Movement.lua",
+    "lines": 125,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/MuzzleFX",
+    "source": "investigation/place_scripts/TestPlace/81677_MuzzleFX.lua",
+    "lines": 234,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Notify",
+    "source": "investigation/place_scripts/TestPlace/81678_Notify.lua",
+    "lines": 118,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Options",
+    "source": "investigation/place_scripts/TestPlace/81679_Options.lua",
+    "lines": 243,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Scope",
+    "source": "investigation/place_scripts/TestPlace/81680_Scope.lua",
+    "lines": 118,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/SoundIds",
+    "source": "investigation/place_scripts/TestPlace/81681_SoundIds.lua",
+    "lines": 140,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Spectate",
+    "source": "investigation/place_scripts/TestPlace/81682_Spectate.lua",
+    "lines": 245,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Spectate.Source.txt"
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Sway",
+    "source": "investigation/place_scripts/TestPlace/81683_Sway.lua",
+    "lines": 143,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/Tracer",
+    "source": "investigation/place_scripts/TestPlace/81684_Tracer.lua",
+    "lines": 271,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/ViewModel",
+    "source": "investigation/place_scripts/TestPlace/81685_ViewModel.lua",
+    "lines": 98,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/ClientModules/ViewModelRig",
+    "source": "investigation/place_scripts/TestPlace/81686_ViewModelRig.lua",
+    "lines": 551,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/WeaponDB",
+    "source": "investigation/place_scripts/TestPlace/81818_WeaponDB.lua",
+    "lines": 297,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/SoundMap",
+    "source": "investigation/place_scripts/TestPlace/81819_SoundMap.lua",
+    "lines": 80,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/WeaponAnim",
+    "source": "investigation/place_scripts/TestPlace/81820_WeaponAnim.lua",
+    "lines": 804,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ReplicatedStorage/WeaponFX",
+    "source": "investigation/place_scripts/TestPlace/81821_WeaponFX.lua",
+    "lines": 316,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/StarterGui/Main/Aligned/BottomRight/MobileOverlay/Use/Icons",
+    "source": "investigation/place_scripts/TestPlace/82837_.lua",
+    "lines": 3,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Profile",
+    "source": "investigation/place_scripts/TestPlace/82875_Profile.lua",
+    "lines": 322,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/TestHook",
+    "source": "investigation/place_scripts/TestPlace/82876_TestHook.lua",
+    "lines": 87,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Rewards",
+    "source": "investigation/place_scripts/TestPlace/82877_Rewards.lua",
+    "lines": 152,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Cases",
+    "source": "investigation/place_scripts/TestPlace/82878_Cases.lua",
+    "lines": 319,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Ids",
+    "source": "investigation/place_scripts/TestPlace/82879_Ids.lua",
+    "lines": 225,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Products",
+    "source": "investigation/place_scripts/TestPlace/82880_Products.lua",
+    "lines": 194,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Passes",
+    "source": "investigation/place_scripts/TestPlace/82881_Passes.lua",
+    "lines": 290,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Loadout",
+    "source": "investigation/place_scripts/TestPlace/82882_Loadout.lua",
+    "lines": 374,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Daily",
+    "source": "investigation/place_scripts/TestPlace/82883_Daily.lua",
+    "lines": 111,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Tracers",
+    "source": "investigation/place_scripts/TestPlace/82884_Tracers.lua",
+    "lines": 104,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Codes",
+    "source": "investigation/place_scripts/TestPlace/82885_Codes.lua",
+    "lines": 270,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Boosters",
+    "source": "investigation/place_scripts/TestPlace/82886_Boosters.lua",
+    "lines": 145,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Powerups",
+    "source": "investigation/place_scripts/TestPlace/82887_Powerups.lua",
+    "lines": 184,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/ChatCosmetics",
+    "source": "investigation/place_scripts/TestPlace/82888_ChatCosmetics.lua",
+    "lines": 150,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Payload",
+    "source": "investigation/place_scripts/TestPlace/82889_Payload.lua",
+    "lines": 448,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Leaderboards",
+    "source": "investigation/place_scripts/TestPlace/82890_Leaderboards.lua",
+    "lines": 238,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/Economy/Init",
+    "source": "investigation/place_scripts/TestPlace/82891_Init.lua",
+    "lines": 33,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/ServerScriptService/TestArena",
+    "source": "investigation/place_scripts/TestPlace/82893_TestArena.lua",
+    "lines": 15102,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/StarterPlayer/StarterPlayerScripts/TestArenaClient",
+    "source": "investigation/place_scripts/TestPlace/82895_TestArenaClient.lua",
+    "lines": 5822,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/StarterPlayer/StarterPlayerScripts/Client/Gui/Loadout",
+    "source": "investigation/place_scripts/TestPlace/82896_Loadout.lua",
+    "lines": 824,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": null
+  },
+  {
+    "place_path": "/StarterPlayer/StarterPlayerScripts/Client/Gui/Shop",
+    "source": "investigation/place_scripts/TestPlace/82897_Shop.lua",
+    "lines": 541,
+    "exact_normalized_match_to_extracted": false,
+    "candidate": "extracted/04-scripts/scripts/ModuleScript.Shop.Source.txt"
+  }
+]

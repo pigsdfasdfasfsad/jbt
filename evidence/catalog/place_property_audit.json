@@ -1,0 +1,2299 @@
+{
+  "property_counts": [
+    {
+      "tag": "string",
+      "name": "Name",
+      "count": 82903
+    },
+    {
+      "tag": "float",
+      "name": "Gravity",
+      "count": 1
+    },
+    {
+      "tag": "bool",
+      "name": "FilteringEnabled",
+      "count": 1
+    },
+    {
+      "tag": "bool",
+      "name": "StreamingEnabled",
+      "count": 1
+    },
+    {
+      "tag": "int",
+      "name": "StreamingMinRadius",
+      "count": 1
+    },
+    {
+      "tag": "int",
+      "name": "StreamingTargetRadius",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "StreamingIntegrityMode",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "ModelStreamingBehavior",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "StreamOutBehavior",
+      "count": 1
+    },
+    {
+      "tag": "BinaryString",
+      "name": "AttributesSerialize",
+      "count": 82670
+    },
+    {
+      "tag": "SecurityCapabilities",
+      "name": "Capabilities",
+      "count": 82670
+    },
+    {
+      "tag": "bool",
+      "name": "DefinesCapabilities",
+      "count": 82670
+    },
+    {
+      "tag": "UniqueId",
+      "name": "HistoryId",
+      "count": 82670
+    },
+    {
+      "tag": "int64",
+      "name": "SourceAssetId",
+      "count": 82670
+    },
+    {
+      "tag": "SharedString",
+      "name": "Tags",
+      "count": 82670
+    },
+    {
+      "tag": "UniqueId",
+      "name": "UniqueId",
+      "count": 82670
+    },
+    {
+      "tag": "token",
+      "name": "shape",
+      "count": 30400
+    },
+    {
+      "tag": "token",
+      "name": "formFactorRaw",
+      "count": 30895
+    },
+    {
+      "tag": "bool",
+      "name": "Anchored",
+      "count": 54151
+    },
+    {
+      "tag": "bool",
+      "name": "AudioCanCollide",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "BackParamA",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "BackParamB",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "BackSurface",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "BackSurfaceInput",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "BottomParamA",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "BottomParamB",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "BottomSurface",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "BottomSurfaceInput",
+      "count": 54147
+    },
+    {
+      "tag": "CoordinateFrame",
+      "name": "CFrame",
+      "count": 54183
+    },
+    {
+      "tag": "bool",
+      "name": "CanCollide",
+      "count": 54151
+    },
+    {
+      "tag": "bool",
+      "name": "CanQuery",
+      "count": 54147
+    },
+    {
+      "tag": "bool",
+      "name": "CanTouch",
+      "count": 54147
+    },
+    {
+      "tag": "bool",
+      "name": "CastShadow",
+      "count": 54147
+    },
+    {
+      "tag": "string",
+      "name": "CollisionGroup",
+      "count": 54147
+    },
+    {
+      "tag": "int",
+      "name": "CollisionGroupId",
+      "count": 54147
+    },
+    {
+      "tag": "Color3uint8",
+      "name": "Color3uint8",
+      "count": 54147
+    },
+    {
+      "tag": "PhysicalProperties",
+      "name": "CustomPhysicalProperties",
+      "count": 54149
+    },
+    {
+      "tag": "bool",
+      "name": "EnableFluidForces",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "FrontParamA",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "FrontParamB",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "FrontSurface",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "FrontSurfaceInput",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "LeftParamA",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "LeftParamB",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "LeftSurface",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "LeftSurfaceInput",
+      "count": 54147
+    },
+    {
+      "tag": "bool",
+      "name": "Locked",
+      "count": 54147
+    },
+    {
+      "tag": "bool",
+      "name": "Massless",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "Material",
+      "count": 54147
+    },
+    {
+      "tag": "string",
+      "name": "MaterialVariantSerialized",
+      "count": 54147
+    },
+    {
+      "tag": "CoordinateFrame",
+      "name": "PivotOffset",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "Reflectance",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "RightParamA",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "RightParamB",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "RightSurface",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "RightSurfaceInput",
+      "count": 54147
+    },
+    {
+      "tag": "int",
+      "name": "RootPriority",
+      "count": 54147
+    },
+    {
+      "tag": "Vector3",
+      "name": "RotVelocity",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "TopParamA",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "TopParamB",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "TopSurface",
+      "count": 54147
+    },
+    {
+      "tag": "token",
+      "name": "TopSurfaceInput",
+      "count": 54147
+    },
+    {
+      "tag": "float",
+      "name": "Transparency",
+      "count": 56912
+    },
+    {
+      "tag": "Vector3",
+      "name": "Velocity",
+      "count": 54147
+    },
+    {
+      "tag": "Vector3",
+      "name": "size",
+      "count": 54151
+    },
+    {
+      "tag": "token",
+      "name": "MeshType",
+      "count": 478
+    },
+    {
+      "tag": "Content",
+      "name": "MeshId",
+      "count": 18278
+    },
+    {
+      "tag": "Content",
+      "name": "TextureId",
+      "count": 478
+    },
+    {
+      "tag": "Vector3",
+      "name": "Offset",
+      "count": 480
+    },
+    {
+      "tag": "Vector3",
+      "name": "Scale",
+      "count": 480
+    },
+    {
+      "tag": "Vector3",
+      "name": "VertexColor",
+      "count": 480
+    },
+    {
+      "tag": "token",
+      "name": "LevelOfDetail",
+      "count": 8992
+    },
+    {
+      "tag": "CoordinateFrame",
+      "name": "ModelMeshCFrame",
+      "count": 8992
+    },
+    {
+      "tag": "SharedString",
+      "name": "ModelMeshData",
+      "count": 8992
+    },
+    {
+      "tag": "Vector3",
+      "name": "ModelMeshSize",
+      "count": 8992
+    },
+    {
+      "tag": "token",
+      "name": "ModelStreamingMode",
+      "count": 8995
+    },
+    {
+      "tag": "bool",
+      "name": "NeedsPivotMigration",
+      "count": 8992
+    },
+    {
+      "tag": "Ref",
+      "name": "PrimaryPart",
+      "count": 8992
+    },
+    {
+      "tag": "float",
+      "name": "ScaleFactor",
+      "count": 8992
+    },
+    {
+      "tag": "SharedString",
+      "name": "SlimHash",
+      "count": 8992
+    },
+    {
+      "tag": "OptionalCoordinateFrame",
+      "name": "WorldPivotData",
+      "count": 8992
+    },
+    {
+      "tag": "bool",
+      "name": "DoubleSided",
+      "count": 17800
+    },
+    {
+      "tag": "bool",
+      "name": "HasJointOffset",
+      "count": 17800
+    },
+    {
+      "tag": "bool",
+      "name": "HasSkinnedMesh",
+      "count": 17800
+    },
+    {
+      "tag": "Vector3",
+      "name": "InitialSize",
+      "count": 23252
+    },
+    {
+      "tag": "Vector3",
+      "name": "JointOffset",
+      "count": 17800
+    },
+    {
+      "tag": "BinaryString",
+      "name": "PhysicsData",
+      "count": 23252
+    },
+    {
+      "tag": "token",
+      "name": "RenderFidelity",
+      "count": 23252
+    },
+    {
+      "tag": "Content",
+      "name": "TextureID",
+      "count": 17800
+    },
+    {
+      "tag": "int",
+      "name": "VertexCount",
+      "count": 17800
+    },
+    {
+      "tag": "SharedString",
+      "name": "AeroMeshData",
+      "count": 23252
+    },
+    {
+      "tag": "token",
+      "name": "FluidFidelityInternal",
+      "count": 23252
+    },
+    {
+      "tag": "bool",
+      "name": "InertiaMigrated",
+      "count": 23252
+    },
+    {
+      "tag": "SharedString",
+      "name": "PhysicalConfigData",
+      "count": 23252
+    },
+    {
+      "tag": "Vector3",
+      "name": "UnscaledCofm",
+      "count": 23252
+    },
+    {
+      "tag": "Vector3",
+      "name": "UnscaledVolInertiaDiags",
+      "count": 23252
+    },
+    {
+      "tag": "Vector3",
+      "name": "UnscaledVolInertiaOffDiags",
+      "count": 23252
+    },
+    {
+      "tag": "float",
+      "name": "UnscaledVolume",
+      "count": 23252
+    },
+    {
+      "tag": "float",
+      "name": "Angle",
+      "count": 1062
+    },
+    {
+      "tag": "token",
+      "name": "Face",
+      "count": 3908
+    },
+    {
+      "tag": "float",
+      "name": "Range",
+      "count": 1115
+    },
+    {
+      "tag": "float",
+      "name": "Brightness",
+      "count": 1445
+    },
+    {
+      "tag": "Color3",
+      "name": "Color",
+      "count": 1129
+    },
+    {
+      "tag": "bool",
+      "name": "Enabled",
+      "count": 1557
+    },
+    {
+      "tag": "bool",
+      "name": "Shadows",
+      "count": 1115
+    },
+    {
+      "tag": "float",
+      "name": "OffsetStudsU",
+      "count": 2459
+    },
+    {
+      "tag": "float",
+      "name": "OffsetStudsV",
+      "count": 2459
+    },
+    {
+      "tag": "float",
+      "name": "StudsPerTileU",
+      "count": 2459
+    },
+    {
+      "tag": "float",
+      "name": "StudsPerTileV",
+      "count": 2459
+    },
+    {
+      "tag": "bool",
+      "name": "AutoLocalize",
+      "count": 5364
+    },
+    {
+      "tag": "Color3",
+      "name": "Color3",
+      "count": 2770
+    },
+    {
+      "tag": "Content",
+      "name": "MetalnessMap",
+      "count": 2766
+    },
+    {
+      "tag": "Content",
+      "name": "NormalMap",
+      "count": 2766
+    },
+    {
+      "tag": "float",
+      "name": "Rotation",
+      "count": 5265
+    },
+    {
+      "tag": "Content",
+      "name": "RoughnessMap",
+      "count": 2766
+    },
+    {
+      "tag": "Content",
+      "name": "Texture",
+      "count": 2916
+    },
+    {
+      "tag": "Content",
+      "name": "TexturePack",
+      "count": 2766
+    },
+    {
+      "tag": "string",
+      "name": "TexturePackMetadata",
+      "count": 2760
+    },
+    {
+      "tag": "Vector2",
+      "name": "UVOffset",
+      "count": 2760
+    },
+    {
+      "tag": "Vector2",
+      "name": "UVScale",
+      "count": 2760
+    },
+    {
+      "tag": "int",
+      "name": "ZIndex",
+      "count": 5208
+    },
+    {
+      "tag": "string",
+      "name": "Value",
+      "count": 643
+    },
+    {
+      "tag": "Content",
+      "name": "AssetId",
+      "count": 5452
+    },
+    {
+      "tag": "BinaryString",
+      "name": "ChildData",
+      "count": 5452
+    },
+    {
+      "tag": "SharedString",
+      "name": "ChildData2",
+      "count": 5452
+    },
+    {
+      "tag": "int",
+      "name": "ComponentIndex",
+      "count": 5452
+    },
+    {
+      "tag": "token",
+      "name": "FormFactor",
+      "count": 5452
+    },
+    {
+      "tag": "BinaryString",
+      "name": "MeshData",
+      "count": 5452
+    },
+    {
+      "tag": "SharedString",
+      "name": "MeshData2",
+      "count": 5452
+    },
+    {
+      "tag": "bool",
+      "name": "OffCentered",
+      "count": 5452
+    },
+    {
+      "tag": "float",
+      "name": "SmoothingAngle",
+      "count": 5452
+    },
+    {
+      "tag": "NetAssetRef",
+      "name": "SolidMeshHolder",
+      "count": 5452
+    },
+    {
+      "tag": "int",
+      "name": "TriangleCount",
+      "count": 5452
+    },
+    {
+      "tag": "bool",
+      "name": "UsePartColor",
+      "count": 5452
+    },
+    {
+      "tag": "bool",
+      "name": "AlwaysOnTop",
+      "count": 156
+    },
+    {
+      "tag": "Vector2",
+      "name": "CanvasSize",
+      "count": 86
+    },
+    {
+      "tag": "bool",
+      "name": "ClipsDescendants",
+      "count": 2603
+    },
+    {
+      "tag": "float",
+      "name": "LightInfluence",
+      "count": 312
+    },
+    {
+      "tag": "float",
+      "name": "MaxDistance",
+      "count": 156
+    },
+    {
+      "tag": "float",
+      "name": "PixelsPerStud",
+      "count": 86
+    },
+    {
+      "tag": "token",
+      "name": "SizingMode",
+      "count": 86
+    },
+    {
+      "tag": "float",
+      "name": "ToolPunchThroughDistance",
+      "count": 86
+    },
+    {
+      "tag": "float",
+      "name": "ZOffset",
+      "count": 237
+    },
+    {
+      "tag": "bool",
+      "name": "Active",
+      "count": 2603
+    },
+    {
+      "tag": "Ref",
+      "name": "Adornee",
+      "count": 156
+    },
+    {
+      "tag": "bool",
+      "name": "ResetOnSpawn",
+      "count": 157
+    },
+    {
+      "tag": "token",
+      "name": "ZIndexBehavior",
+      "count": 157
+    },
+    {
+      "tag": "Ref",
+      "name": "RootLocalizationTable",
+      "count": 2604
+    },
+    {
+      "tag": "token",
+      "name": "SelectionBehaviorDown",
+      "count": 2604
+    },
+    {
+      "tag": "token",
+      "name": "SelectionBehaviorLeft",
+      "count": 2604
+    },
+    {
+      "tag": "token",
+      "name": "SelectionBehaviorRight",
+      "count": 2604
+    },
+    {
+      "tag": "token",
+      "name": "SelectionBehaviorUp",
+      "count": 2604
+    },
+    {
+      "tag": "bool",
+      "name": "SelectionGroup",
+      "count": 2604
+    },
+    {
+      "tag": "Content",
+      "name": "Image",
+      "count": 817
+    },
+    {
+      "tag": "Color3",
+      "name": "ImageColor3",
+      "count": 817
+    },
+    {
+      "tag": "Vector2",
+      "name": "ImageRectOffset",
+      "count": 817
+    },
+    {
+      "tag": "Vector2",
+      "name": "ImageRectSize",
+      "count": 817
+    },
+    {
+      "tag": "float",
+      "name": "ImageTransparency",
+      "count": 820
+    },
+    {
+      "tag": "token",
+      "name": "ResampleMode",
+      "count": 821
+    },
+    {
+      "tag": "token",
+      "name": "ScaleType",
+      "count": 817
+    },
+    {
+      "tag": "Rect2D",
+      "name": "SliceCenter",
+      "count": 817
+    },
+    {
+      "tag": "float",
+      "name": "SliceScale",
+      "count": 817
+    },
+    {
+      "tag": "UDim2",
+      "name": "TileSize",
+      "count": 817
+    },
+    {
+      "tag": "Vector2",
+      "name": "AnchorPoint",
+      "count": 2447
+    },
+    {
+      "tag": "token",
+      "name": "AutomaticSize",
+      "count": 2447
+    },
+    {
+      "tag": "Color3",
+      "name": "BackgroundColor3",
+      "count": 2447
+    },
+    {
+      "tag": "float",
+      "name": "BackgroundTransparency",
+      "count": 2447
+    },
+    {
+      "tag": "Color3",
+      "name": "BorderColor3",
+      "count": 2447
+    },
+    {
+      "tag": "token",
+      "name": "BorderMode",
+      "count": 2447
+    },
+    {
+      "tag": "int",
+      "name": "BorderSizePixel",
+      "count": 2447
+    },
+    {
+      "tag": "bool",
+      "name": "Draggable",
+      "count": 2447
+    },
+    {
+      "tag": "token",
+      "name": "InputSink",
+      "count": 2447
+    },
+    {
+      "tag": "bool",
+      "name": "Interactable",
+      "count": 2447
+    },
+    {
+      "tag": "int",
+      "name": "LayoutOrder",
+      "count": 2447
+    },
+    {
+      "tag": "Ref",
+      "name": "NextSelectionDown",
+      "count": 2447
+    },
+    {
+      "tag": "Ref",
+      "name": "NextSelectionLeft",
+      "count": 2447
+    },
+    {
+      "tag": "Ref",
+      "name": "NextSelectionRight",
+      "count": 2447
+    },
+    {
+      "tag": "Ref",
+      "name": "NextSelectionUp",
+      "count": 2447
+    },
+    {
+      "tag": "UDim2",
+      "name": "Position",
+      "count": 2447
+    },
+    {
+      "tag": "bool",
+      "name": "Selectable",
+      "count": 2447
+    },
+    {
+      "tag": "Ref",
+      "name": "SelectionImageObject",
+      "count": 2447
+    },
+    {
+      "tag": "int",
+      "name": "SelectionOrder",
+      "count": 2447
+    },
+    {
+      "tag": "UDim2",
+      "name": "Size",
+      "count": 2517
+    },
+    {
+      "tag": "token",
+      "name": "SizeConstraint",
+      "count": 2447
+    },
+    {
+      "tag": "bool",
+      "name": "Visible",
+      "count": 2480
+    },
+    {
+      "tag": "Vector3",
+      "name": "Acceleration",
+      "count": 148
+    },
+    {
+      "tag": "ColorSequence",
+      "name": "Color",
+      "count": 214
+    },
+    {
+      "tag": "float",
+      "name": "Drag",
+      "count": 148
+    },
+    {
+      "tag": "token",
+      "name": "EmissionDirection",
+      "count": 148
+    },
+    {
+      "tag": "bool",
+      "name": "FlipbookBlendFrames",
+      "count": 148
+    },
+    {
+      "tag": "NumberRange",
+      "name": "FlipbookFramerate",
+      "count": 148
+    },
+    {
+      "tag": "string",
+      "name": "FlipbookIncompatible",
+      "count": 148
+    },
+    {
+      "tag": "token",
+      "name": "FlipbookLayout",
+      "count": 148
+    },
+    {
+      "tag": "token",
+      "name": "FlipbookMode",
+      "count": 148
+    },
+    {
+      "tag": "int",
+      "name": "FlipbookSizeX",
+      "count": 148
+    },
+    {
+      "tag": "int",
+      "name": "FlipbookSizeY",
+      "count": 148
+    },
+    {
+      "tag": "bool",
+      "name": "FlipbookStartRandom",
+      "count": 148
+    },
+    {
+      "tag": "NumberRange",
+      "name": "Lifetime",
+      "count": 148
+    },
+    {
+      "tag": "float",
+      "name": "LightEmission",
+      "count": 156
+    },
+    {
+      "tag": "bool",
+      "name": "LockedToPart",
+      "count": 148
+    },
+    {
+      "tag": "token",
+      "name": "Orientation",
+      "count": 148
+    },
+    {
+      "tag": "float",
+      "name": "Rate",
+      "count": 148
+    },
+    {
+      "tag": "NumberRange",
+      "name": "RotSpeed",
+      "count": 148
+    },
+    {
+      "tag": "NumberRange",
+      "name": "Rotation",
+      "count": 148
+    },
+    {
+      "tag": "token",
+      "name": "Shape",
+      "count": 148
+    },
+    {
+      "tag": "token",
+      "name": "ShapeInOut",
+      "count": 148
+    },
+    {
+      "tag": "float",
+      "name": "ShapePartial",
+      "count": 148
+    },
+    {
+      "tag": "token",
+      "name": "ShapeStyle",
+      "count": 148
+    },
+    {
+      "tag": "NumberSequence",
+      "name": "Size",
+      "count": 148
+    },
+    {
+      "tag": "NumberRange",
+      "name": "Speed",
+      "count": 148
+    },
+    {
+      "tag": "Vector2",
+      "name": "SpreadAngle",
+      "count": 148
+    },
+    {
+      "tag": "NumberSequence",
+      "name": "Squash",
+      "count": 148
+    },
+    {
+      "tag": "float",
+      "name": "TimeScale",
+      "count": 148
+    },
+    {
+      "tag": "NumberSequence",
+      "name": "Transparency",
+      "count": 214
+    },
+    {
+      "tag": "float",
+      "name": "VelocityInheritance",
+      "count": 148
+    },
+    {
+      "tag": "bool",
+      "name": "WindAffectsDrag",
+      "count": 148
+    },
+    {
+      "tag": "float",
+      "name": "Bevel",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "Bevel Roundness",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "Bulge",
+      "count": 2
+    },
+    {
+      "tag": "Content",
+      "name": "LinkedSource",
+      "count": 17
+    },
+    {
+      "tag": "ProtectedString",
+      "name": "Source",
+      "count": 187
+    },
+    {
+      "tag": "string",
+      "name": "ScriptGuid",
+      "count": 17
+    },
+    {
+      "tag": "bool",
+      "name": "AutoJumpEnabled",
+      "count": 2
+    },
+    {
+      "tag": "bool",
+      "name": "AutoRotate",
+      "count": 2
+    },
+    {
+      "tag": "bool",
+      "name": "AutomaticScalingEnabled",
+      "count": 2
+    },
+    {
+      "tag": "bool",
+      "name": "BreakJointsOnDeath",
+      "count": 2
+    },
+    {
+      "tag": "token",
+      "name": "CollisionType",
+      "count": 2
+    },
+    {
+      "tag": "token",
+      "name": "DisplayDistanceType",
+      "count": 2
+    },
+    {
+      "tag": "string",
+      "name": "DisplayName",
+      "count": 2
+    },
+    {
+      "tag": "bool",
+      "name": "EvaluateStateMachine",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "HealthDisplayDistance",
+      "count": 3
+    },
+    {
+      "tag": "token",
+      "name": "HealthDisplayType",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "Health_XML",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "HipHeight",
+      "count": 2
+    },
+    {
+      "tag": "Vector3",
+      "name": "InternalBodyScale",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "InternalHeadScale",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "JumpHeight",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "JumpPower",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "MaxHealth",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "MaxSlopeAngle",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "NameDisplayDistance",
+      "count": 3
+    },
+    {
+      "tag": "token",
+      "name": "NameOcclusion",
+      "count": 2
+    },
+    {
+      "tag": "bool",
+      "name": "RequiresNeck",
+      "count": 2
+    },
+    {
+      "tag": "token",
+      "name": "RigType",
+      "count": 2
+    },
+    {
+      "tag": "bool",
+      "name": "UseJumpPower",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "WalkSpeed",
+      "count": 2
+    },
+    {
+      "tag": "Content",
+      "name": "ShirtTemplate",
+      "count": 5
+    },
+    {
+      "tag": "Content",
+      "name": "PantsTemplate",
+      "count": 5
+    },
+    {
+      "tag": "bool",
+      "name": "AcousticSimulationEnabled",
+      "count": 265
+    },
+    {
+      "tag": "NumberRange",
+      "name": "LoopRegion",
+      "count": 265
+    },
+    {
+      "tag": "bool",
+      "name": "Looped",
+      "count": 265
+    },
+    {
+      "tag": "bool",
+      "name": "PlayOnRemove",
+      "count": 265
+    },
+    {
+      "tag": "NumberRange",
+      "name": "PlaybackRegion",
+      "count": 265
+    },
+    {
+      "tag": "bool",
+      "name": "PlaybackRegionsEnabled",
+      "count": 265
+    },
+    {
+      "tag": "float",
+      "name": "PlaybackSpeed",
+      "count": 265
+    },
+    {
+      "tag": "bool",
+      "name": "Playing",
+      "count": 265
+    },
+    {
+      "tag": "float",
+      "name": "RollOffMaxDistance",
+      "count": 265
+    },
+    {
+      "tag": "float",
+      "name": "RollOffMinDistance",
+      "count": 265
+    },
+    {
+      "tag": "token",
+      "name": "RollOffMode",
+      "count": 265
+    },
+    {
+      "tag": "Ref",
+      "name": "SoundGroup",
+      "count": 265
+    },
+    {
+      "tag": "Content",
+      "name": "SoundId",
+      "count": 265
+    },
+    {
+      "tag": "double",
+      "name": "TimePosition",
+      "count": 265
+    },
+    {
+      "tag": "float",
+      "name": "Volume",
+      "count": 265
+    },
+    {
+      "tag": "bool",
+      "name": "Value",
+      "count": 828
+    },
+    {
+      "tag": "Ref",
+      "name": "Attachment0",
+      "count": 8
+    },
+    {
+      "tag": "Ref",
+      "name": "Attachment1",
+      "count": 8
+    },
+    {
+      "tag": "float",
+      "name": "CurveSize0",
+      "count": 3
+    },
+    {
+      "tag": "float",
+      "name": "CurveSize1",
+      "count": 3
+    },
+    {
+      "tag": "bool",
+      "name": "FaceCamera",
+      "count": 8
+    },
+    {
+      "tag": "int",
+      "name": "Segments",
+      "count": 3
+    },
+    {
+      "tag": "float",
+      "name": "TextureLength",
+      "count": 8
+    },
+    {
+      "tag": "token",
+      "name": "TextureMode",
+      "count": 8
+    },
+    {
+      "tag": "float",
+      "name": "TextureSpeed",
+      "count": 3
+    },
+    {
+      "tag": "float",
+      "name": "Width0",
+      "count": 3
+    },
+    {
+      "tag": "float",
+      "name": "Width1",
+      "count": 3
+    },
+    {
+      "tag": "double",
+      "name": "Value",
+      "count": 280
+    },
+    {
+      "tag": "float",
+      "name": "Level",
+      "count": 2
+    },
+    {
+      "tag": "int",
+      "name": "Priority",
+      "count": 26
+    },
+    {
+      "tag": "Font",
+      "name": "FontFace",
+      "count": 1167
+    },
+    {
+      "tag": "float",
+      "name": "LineHeight",
+      "count": 1167
+    },
+    {
+      "tag": "string",
+      "name": "LocalizationMatchIdentifier",
+      "count": 1167
+    },
+    {
+      "tag": "string",
+      "name": "LocalizationMatchedSourceText",
+      "count": 1167
+    },
+    {
+      "tag": "int",
+      "name": "MaxVisibleGraphemes",
+      "count": 1167
+    },
+    {
+      "tag": "string",
+      "name": "OpenTypeFeatures",
+      "count": 1167
+    },
+    {
+      "tag": "bool",
+      "name": "RichText",
+      "count": 1167
+    },
+    {
+      "tag": "string",
+      "name": "Text",
+      "count": 1174
+    },
+    {
+      "tag": "Color3",
+      "name": "TextColor3",
+      "count": 1167
+    },
+    {
+      "tag": "token",
+      "name": "TextDirection",
+      "count": 1167
+    },
+    {
+      "tag": "bool",
+      "name": "TextScaled",
+      "count": 1167
+    },
+    {
+      "tag": "float",
+      "name": "TextSize",
+      "count": 1167
+    },
+    {
+      "tag": "Color3",
+      "name": "TextStrokeColor3",
+      "count": 1167
+    },
+    {
+      "tag": "float",
+      "name": "TextStrokeTransparency",
+      "count": 1167
+    },
+    {
+      "tag": "float",
+      "name": "TextTransparency",
+      "count": 1167
+    },
+    {
+      "tag": "token",
+      "name": "TextTruncate",
+      "count": 1167
+    },
+    {
+      "tag": "bool",
+      "name": "TextWrapped",
+      "count": 1167
+    },
+    {
+      "tag": "token",
+      "name": "TextXAlignment",
+      "count": 1167
+    },
+    {
+      "tag": "token",
+      "name": "TextYAlignment",
+      "count": 1167
+    },
+    {
+      "tag": "token",
+      "name": "Style",
+      "count": 533
+    },
+    {
+      "tag": "Content",
+      "name": "HoverImage",
+      "count": 38
+    },
+    {
+      "tag": "Content",
+      "name": "PressedImage",
+      "count": 38
+    },
+    {
+      "tag": "bool",
+      "name": "AutoButtonColor",
+      "count": 93
+    },
+    {
+      "tag": "Ref",
+      "name": "HoverHapticEffect",
+      "count": 93
+    },
+    {
+      "tag": "bool",
+      "name": "Modal",
+      "count": 93
+    },
+    {
+      "tag": "Ref",
+      "name": "PressHapticEffect",
+      "count": 93
+    },
+    {
+      "tag": "bool",
+      "name": "Selected",
+      "count": 93
+    },
+    {
+      "tag": "token",
+      "name": "AutomaticCanvasSize",
+      "count": 14
+    },
+    {
+      "tag": "Content",
+      "name": "BottomImage",
+      "count": 14
+    },
+    {
+      "tag": "Vector2",
+      "name": "CanvasPosition",
+      "count": 14
+    },
+    {
+      "tag": "UDim2",
+      "name": "CanvasSize",
+      "count": 14
+    },
+    {
+      "tag": "token",
+      "name": "ElasticBehavior",
+      "count": 14
+    },
+    {
+      "tag": "token",
+      "name": "HorizontalScrollBarInset",
+      "count": 14
+    },
+    {
+      "tag": "Content",
+      "name": "MidImage",
+      "count": 14
+    },
+    {
+      "tag": "Color3",
+      "name": "ScrollBarImageColor3",
+      "count": 14
+    },
+    {
+      "tag": "float",
+      "name": "ScrollBarImageTransparency",
+      "count": 14
+    },
+    {
+      "tag": "int",
+      "name": "ScrollBarThickness",
+      "count": 14
+    },
+    {
+      "tag": "token",
+      "name": "ScrollingDirection",
+      "count": 14
+    },
+    {
+      "tag": "bool",
+      "name": "ScrollingEnabled",
+      "count": 14
+    },
+    {
+      "tag": "Content",
+      "name": "TopImage",
+      "count": 14
+    },
+    {
+      "tag": "token",
+      "name": "VerticalScrollBarInset",
+      "count": 14
+    },
+    {
+      "tag": "token",
+      "name": "VerticalScrollBarPosition",
+      "count": 14
+    },
+    {
+      "tag": "bool",
+      "name": "CelestialBodiesShown",
+      "count": 13
+    },
+    {
+      "tag": "float",
+      "name": "MoonAngularSize",
+      "count": 13
+    },
+    {
+      "tag": "Content",
+      "name": "MoonTextureId",
+      "count": 13
+    },
+    {
+      "tag": "Content",
+      "name": "SkyboxBk",
+      "count": 13
+    },
+    {
+      "tag": "Content",
+      "name": "SkyboxDn",
+      "count": 13
+    },
+    {
+      "tag": "Content",
+      "name": "SkyboxFt",
+      "count": 13
+    },
+    {
+      "tag": "Content",
+      "name": "SkyboxLf",
+      "count": 13
+    },
+    {
+      "tag": "Vector3",
+      "name": "SkyboxOrientation",
+      "count": 13
+    },
+    {
+      "tag": "Content",
+      "name": "SkyboxRt",
+      "count": 13
+    },
+    {
+      "tag": "Content",
+      "name": "SkyboxUp",
+      "count": 13
+    },
+    {
+      "tag": "int",
+      "name": "StarCount",
+      "count": 13
+    },
+    {
+      "tag": "float",
+      "name": "SunAngularSize",
+      "count": 13
+    },
+    {
+      "tag": "Content",
+      "name": "SunTextureId",
+      "count": 13
+    },
+    {
+      "tag": "float",
+      "name": "Intensity",
+      "count": 20
+    },
+    {
+      "tag": "float",
+      "name": "Size",
+      "count": 12
+    },
+    {
+      "tag": "float",
+      "name": "Threshold",
+      "count": 12
+    },
+    {
+      "tag": "float",
+      "name": "Contrast",
+      "count": 17
+    },
+    {
+      "tag": "float",
+      "name": "Saturation",
+      "count": 17
+    },
+    {
+      "tag": "Color3",
+      "name": "TintColor",
+      "count": 17
+    },
+    {
+      "tag": "float",
+      "name": "Spread",
+      "count": 8
+    },
+    {
+      "tag": "Color3",
+      "name": "Ambient",
+      "count": 1
+    },
+    {
+      "tag": "Color3",
+      "name": "OutdoorAmbient",
+      "count": 1
+    },
+    {
+      "tag": "string",
+      "name": "TimeOfDay",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "GeographicLatitude",
+      "count": 1
+    },
+    {
+      "tag": "Color3",
+      "name": "FogColor",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "FogStart",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "FogEnd",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "Technology",
+      "count": 1
+    },
+    {
+      "tag": "bool",
+      "name": "GlobalShadows",
+      "count": 1
+    },
+    {
+      "tag": "string",
+      "name": "Label",
+      "count": 9750
+    },
+    {
+      "tag": "bool",
+      "name": "PassThrough",
+      "count": 9750
+    },
+    {
+      "tag": "float",
+      "name": "Octave",
+      "count": 15
+    },
+    {
+      "tag": "Color3",
+      "name": "Decay",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "Density",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "Glare",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "Haze",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "Offset",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "FarIntensity",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "FocusDistance",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "InFocusRadius",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "NearIntensity",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "HighGain",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "LowGain",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "MidGain",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "DesiredAngle",
+      "count": 6
+    },
+    {
+      "tag": "float",
+      "name": "MaxVelocity",
+      "count": 6
+    },
+    {
+      "tag": "CoordinateFrame",
+      "name": "C0",
+      "count": 6
+    },
+    {
+      "tag": "CoordinateFrame",
+      "name": "C1",
+      "count": 6
+    },
+    {
+      "tag": "Ref",
+      "name": "Part0",
+      "count": 6
+    },
+    {
+      "tag": "Ref",
+      "name": "Part1",
+      "count": 6
+    },
+    {
+      "tag": "bool",
+      "name": "PreferLodEnabled",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "Lifetime",
+      "count": 5
+    },
+    {
+      "tag": "float",
+      "name": "MaxLength",
+      "count": 5
+    },
+    {
+      "tag": "float",
+      "name": "MinLength",
+      "count": 5
+    },
+    {
+      "tag": "NumberSequence",
+      "name": "WidthScale",
+      "count": 5
+    },
+    {
+      "tag": "float",
+      "name": "DistanceLowerLimit",
+      "count": 70
+    },
+    {
+      "tag": "float",
+      "name": "DistanceUpperLimit",
+      "count": 70
+    },
+    {
+      "tag": "Vector3",
+      "name": "ExtentsOffset",
+      "count": 70
+    },
+    {
+      "tag": "Vector3",
+      "name": "ExtentsOffsetWorldSpace",
+      "count": 70
+    },
+    {
+      "tag": "Ref",
+      "name": "PlayerToHideFrom",
+      "count": 70
+    },
+    {
+      "tag": "Vector2",
+      "name": "SizeOffset",
+      "count": 70
+    },
+    {
+      "tag": "Vector3",
+      "name": "StudsOffset",
+      "count": 70
+    },
+    {
+      "tag": "Vector3",
+      "name": "StudsOffsetWorldSpace",
+      "count": 70
+    },
+    {
+      "tag": "float",
+      "name": "Scale",
+      "count": 108
+    },
+    {
+      "tag": "Vector2",
+      "name": "Offset",
+      "count": 58
+    },
+    {
+      "tag": "token",
+      "name": "TileMode",
+      "count": 58
+    },
+    {
+      "tag": "token",
+      "name": "Type",
+      "count": 58
+    },
+    {
+      "tag": "Vector3",
+      "name": "Value",
+      "count": 2
+    },
+    {
+      "tag": "CoordinateFrame",
+      "name": "Value",
+      "count": 1
+    },
+    {
+      "tag": "bool",
+      "name": "ClearTextOnFocus",
+      "count": 12
+    },
+    {
+      "tag": "bool",
+      "name": "MultiLine",
+      "count": 12
+    },
+    {
+      "tag": "Color3",
+      "name": "PlaceholderColor3",
+      "count": 12
+    },
+    {
+      "tag": "string",
+      "name": "PlaceholderText",
+      "count": 12
+    },
+    {
+      "tag": "bool",
+      "name": "ShowNativeInput",
+      "count": 12
+    },
+    {
+      "tag": "bool",
+      "name": "TextEditable",
+      "count": 12
+    },
+    {
+      "tag": "Color3",
+      "name": "GroupColor3",
+      "count": 9
+    },
+    {
+      "tag": "float",
+      "name": "GroupTransparency",
+      "count": 9
+    },
+    {
+      "tag": "token",
+      "name": "ApplyStrokeMode",
+      "count": 1
+    },
+    {
+      "tag": "UDim",
+      "name": "BorderOffset",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "BorderStrokePosition",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "LineJoinMode",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "StrokeSizingMode",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "Thickness",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "AlphaMode",
+      "count": 6
+    },
+    {
+      "tag": "Content",
+      "name": "ColorMap",
+      "count": 6
+    },
+    {
+      "tag": "Content",
+      "name": "EmissiveMaskContent",
+      "count": 6
+    },
+    {
+      "tag": "float",
+      "name": "EmissiveStrength",
+      "count": 6
+    },
+    {
+      "tag": "Color3",
+      "name": "EmissiveTint",
+      "count": 6
+    },
+    {
+      "tag": "token",
+      "name": "ScreenOrientation",
+      "count": 1
+    },
+    {
+      "tag": "bool",
+      "name": "ClipToDeviceSafeArea",
+      "count": 1
+    },
+    {
+      "tag": "int",
+      "name": "DisplayOrder",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "SafeAreaCompatibility",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "ScreenInsets",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "AspectRatio",
+      "count": 11
+    },
+    {
+      "tag": "token",
+      "name": "AspectType",
+      "count": 11
+    },
+    {
+      "tag": "token",
+      "name": "DominantAxis",
+      "count": 11
+    },
+    {
+      "tag": "token",
+      "name": "HorizontalFlex",
+      "count": 8
+    },
+    {
+      "tag": "token",
+      "name": "ItemLineAlignment",
+      "count": 8
+    },
+    {
+      "tag": "UDim",
+      "name": "Padding",
+      "count": 8
+    },
+    {
+      "tag": "token",
+      "name": "VerticalFlex",
+      "count": 8
+    },
+    {
+      "tag": "bool",
+      "name": "Wraps",
+      "count": 8
+    },
+    {
+      "tag": "token",
+      "name": "FillDirection",
+      "count": 9
+    },
+    {
+      "tag": "token",
+      "name": "HorizontalAlignment",
+      "count": 9
+    },
+    {
+      "tag": "token",
+      "name": "SortOrder",
+      "count": 9
+    },
+    {
+      "tag": "token",
+      "name": "VerticalAlignment",
+      "count": 9
+    },
+    {
+      "tag": "UDim2",
+      "name": "CellPadding",
+      "count": 1
+    },
+    {
+      "tag": "UDim2",
+      "name": "CellSize",
+      "count": 1
+    },
+    {
+      "tag": "int",
+      "name": "FillDirectionMaxCells",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "StartCorner",
+      "count": 1
+    },
+    {
+      "tag": "bool",
+      "name": "Disabled",
+      "count": 3
+    },
+    {
+      "tag": "token",
+      "name": "RunContext",
+      "count": 2
+    },
+    {
+      "tag": "token",
+      "name": "BaseMaterial",
+      "count": 2
+    },
+    {
+      "tag": "token",
+      "name": "MaterialPattern",
+      "count": 2
+    },
+    {
+      "tag": "float",
+      "name": "StudsPerTile",
+      "count": 2
+    },
+    {
+      "tag": "int",
+      "name": "MaxPlayers",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "RespawnTime",
+      "count": 1
+    },
+    {
+      "tag": "bool",
+      "name": "CharacterAutoLoads",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "CameraMaxZoomDistance",
+      "count": 1
+    },
+    {
+      "tag": "float",
+      "name": "CameraMinZoomDistance",
+      "count": 1
+    },
+    {
+      "tag": "token",
+      "name": "DevCameraOcclusionMode",
+      "count": 1
+    },
+    {
+      "tag": "bool",
+      "name": "EnableMouseLockOption",
+      "count": 1
+    }
+  ],
+  "binary_property_sizes": {
+    "AttributesSerialize": 3240,
+    "Tags": 1984080,
+    "ModelMeshData": 215808,
+    "SlimHash": 215808,
+    "PhysicsData": 0,
+    "AeroMeshData": 558048,
+    "PhysicalConfigData": 558048,
+    "ChildData": 0,
+    "ChildData2": 130848,
+    "MeshData": 0,
+    "MeshData2": 130848
+  },
+  "shared_strings": [
+    {
+      "md5": "AjHM1ls5KjyiiTb0wpOlvw==",
+      "bytes": 26,
+      "header_hex": "5365727650726f6a436f6c00436f6c6c69646561626c654d6170"
+    },
+    {
+      "md5": "C97BlWPWcnO21ctD+9E/hA==",
+      "bytes": 23,
+      "header_hex": "49676e6f72650050726f6a656374696c6549676e6f7265"
+    },
+    {
+      "md5": "HMjk+hTS/11C9vRLxR9AfQ==",
+      "bytes": 17,
+      "header_hex": "49676e6f7265005365655468726f756768"
+    },
+    {
+      "md5": "JgidzqVLbYdlu3Uz1Pfzdg==",
+      "bytes": 33,
+      "header_hex": "5061746866696e64696e67436f6c6c69646500436f6c6c69646561626c654d61"
+    },
+    {
+      "md5": "Oe/NiiSLQVb9QZVclS4yaQ==",
+      "bytes": 26,
+      "header_hex": "436f6c6c69646561626c654d6170005365727650726f6a436f6c"
+    },
+    {
+      "md5": "OsVnK3zkkdGdAHRkM9cuTQ==",
+      "bytes": 4,
+      "header_hex": "476c6f77"
+    },
+    {
+      "md5": "RbUBqa3oGYNVlny8XlV+Kw==",
+      "bytes": 21,
+      "header_hex": "5468654861746368537061776e4c6f636174696f6e"
+    },
+    {
+      "md5": "S9VPQ2HQepeT5s+0PgPtAw==",
+      "bytes": 6,
+      "header_hex": "49676e6f7265"
+    },
+    {
+      "md5": "TJzW/fyLqVhugz/6Xvh/lw==",
+      "bytes": 61,
+      "header_hex": "436f6c6c69646561626c654d6170005365727650726f6a436f6c004578706c6f"
+    },
+    {
+      "md5": "idYfvCw7y/FXDStviNLUHg==",
+      "bytes": 52,
+      "header_hex": "49676e6f726500436f6c6c69646561626c654d6170005365727650726f6a436f"
+    },
+    {
+      "md5": "khDBwgIq/41zefe04ehGmw==",
+      "bytes": 16,
+      "header_hex": "50726f6a656374696c6549676e6f7265"
+    },
+    {
+      "md5": "miHBHxxle1d4K3ZZ2f4uHA==",
+      "bytes": 42,
+      "header_hex": "436f6c6c69646561626c654d6170005365727650726f6a436f6c004578706c6f"
+    },
+    {
+      "md5": "qPAffTXw0YZMrbdMQq8iEg==",
+      "bytes": 18,
+      "header_hex": "5061746866696e64696e67436f6c6c696465"
+    },
+    {
+      "md5": "yuZpQdnvvUBOTYh1jqZ2cA==",
+      "bytes": 0,
+      "header_hex": ""
+    },
+    {
+      "md5": "+qv2o0HSW+htH+ALwYQpiw==",
+      "bytes": 15,
+      "header_hex": "43534750485300000000424c4f434b"
+    }
+  ]
+}

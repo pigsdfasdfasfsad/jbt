@@ -1,0 +1,91 @@
+{
+  "archive_files": 8033,
+  "distinct_file_sha256": 7698,
+  "archives": [
+    {
+      "archive": "01-other-scripts-and-information.zip",
+      "sha256": "eaa140b36a1d93e2ea114a18979d4549ac4b8f920687d569be862f96e296197f",
+      "bytes": 296572,
+      "files": 22,
+      "zip_entries": 22,
+      "directories": 0
+    },
+    {
+      "archive": "02-videos-of-game.zip",
+      "sha256": "6016ff1393277113e729dde4d1135ac8cb8cdb5c2a1586e16bb35ec38252a4e4",
+      "bytes": 63977560,
+      "files": 8,
+      "zip_entries": 9,
+      "directories": 1
+    },
+    {
+      "archive": "03-TestPlace.zip",
+      "sha256": "3ba6f60ff29e991691df32098df17d561715f95df2b6bdadbc94e6e7f7292ab0",
+      "bytes": 99848900,
+      "files": 1638,
+      "zip_entries": 1676,
+      "directories": 38
+    },
+    {
+      "archive": "04-scripts.zip",
+      "sha256": "c4c42a3e5fc9f085dcdf1e4c68b7ed5bd5248022e135ecca6c9af9cf298077fe",
+      "bytes": 496758,
+      "files": 225,
+      "zip_entries": 226,
+      "directories": 1
+    },
+    {
+      "archive": "05-images.zip",
+      "sha256": "b07b058367d115b9710feb25accf0ac5cc8a1de74b4b1769a890ff0c457115f0",
+      "bytes": 103477453,
+      "files": 3077,
+      "zip_entries": 3078,
+      "directories": 1
+    },
+    {
+      "archive": "06-image-docs.zip",
+      "sha256": "e2ebf80af7b6591af0de885a9cee9e863da398407fdc741ac3f215077936984f",
+      "bytes": 9591582,
+      "files": 3063,
+      "zip_entries": 3064,
+      "directories": 1
+    }
+  ],
+  "scripts": {
+    "exported": 225,
+    "definitions": 98,
+    "weapons": 91,
+    "module_scripts": 218,
+    "local_scripts": 6,
+    "other_text": 1,
+    "api_rate_limit_stubs": 11,
+    "files_with_decompiler_error": 41,
+    "decompiler_error_markers": 459
+  },
+  "places": {
+    "latest_instances": 82903,
+    "previous_instances": 47618,
+    "latest_scripts": 187,
+    "normalized_exact_matches_to_exported": 91,
+    "interpretation": "new reconstruction harness with copied source fragments"
+  },
+  "visuals": {
+    "images": 3077,
+    "docs": 3063,
+    "manual_contact_sheets": 57,
+    "unique_images_in_reviewed_sheets": 1493,
+    "scope": "All files inventoried/decoded. Non-skin categories and representative skin families viewed through contact sheets; selected key originals viewed at full resolution. Not a frame-by-frame examination of every GIF or a pixel-level review of every skin."
+  },
+  "videos": {
+    "clips": 7,
+    "total_duration_seconds": 65.0604,
+    "visual_review": "complete duration sampled at 2fps plus targeted full-rate red-tint measurement",
+    "audio_review": "stream presence/sample rate verified; no listening-based sound identity or timing claim"
+  },
+  "not_executed": [
+    "uploaded EXE",
+    "uploaded Lua/Luau scripts",
+    "uploaded server harness"
+  ],
+  "missing_original_file": "my game.rbxlx mentioned by reconstruction README, not present in available sources"
+}

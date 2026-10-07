@@ -1,0 +1,2105 @@
+{
+  "classes": {
+    "deterministically_regenerated": "Produced from recovered normalized evidence, static source scans, report facts, or deterministic runtime-content synchronization.",
+    "directly_recovered": "Exact bytes copied from surviving development/evidence artifacts, including clean embedded map-preview PNGs.",
+    "newly_reconstructed": "Implementation/tool/test/document files rebuilt to restore the documented architecture and locked product contract."
+  },
+  "counts": {
+    "deterministically_regenerated": 348,
+    "directly_recovered": 77,
+    "newly_reconstructed": 96,
+    "total": 521
+  },
+  "format": "twr-recovery-provenance-v1",
+  "known_unrecovered_components": [
+    "Historical ten-map static geometry/collision IR bytes",
+    "Historical 14,363-call RemoteSpy normalized database bytes",
+    "Historical 78-file C# source tree byte-for-byte"
+  ],
+  "records": [
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/asset-scaffold.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/bypass-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/cabin-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/cargo-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/district-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/expressway-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/laboratory-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/manor-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/mill-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/prison-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/maps/ranch-outline.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/bypass-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/cabin-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/cargo-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/district-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/expressway-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/laboratory-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/manor-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/mill-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/prison-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/assets/reference-boards/ranch-reference-board.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/BUILD_PROCESS.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/README.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/YOUTUBE_DEVLOG_STORYBOARD.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-01.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-02.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-03.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-04.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-05.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-06.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-07.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/development/phases/phase-08.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/BYPASS.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/CABIN.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/CARGO.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/DISTRICT.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/EXPRESSWAY.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/LABORATORY.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/MANOR.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/MAP_INVENTORY.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/MILL.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/PRISON.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/RANCH.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/README.md"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/bypass.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/cabin.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/cargo.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/district.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/expressway.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/laboratory.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/manor.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/mill.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/prison.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "docs/maps/previews/ranch.png"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/archive_manifest.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/artifact_validation.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/bundle_manifest.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/contradictions.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/expanded_shared_tables.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/fidelity_matrix.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/investigation_coverage.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/map_catalog.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/master_checklist.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/place_property_audit.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/reward_analysis.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/risk_register.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/roadmap.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/script_index.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/script_version_comparison.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/shared_tables.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/spawn_markers.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/technical_sources.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/traceability.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/unknowns.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/video_measurements.json"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "evidence/catalog/video_metadata.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "evidence/catalog/weapon_catalog.json.gz"
+    },
+    {
+      "class": "directly_recovered",
+      "path": "tools/documentation/generate_dev_docs.py"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/fortifications/fortifications.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/infected/infected.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/maps.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Bypass.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Cabin.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Cargo.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/District.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Expressway.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Laboratory.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Manor.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Mill.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Prison.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/maps/recovery/Ranch.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/perks/perks.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/recovery/source_counts.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/remotes/recovery_status.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/rewards/rewards.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/localscript-frameworkclient.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/localscript-guiadapt.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/localscript-localscript.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/localscript-playerscriptsloader.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/localscript-rbxcharactersounds.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/localscript-runner.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-2x4-w-barbed-wire.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-2x4.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-a10client.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-aa-12.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-aero-survival-rifle.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ai-sounds.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ai.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-aianimations.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-aicontroller.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ak-47.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-animate.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ar-57.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-as-val.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ash-12.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-assets.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-atomicbinding.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-audiovisualizer.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-aug.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-banlist.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-barrett-m82a1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-baseball-bat.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-basecamera.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-basecharactercontroller.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-baseocclusion.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-benelli-m4.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-bonuses.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-bullet.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-bullethandlerclient.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-bullets.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-butcher-knife.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-camerainput.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-cameramodule.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-cameratogglestatecontroller.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-cameraui.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-camerautils.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-camerawrapper-spec.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-camerawrapper.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-candy-cane-sword.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-cas-radio.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-cbj-ms.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-characterutil.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-chat-color.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-chunk.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-classiccamera.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-clicktomovecontroller.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-clicktomovedisplay.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-client.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-cmmg-mk47-mutant.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-collectedassetids.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-collision-group.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-colt-python.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-commandslog.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-compress.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-connectionutil-spec.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-connectionutil.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-controlmodule.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-crowbar.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-cz-scorpion-evo-micro-k.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-deepcopy.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-defibrillator.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-desert-eagle.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-devproducts.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-dog-whistle.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-dynamicthumbstick.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ease.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-effect.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-effects.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-endlessclient.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-exp.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-explosions.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-festive-rpg-7.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-fire-axe.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-flagutil.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-flamethrower.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-fn-fal.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-footsteps.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-fortifications.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-fortificationsinfo.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-forts.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-frag.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-frying-pan.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-g36c.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-gamepad.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-gamepassclient.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-gamepasses.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-gamepassinfo.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-gepard-pdw.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-germanshepard.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-glock-17.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-golf-club.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-gsclient.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-gui.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-hammer.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-helicopter.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-hints.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-hit-sounds.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-hk-p30l.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-infected-info.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ingram-mac-10.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-input.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-interact.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-invisicam.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-kac-pdw.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-katana.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-keyboard.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-kriss-vector.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-legacycamera.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-lh9-mkii.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-lobby.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-lwrc-ic-psd.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-m1-garand.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-m110-sass.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-m14.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-m16a1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-m1911a1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-m320.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-m4a1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-m60.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-makarov.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-map.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-marker.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-maxim-9.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mg-42.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-minigun.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mk18.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-model.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-molotov.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mosin-nagant.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mossberg-500.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mouse.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mouselockcontroller.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mp-443-grach.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mp5a2.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-mp7.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-nerve-gas.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-numtomapname.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-object.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-objectiveitem.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-obrez-mosin.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-orbitalcamera.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ots-14-groza.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-p320.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-p90.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-pathdisplay.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-pathfind.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-pb-6p9.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-perks.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-player-sounds.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-playermodule.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-pool-cue.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-popper.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-poppercam.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-pp-91-kedr.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ppsh-41.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-projectile.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-projectileclient.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-projectiles.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ragdolls.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ray.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-role-tags.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-rotatedregion3.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-rpg-7.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-rpk.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ruger-10-22.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-sabre.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-sap-6.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-sawn-off-shotgun.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-scar-h.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-serbu-super-shorty.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-shop.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-shovel.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-skins.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-sko-shorty.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-sledge-hammer.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-sound.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-sounds.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-spas-12.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-specific-perks.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-spectate.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-spiked-baseball-bat.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-spring.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-sten-mk-v.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-string-manipulation.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-svd.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-table.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-taurus-judge.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-taurus-model-66.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-tec-9.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-thompson-m1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-time.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-touchjump.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-touchthumbstick.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-tp9sfx.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-tracerutil.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-transparencycontroller.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-tween.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-umbrella.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-ump-45.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-update.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-uzi.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vehiclecamera.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vehiclecameraconfig.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vehiclecameracore.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vehiclecontroller.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vrbasecamera.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vrcamera.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vrnavigation.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vrvehiclecamera.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-vss.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-walther-p38.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-weeklyrewardutil.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-weldmodel.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-winchester-model-1892.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-winchester-model-70.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-world-effects.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-wrench.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-xd-9.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/modulescript-zoomcontroller.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/scripts/weapon-select-txt.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/source_index/summary.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/catalog.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/2x4-w-barbed-wire.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/2x4.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/aa-12.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/aero-survival-rifle.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/ak-47.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/ar-57.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/as-val.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/ash-12.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/aug.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/barrett-m82a1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/baseball-bat.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/benelli-m4.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/butcher-knife.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/candy-cane-sword.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/cas-radio.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/cbj-ms.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/cmmg-mk47-mutant.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/colt-python.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/crowbar.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/cz-scorpion-evo-micro-k.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/defibrillator.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/desert-eagle.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/dog-whistle.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/festive-rpg-7.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/fire-axe.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/flamethrower.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/fn-fal.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/frag.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/frying-pan.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/g36c.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/gepard-pdw.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/glock-17.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/golf-club.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/hammer.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/hk-p30l.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/ingram-mac-10.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/kac-pdw.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/katana.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/kriss-vector.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/lh9-mkii.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/lwrc-ic-psd.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/m1-garand.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/m110-sass.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/m14.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/m16a1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/m1911a1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/m320.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/m4a1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/m60.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/makarov.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/maxim-9.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/mg-42.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/minigun.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/mk18.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/molotov.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/mosin-nagant.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/mossberg-500.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/mp-443-grach.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/mp5a2.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/mp7.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/nerve-gas.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/obrez-mosin.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/ots-14-groza.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/p320.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/p90.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/pb-6p9.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/pool-cue.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/pp-91-kedr.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/ppsh-41.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/rpg-7.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/rpk.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/ruger-10-22.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/sabre.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/sap-6.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/sawn-off-shotgun.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/scar-h.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/serbu-super-shorty.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/shovel.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/sko-shorty.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/sledge-hammer.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/spas-12.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/spiked-baseball-bat.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/sten-mk-v.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/svd.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/taurus-judge.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/taurus-model-66.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/tec-9.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/thompson-m1.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/tp9sfx.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/umbrella.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/ump-45.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/uzi.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/vss.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/walther-p38.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/winchester-model-1892.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/winchester-model-70.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/wrench.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "content/weapons/entries/xd-9.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "evidence/recovery/fortifications_info.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "evidence/recovery/historical_checkpoint.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "evidence/recovery/infected_info.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "evidence/recovery/script_remote_actions.json"
+    },
+    {
+      "class": "deterministically_regenerated",
+      "path": "evidence/recovery/source_archive_verification.json"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": ".github/workflows/windows-build.yml"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": ".gitignore"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "README.md"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "build/Windows/build.ps1"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "docs/PRODUCT_PROFILE.md"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "docs/RECOVERY_STATUS.md"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "docs/architecture/LOCAL_AUTHORITY.md"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "evidence/README.md"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "pyproject.toml"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "recovery/PROVENANCE.json"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Commands/AdvanceWaveCommand.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Commands/CompleteObjectiveCommand.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Commands/DamagePlayerCommand.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Commands/PurchaseCommand.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Commands/SpendAmmoCommand.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Commands/StartMatchCommand.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Events/AmmoChangedEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Events/MatchCompletedEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Events/ObjectiveCompletedEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Events/PlayerDamagedEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Events/ProfileSavedEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Events/PurchaseCompletedEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Events/ReturnToLobbyEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/Events/WaveStartedEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/IGameCommand.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Contracts/IGameEvent.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Core/CommandBus.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Core/EventStream.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Core/FixedStepClock.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/FortificationDefinition.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/GameState.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/InfectedDefinition.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/MatchPhase.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/MatchState.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/ObjectiveDefinition.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/PlayerState.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/Profile.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/ReleaseRules.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Model/WeaponDefinition.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Persistence/IProfileStore.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Persistence/InMemoryProfileStore.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Persistence/JsonProfileStore.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Persistence/SaveCoordinator.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Policies/CompletionRewardPolicy.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Policies/DamagePolicy.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Policies/InfectedSpawnPolicy.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Runtime/LocalSession.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/AmmoService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/CompletionRewardService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/DamageService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/EconomyService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/FortificationService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/LoadoutService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/LootService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/MatchDirector.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/ObjectiveService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/ReceiptLedger.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/SpawnDirector.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Services/SupplyService.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Domain/Twr.Domain.csproj"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scenes/Main.tscn"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scenes/SystemsHarness.tscn"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/Bootstrap.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/HudController.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/InteractionController.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/LocalSessionNode.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/MainMenuController.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/MapLoader.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/PauseController.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/PresentationRouter.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/ResultsController.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Scripts/SettingsController.cs"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/Twr.Godot.csproj"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/export_presets.cfg"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "src/Twr.Godot/project.godot"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/acceptance_gates.json"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/conftest.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/test_authority.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/test_build_and_sync.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/test_content.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/test_evidence.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/test_maps.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/test_parser.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tests/test_release_profile.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/content/build_content.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/content/sync_godot_content.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/evidence/bootstrap.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/maps/rbxlx_static_parser.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/maps/render_map_preview.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/recovery/build_source_normalized.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/remotes/normalize_remotes.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/validation/gate_audit.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/validation/offline_audit.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/validation/project_audit.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/validation/run_all.py"
+    },
+    {
+      "class": "newly_reconstructed",
+      "path": "tools/validation/static_csharp.py"
+    }
+  ]
+}

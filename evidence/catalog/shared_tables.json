@@ -1,0 +1,1210 @@
+{
+  "ModuleScript.AI Sounds.Source.txt": {},
+  "ModuleScript.AIAnimations.Source.txt": {
+    "newAnims": false,
+    "Anims": {
+      "Juggernaut": [
+        [
+          "rbxassetid://2542377971"
+        ],
+        [
+          "rbxassetid://2542377470"
+        ],
+        [
+          "rbxassetid://10622936963"
+        ],
+        [
+          "rbxassetid://10643655959"
+        ],
+        [
+          "rbxassetid://3198144799"
+        ]
+      ],
+      "Bloater": [
+        [
+          "rbxassetid://2542377971"
+        ],
+        [
+          "rbxassetid://2542377470"
+        ],
+        [
+          "rbxassetid://3198144799"
+        ]
+      ],
+      "Riot": [
+        [
+          "rbxassetid://2542377971"
+        ],
+        [
+          "rbxassetid://2542377470"
+        ]
+      ],
+      "Bolter": [
+        [
+          "rbxassetid://2666682149"
+        ],
+        [
+          "rbxassetid://2666685246"
+        ],
+        [
+          "rbxassetid://2666684048"
+        ],
+        [
+          "rbxassetid://2666683153"
+        ]
+      ],
+      "Burster": [
+        [
+          "rbxassetid://2930569881"
+        ],
+        [
+          "rbxassetid://2934423139"
+        ]
+      ],
+      "Hazmat": [
+        [
+          "rbxassetid://2542377971"
+        ],
+        [
+          "rbxassetid://2542377470"
+        ]
+      ],
+      "Military": [
+        [
+          "rbxassetid://2542377971"
+        ],
+        [
+          "rbxassetid://2542377470"
+        ]
+      ],
+      "Sprinter": [
+        [
+          "rbxassetid://2542377971"
+        ],
+        [
+          "rbxassetid://2542377470"
+        ]
+      ],
+      "Civilian": [
+        [
+          "rbxassetid://2542377971"
+        ],
+        [
+          "rbxassetid://2542377470"
+        ]
+      ]
+    },
+    "Enum": {
+      "Juggernaut": {
+        "walk": 1,
+        "attack1": 2,
+        "charge": 3,
+        "chargeAttack": 4,
+        "throw": 5
+      },
+      "Bloater": {
+        "walk": 1,
+        "attack1": 2,
+        "throw": 3
+      },
+      "Riot": {
+        "walk": 1,
+        "attack1": 2
+      },
+      "Bolter": {
+        "walk": 1,
+        "attack1": 2,
+        "attack2": 3,
+        "leap": 4
+      },
+      "Burster": {
+        "walk": 1,
+        "attack1": 2
+      },
+      "Hazmat": {
+        "walk": 1,
+        "attack1": 2
+      },
+      "Military": {
+        "walk": 1,
+        "attack1": 2
+      },
+      "Sprinter": {
+        "walk": 1,
+        "attack1": 2
+      },
+      "Civilian": {
+        "walk": 1,
+        "attack1": 2
+      }
+    },
+    "Priorities": {
+      "idle": {
+        "expression": "Enum.AnimationPriority.Idle"
+      },
+      "walk": {
+        "expression": "Enum.AnimationPriority.Movement"
+      },
+      "run": {
+        "expression": "Enum.AnimationPriority.Movement"
+      },
+      "charge": {
+        "expression": "Enum.AnimationPriority.Movement"
+      },
+      "attack1": {
+        "expression": "Enum.AnimationPriority.Action"
+      },
+      "attack2": {
+        "expression": "Enum.AnimationPriority.Action"
+      },
+      "chargeAttack": {
+        "expression": "Enum.AnimationPriority.Action"
+      },
+      "throw": {
+        "expression": "Enum.AnimationPriority.Action"
+      },
+      "leap": {
+        "expression": "Enum.AnimationPriority.Action4"
+      },
+      "leapPose": {
+        "expression": "Enum.AnimationPriority.Action3"
+      },
+      "jump": {
+        "expression": "Enum.AnimationPriority.Action"
+      },
+      "land": {
+        "expression": "Enum.AnimationPriority.Action"
+      },
+      "fall": {
+        "expression": "Enum.AnimationPriority.Action"
+      },
+      "climb": {
+        "expression": "Enum.AnimationPriority.Action"
+      },
+      "hit": {
+        "expression": "Enum.AnimationPriority.Action"
+      }
+    },
+    "ReverseEnum": {}
+  },
+  "ModuleScript.Bonuses.Source.txt": {
+    "fields": {
+      "GetBonus": {
+        "expression": "function(arg1, arg2, arg3, arg4, arg5, arg6) -- Line 17\n\t\t--[[ Upvalues[1]:\n\t\t\t[1]: module_upvr (readonly)\n\t\t]]\n\t\tlocal Mode = workspace:GetAttribute(\"Mode\")\n\t\tif Mode ~= \"Endless\" then\n\t\t\treturn math.floor(arg1 * arg3 ^ 0.055 * module_upvr[Mode] + 0.5)"
+      }
+    },
+    "array": [
+      {
+        "expression": "math.floor(math.floor(190 * arg1 ^ 0.17 + 0.5) + 0.5)"
+      },
+      {
+        "expression": "arg2 * 200"
+      },
+      {
+        "expression": "arg2 * 400"
+      },
+      {
+        "expression": "math.floor(1.75 ^ (1 / (workspace:GetAttribute(\"MaxWaves\") - 1)) ^ (arg4 - 1) / 0.01 + 0.5) * 0.01\n\t\tend\n\t\tlocal minimum = math.min(arg1, 27)\n\t\treturn math.floor(minimum * arg3 ^ 0.055 * module_upvr[Mode] + 0.5)"
+      },
+      {
+        "expression": "math.floor(math.floor(190 * minimum ^ 0.17 + 0.5) + 0.5)"
+      },
+      0,
+      0,
+      {
+        "expression": "math.floor(1.0298915058042881 ^ (math.clamp(arg4, 0, 20) - 1) / 0.01 + 0.5) * 0.01\n\tend"
+      }
+    ]
+  },
+  "ModuleScript.CollectedAssetIDs.Source.txt": [
+    "http://www.roblox.com/asset/?id=1019631442",
+    "http://www.roblox.com/asset/?id=1019699614",
+    "http://www.roblox.com/asset/?id=242102147",
+    "http://www.roblox.com/asset/?id=245941389",
+    "rbxassetid://100783896502456",
+    "rbxassetid://1008616696",
+    "rbxassetid://1010389405",
+    "rbxassetid://1010391075",
+    "rbxassetid://1018668762",
+    "rbxassetid://1018669073",
+    "rbxassetid://1018679873",
+    "rbxassetid://1018680031",
+    "rbxassetid://1018697668",
+    "rbxassetid://1018697866",
+    "rbxassetid://1018698149",
+    "rbxassetid://1018698379",
+    "rbxassetid://1018850285",
+    "rbxassetid://1019196563",
+    "rbxassetid://1019196971",
+    "rbxassetid://1021245072",
+    "rbxassetid://1021246056",
+    "rbxassetid://1021248446",
+    "rbxassetid://1021253680",
+    "rbxassetid://1021255471",
+    "rbxassetid://1021256312",
+    "rbxassetid://1021356370",
+    "rbxassetid://10347931042",
+    "rbxassetid://10348153881",
+    "rbxassetid://1050328064",
+    "rbxassetid://106773005428713",
+    "rbxassetid://1070180886",
+    "rbxassetid://1071203512",
+    "rbxassetid://1073333355",
+    "rbxassetid://1083307898",
+    "rbxassetid://1083308105",
+    "rbxassetid://1083308308",
+    "rbxassetid://1083314560",
+    "rbxassetid://1083314939",
+    "rbxassetid://1083315177",
+    "rbxassetid://109583780409588",
+    "rbxassetid://111685676448172",
+    "rbxassetid://11347239269",
+    "rbxassetid://1159880697",
+    "rbxassetid://1159881284",
+    "rbxassetid://1159882235",
+    "rbxassetid://1159883075",
+    "rbxassetid://1159883700",
+    "rbxassetid://1159884305",
+    "rbxassetid://1159884792",
+    "rbxassetid://1159885335",
+    "rbxassetid://1159885906",
+    "rbxassetid://1159886356",
+    "rbxassetid://1159886771",
+    "rbxassetid://1194801200",
+    "rbxassetid://1194801585",
+    "rbxassetid://1194804385",
+    "rbxassetid://1194969570",
+    "rbxassetid://1196239320",
+    "rbxassetid://1196628890",
+    "rbxassetid://1196813559",
+    "rbxassetid://1199341884",
+    "rbxassetid://1199690892",
+    "rbxassetid://1199951290",
+    "rbxassetid://1222838568",
+    "rbxassetid://1222839037",
+    "rbxassetid://1222839280",
+    "rbxassetid://1223097315",
+    "rbxassetid://1223382210",
+    "rbxassetid://1223382446",
+    "rbxassetid://1223382608",
+    "rbxassetid://1223382774",
+    "rbxassetid://1223382848",
+    "rbxassetid://1223394575",
+    "rbxassetid://1223394725",
+    "rbxassetid://1223458880",
+    "rbxassetid://1223505948",
+    "rbxassetid://1223506922",
+    "rbxassetid://1223507094",
+    "rbxassetid://1223507242",
+    "rbxassetid://1223507458",
+    "rbxassetid://1223507687",
+    "rbxassetid://1223507948",
+    "rbxassetid://1223508155",
+    "rbxassetid://1223542192",
+    "rbxassetid://1223548449",
+    "rbxassetid://122971891587035",
+    "rbxassetid://1250592285",
+    "rbxassetid://1250592619",
+    "rbxassetid://1250618530",
+    "rbxassetid://1251044665",
+    "rbxassetid://1251044894",
+    "rbxassetid://1251240678",
+    "rbxassetid://1251298391",
+    "rbxassetid://1251298782",
+    "rbxassetid://1251299702",
+    "rbxassetid://1251300031",
+    "rbxassetid://1253887966",
+    "rbxassetid://1253888121",
+    "rbxassetid://1253888582",
+    "rbxassetid://1253888737",
+    "rbxassetid://1253889154",
+    "rbxassetid://1253889280",
+    "rbxassetid://1253892432",
+    "rbxassetid://1255896478",
+    "rbxassetid://1255896663",
+    "rbxassetid://1255896886",
+    "rbxassetid://1255897826",
+    "rbxassetid://1255898003",
+    "rbxassetid://1255900885",
+    "rbxassetid://1255903855",
+    "rbxassetid://1255905155",
+    "rbxassetid://1255943993",
+    "rbxassetid://1255944069",
+    "rbxassetid://1255944414",
+    "rbxassetid://1255944625",
+    "rbxassetid://1255944921",
+    "rbxassetid://1255945001",
+    "rbxassetid://1255945236",
+    "rbxassetid://1255945397",
+    "rbxassetid://1255945771",
+    "rbxassetid://1255945871",
+    "rbxassetid://1255946073",
+    "rbxassetid://1255946134",
+    "rbxassetid://1281135154",
+    "rbxassetid://1281135313",
+    "rbxassetid://1281135470",
+    "rbxassetid://1283192655",
+    "rbxassetid://1283195437",
+    "rbxassetid://1283195838",
+    "rbxassetid://1283829086",
+    "rbxassetid://1283829487",
+    "rbxassetid://1283830014",
+    "rbxassetid://1284054325",
+    "rbxassetid://1339171840",
+    "rbxassetid://1396469621",
+    "rbxassetid://1396469885",
+    "rbxassetid://1396470211",
+    "rbxassetid://1396470495",
+    "rbxassetid://1396471138",
+    "rbxassetid://1397256020",
+    "rbxassetid://14345185106",
+    "rbxassetid://14345265641",
+    "rbxassetid://14364558333",
+    "rbxassetid://1442304035",
+    "rbxassetid://1442310073",
+    "rbxassetid://1442318016",
+    "rbxassetid://1442322159",
+    "rbxassetid://1442330354",
+    "rbxassetid://1442333177",
+    "rbxassetid://1442334170",
+    "rbxassetid://1442349510",
+    "rbxassetid://1442351798",
+    "rbxassetid://1442352294",
+    "rbxassetid://1442352812",
+    "rbxassetid://1442357801",
+    "rbxassetid://1448649592",
+    "rbxassetid://1448650261",
+    "rbxassetid://1448650641",
+    "rbxassetid://1448651624",
+    "rbxassetid://1448651996",
+    "rbxassetid://1448652637",
+    "rbxassetid://1448652981",
+    "rbxassetid://1448653456",
+    "rbxassetid://1448667447",
+    "rbxassetid://1503348528",
+    "rbxassetid://1503348830",
+    "rbxassetid://1503349055",
+    "rbxassetid://1503349148",
+    "rbxassetid://1503397358",
+    "rbxassetid://1503399569",
+    "rbxassetid://1503400168",
+    "rbxassetid://1503402464",
+    "rbxassetid://1503402703",
+    "rbxassetid://1505846318",
+    "rbxassetid://15092504151",
+    "rbxassetid://1565210804",
+    "rbxassetid://1576125049",
+    "rbxassetid://1576125229",
+    "rbxassetid://1576125367",
+    "rbxassetid://1700904706",
+    "rbxassetid://1704889070",
+    "rbxassetid://1704891990",
+    "rbxassetid://1704900015",
+    "rbxassetid://1714643990",
+    "rbxassetid://1850649806",
+    "rbxassetid://1920405776",
+    "rbxassetid://192776775",
+    "rbxassetid://1937184688",
+    "rbxassetid://1937194470",
+    "rbxassetid://2013260016",
+    "rbxassetid://2013271773",
+    "rbxassetid://2013272288",
+    "rbxassetid://2013272581",
+    "rbxassetid://2013302563",
+    "rbxassetid://2013317047",
+    "rbxassetid://2013321528",
+    "rbxassetid://201465124",
+    "rbxassetid://2049668214",
+    "rbxassetid://2049668608",
+    "rbxassetid://2049798114",
+    "rbxassetid://2049798510",
+    "rbxassetid://2080148189",
+    "rbxassetid://2080148937",
+    "rbxassetid://2080165686",
+    "rbxassetid://2177253731",
+    "rbxassetid://2177254520",
+    "rbxassetid://2177255176",
+    "rbxassetid://2177257900",
+    "rbxassetid://2181899061",
+    "rbxassetid://2216942937",
+    "rbxassetid://2216943291",
+    "rbxassetid://2216994633",
+    "rbxassetid://2228389393",
+    "rbxassetid://2228390729",
+    "rbxassetid://2228391398",
+    "rbxassetid://2228392477",
+    "rbxassetid://2228392961",
+    "rbxassetid://2228400815",
+    "rbxassetid://2239055980",
+    "rbxassetid://2239058504",
+    "rbxassetid://2297026808",
+    "rbxassetid://2297027222",
+    "rbxassetid://2385732049",
+    "rbxassetid://2409347942",
+    "rbxassetid://2409348961",
+    "rbxassetid://2409349344",
+    "rbxassetid://2409517594",
+    "rbxassetid://2526086943",
+    "rbxassetid://2541794073",
+    "rbxassetid://2600757280",
+    "rbxassetid://2600786956",
+    "rbxassetid://2610208195",
+    "rbxassetid://2610209725",
+    "rbxassetid://2671645249",
+    "rbxassetid://2934956297",
+    "rbxassetid://2950687199",
+    "rbxassetid://2950687641",
+    "rbxassetid://2950687872",
+    "rbxassetid://2950830985",
+    "rbxassetid://2950831212",
+    "rbxassetid://491056360",
+    "rbxassetid://491056588",
+    "rbxassetid://491057838",
+    "rbxassetid://6605881886",
+    "rbxassetid://6605883942",
+    "rbxassetid://6605885137",
+    "rbxassetid://6605887692",
+    "rbxassetid://72289926029270",
+    "rbxassetid://743077042",
+    "rbxassetid://81618840986573",
+    "rbxassetid://83858367496898",
+    "rbxassetid://838760373",
+    "rbxassetid://840516623",
+    "rbxassetid://84181115790903",
+    "rbxassetid://847192070",
+    "rbxassetid://847192109",
+    "rbxassetid://847193112",
+    "rbxassetid://847199167",
+    "rbxassetid://847199220",
+    "rbxassetid://847202238",
+    "rbxassetid://852040696",
+    "rbxassetid://852053454",
+    "rbxassetid://852057367",
+    "rbxassetid://852059636",
+    "rbxassetid://875469175",
+    "rbxassetid://88824416075067",
+    "rbxassetid://896121128",
+    "rbxassetid://9083869061",
+    "rbxassetid://9083889464",
+    "rbxassetid://9084099732",
+    "rbxassetid://9159649191",
+    "rbxassetid://9159662026",
+    "rbxassetid://947847305",
+    "rbxassetid://962468078",
+    "rbxassetid://984328728",
+    "rbxassetid://984328996",
+    "rbxassetid://984329273",
+    "rbxassetid://984329682",
+    "rbxassetid://984330102",
+    "rbxassetid://984330490",
+    "rbxassetid://984330842",
+    "rbxassetid://984331057",
+    "rbxassetid://984331290",
+    "rbxassetid://984331584",
+    "rbxassetid://984332023",
+    "rbxassetid://984332447",
+    "rbxassetid://984332723",
+    "rbxassetid://984332969",
+    "rbxassetid://984333222",
+    "rbxassetid://984333618",
+    "rbxassetid://984333957",
+    "rbxassetid://984334079",
+    "rbxassetid://984334195",
+    "rbxassetid://984431429",
+    "rbxassetid://984438018"
+  ],
+  "ModuleScript.DevProducts.Source.txt": [
+    {
+      "name": "Respawn",
+      "title": "SPAWN IN TOKEN",
+      "desc": "Gives you one token to spawn back into the current wave <b>(NO WAVE BONUS)</b>",
+      "id": 176041254,
+      "Image": "rbxassetid://2376563346",
+      "Scale": 1.3
+    },
+    {
+      "name": "RespawnBundle",
+      "title": "SPAWN IN TOKEN x10",
+      "desc": "Grants you <b>10 spawn-in tokens</b> for <b>20% off</b> of their regular price <b>(NO WAVE BONUS)</b>",
+      "id": 430874503,
+      "Image": "rbxassetid://2631927827",
+      "Scale": 1.3
+    },
+    {
+      "name": "Bandolier",
+      "title": "BANDOLIER",
+      "desc": "Spawn with <b>double ammo storage</b> for the next wave",
+      "id": 176088230,
+      "Image": "rbxassetid://2376559268",
+      "Scale": 1.3
+    },
+    {
+      "name": "BandolierBundle",
+      "title": "BANDOLIER BUNDLE",
+      "desc": "Grants <b>10 bandolier powerups</b> for <b>20% off</b> their regular price",
+      "id": 1230959085,
+      "Image": "rbxassetid://8382803672",
+      "Scale": 0.65
+    },
+    {
+      "name": "EXPBoost",
+      "title": "EXP BOOST x2",
+      "desc": "Experience is boosted <b>x2</b> for <b>20 in-wave minutes</b>",
+      "id": 176033334,
+      "Image": "rbxassetid://2376562848"
+    },
+    {
+      "name": "CreditBoost",
+      "title": "CREDIT BOOST x2",
+      "desc": "Credits are boosted <b>x2</b> for <b>20 in-wave minutes</b>",
+      "id": 176033883,
+      "Image": "rbxassetid://2376560382"
+    },
+    {
+      "name": "Donation",
+      "title": "DONATION",
+      "desc": "Donate to the developers of the game to help fund future projects",
+      "id": 176025602,
+      "Image": "rbxassetid://2376561424"
+    },
+    {
+      "name": "ExcessiveDonation",
+      "title": "EXCESSIVE DONATION",
+      "desc": "Maybe you're feeling generous today, or perhaps you just wanna get a little crazy",
+      "id": 176026262,
+      "Image": "rbxassetid://2376562319"
+    }
+  ],
+  "ModuleScript.FortificationsInfo.Source.txt": {
+    "50 Cal": {
+      "Count": 1,
+      "Swings": 3,
+      "Icon": "rbxassetid://1585266923",
+      "Sound": "rbxassetid://1496699084",
+      "FireSound": "rbxassetid://1494276636",
+      "Damage": 75,
+      "MaxPen": 5,
+      "CheckBelt": {
+        "Max": 21,
+        "Belt": [
+          "Mount Connector",
+          "50 Cal",
+          "Belt"
+        ]
+      },
+      "Rels": {
+        "Bullet1": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet1.Handle.CFrame)"
+        },
+        "Bullet2": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet2.Handle.CFrame)"
+        },
+        "Bullet3": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet3.Handle.CFrame)"
+        },
+        "Bullet4": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet4.Handle.CFrame)"
+        },
+        "Bullet5": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet5.Handle.CFrame)"
+        },
+        "Bullet6": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet6.Handle.CFrame)"
+        },
+        "Bullet7": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet7.Handle.CFrame)"
+        },
+        "Bullet8": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet8.Handle.CFrame)"
+        },
+        "Bullet9": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet9.Handle.CFrame)"
+        },
+        "Bullet10": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet10.Handle.CFrame)"
+        },
+        "Bullet11": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet11.Handle.CFrame)"
+        },
+        "Bullet12": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet12.Handle.CFrame)"
+        },
+        "Bullet13": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet13.Handle.CFrame)"
+        },
+        "Bullet14": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet14.Handle.CFrame)"
+        },
+        "Bullet15": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet15.Handle.CFrame)"
+        },
+        "Bullet16": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet16.Handle.CFrame)"
+        },
+        "Bullet17": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet17.Handle.CFrame)"
+        },
+        "Bullet18": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet18.Handle.CFrame)"
+        },
+        "Bullet19": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet19.Handle.CFrame)"
+        },
+        "Bullet20": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet20.Handle.CFrame)"
+        },
+        "Bullet21": {
+          "expression": "game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Handle.CFrame:toObjectSpace(game.ReplicatedStorage.Models.Fortifications[\"50 Cal\"][\"Mount Connector\"][\"50 Cal\"].Belt.Bullet21.Handle.CFrame)"
+        }
+      },
+      "Animations": {
+        "GunnerAim": {
+          "Number": 1,
+          "CurrentTime": 0,
+          "Sequence": [
+            {
+              "Time": 0.5,
+              "AV": {
+                "GunnerAim": {
+                  "Lerp": true,
+                  "Ease": "SlowDown2",
+                  "To": {
+                    "expression": "CFrame.new(0, -0.2, 0)"
+                  }
+                }
+              },
+              "FOV": {
+                "Ease": "SlowDown",
+                "To": 60
+              }
+            }
+          ]
+        },
+        "GunnerUnAim": {
+          "Number": 1,
+          "CurrentTime": 0,
+          "Sequence": [
+            {
+              "Time": 0.25,
+              "AV": {
+                "GunnerAim": {
+                  "Lerp": true,
+                  "Ease": "SlowDown",
+                  "To": {
+                    "expression": "CFrame.new()"
+                  }
+                }
+              },
+              "FOV": {
+                "Ease": "SlowDown",
+                "To": 70
+              }
+            }
+          ]
+        },
+        "Fire": {
+          "Number": 1,
+          "CurrentTime": 0,
+          "Sequence": [
+            {
+              "Time": 0.075,
+              "AV": {
+                "Fire": {
+                  "Lerp": true,
+                  "Ease": "Linear",
+                  "Start": {
+                    "expression": "CFrame.new()"
+                  },
+                  "To": {
+                    "expression": "CFrame.Angles(0.017453292519943295, 0, 0)"
+                  }
+                }
+              }
+            },
+            {
+              "Time": 0.15,
+              "AV": {
+                "Fire": {
+                  "Lerp": true,
+                  "Ease": "SlowDown",
+                  "To": {
+                    "expression": "CFrame.new()"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "Transition": {
+          "Number": 1,
+          "CurrentTime": 0,
+          "Sequence": [
+            {
+              "Time": 0.25,
+              "AV": {
+                "GunnerOffset": {
+                  "Lerp": true,
+                  "Ease": "SlowDown",
+                  "To": {
+                    "expression": "CFrame.new()"
+                  }
+                },
+                "GunnerRightOffset": {
+                  "Lerp": true,
+                  "Ease": "SlowDown",
+                  "To": {
+                    "expression": "CFrame.new()"
+                  }
+                },
+                "GunnerLeftOffset": {
+                  "Lerp": true,
+                  "Ease": "SlowDown",
+                  "To": {
+                    "expression": "CFrame.new()"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Barbed Wire": {
+      "Count": 2,
+      "Swings": 2,
+      "Sound": "rbxassetid://1496729847"
+    },
+    "Clap Bomb": {
+      "Count": 1,
+      "Swings": 1,
+      "Sound": "rbxassetid://1496566264",
+      "Radius": 25,
+      "Damage": 420
+    },
+    "Jack": {
+      "Count": 1,
+      "Swings": 1,
+      "Sound": "rbxassetid://1496900777",
+      "Radius": 35,
+      "Damage": 375
+    }
+  },
+  "ModuleScript.Gamepasses.Source.txt": [
+    {
+      "name": "PrivateServers",
+      "title": "PRIVATE SERVERS",
+      "desc": "Create your own custom private server! (Must be in lobby)",
+      "id": 26231885,
+      "Image": "rbxassetid://8295559444"
+    },
+    {
+      "name": "ExtraPerk",
+      "title": "EXTRA PERK",
+      "desc": "Grants one extra perk slot in the Perks menu",
+      "id": 5571407,
+      "Image": "rbxassetid://2661505455"
+    },
+    {
+      "name": "ColoredTracers",
+      "title": "COLORED TRACERS",
+      "desc": "Allows you to change color of tracers when firing",
+      "id": 6052894,
+      "Image": "rbxassetid://2960549612"
+    },
+    {
+      "name": "CustomDeathSound",
+      "title": "CUSTOM DEATH SOUND",
+      "desc": "Allows you to change sound upon death",
+      "id": 927940434,
+      "Image": "rbxassetid://77921932619463"
+    },
+    {
+      "name": "FreeCam",
+      "title": "FREECAM",
+      "desc": "Grants ability to use freecam mode while spectating (K to activate)",
+      "id": 5144766,
+      "device": {
+        "PC": true
+      },
+      "Image": "rbxassetid://2376557638"
+    },
+    {
+      "name": "CustomTag",
+      "title": "CUSTOM CHAT TAG",
+      "desc": "Grants ability to add a tag in before your name",
+      "id": 4275798,
+      "device": {
+        "PC": true,
+        "MOBILE": true
+      },
+      "Image": "rbxassetid://2376554346"
+    },
+    {
+      "name": "RainbowText",
+      "title": "RAINBOW CHAT TEXT",
+      "desc": "Displays your chat text in rainbow letters to show how cool you are",
+      "id": 4275809,
+      "device": {
+        "PC": true,
+        "MOBILE": true
+      },
+      "Image": "rbxassetid://2376555307"
+    }
+  ],
+  "ModuleScript.Hit Sounds.Source.txt": {
+    "Basic": {
+      "BaseVolume": 1,
+      "Ids": [
+        "rbxassetid://85742799407731",
+        "rbxassetid://111116193655343",
+        "rbxassetid://87142318050977",
+        "rbxassetid://137682097524912",
+        "rbxassetid://117349423038505",
+        "rbxassetid://138325278282773"
+      ]
+    },
+    "Headshot": {
+      "BaseVolume": 3,
+      "Ids": [
+        "rbxassetid://93206308277014",
+        "rbxassetid://129687396554372"
+      ]
+    },
+    "Decapitation": {
+      "BaseVolume": 3,
+      "Ids": [
+        "rbxassetid://72138783317080"
+      ]
+    }
+  },
+  "ModuleScript.Infected Info.Source.txt": {
+    "NumToType": [
+      "Bolter",
+      "Civilian",
+      "Sprinter",
+      "Military",
+      "Hazmat",
+      "Riot",
+      "Burster",
+      "Bloater",
+      "Juggernaut",
+      "Escort"
+    ],
+    "TypeToNum": {
+      "Bolter": 1,
+      "Civilian": 2,
+      "Sprinter": 3,
+      "Military": 4,
+      "Hazmat": 5,
+      "Riot": 6,
+      "Burster": 7,
+      "Bloater": 8,
+      "Juggernaut": 9,
+      "Escort": 10
+    },
+    "Stats": {
+      "Bolter": {
+        "Credits": 15,
+        "EXP": 8,
+        "Damage": 4,
+        "Manipulators": {
+          "Fire": 1,
+          "Melee": 1,
+          "Smoke": 0.5
+        },
+        "Humanoid": {
+          "JumpPower": 35,
+          "WalkSpeed": 13.5,
+          "Health": 32.5,
+          "MaxHealth": 32.5
+        }
+      },
+      "Civilian": {
+        "Credits": 10,
+        "EXP": 5,
+        "Damage": 8,
+        "Manipulators": {
+          "Fire": 1,
+          "Melee": 1,
+          "Smoke": 1
+        },
+        "Humanoid": {
+          "JumpPower": 35,
+          "WalkSpeed": 15,
+          "Health": 65,
+          "MaxHealth": 65
+        }
+      },
+      "Sprinter": {
+        "Credits": 10,
+        "EXP": 5,
+        "Damage": 8,
+        "Manipulators": {
+          "Fire": 1,
+          "Melee": 1,
+          "Smoke": 1
+        },
+        "Humanoid": {
+          "WalkSpeed": 18,
+          "Health": 65,
+          "MaxHealth": 65
+        }
+      },
+      "Military": {
+        "Credits": 25,
+        "EXP": 13,
+        "Damage": 12,
+        "Manipulators": {
+          "Fire": 1,
+          "Melee": 1,
+          "Smoke": 1
+        },
+        "Humanoid": {
+          "WalkSpeed": 17,
+          "Health": 113.75,
+          "MaxHealth": 113.75
+        }
+      },
+      "Hazmat": {
+        "Credits": 75,
+        "EXP": 30,
+        "Damage": 12,
+        "Manipulators": {
+          "Fire": 1,
+          "Melee": 1,
+          "Smoke": 0
+        },
+        "Humanoid": {
+          "WalkSpeed": 15,
+          "Health": 85,
+          "MaxHealth": 85
+        }
+      },
+      "Riot": {
+        "Credits": 50,
+        "EXP": 25,
+        "Damage": 24,
+        "Manipulators": {
+          "Fire": 1,
+          "Melee": 0.5,
+          "Smoke": 1
+        },
+        "Humanoid": {
+          "WalkSpeed": 12,
+          "Health": 357.5,
+          "MaxHealth": 357.5
+        }
+      },
+      "Burster": {
+        "Credits": 50,
+        "EXP": 25,
+        "Damage": 12,
+        "BurstRadius": 20,
+        "BurstDamage": 27.5,
+        "BurstAreaDamage": 5,
+        "Manipulators": {
+          "Fire": 1,
+          "Melee": 1,
+          "Smoke": 0
+        },
+        "Humanoid": {
+          "JumpPower": 35,
+          "WalkSpeed": 10,
+          "Health": 87.75,
+          "MaxHealth": 87.75
+        }
+      },
+      "Bloater": {
+        "Credits": 100,
+        "EXP": 50,
+        "Damage": 60,
+        "SporeRadius": 15,
+        "SporeDamage": 26.400000000000002,
+        "Manipulators": {
+          "Fire": 3,
+          "Melee": 1,
+          "Smoke": 1
+        },
+        "Humanoid": {
+          "JumpPower": 35,
+          "WalkSpeed": 7,
+          "Health": 487.5,
+          "MaxHealth": 487.5
+        }
+      },
+      "Juggernaut": {
+        "Credits": 500,
+        "EXP": 250,
+        "Damage": 60,
+        "SporeRadius": 15,
+        "SporeDamage": 35,
+        "Manipulators": {
+          "Fire": 3,
+          "Melee": 1,
+          "Smoke": 1
+        },
+        "Humanoid": {
+          "JumpPower": 35,
+          "WalkSpeed": 7,
+          "Health": 487.5,
+          "MaxHealth": 487.5
+        }
+      }
+    }
+  },
+  "ModuleScript.NumToMapName.Source.txt": [
+    "Bypass",
+    "Cabin",
+    "Cargo",
+    "District",
+    "Expressway",
+    "Laboratory",
+    "Manor",
+    "Mill",
+    "Prison",
+    "Ranch",
+    "Market",
+    "Test Map",
+    "Skyscraper",
+    "Carnival",
+    null,
+    "Dealership",
+    "Stadium",
+    null
+  ],
+  "ModuleScript.Perks.Source.txt": {
+    "Survivalist": {
+      "Hardened Sight": {
+        "Level": 10,
+        "Icon": "rbxassetid://2600767053",
+        "Desc": "Lowers low health effect by 50%."
+      },
+      "Bruiser": {
+        "Level": 20,
+        "Icon": "rbxassetid://2600767158",
+        "Desc": "Lowers all damage effects by 65%"
+      },
+      "Medic": {
+        "Level": 30,
+        "Icon": "rbxassetid://2600767687",
+        "Desc": "Bandages heal 30% more."
+      },
+      "Caffeinated": {
+        "Level": 45,
+        "Icon": "rbxassetid://2600768023",
+        "Desc": "Energy Drink effects last 10 seconds longer."
+      },
+      "Adrenaline Rush": {
+        "Level": 60,
+        "Icon": "rbxassetid://2600768196",
+        "Desc": "When under 35% health, health regenerates slowly to 35%."
+      },
+      "Speed Demon": {
+        "Level": 85,
+        "Icon": "rbxassetid://2600768578",
+        "Desc": "Sprint speed increases by 12%."
+      },
+      "Guardian Angel": {
+        "Level": 100,
+        "Icon": "rbxassetid://2600768700",
+        "Desc": "Revive a teammate if they die. Single use per teammate per wave."
+      }
+    },
+    "Craftsman": {
+      "Play Maker": {
+        "Level": 10,
+        "Icon": "rbxassetid://2600781777",
+        "Desc": "Carry 1 extra Clap Bomb."
+      },
+      "Efficiency": {
+        "Level": 20,
+        "Icon": "rbxassetid://2600781898",
+        "Desc": "One less hammer swing to deploy the 50 cal."
+      },
+      "Enhanced Electronics": {
+        "Level": 30,
+        "Icon": "rbxassetid://2600782323",
+        "Desc": "Increases Clap Bomb range by 40%."
+      },
+      "Fortifier": {
+        "Level": 45,
+        "Icon": "rbxassetid://2600782504",
+        "Desc": "Carry 2 extra Barbed Wire."
+      },
+      "Pyrotechnic": {
+        "Level": 60,
+        "Icon": "rbxassetid://2600783167",
+        "Desc": "Explosive forts do 35% more damage."
+      },
+      "Carpenter": {
+        "Level": 85,
+        "Icon": "rbxassetid://2600782950",
+        "Desc": "Build speed increases by 40%."
+      },
+      "Juggernaut": {
+        "Level": 100,
+        "Icon": "rbxassetid://2600783301",
+        "Desc": "Spawn in with a full set of makeshift armor. This new armor is twice as durable as regular armor."
+      }
+    },
+    "Marksman": {
+      "Dexterous": {
+        "Level": 10,
+        "Icon": "rbxassetid://2600785683",
+        "Desc": "Equip speed increases by 30%."
+      },
+      "Trigger Finger": {
+        "Level": 20,
+        "Icon": "rbxassetid://2600785784",
+        "Desc": "Rate of fire increases by 35% for pump action, bolt action, and semi-automatic weapons."
+      },
+      "Eagle Eyes": {
+        "Level": 30,
+        "Icon": "rbxassetid://2600786648",
+        "Desc": "Aiming speed increases by 40%."
+      },
+      "Heavy Hitter": {
+        "Level": 45,
+        "Icon": "rbxassetid://2600786347",
+        "Desc": "Upper body shots on infected deal 20% more damage."
+      },
+      "Steady Hand": {
+        "Level": 60,
+        "Icon": "rbxassetid://2600786228",
+        "Desc": "Recoil reduced by 50%."
+      },
+      "Brisk": {
+        "Level": 85,
+        "Icon": "rbxassetid://2600786860",
+        "Desc": "Reloading is 20% faster."
+      },
+      "Overwatch": {
+        "Level": 100,
+        "Icon": "rbxassetid://2600786956",
+        "Desc": "Unlock the Barrett M82A1. You can only use the Barrett M82A1 while this perk is equipped."
+      }
+    }
+  },
+  "ModuleScript.Player Sounds.Source.txt": {
+    "Sounds": {
+      "Scream": {
+        "Id": "rbxassetid://9083929120",
+        "TimeStamps": [
+          {
+            "Start": 0,
+            "Stop": 2.5
+          },
+          {
+            "Start": 4.45,
+            "Stop": 7.6
+          },
+          {
+            "Start": 9.53,
+            "Stop": 13.9
+          }
+        ]
+      }
+    }
+  },
+  "ModuleScript.Specific Perks.Source.txt": {}
+}

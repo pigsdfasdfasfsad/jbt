@@ -1,0 +1,16 @@
+{
+  "format": "twr-historical-checkpoint-evidence-v1",
+  "source": "TWR_Offline_Current_Build_Screenshots-recovered.pdf",
+  "snapshot_date": "2026-10-06",
+  "historical_repository_commit_shown": "a91da06",
+  "historical_validation": {
+    "tests_passed": 82,
+    "tests_total": 82,
+    "csharp_files_static_audit": 78,
+    "acceptance_gates": 21,
+    "requested_source_maps_converted_to_ir": 10,
+    "remotespy_calls_normalized": 14363
+  },
+  "qualification": "Historical engineering-report evidence only. Current recovery must re-run its own validation; these counts are not asserted as current.",
+  "map_preview_provenance": "docs/maps/previews/*.png were extracted as clean embedded map-conversion images from report pages 9-18; they are not live game screenshots."
+}

@@ -1,0 +1,98 @@
+{
+  "source": "ModuleScript.Bonuses.Source.txt lines14to24",
+  "arithmetic_confidence": "source-confirmed literal",
+  "argument_semantics": "wave, completed objectives, player count, scaling wave strongly inferred; original caller missing",
+  "bases": {
+    "Regular": 1500,
+    "Classic": 1900,
+    "Hardcore": 1000,
+    "Endless": 525
+  },
+  "unused_table": {
+    "Regular": 6000,
+    "Classic": 10000,
+    "Hardcore": 22000,
+    "Endless": 5000
+  },
+  "formulas": {
+    "credits": "floor(w * p^0.055 * base + 0.5), w=min(w,27) in Endless",
+    "xp": "floor(190 * w^0.17 + 0.5), w=min(w,27) in Endless",
+    "objective_extra_credits": "200*k except Endless0",
+    "objective_extra_xp": "400*k except Endless0",
+    "non_endless_fifth_literal": "round_0.01(1.75 ^ ((1/(N-1)) ^ (q-1)))",
+    "non_endless_fifth_proposed": "round_0.01(1.75 ^ ((q-1)/(N-1)))",
+    "endless_fifth": "round_0.01(1.0298915058042881 ^ (clamp(q,0,20)-1))"
+  },
+  "examples": [
+    {
+      "mode": "Regular",
+      "argument_wave": 1,
+      "players": 1,
+      "function_credit_component": 1500,
+      "function_xp_component": 190
+    },
+    {
+      "mode": "Regular",
+      "argument_wave": 10,
+      "players": 1,
+      "function_credit_component": 15000,
+      "function_xp_component": 281
+    },
+    {
+      "mode": "Classic",
+      "argument_wave": 1,
+      "players": 1,
+      "function_credit_component": 1900,
+      "function_xp_component": 190
+    },
+    {
+      "mode": "Classic",
+      "argument_wave": 10,
+      "players": 1,
+      "function_credit_component": 19000,
+      "function_xp_component": 281
+    },
+    {
+      "mode": "Hardcore",
+      "argument_wave": 1,
+      "players": 1,
+      "function_credit_component": 1000,
+      "function_xp_component": 190
+    },
+    {
+      "mode": "Hardcore",
+      "argument_wave": 10,
+      "players": 1,
+      "function_credit_component": 10000,
+      "function_xp_component": 281
+    },
+    {
+      "mode": "Endless",
+      "argument_wave": 1,
+      "players": 1,
+      "function_credit_component": 525,
+      "function_xp_component": 190
+    },
+    {
+      "mode": "Endless",
+      "argument_wave": 20,
+      "players": 1,
+      "function_credit_component": 10500,
+      "function_xp_component": 316
+    },
+    {
+      "mode": "Endless",
+      "argument_wave": 27,
+      "players": 1,
+      "function_credit_component": 14175,
+      "function_xp_component": 333
+    },
+    {
+      "mode": "Endless",
+      "argument_wave": 40,
+      "players": 1,
+      "function_credit_component": 14175,
+      "function_xp_component": 333
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+[
+  {
+    "id": "C01",
+    "subject": "Original versus reconstruction",
+    "conflict": "TestArena server/client and economy modules are substantial new code; copied original-looking data also exists.",
+    "evidence": "README.md; tools/buildplace.py; source hashes",
+    "resolution": "Never use new server constants as retail truth; provenance tag every extraction.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C02",
+    "subject": "Weapon count",
+    "conflict": "Older harness notes89weapons; current export has91weaponstats plus7tooldefinitions.",
+    "evidence": "Weapon catalog; archived analysis",
+    "resolution": "Use current complete roster, retain provenance flags for recovered Ruger and barbed2x4.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C03",
+    "subject": "Wave exponent",
+    "conflict": "Lua literal non-Endless exponent right-associates; earlier analysis asserts lost parentheses and geometric1to1.75curve.",
+    "evidence": "Bonuses GetBonus; Lua manual",
+    "resolution": "Keep literal and proposed intended expression separately; caller/video needed before fidelity gate.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C04",
+    "subject": "Wave XP cap",
+    "conflict": "Earlier analysis reports301XP at Endless reward cap; direct190*27^.17 rounds333.",
+    "evidence": "Bonuses lines22to24",
+    "resolution": "Use333for this function result; actual payout modifiers remain unknown.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C05",
+    "subject": "Health values",
+    "conflict": "InfectedInfo point values differ from wiki mode ranges, especiallyJuggernaut487.5versus1050+.",
+    "evidence": "InfectedInfo Stats;02-Infected",
+    "resolution": "Retain config point separately; do not fit invented mode ratios and call them source-confirmed.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C06",
+    "subject": "Hazmat fire",
+    "conflict": "ConfigFire1, reference burn immunity; direct flame hit versus burning may be separate effects.",
+    "evidence": "InfectedInfo; Hazmat/Flamethrower reference",
+    "resolution": "Separate direct fire damage and ignite policy; require runtime verification.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C07",
+    "subject": "Riot melee",
+    "conflict": "ConfigMelee.5, reference warns chat advice about melee immunity is false and states full damage.",
+    "evidence": "InfectedInfo;02-Infected",
+    "resolution": "Expose both evidence profiles until server or controlled test settles it.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C08",
+    "subject": "Hardcore length",
+    "conflict": "Current mode text15; old infected availability20; historical notes conflict internally.",
+    "evidence": "01-Core-Gameplay;02-Infected",
+    "resolution": "Provisional15profile, dated20legacy profile retained; no silent merge.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C09",
+    "subject": "Objective payout",
+    "conflict": "References4000/3500versusCE-ObjectiveComplete image5000/2000; Update says higher and participation rewards.",
+    "evidence": "07-Objectives; CE screenshot;Update",
+    "resolution": "Current values and contribution algorithm unresolved.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C10",
+    "subject": "Kill bonus rounding",
+    "conflict": "ReferenceCivilianheadshot3XP; testcapture image2XP.",
+    "evidence": "02-Infected; kill feed and bonus's.png",
+    "resolution": "Bonus roundingC; avoid inferring ceil/floor globally.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C11",
+    "subject": "Revive payout",
+    "conflict": "Body500credits1000XP; datedchangelog1000credits500XP.",
+    "evidence": "Guardian Angel compiled references",
+    "resolution": "Keep historical alternatives; no current formula claim.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C12",
+    "subject": "Speed versus duration perks",
+    "conflict": "Descriptions say speed +30/+40/+20%; reference examples imply time*.7/.6/.8.",
+    "evidence": "Perks;05-Perks",
+    "resolution": "Specify provisional duration multipliers explicitly; validate interpreter/runtime.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C13",
+    "subject": "Enhanced Electronics",
+    "conflict": "Original Desc says range+40%; reference example widensangle30to42degrees.",
+    "evidence": "Perks;05-Perks",
+    "resolution": "Detection dimension unknown; avoid radius+40% without evidence.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C14",
+    "subject": "Frag bounce",
+    "conflict": "RawMaxBounces=infinity; reference onlyonebounce beforedetonation.",
+    "evidence": "Frag Stats;06-Items",
+    "resolution": "Missing controller semantics, test ricochet and fuse separately.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C15",
+    "subject": "Nerve Gas damage",
+    "conflict": "Generic rawDamage200; reference no direct damaging effect, instead weakness/slow.",
+    "evidence": "Nerve Gas Stats;06-Items",
+    "resolution": "Do not apply generic grenade blast to nerve gas.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C16",
+    "subject": "Jack and mounted damage",
+    "conflict": "Jack raw375versusapprox400;50Cal75/pen5versusapprox100/6.",
+    "evidence": "FortificationsInfo;06-Items",
+    "resolution": "Prefer raw config for baseline data; effective server damage still unconfirmed.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C17",
+    "subject": "Lighting",
+    "conflict": "Generated rootLab daylight differs from darker/white-lit retail references; Lighting scripts are API stubs.",
+    "evidence": "buildplace.py; CMaps Lighting;Labimages",
+    "resolution": "Calibrate original visual profile, quarantine harness lighting.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C18",
+    "subject": "Map identity and completeness",
+    "conflict": "Some Lab V1/V2 and development images differ; CMaps are local fragments, not complete maps.",
+    "evidence": "Map module; place; image docs",
+    "resolution": "Map version IDs and per-chunk provenance; no automatic mashup.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C19",
+    "subject": "Gun damage semantics",
+    "conflict": "Reference calls guns hitscan; client Bullet animates fast projectile; server missing.",
+    "evidence": "Bullet;weapons references",
+    "resolution": "Separate visual tracer from authoritative query/travel policy.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C20",
+    "subject": "Level tables",
+    "conflict": "EXP function25*n\u00b2and reference target example agree; printed cumulative totals drift from mathematical sum.",
+    "evidence": "EXP;08-Progression Sections14to16",
+    "resolution": "Formula baseline with target-level semantics inferred; raw table preserved.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C21",
+    "subject": "Capture HUD",
+    "conflict": "Test videos show top-rightHP/simplewave; original image and copied GUI have circularbottom-rightHUD.",
+    "evidence": "All7videos;WeaponHUD.png;StarterGui",
+    "resolution": "Videos are capture evidence, not retail HUD authority.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C22",
+    "subject": "Missing source claims",
+    "conflict": "Older specs cite my game.rbxlx line numbers; that296636011-byte file is absent.",
+    "evidence": "README;prior specs; six archive manifest",
+    "resolution": "Treat references as secondary quotations until original file provided.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C23",
+    "subject": "Weapon balancing",
+    "conflict": "AK47,SKO12,Winchester1892,Barrett,SVD,SPAS12,Mosin/ObrezandSAP6/Kedrvalues differ between configs and compiled wiki.",
+    "evidence": "weapon_catalog;reference_tables",
+    "resolution": "Field-specific source-first resolution; date and server override unresolved.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C24",
+    "subject": "Juggernaut armor gas mask",
+    "conflict": "Secondary page has an unusually formattedJuly25,2026gas-mask addition which compiler flags unverified.",
+    "evidence": "01-Core-Gameplay final notes",
+    "resolution": "Do not treat old or new protection policy as confirmed current behavior.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C25",
+    "subject": "Event pricing",
+    "conflict": "Some event weapon configPrice/Levelsentinels differ fromreferenceTBA/Event.",
+    "evidence": "Weapon records;specialweaponreferences",
+    "resolution": "Sentinels are availability flags, not automatically free or purchasable.",
+    "status": "open unless explicitly resolved by literal arithmetic"
+  },
+  {
+    "id": "C26",
+    "subject": "Hammer build timing",
+    "conflict": "Source Build sequence sums0.865seconds; secondary reference approximate0.66seconds.",
+    "evidence": "Hammer Animations; fortification build reference",
+    "resolution": "Keep sequence sum separate from runtime swing/commit time; verify the timeline interpreter and original placement footage.",
+    "status": "open"
+  }
+]

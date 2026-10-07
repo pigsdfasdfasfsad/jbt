@@ -1,0 +1,177 @@
+[
+  {
+    "id": "U01",
+    "subject": "Original authority and release",
+    "evidence_needed": "Original my game.rbxlx or authorized full scripts/place export with release/date and hashes",
+    "gate": "Before declaring full original-source coverage",
+    "status": "open"
+  },
+  {
+    "id": "U02",
+    "subject": "Spawn director",
+    "evidence_needed": "Server wave modules, type weights, intervals, player scaling, active caps, spawn selection and despawn rules",
+    "gate": "Before full pacing fidelity",
+    "status": "open"
+  },
+  {
+    "id": "U03",
+    "subject": "Match transitions",
+    "evidence_needed": "Full lobby\u2192map\u2192wave1\u2192intermission\u2192victory/loss captures, with mode/wave and clock",
+    "gate": "Before match gate",
+    "status": "open"
+  },
+  {
+    "id": "U04",
+    "subject": "Scaling and difficulty",
+    "evidence_needed": "Server stat scaling; per-mode per-wave controlled HP/damage/speed samples",
+    "gate": "Before infected tuning",
+    "status": "open"
+  },
+  {
+    "id": "U05",
+    "subject": "AI attacks and targeting",
+    "evidence_needed": "Server FSMs/pathfinding; timestamped attack/leap/charge/throw/blocked-door tests",
+    "gate": "Before special infected gate",
+    "status": "open"
+  },
+  {
+    "id": "U06",
+    "subject": "Movement and camera",
+    "evidence_needed": "Original controller/settings or calibrated straight walk/sprint/ADS/jump recording across known part lengths",
+    "gate": "Before movement feel gate",
+    "status": "open"
+  },
+  {
+    "id": "U07",
+    "subject": "Health and armor",
+    "evidence_needed": "Original maxHP/damage armor code or health-visible hits with/without armor/gas protection",
+    "gate": "Before damage gate",
+    "status": "open"
+  },
+  {
+    "id": "U08",
+    "subject": "Damage pipeline",
+    "evidence_needed": "Server firearms/melee/explosion modules; moving target, head/torso/limb and multi-infected penetration tests",
+    "gate": "Before weapon fidelity",
+    "status": "open"
+  },
+  {
+    "id": "U09",
+    "subject": "Animation interpreter",
+    "evidence_needed": "Original AV/sequence controller with easing/channel order, chamber events, repeat and cancellation rules",
+    "gate": "Before all weapon families",
+    "status": "open"
+  },
+  {
+    "id": "U10",
+    "subject": "Reload commit and penalties",
+    "evidence_needed": "Full standard/tactical/empty/partial/reload-cancel recordings for each reload family",
+    "gate": "Before gun handling gate",
+    "status": "open"
+  },
+  {
+    "id": "U11",
+    "subject": "Items and weights",
+    "evidence_needed": "Original item spawn tables/timers; repeated marker samples across waves/modes",
+    "gate": "Before loot pacing",
+    "status": "open"
+  },
+  {
+    "id": "U12",
+    "subject": "Fortifications",
+    "evidence_needed": "Placement controller, footprints, repair/HP, invalid placement footage, trap reentry and mounted gun tests",
+    "gate": "Before crafting gate",
+    "status": "open"
+  },
+  {
+    "id": "U13",
+    "subject": "Objectives",
+    "evidence_needed": "Server objective modules/markers; timed solo and two-human secure, fill, escort and tanker sequences",
+    "gate": "Before objective fidelity",
+    "status": "open"
+  },
+  {
+    "id": "U14",
+    "subject": "Rewards and XP",
+    "evidence_needed": "Bonuses caller, survival modifier, current objective participation function, bonus rounding/assist code",
+    "gate": "Before economy gate",
+    "status": "open"
+  },
+  {
+    "id": "U15",
+    "subject": "Perk runtime",
+    "evidence_needed": "Modifier application and stacking code; timing examples for speed-versus-duration perks",
+    "gate": "Before perk gate",
+    "status": "open"
+  },
+  {
+    "id": "U16",
+    "subject": "Map geometry",
+    "evidence_needed": "Full world/terrain exports for non-Lab maps, valid CSG/mesh payloads and maps version ledger",
+    "gate": "Before complete maps",
+    "status": "open"
+  },
+  {
+    "id": "U17",
+    "subject": "Map markers",
+    "evidence_needed": "Original player/infected/loot/fort/objective/generator/escort route markers for each map",
+    "gate": "Before per-map gate",
+    "status": "open"
+  },
+  {
+    "id": "U18",
+    "subject": "Lighting and atmosphere",
+    "evidence_needed": "Non-stub map Lighting scripts; screenshots with camera/time/settings, fog distances and sky assets",
+    "gate": "Before atmosphere gate",
+    "status": "open"
+  },
+  {
+    "id": "U19",
+    "subject": "Asset bytes",
+    "evidence_needed": "Authorized mesh/texture/audio/keyframe exports with source IDs, format and rights records",
+    "gate": "Before asset shipping",
+    "status": "open"
+  },
+  {
+    "id": "U20",
+    "subject": "Audio behavior",
+    "evidence_needed": "Clean isolated shots/reloads/steps/infected/ambience/supply flight at several distances",
+    "gate": "Before audio gate",
+    "status": "open"
+  },
+  {
+    "id": "U21",
+    "subject": "UI transitions",
+    "evidence_needed": "Retail menus/HUD/objective/feed/death/spectate interaction recordings at known resolution",
+    "gate": "Before UI fidelity",
+    "status": "open"
+  },
+  {
+    "id": "U22",
+    "subject": "Map candidates",
+    "evidence_needed": "Metro release/geometry/modes, Airport historical target, cut-content availability",
+    "gate": "Before extending roster",
+    "status": "open"
+  },
+  {
+    "id": "U23",
+    "subject": "Economy and cosmetics",
+    "evidence_needed": "Original odds, daily streaks, booster timing/stacking, event entitlements and wear/tracer implementation",
+    "gate": "Before full shop progression",
+    "status": "open"
+  },
+  {
+    "id": "U24",
+    "subject": "Solo balance",
+    "evidence_needed": "Original one-player private-session samples for all modes; preserve n=1 behavior before optional adaptation",
+    "gate": "Before default solo balance",
+    "status": "open"
+  },
+  {
+    "id": "U25",
+    "subject": "Corpse and revival lifecycle",
+    "evidence_needed": "Original death/cleanup thresholds and revival anchors/camera, old perk rewards/current protection",
+    "gate": "Before lifecycle fidelity",
+    "status": "open"
+  }
+]

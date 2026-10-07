@@ -1,0 +1,49 @@
+{
+  "format": "twr-recovery-source-verification-v1",
+  "verification_environment": "current recovery runtime",
+  "all_match": true,
+  "archives": [
+    {
+      "archive": "01-other-scripts-and-information.zip",
+      "expected_sha256": "eaa140b36a1d93e2ea114a18979d4549ac4b8f920687d569be862f96e296197f",
+      "actual_sha256": "eaa140b36a1d93e2ea114a18979d4549ac4b8f920687d569be862f96e296197f",
+      "match": true,
+      "bytes": 296572
+    },
+    {
+      "archive": "02-videos-of-game.zip",
+      "expected_sha256": "6016ff1393277113e729dde4d1135ac8cb8cdb5c2a1586e16bb35ec38252a4e4",
+      "actual_sha256": "6016ff1393277113e729dde4d1135ac8cb8cdb5c2a1586e16bb35ec38252a4e4",
+      "match": true,
+      "bytes": 63977560
+    },
+    {
+      "archive": "03-TestPlace.zip",
+      "expected_sha256": "3ba6f60ff29e991691df32098df17d561715f95df2b6bdadbc94e6e7f7292ab0",
+      "actual_sha256": "3ba6f60ff29e991691df32098df17d561715f95df2b6bdadbc94e6e7f7292ab0",
+      "match": true,
+      "bytes": 99848900
+    },
+    {
+      "archive": "04-scripts.zip",
+      "expected_sha256": "c4c42a3e5fc9f085dcdf1e4c68b7ed5bd5248022e135ecca6c9af9cf298077fe",
+      "actual_sha256": "c4c42a3e5fc9f085dcdf1e4c68b7ed5bd5248022e135ecca6c9af9cf298077fe",
+      "match": true,
+      "bytes": 496758
+    },
+    {
+      "archive": "05-images.zip",
+      "expected_sha256": "b07b058367d115b9710feb25accf0ac5cc8a1de74b4b1769a890ff0c457115f0",
+      "actual_sha256": "b07b058367d115b9710feb25accf0ac5cc8a1de74b4b1769a890ff0c457115f0",
+      "match": true,
+      "bytes": 103477453
+    },
+    {
+      "archive": "06-image-docs.zip",
+      "expected_sha256": "e2ebf80af7b6591af0de885a9cee9e863da398407fdc741ac3f215077936984f",
+      "actual_sha256": "e2ebf80af7b6591af0de885a9cee9e863da398407fdc741ac3f215077936984f",
+      "match": true,
+      "bytes": 9591582
+    }
+  ]
+}

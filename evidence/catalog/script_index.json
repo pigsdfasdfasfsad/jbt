@@ -1,0 +1,8732 @@
+[
+  {
+    "file": "ModuleScript.AI Sounds.Source.txt",
+    "lines": 546,
+    "bytes": 8621,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.SCAR-H.Source.txt",
+    "lines": 708,
+    "bytes": 20014,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Frying Pan.Source.txt",
+    "lines": 188,
+    "bytes": 5097,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.M320.Source.txt",
+    "lines": 582,
+    "bytes": 15706,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.EXP.Source.txt",
+    "lines": 5,
+    "bytes": 90,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Model.Source.txt",
+    "lines": 83,
+    "bytes": 2226,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.SetCollisionGroup",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetMassless",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Weld",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.CutVelocity",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetMass",
+        "",
+        ""
+      ],
+      [
+        "launch_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "launch",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.RPK.Source.txt",
+    "lines": 646,
+    "bytes": 17145,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.HK P30L.Source.txt",
+    "lines": 663,
+    "bytes": 17376,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Uzi.Source.txt",
+    "lines": 674,
+    "bytes": 18672,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Sound.Source.txt",
+    "lines": 43,
+    "bytes": 1394,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "arg1.SharedModules.Utilities.ObjectiveItem)"
+    ],
+    "functions": [
+      [
+        "module_upvr.AddSoundToObj",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "..."
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VehicleCameraConfig.Source.txt",
+    "lines": 20,
+    "bytes": 550,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.DeepCopy.Source.txt",
+    "lines": 15,
+    "bytes": 304,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.Copy",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.M4A1.Source.txt",
+    "lines": 617,
+    "bytes": 16664,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AudioVisualizer.Source.txt",
+    "lines": 63,
+    "bytes": 2177,
+    "errors": 12,
+    "warnings": 1,
+    "requires": [],
+    "functions": [
+      [
+        "UpdateAppearance_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "UpdateAppearance",
+        ""
+      ],
+      [
+        "GenerateRandomNumber",
+        "",
+        ""
+      ],
+      [
+        "module.Update",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VRNavigation.Source.txt",
+    "lines": 501,
+    "bytes": 17740,
+    "errors": 18,
+    "warnings": 4,
+    "requires": [
+      "PathDisplay)",
+      "script.Parent:WaitForChild(\"BaseCharacterController\"))",
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserRaycastUpdateAPI\")"
+    ],
+    "functions": [
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "IsFinite",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "IsFiniteVector3",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetLaserPointerMode",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetLocalHumanoid",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.HasBothHandControllers",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.HasAnyHandControllers",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.IsMobileVR",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.HasGamepad",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.ShouldUseNavigationLaser",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.StartFollowingPath",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GoToPoint",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.StopFollowingPath",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.TryComputePath",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnNavigationRequest",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnJumpAction",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.BindJumpAction",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.ControlCharacterGamepad",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnHeartbeat",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnUserCFrameEnabled",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4, arg2_3, arg3"
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.A10Client.Source.txt",
+    "lines": 267,
+    "bytes": 7683,
+    "errors": 7,
+    "warnings": 3,
+    "requires": [
+      "game.ReplicatedStorage.SharedModules.Utilities.Chunk)",
+      "script.Parent.Animate)",
+      "game.ReplicatedStorage.SharedModules.Utilities.Ray)"
+    ],
+    "functions": [
+      [
+        "module.GetCurSound",
+        "",
+        ""
+      ],
+      [
+        "module.PlayRadioSound",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.Brt",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "GetNewF",
+        ""
+      ],
+      [
+        "module.Update",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Poppercam.Source.txt",
+    "lines": 111,
+    "bytes": 5690,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent:WaitForChild(\"BaseOcclusion\"))",
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserFixCameraFPError\")",
+      "script.Parent:WaitForChild(\"ZoomController\"))"
+    ],
+    "functions": [
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "cframeToAxis",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "axisToCFrame",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "extractRotation",
+        ""
+      ],
+      [
+        "new",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr.Step",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "extrapolate",
+        ""
+      ],
+      [
+        "tbl_upvr.Reset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetOcclusionMode",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.CharacterAdded",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.CharacterRemoving",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnCameraSubjectChanged",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.TEC-9.Source.txt",
+    "lines": 671,
+    "bytes": 18419,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.SKO Shorty.Source.txt",
+    "lines": 703,
+    "bytes": 19631,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.PPSh-41.Source.txt",
+    "lines": 642,
+    "bytes": 17589,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AS VAL.Source.txt",
+    "lines": 673,
+    "bytes": 18100,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.P90.Source.txt",
+    "lines": 674,
+    "bytes": 19511,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.OTs-14 Groza.Source.txt",
+    "lines": 621,
+    "bytes": 16762,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Effect.Source.txt",
+    "lines": 58,
+    "bytes": 2068,
+    "errors": 4,
+    "warnings": 0,
+    "requires": [
+      "arg1.SharedModules.Utilities.Table)"
+    ],
+    "functions": [
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CameraToggleStateController.Source.txt",
+    "lines": 72,
+    "bytes": 2713,
+    "errors": 0,
+    "warnings": 1,
+    "requires": [
+      "script.Parent:WaitForChild(\"CameraUI\"))",
+      "script.Parent:WaitForChild(\"CameraInput\"))",
+      "script.Parent:WaitForChild(\"CameraUtils\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Ease.Source.txt",
+    "lines": 26,
+    "bytes": 779,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2, arg3, arg4"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VehicleCamera.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VSS.Source.txt",
+    "lines": 675,
+    "bytes": 18149,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Perks.Source.txt",
+    "lines": 113,
+    "bytes": 2991,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ZoomController.Source.txt",
+    "lines": 145,
+    "bytes": 4389,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script:WaitForChild(\"Popper\"))"
+    ],
+    "functions": [
+      [
+        "updateBounds",
+        "",
+        ""
+      ],
+      [
+        "var6_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "var6_upvr.Step",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "stepTargetZoom",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "module.Update",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ],
+      [
+        "module.GetZoomRadius",
+        "",
+        ""
+      ],
+      [
+        "module.SetZoomParameters",
+        "",
+        ""
+      ],
+      [
+        "module.ReleaseSpring",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Baseball Bat.Source.txt",
+    "lines": 192,
+    "bytes": 5356,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CAS Radio.Source.txt",
+    "lines": 378,
+    "bytes": 10480,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "game.ReplicatedStorage.AudioVisualizer)"
+    ],
+    "functions": [
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "randOffset",
+        ""
+      ],
+      [
+        "module.AnimUpdate",
+        "",
+        ""
+      ],
+      [
+        "module.UseErrorMsg",
+        "",
+        ""
+      ],
+      [
+        "module.UseUtilityCheckPass",
+        "",
+        ""
+      ],
+      [
+        "func",
+        "",
+        ""
+      ],
+      [
+        "func",
+        "",
+        ""
+      ],
+      [
+        "func",
+        "",
+        ""
+      ],
+      [
+        "func",
+        "",
+        ""
+      ],
+      [
+        "tbl_13.func",
+        "",
+        ""
+      ]
+    ],
+    "remotes": [
+      "FireServer"
+    ]
+  },
+  {
+    "file": "ModuleScript.Maxim 9.Source.txt",
+    "lines": 650,
+    "bytes": 17237,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ObjectiveItem.Source.txt",
+    "lines": 43,
+    "bytes": 1005,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "GetItemInfo",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "GetItemPickupSounds",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CharacterUtil.Source.txt",
+    "lines": 130,
+    "bytes": 4700,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent:WaitForChild(\"ConnectionUtil\")).new();"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getLocalPlayer",
+        ""
+      ],
+      [
+        "module_upvr_2.onLocalPlayer",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.getCharacter",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.onCharacter",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "module_upvr_2.getChild",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.onChild",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5"
+      ],
+      [
+        "module_upvr_2._getOrCreateBoundEvent",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.EndlessClient.Source.txt",
+    "lines": 249,
+    "bytes": 8089,
+    "errors": 2,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "Tag",
+        "",
+        ""
+      ],
+      [
+        "SlowDown",
+        "",
+        ""
+      ],
+      [
+        "module.NewMap",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VehicleCameraCore.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.LWRC IC-PSD.Source.txt",
+    "lines": 644,
+    "bytes": 17947,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.RotatedRegion3.Source.txt",
+    "lines": 269,
+    "bytes": 10190,
+    "errors": 12,
+    "warnings": 6,
+    "requires": [],
+    "functions": [
+      [
+        "drawline",
+        "",
+        ""
+      ],
+      [
+        "shallowcopy",
+        "",
+        ""
+      ],
+      [
+        "planeIntersect",
+        "",
+        ""
+      ],
+      [
+        "getCorners",
+        "",
+        ""
+      ],
+      [
+        "getAxis",
+        "",
+        ""
+      ],
+      [
+        "testAxis",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "module_3_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "module_3_upvr.fromPart",
+        "",
+        ""
+      ],
+      [
+        "module_3_upvr.castPoint",
+        "",
+        ""
+      ],
+      [
+        "module_3_upvr.castPart",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2_2"
+      ],
+      [
+        "module_3_upvr.intersectionPoints",
+        "",
+        ""
+      ],
+      [
+        "module_3_upvr.cast",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_3, arg2_3"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Ruger 10-22.Source.txt",
+    "lines": 714,
+    "bytes": 19450,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Invisicam.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VRCamera.Source.txt",
+    "lines": 311,
+    "bytes": 13957,
+    "errors": 8,
+    "warnings": 2,
+    "requires": [
+      "script.Parent:WaitForChild(\"VRBaseCamera\"))",
+      "Players_upvr.LocalPlayer:WaitForChild(\"PlayerScripts\").PlayerModule:WaitForChild(\"ControlModule\"))"
+    ],
+    "functions": [
+      [
+        "setmetatable_result1_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Reset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.GetAvatarFeetWorldYValue",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.UpdateFirstPersonTransform",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.UpdateImmersionCamera",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.UpdateThirdPersonComfortTransform",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.UpdateThirdPersonFollowTransform",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.LeaveFirstPerson",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CameraInput.Source.txt",
+    "lines": 649,
+    "bytes": 19609,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "BindableEvent_upvw",
+        "",
+        ""
+      ],
+      [
+        "",
+        "thumbstickCurve",
+        ""
+      ],
+      [
+        "BindableEvent_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "adjustTouchPitchSensitivity",
+        ""
+      ],
+      [
+        "isInDynamicThumbstickArea_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "isInDynamicThumbstickArea",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "incPanInputCount",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "decPanInputCount",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "resetPanInputCount",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "module.getRotationActivated",
+        "",
+        ""
+      ],
+      [
+        "module.getRotation",
+        "",
+        ""
+      ],
+      [
+        "module.getZoomDelta",
+        "",
+        ""
+      ],
+      [
+        "thumbstick_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "thumbstick",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "mouseMovement",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "mouseWheel",
+        ""
+      ],
+      [
+        "keypress_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "keypress",
+        ""
+      ],
+      [
+        "gamepadZoomPress_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "gamepadZoomPress",
+        ""
+      ],
+      [
+        "gamepadReset_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "gamepadReset",
+        ""
+      ],
+      [
+        "resetInputDevices_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "resetInputDevices",
+        ""
+      ],
+      [
+        "touchBegan_upvw",
+        "",
+        ""
+      ],
+      [
+        "",
+        "touchBegan",
+        ""
+      ],
+      [
+        "touchEnded_upvw",
+        "",
+        ""
+      ],
+      [
+        "",
+        "touchEnded",
+        ""
+      ],
+      [
+        "touchChanged_upvw",
+        "",
+        ""
+      ],
+      [
+        "",
+        "touchChanged",
+        ""
+      ],
+      [
+        "resetTouchState_upvw",
+        "",
+        ""
+      ],
+      [
+        "",
+        "resetTouchState",
+        ""
+      ],
+      [
+        "pointerAction_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "pointerAction",
+        ""
+      ],
+      [
+        "inputBegan_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "inputBegan",
+        ""
+      ],
+      [
+        "inputChanged_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "inputChanged",
+        ""
+      ],
+      [
+        "inputEnded_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "inputEnded",
+        ""
+      ],
+      [
+        "module.setInputEnabled",
+        "",
+        ""
+      ],
+      [
+        "module.getInputEnabled",
+        "",
+        ""
+      ],
+      [
+        "module.resetInputForFrameEnd",
+        "",
+        ""
+      ],
+      [
+        "module.getHoldPan",
+        "",
+        ""
+      ],
+      [
+        "module.getTogglePan",
+        "",
+        ""
+      ],
+      [
+        "module.getPanning",
+        "",
+        ""
+      ],
+      [
+        "module.setTogglePan",
+        "",
+        ""
+      ],
+      [
+        "module.enableCameraToggleInput",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.disableCameraToggleInput",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Player Sounds.Source.txt",
+    "lines": 17,
+    "bytes": 242,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Frag.Source.txt",
+    "lines": 205,
+    "bytes": 5662,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Pathfind.Source.txt",
+    "lines": 60,
+    "bytes": 1643,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1, arg2, arg3"
+      ],
+      [
+        "",
+        "FindPathAsyncWithPath",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_3.FindPathAsync",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.M1911A1.Source.txt",
+    "lines": 691,
+    "bytes": 19353,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Time.Source.txt",
+    "lines": 20,
+    "bytes": 806,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "module_upvr.GetWeekRange",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Infected Info.Source.txt",
+    "lines": 164,
+    "bytes": 2720,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Chat Color.Source.txt",
+    "lines": 36,
+    "bytes": 1171,
+    "errors": 0,
+    "warnings": 1,
+    "requires": [],
+    "functions": [
+      [
+        "LoadChatColorModule",
+        "",
+        ""
+      ],
+      [
+        "GetId_upvw",
+        "",
+        ""
+      ],
+      [
+        "",
+        "GetId",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "Get",
+        ""
+      ],
+      [
+        "module.GetColor",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Hammer.Source.txt",
+    "lines": 163,
+    "bytes": 4194,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Sawn Off Shotgun.Source.txt",
+    "lines": 620,
+    "bytes": 18001,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.LegacyCamera.Source.txt",
+    "lines": 42,
+    "bytes": 1754,
+    "errors": 6,
+    "warnings": 0,
+    "requires": [
+      "script.Parent:WaitForChild(\"BaseCamera\"))",
+      "script.Parent:WaitForChild(\"CameraInput\"))"
+    ],
+    "functions": [
+      [
+        "setmetatable_result1_2_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetModuleName",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetCameraToSubjectDistance",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Update",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.GamepassInfo.Source.txt",
+    "lines": 8,
+    "bytes": 189,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Spring.Source.txt",
+    "lines": 105,
+    "bytes": 5331,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.GetPosAtTime",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetVelAtTime",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetAccAtTime",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Compress",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.UpdateGA",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Reset",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Minigun.Source.txt",
+    "lines": 521,
+    "bytes": 15639,
+    "errors": 10,
+    "warnings": 2,
+    "requires": [
+      "game.ReplicatedStorage.Modules.WeldModel)"
+    ],
+    "functions": [
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "localOffset",
+        ""
+      ],
+      [
+        "bezierPos_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "bezierPos",
+        ""
+      ],
+      [
+        "buildArcTable_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "buildArcTable",
+        ""
+      ],
+      [
+        "getTAtDistance_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getTAtDistance",
+        ""
+      ],
+      [
+        "module_2_upvr.CheckMinigunMag",
+        "",
+        ""
+      ],
+      [
+        "module_2_upvr.AnimUpdate",
+        "",
+        ""
+      ],
+      [
+        "module_2_upvr.EquipSetup",
+        "",
+        ""
+      ],
+      [
+        "module_2_upvr.EquipUnsetup",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Helicopter.Source.txt",
+    "lines": 157,
+    "bytes": 5884,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "game.ReplicatedStorage.Modules.WeldModel)",
+      "game.ReplicatedStorage.Modules[\"Collision Group\"])"
+    ],
+    "functions": [
+      [
+        "GetMass",
+        "",
+        ""
+      ],
+      [
+        "Launch_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "Launch",
+        ""
+      ],
+      [
+        "module.Reset",
+        "",
+        ""
+      ],
+      [
+        "module.Spawn",
+        "",
+        ""
+      ],
+      [
+        "module.DestroyCargo",
+        "",
+        ""
+      ],
+      [
+        "module.Update",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Shovel.Source.txt",
+    "lines": 188,
+    "bytes": 4983,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Fire Axe.Source.txt",
+    "lines": 189,
+    "bytes": 4747,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.DynamicThumbstick.Source.txt",
+    "lines": 617,
+    "bytes": 22549,
+    "errors": 6,
+    "warnings": 1,
+    "requires": [
+      "script.Parent:WaitForChild(\"BaseCharacterController\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.GetIsJumping",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.OnInputEnded",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.FadeThumbstick",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.FadeThumbstickFrame",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.InputInFrame",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.DoFadeInBackground",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.DoMove",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.LayoutMiddleImages",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.MoveStick",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.BindContextActions",
+        "",
+        ""
+      ],
+      [
+        "inputBegan_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "inputBegan",
+        ""
+      ],
+      [
+        "inputChanged_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "inputChanged",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "inputEnded",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_5, arg2, arg3"
+      ],
+      [
+        "",
+        "handleInput",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_6, arg2"
+      ],
+      [
+        "setmetatable_result1_upvr.UnbindContextActions",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Create",
+        "",
+        ""
+      ],
+      [
+        "layoutThumbstickFrame_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "layoutThumbstickFrame",
+        ""
+      ],
+      [
+        "ResizeThumbstick",
+        "",
+        ""
+      ],
+      [
+        "onCurrentCameraChanged",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "onViewportSizeChanged",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_8"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "longShowBackground",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Fortifications.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Butcher Knife.Source.txt",
+    "lines": 189,
+    "bytes": 5108,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.TransparencyController.Source.txt",
+    "lines": 216,
+    "bytes": 7027,
+    "errors": 0,
+    "warnings": 1,
+    "requires": [
+      "script.Parent:WaitForChild(\"CameraUtils\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.HasToolAncestor",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.IsValidPartToModify",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.CachePartsRecursive",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.TeardownTransparency",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetupTransparency",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5"
+      ],
+      [
+        "module_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetSubject",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.BulletHandlerClient.Source.txt",
+    "lines": 95,
+    "bytes": 2803,
+    "errors": 1,
+    "warnings": 0,
+    "requires": [
+      "arg1.Modules.Other.Bullet).new(arg2, tbl_upvr[arg2], arg3, arg4, arg5, arg6, var7, arg7)"
+    ],
+    "functions": [
+      [
+        "module.EndBullet",
+        "",
+        ""
+      ],
+      [
+        "module.CreateBullet",
+        "",
+        ""
+      ],
+      [
+        "module.Update",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Input.Source.txt",
+    "lines": 24,
+    "bytes": 518,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "v)"
+    ],
+    "functions": [
+      [
+        "module.GetModule",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Sounds.Source.txt",
+    "lines": 240,
+    "bytes": 7468,
+    "errors": 7,
+    "warnings": 1,
+    "requires": [
+      "script.Parent.Spectate)"
+    ],
+    "functions": [
+      [
+        "module.UpdateSounds",
+        "",
+        ""
+      ],
+      [
+        "module.AddEffect",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateMusic",
+        "",
+        ""
+      ],
+      [
+        "module.AddMusic",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateVolume",
+        "",
+        ""
+      ],
+      [
+        "module.HeartbeatIn",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.HeatbeatOut",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.PlaySoundAtPos",
+        "",
+        ""
+      ],
+      [
+        "module.PlayInfectedSound",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Kriss Vector.Source.txt",
+    "lines": 608,
+    "bytes": 17285,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.String Manipulation.Source.txt",
+    "lines": 13,
+    "bytes": 366,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.RPG-7.Source.txt",
+    "lines": 599,
+    "bytes": 17057,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module.LauncherFlash",
+        "",
+        ""
+      ],
+      [
+        "flash",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Bullets.Source.txt",
+    "lines": 333,
+    "bytes": 11683,
+    "errors": 0,
+    "warnings": 2,
+    "requires": [
+      "script.Parent.Parent.Controllers.BulletHandlerClient)",
+      "game.ReplicatedStorage.Modules.TracerUtil)",
+      "game.ReplicatedStorage.Modules.FortificationsInfo)"
+    ],
+    "functions": [
+      [
+        "QuickRemove",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.lm",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.updateDamageStr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "module_upvr_3.GetProjectileIgnoreCache",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.GetIgnoreCache",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.GetCollideableMapCache",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.GetSeeThroughCache",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.GetServProjColCache",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.ReturnHitGlass",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.Reset",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.A10Fire",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.Fire",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.Fire2",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_3.Update",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ]
+    ],
+    "remotes": [
+      "FireServer"
+    ]
+  },
+  {
+    "file": "ModuleScript.CameraWrapper.spec.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Role Tags.Source.txt",
+    "lines": 88,
+    "bytes": 2209,
+    "errors": 4,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.SetTag",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetTag",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Check",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetTagColor",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetAllTags",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CameraWrapper.Source.txt",
+    "lines": 64,
+    "bytes": 1870,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent.ConnectionUtil)"
+    ],
+    "functions": [
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "module_upvr._connectCallbacks",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Disable",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Connect",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Disconnect",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.getCamera",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Walther P38.Source.txt",
+    "lines": 692,
+    "bytes": 19538,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Sledge Hammer.Source.txt",
+    "lines": 188,
+    "bytes": 4989,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Taurus Model 66.Source.txt",
+    "lines": 747,
+    "bytes": 23771,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Gepard PDW.Source.txt",
+    "lines": 671,
+    "bytes": 18457,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CommandsLog.Source.txt",
+    "lines": 397,
+    "bytes": 14900,
+    "errors": 6,
+    "warnings": 2,
+    "requires": [
+      "game.ReplicatedStorage.Modules.Time)",
+      "game.ReplicatedStorage.Modules[\"Role Tags\"])"
+    ],
+    "functions": [
+      [
+        "module.SearchLogs",
+        "",
+        ""
+      ],
+      [
+        "module.OpenLog",
+        "",
+        ""
+      ],
+      [
+        "UpdateLogsWithUserInfo_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "UpdateLogsWithUserInfo",
+        ""
+      ],
+      [
+        "GetUNIXFromDate_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "GetUNIXFromDate",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "UpdateRefreshElements_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "UpdateRefreshElements",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_4, arg2"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AIAnimations.Source.txt",
+    "lines": 139,
+    "bytes": 3977,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_2_upvr.Get",
+        "",
+        ""
+      ],
+      [
+        "module_2_upvr.LoadAll",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_2_upvr.GetAnimNum",
+        "",
+        ""
+      ],
+      [
+        "module_2_upvr.GetAnimName",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.2x4.Source.txt",
+    "lines": 191,
+    "bytes": 5268,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Pool Cue.Source.txt",
+    "lines": 191,
+    "bytes": 5306,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AtomicBinding.Source.txt",
+    "lines": 222,
+    "bytes": 6390,
+    "errors": 10,
+    "warnings": 4,
+    "requires": [],
+    "functions": [
+      [
+        "parsePath_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "parsePath",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "isManifestResolved",
+        ""
+      ],
+      [
+        "unbindNodeDescend_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "unbindNodeDescend",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "module_upvr._startBoundFn",
+        "",
+        ""
+      ],
+      [
+        "module_upvr._stopBoundFn",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.bindRoot",
+        "",
+        ""
+      ],
+      [
+        "processNode_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "processNode",
+        ""
+      ],
+      [
+        "module_upvr.unbindRoot",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.destroy",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ASh-12.Source.txt",
+    "lines": 667,
+    "bytes": 18338,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.SAP-6.Source.txt",
+    "lines": 784,
+    "bytes": 21373,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.M60.Source.txt",
+    "lines": 886,
+    "bytes": 25768,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Forts.Source.txt",
+    "lines": 1,
+    "bytes": 48,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ConnectionUtil.spec.Source.txt",
+    "lines": 110,
+    "bytes": 3851,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "CorePackages.Packages.Dev.JestGlobals)",
+      "script.Parent.ConnectionUtil)",
+      "CorePackages.Workspace.Packages.AppCommonLib).Signal"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Golf Club.Source.txt",
+    "lines": 191,
+    "bytes": 5313,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.P320.Source.txt",
+    "lines": 614,
+    "bytes": 16328,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Dog Whistle.Source.txt",
+    "lines": 187,
+    "bytes": 5106,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module.UseUtilityCheckPass",
+        "",
+        ""
+      ],
+      [
+        "module.UseErrorMsg",
+        "",
+        ""
+      ],
+      [
+        "tbl_3.func",
+        "",
+        ""
+      ]
+    ],
+    "remotes": [
+      "FireServer"
+    ]
+  },
+  {
+    "file": "ModuleScript.PP-91 Kedr.Source.txt",
+    "lines": 676,
+    "bytes": 18572,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.G36C.Source.txt",
+    "lines": 730,
+    "bytes": 20833,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.BaseCamera.Source.txt",
+    "lines": 677,
+    "bytes": 23172,
+    "errors": 31,
+    "warnings": 13,
+    "requires": [
+      "script.Parent:WaitForChild(\"CameraUtils\"))",
+      "script.Parent:WaitForChild(\"ZoomController\"))",
+      "script.Parent:WaitForChild(\"CameraInput\"))",
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"ConnectionUtil\"))",
+      "script.Parent:WaitForChild(\"CameraUI\"))",
+      "script.Parent:WaitForChild(\"CameraToggleStateController\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.new",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetModuleName",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5._setUpConfigurations",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.OnCharacterAdded",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetHumanoidRootPart",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetBodyPartToFollow",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetSubjectCFrame",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetSubjectVelocity",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetSubjectRotVelocity",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.StepZoom",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetSubjectPosition",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.OnCurrentCameraChanged",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.OnPlayerCameraPropertyChange",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.InputTranslationToCameraAngleChange",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GamepadZoomPress",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.Enable",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.OnEnabledChanged",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetEnabled",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.Cleanup",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.UpdateMouseBehavior",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.UpdateForDistancePropertyChange",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.SetCameraToSubjectDistance",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.SetCameraType",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetCameraType",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.SetCameraMovementMode",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetCameraMovementMode",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.SetIsMouseLocked",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetIsMouseLocked",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.SetMouseLockOffset",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetMouseLockOffset",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.InFirstPerson",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.EnterFirstPerson",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.LeaveFirstPerson",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetCameraToSubjectDistance",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetMeasuredDistanceToFocus",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetCameraLookVector",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.CalculateNewLookCFrameFromArg",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.CalculateNewLookVectorFromArg",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.CalculateNewLookVectorVRFromArg",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetHumanoid",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetHumanoidPartToFollow",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.OnNewCameraSubject",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.IsInFirstPerson",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.Update",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_5.GetCameraHeight",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Bonuses.Source.txt",
+    "lines": 25,
+    "bytes": 930,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1, arg2, arg3, arg4, arg5, arg6"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.M16A1.Source.txt",
+    "lines": 644,
+    "bytes": 17893,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Footsteps.Source.txt",
+    "lines": 267,
+    "bytes": 9671,
+    "errors": 14,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module.Update",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.PlayerModule.Source.txt",
+    "lines": 21,
+    "bytes": 712,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script:WaitForChild(\"CameraModule\"))",
+      "script:WaitForChild(\"ControlModule\"))"
+    ],
+    "functions": [
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetCameras",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetControls",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetClickToMoveController",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Skins.Source.txt",
+    "lines": 3392,
+    "bytes": 104739,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.TP9SFx.Source.txt",
+    "lines": 655,
+    "bytes": 17295,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Effects.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.WeeklyRewardUtil.Source.txt",
+    "lines": 4,
+    "bytes": 62,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VehicleController.Source.txt",
+    "lines": 149,
+    "bytes": 4896,
+    "errors": 9,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.BindContextActions",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2, arg3"
+      ],
+      [
+        "",
+        "",
+        "arg1_3, arg2, arg3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4, arg2, arg3"
+      ],
+      [
+        "",
+        "",
+        "arg1_5, arg2, arg3"
+      ],
+      [
+        "module_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnThrottleAccel",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnThrottleDeccel",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnSteerRight",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnSteerLeft",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.ComputeThrottle",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.ComputeSteer",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetupAutoPilot",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Popper.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Obrez Mosin.Source.txt",
+    "lines": 885,
+    "bytes": 25100,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CameraModule.Source.txt",
+    "lines": 443,
+    "bytes": 17461,
+    "errors": 24,
+    "warnings": 5,
+    "requires": [
+      "CommonUtils:WaitForChild(\"FlagUtil\"))",
+      "script:WaitForChild(\"CameraUtils\"))",
+      "script:WaitForChild(\"TransparencyController\"))",
+      "CommonUtils:WaitForChild(\"ConnectionUtil\"))",
+      "script:WaitForChild(\"MouseLockController\"))",
+      "script:WaitForChild(\"Poppercam\"))",
+      "script:WaitForChild(\"Invisicam\"))",
+      "script:WaitForChild(\"LegacyCamera\"))",
+      "script:WaitForChild(\"VRCamera\"))",
+      "script:WaitForChild(\"ClassicCamera\"))",
+      "script:WaitForChild(\"OrbitalCamera\"))",
+      "script:WaitForChild(\"VRVehicleCamera\"))",
+      "script:WaitForChild(\"VehicleCamera\"))",
+      "script:WaitForChild(\"CameraInput\"))"
+    ],
+    "functions": [
+      [
+        "tbl_upvr_3.new",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "var50",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.GetCameraMovementModeFromSettings",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.ActivateOcclusionModule",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.ShouldUseVehicleCamera",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.ActivateCameraController",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnCameraSubjectChanged",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnCameraTypeChanged",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnCurrentCameraChanged",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnLocalPlayerCameraPropertyChanged",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnUserGameSettingsPropertyChanged",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnPreferredInputChanged",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.Update",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnCharacterAdded",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnCharacterRemoving",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnPlayerAdded",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5"
+      ],
+      [
+        "tbl_upvr_3.OnPlayerRemoving",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_3.OnMouseLockToggled",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Nerve Gas.Source.txt",
+    "lines": 207,
+    "bytes": 5719,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Serbu Super Shorty.Source.txt",
+    "lines": 716,
+    "bytes": 19768,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "LocalScript.PlayerScriptsLoader.Source.txt",
+    "lines": 1,
+    "bytes": 56,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent:WaitForChild(\"PlayerModule\"))"
+    ],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Makarov.Source.txt",
+    "lines": 668,
+    "bytes": 17575,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.SVD.Source.txt",
+    "lines": 678,
+    "bytes": 18430,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.MK18.Source.txt",
+    "lines": 618,
+    "bytes": 16849,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Assets.Source.txt",
+    "lines": 1,
+    "bytes": 2537,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.MP7.Source.txt",
+    "lines": 659,
+    "bytes": 18539,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Projectile.Source.txt",
+    "lines": 105,
+    "bytes": 3218,
+    "errors": 6,
+    "warnings": 0,
+    "requires": [
+      "script.Parent.Parent.Parent.Client.Effects)",
+      "script.Parent.Parent.Parent.Client.Bullets)"
+    ],
+    "functions": [
+      [
+        "module_2_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "module_2_upvr.End",
+        "",
+        ""
+      ],
+      [
+        "DestroyBonds",
+        "",
+        ""
+      ],
+      [
+        "Destroy_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "Destroy",
+        ""
+      ],
+      [
+        "module_2_upvr.new",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.DevProducts.Source.txt",
+    "lines": 53,
+    "bytes": 1654,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Mosin Nagant.Source.txt",
+    "lines": 884,
+    "bytes": 25084,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.M110 SASS.Source.txt",
+    "lines": 710,
+    "bytes": 20293,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Marker.Source.txt",
+    "lines": 100,
+    "bytes": 3733,
+    "errors": 8,
+    "warnings": 2,
+    "requires": [],
+    "functions": [
+      [
+        "findClosestBorderPoint",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.End",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.LH9 MKII.Source.txt",
+    "lines": 659,
+    "bytes": 17674,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.BaseCharacterController.Source.txt",
+    "lines": 32,
+    "bytes": 1218,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"ConnectionUtil\"))"
+    ],
+    "functions": [
+      [
+        "module_upvr_2.new",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.GetMoveVector",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.IsMoveVectorCameraRelative",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.GetIsJumping",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.Enable",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Winchester Model 1892.Source.txt",
+    "lines": 843,
+    "bytes": 26152,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Ingram MAC-10.Source.txt",
+    "lines": 685,
+    "bytes": 19035,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VRBaseCamera.Source.txt",
+    "lines": 358,
+    "bytes": 13443,
+    "errors": 21,
+    "warnings": 4,
+    "requires": [
+      "script.Parent:WaitForChild(\"CameraInput\"))",
+      "script.Parent:WaitForChild(\"BaseCamera\"))",
+      "script.Parent:WaitForChild(\"ZoomController\"))",
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserCameraInputDt\")"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Reset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetModuleName",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GamepadZoomPress",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GamepadReset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.ResetZoom",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnEnabledChanged",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2"
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnCurrentCameraChanged",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnHeadScaleChanged",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetVRFocus",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.StartFadeFromBlack",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.UpdateFadeFromBlack",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.StartVREdgeBlur",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "setmetatable_result1_2_upvr.UpdateEdgeBlur",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetCameraHeight",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetSubjectCFrame",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetSubjectPosition",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.getRotation",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Spiked Baseball Bat.Source.txt",
+    "lines": 192,
+    "bytes": 5333,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.M14.Source.txt",
+    "lines": 707,
+    "bytes": 19588,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Crowbar.Source.txt",
+    "lines": 188,
+    "bytes": 5095,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.2x4 w- Barbed Wire.Source.txt",
+    "lines": 194,
+    "bytes": 5102,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.UMP-45.Source.txt",
+    "lines": 733,
+    "bytes": 20663,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.PB 6P9.Source.txt",
+    "lines": 668,
+    "bytes": 17580,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ProjectileClient.Source.txt",
+    "lines": 121,
+    "bytes": 3666,
+    "errors": 1,
+    "warnings": 0,
+    "requires": [
+      "arg1.Modules.Other.Projectile).new(arg2, arg4, ...)"
+    ],
+    "functions": [
+      [
+        "module.EndProjectile",
+        "",
+        ""
+      ],
+      [
+        "module.CreateProjectile",
+        "",
+        ""
+      ],
+      [
+        "module.GetCurID",
+        "",
+        ""
+      ],
+      [
+        "module.Update",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5, arg2, ..."
+      ],
+      [
+        "",
+        "",
+        "arg1_6, arg2"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ClickToMoveController.Source.txt",
+    "lines": 1524,
+    "bytes": 50757,
+    "errors": 20,
+    "warnings": 10,
+    "requires": [
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserRaycastUpdateAPI\")",
+      "script.Parent:WaitForChild(\"ClickToMoveDisplay\"))",
+      "script.Parent:WaitForChild(\"Keyboard\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "FindCharacterAncestor_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "FindCharacterAncestor",
+        ""
+      ],
+      [
+        "findPlayerHumanoid_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "Raycast",
+        ""
+      ],
+      [
+        "findPlayerHumanoid_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "findPlayerHumanoid",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "GetCharacter",
+        ""
+      ],
+      [
+        "UpdateIgnoreTag_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "UpdateIgnoreTag",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getIgnoreList",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "minV",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "maxV",
+        ""
+      ],
+      [
+        "getCollidableExtentsSize_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getCollidableExtentsSize",
+        ""
+      ],
+      [
+        "Pather_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "Pather",
+        ""
+      ],
+      [
+        "module_upvr_2.Cleanup",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.Cancel",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.IsActive",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.OnPathInterrupted",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.ComputePath",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_23"
+      ],
+      [
+        "module_upvr_2.IsValidPath",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.OnPathBlocked",
+        "",
+        ""
+      ],
+      [
+        "OnRenderStepped",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.IsCurrentWaypointReached",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.OnPointReached",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.MoveToNextWayPoint",
+        "",
+        ""
+      ],
+      [
+        "Start",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_31, arg2_13"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "CheckAlive",
+        ""
+      ],
+      [
+        "GetEquippedTool_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "GetEquippedTool",
+        ""
+      ],
+      [
+        "CleanupPath",
+        "",
+        ""
+      ],
+      [
+        "HandleMoveTo_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "HandleMoveTo",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "ShowPathFailedFeedback",
+        ""
+      ],
+      [
+        "OnTap",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "DisconnectEvent",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.DisconnectEvents",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnTouchBegan",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnTouchChanged",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnTouchEnded",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnPreferredInputChanged",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnCharacterAdded",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_32, arg2_14"
+      ],
+      [
+        "",
+        "",
+        "arg1_33, arg2_15"
+      ],
+      [
+        "",
+        "",
+        "arg1_34, arg2_16"
+      ],
+      [
+        "",
+        "",
+        "arg1_35, arg2_17"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "OnCharacterChildAdded_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "OnCharacterChildAdded",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_37"
+      ],
+      [
+        "",
+        "",
+        "arg1_38"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Start",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Stop",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.CleanupPath",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_40"
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnRenderStepped",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.UpdateMovement",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.UpdateJump",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetShowPath",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetShowPath",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetWaypointTexture",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetWaypointTexture",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetWaypointRadius",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetWaypointRadius",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetEndWaypointTexture",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetEndWaypointTexture",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetWaypointsAlwaysOnTop",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetWaypointsAlwaysOnTop",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetFailureAnimationEnabled",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetFailureAnimationEnabled",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetIgnoredPartsTag",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetIgnoredPartsTag",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetUseDirectPath",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetUseDirectPath",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetAgentSizeIncreaseFactor",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetAgentSizeIncreaseFactor",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetUnreachableWaypointTimeout",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetUnreachableWaypointTimeout",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.SetUserJumpEnabled",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.GetUserJumpEnabled",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.MoveTo",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.XD-9.Source.txt",
+    "lines": 614,
+    "bytes": 16355,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.GermanShepard.Source.txt",
+    "lines": 81,
+    "bytes": 3449,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.STUpdate",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.HBUpdate",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "module_upvr.Destroy",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AR-57.Source.txt",
+    "lines": 690,
+    "bytes": 18727,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Thompson M1.Source.txt",
+    "lines": 591,
+    "bytes": 16115,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Gui.Source.txt",
+    "lines": 422,
+    "bytes": 14042,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent.Parent.Client.Gui)",
+      "game:GetService(\"ReplicatedStorage\"):WaitForChild(\"Modules\"):WaitForChild(\"String Manipulation\"))",
+      "arg1.Modules.Marker)",
+      "arg1.SharedModules.Utilities.ObjectiveItem)",
+      "script.Parent.Parent:WaitForChild(\"Client\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "UpdatePlayerData",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "RemoveCarryingItem",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "GetCurrentInteractPrompt",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "RemoveInteractPrompt",
+        ""
+      ],
+      [
+        "module.PromptInteract",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "module.IsChatting",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5, arg2"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_6, arg2"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_7, arg2"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_8, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1_9, arg2"
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.M1 Garand.Source.txt",
+    "lines": 759,
+    "bytes": 20669,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Table.Source.txt",
+    "lines": 34,
+    "bytes": 886,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "GetRandom",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "QuickRemove",
+        ""
+      ],
+      [
+        "module_3_upvr.Copy",
+        "",
+        ""
+      ],
+      [
+        "module_3_upvr.Scramble",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CameraUI.Source.txt",
+    "lines": 33,
+    "bytes": 814,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.setCameraModeToastEnabled",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.setCameraModeToastOpen",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.NumToMapName.Source.txt",
+    "lines": 1,
+    "bytes": 199,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Keyboard.Source.txt",
+    "lines": 45,
+    "bytes": 1651,
+    "errors": 6,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module.Touch",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "LocalScript.FrameworkClient.Source.txt",
+    "lines": 112,
+    "bytes": 3326,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "v), tbl_upvr)",
+      "v_2)"
+    ],
+    "functions": [
+      [
+        "loadModules",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr_2.Fire",
+        "",
+        ""
+      ],
+      [
+        "Connect",
+        "",
+        ""
+      ],
+      [
+        "var44_upvr.Connect",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "..."
+      ],
+      [
+        "var44_upvr.OnClientInvoke",
+        "",
+        ""
+      ]
+    ],
+    "remotes": [
+      "FireServer",
+      "OnClientEvent"
+    ]
+  },
+  {
+    "file": "ModuleScript.GSClient.Source.txt",
+    "lines": 38,
+    "bytes": 1068,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent.Parent.Modules.GermanShepard)"
+    ],
+    "functions": [
+      [
+        "module_upvr_2.SpawnGS",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.DespawnGS",
+        "",
+        ""
+      ],
+      [
+        "module_upvr_2.GetGS",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ]
+    ],
+    "remotes": [
+      "OnClientEvent",
+      "OnClientEvent"
+    ]
+  },
+  {
+    "file": "LocalScript.RbxCharacterSounds.Source.txt",
+    "lines": 297,
+    "bytes": 9109,
+    "errors": 14,
+    "warnings": 0,
+    "requires": [
+      "script:WaitForChild(\"AtomicBinding\")).new({"
+    ],
+    "functions": [
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "loadFlag",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "var13_upvr",
+        "",
+        ""
+      ],
+      [
+        "var18_upvr",
+        "",
+        ""
+      ],
+      [
+        "map",
+        "",
+        ""
+      ],
+      [
+        "getRelativeVelocity_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getRelativeVelocity",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "playSound",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "stopSound",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "playSoundIf",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "setSoundLooped",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "shallowCopy",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "initializeSoundSystem",
+        ""
+      ],
+      [
+        "characterAdded_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "characterAdded",
+        ""
+      ],
+      [
+        "characterRemoving_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "characterRemoving",
+        ""
+      ],
+      [
+        "playerAdded",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "playerRemoving",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "LocalScript.LocalScript.Source.txt",
+    "lines": 5,
+    "bytes": 138,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Sten Mk V.Source.txt",
+    "lines": 638,
+    "bytes": 17583,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.VRVehicleCamera.Source.txt",
+    "lines": 351,
+    "bytes": 16347,
+    "errors": 6,
+    "warnings": 3,
+    "requires": [
+      "script.Parent:WaitForChild(\"VRBaseCamera\"))",
+      "script.Parent:WaitForChild(\"CameraUtils\"))",
+      "script.Parent.VehicleCamera:FindFirstChild(\"VehicleCameraConfig\"))",
+      "script.Parent.VehicleCamera:FindFirstChild(\"VehicleCameraCore\"))",
+      "script.Parent:WaitForChild(\"CameraInput\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "pitchVelocity",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "yawVelocity",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "setmetatable_result1_upvr.Reset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr._StepRotation",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr._GetThirdPersonLocalOffset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr._GetFirstPersonLocalOffset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.addDrift",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "NormalizeAngle",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.UpdateRotationCamera",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.UpdateStepRotation",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.UpdateComfortCamera",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AA-12.Source.txt",
+    "lines": 685,
+    "bytes": 18101,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Glock 17.Source.txt",
+    "lines": 614,
+    "bytes": 16362,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Barrett M82A1.Source.txt",
+    "lines": 722,
+    "bytes": 20441,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Update.Source.txt",
+    "lines": 16,
+    "bytes": 676,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Lobby.Source.txt",
+    "lines": 239,
+    "bytes": 7899,
+    "errors": 0,
+    "warnings": 2,
+    "requires": [
+      "game.ReplicatedStorage.Modules.Ease)",
+      "script.Parent.Animate)",
+      "game.ReplicatedStorage.Modules[\"Weapon Modules\"][i_6])"
+    ],
+    "functions": [
+      [
+        "GetRels",
+        "",
+        ""
+      ],
+      [
+        "SetParts",
+        "",
+        ""
+      ],
+      [
+        "module.SetRightDown",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "GetPoint",
+        ""
+      ],
+      [
+        "module.SetGoalCam",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateCamera",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "module.SetCamera",
+        "",
+        ""
+      ],
+      [
+        "DestroyHandles",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateLoadoutModels",
+        "",
+        ""
+      ],
+      [
+        "module.RemoveLoadoutModelSlot",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateAngle",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateModelTilts",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Ragdolls.Source.txt",
+    "lines": 553,
+    "bytes": 20166,
+    "errors": 4,
+    "warnings": 7,
+    "requires": [
+      "game.ReplicatedStorage.Modules.WeldModel)",
+      "script.Parent.Effects)",
+      "script.Parent.Sounds)",
+      "game.ReplicatedStorage.Modules[\"AI Sounds\"])",
+      "game.ReplicatedStorage.Modules[\"Hit Sounds\"])",
+      "game.ReplicatedStorage.Modules[\"Collision Group\"])"
+    ],
+    "functions": [
+      [
+        "MakeLimbBoxes",
+        "",
+        ""
+      ],
+      [
+        "SetNetworkOwner",
+        "",
+        ""
+      ],
+      [
+        "Launch_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "Launch",
+        ""
+      ],
+      [
+        "ColorSkin",
+        "",
+        ""
+      ],
+      [
+        "INLINED_4",
+        "",
+        ""
+      ],
+      [
+        "module.RagdollInfected",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Shop.Source.txt",
+    "lines": 75,
+    "bytes": 1286,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Winchester Model 70.Source.txt",
+    "lines": 795,
+    "bytes": 23004,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "weapon select.txt",
+    "lines": 18,
+    "bytes": 1015,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": [
+      "FireServer",
+      "FireServer",
+      "FireServer",
+      "FireServer"
+    ]
+  },
+  {
+    "file": "ModuleScript.FlagUtil.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ClickToMoveDisplay.Source.txt",
+    "lines": 596,
+    "bytes": 24152,
+    "errors": 19,
+    "warnings": 5,
+    "requires": [
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserRaycastUpdateAPI\")"
+    ],
+    "functions": [
+      [
+        "CreateWaypointTemplates_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "CreateWaypointTemplates",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getTrailDotParent",
+        ""
+      ],
+      [
+        "placePathWaypoint_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "placePathWaypoint",
+        ""
+      ],
+      [
+        "Destroy",
+        "",
+        ""
+      ],
+      [
+        "NewDisplayModel",
+        "",
+        ""
+      ],
+      [
+        "new",
+        "",
+        ""
+      ],
+      [
+        "Destroy",
+        "",
+        ""
+      ],
+      [
+        "NewDisplayModel",
+        "",
+        ""
+      ],
+      [
+        "module_3_upvr.CreateTween",
+        "",
+        ""
+      ],
+      [
+        "module_3_upvr.TweenInFrom",
+        "",
+        ""
+      ],
+      [
+        "new",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr.Hide",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr.Destroy",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr.NewDisplayModel",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr.RunFailureTween",
+        "",
+        ""
+      ],
+      [
+        "tbl_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getFailureAnimationTrack",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "findPlayerHumanoid",
+        ""
+      ],
+      [
+        "createTrailDots_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "createTrailDots",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getTrailDotScale",
+        ""
+      ],
+      [
+        "module.CreatePathDisplay",
+        "",
+        ""
+      ],
+      [
+        "removePathBeforePoint_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "removePathBeforePoint",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "resizeTrailDots",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "removePath",
+        ""
+      ],
+      [
+        "module.DisplayFailureWaypoint",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.CreateEndWaypoint",
+        "",
+        ""
+      ],
+      [
+        "module.PlayFailureAnimation",
+        "",
+        ""
+      ],
+      [
+        "module.CancelFailureAnimation",
+        "",
+        ""
+      ],
+      [
+        "module.SetWaypointTexture",
+        "",
+        ""
+      ],
+      [
+        "module.GetWaypointTexture",
+        "",
+        ""
+      ],
+      [
+        "module.SetWaypointRadius",
+        "",
+        ""
+      ],
+      [
+        "module.GetWaypointRadius",
+        "",
+        ""
+      ],
+      [
+        "module.SetEndWaypointTexture",
+        "",
+        ""
+      ],
+      [
+        "module.GetEndWaypointTexture",
+        "",
+        ""
+      ],
+      [
+        "module.SetWaypointsAlwaysOnTop",
+        "",
+        ""
+      ],
+      [
+        "module.GetWaypointsAlwaysOnTop",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.TracerUtil.Source.txt",
+    "lines": 64,
+    "bytes": 1664,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "GetTracer",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "ClampTracerNum",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Festive RPG-7.Source.txt",
+    "lines": 639,
+    "bytes": 18267,
+    "errors": 0,
+    "warnings": 1,
+    "requires": [],
+    "functions": [
+      [
+        "module.LauncherFlash",
+        "",
+        ""
+      ],
+      [
+        "module.AnimUpdate",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Gamepasses.Source.txt",
+    "lines": 54,
+    "bytes": 1389,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CZ Scorpion EVO Micro K.Source.txt",
+    "lines": 739,
+    "bytes": 20946,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Bullet.Source.txt",
+    "lines": 170,
+    "bytes": 5615,
+    "errors": 10,
+    "warnings": 3,
+    "requires": [
+      "script.Parent.Parent.Parent.Client.Sounds)",
+      "game.ReplicatedStorage.Modules[\"AI Sounds\"])",
+      "script.Parent.Parent.Parent.Client.Effects)",
+      "game.ReplicatedStorage.Modules[\"Hit Sounds\"])"
+    ],
+    "functions": [
+      [
+        "module_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.End",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "INLINED_3",
+        "",
+        ""
+      ],
+      [
+        "INLINED_4",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Map.Source.txt",
+    "lines": 153,
+    "bytes": 4824,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "game.ReplicatedStorage.Modules[\"Collision Group\"])"
+    ],
+    "functions": [
+      [
+        "module.UpdateClientMap",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateLighting",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateGlass",
+        "",
+        ""
+      ],
+      [
+        "TagIgnore",
+        "",
+        ""
+      ],
+      [
+        "module.UpdateLOD",
+        "",
+        ""
+      ],
+      [
+        "Unmaterial_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "Unmaterial",
+        ""
+      ],
+      [
+        "module.RecordParts",
+        "",
+        ""
+      ],
+      [
+        "Record_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "Record",
+        ""
+      ],
+      [
+        "module.UpdateMaterials",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.OrbitalCamera.Source.txt",
+    "lines": 240,
+    "bytes": 10759,
+    "errors": 0,
+    "warnings": 1,
+    "requires": [
+      "script.Parent:WaitForChild(\"BaseCamera\"))",
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserFixOrbitalCameraAzimuth\")",
+      "script.Parent:WaitForChild(\"CameraUtils\"))",
+      "script.Parent:WaitForChild(\"CameraInput\"))"
+    ],
+    "functions": [
+      [
+        "setmetatable_result1_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.LoadOrCreateNumberValueParameter",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "setmetatable_result1_upvr.SetAndBoundsCheckAzimuthValues",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.SetAndBoundsCheckElevationValues",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.SetAndBoundsCheckDistanceValues",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.LoadNumberValueParameters",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.GetModuleName",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.SetInitialOrientation",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.GetCameraToSubjectDistance",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.SetCameraToSubjectDistance",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.CalculateNewLookVector",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Candy Cane Sword.Source.txt",
+    "lines": 218,
+    "bytes": 6328,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Hints.Source.txt",
+    "lines": 4,
+    "bytes": 1893,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Object.Source.txt",
+    "lines": 17,
+    "bytes": 342,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AUG.Source.txt",
+    "lines": 714,
+    "bytes": 20024,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Projectiles.Source.txt",
+    "lines": 200,
+    "bytes": 6916,
+    "errors": 7,
+    "warnings": 3,
+    "requires": [
+      "script.Parent.Bullets)",
+      "game.ReplicatedStorage.SharedModules.Utilities.Ray)",
+      "script.Parent.Effects)",
+      "script.Parent.Sounds)"
+    ],
+    "functions": [
+      [
+        "module.Add",
+        "",
+        ""
+      ],
+      [
+        "GetSurfaceCF",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "linePlaneIntersection",
+        ""
+      ],
+      [
+        "fromAxisAngle_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "fromAxisAngle",
+        ""
+      ],
+      [
+        "getLowerPos",
+        "",
+        ""
+      ],
+      [
+        "getEffectPoints",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2_2"
+      ],
+      [
+        "module.Reset",
+        "",
+        ""
+      ],
+      [
+        "module.RemoveProjectile",
+        "",
+        ""
+      ],
+      [
+        "module.lm",
+        "",
+        ""
+      ],
+      [
+        "module.Update",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Wrench.Source.txt",
+    "lines": 188,
+    "bytes": 5065,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Umbrella.Source.txt",
+    "lines": 188,
+    "bytes": 5080,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Animate.Source.txt",
+    "lines": 33,
+    "bytes": 749,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Play",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Pause",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Stop",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "LocalScript.Runner.Source.txt",
+    "lines": 1,
+    "bytes": 50,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent:WaitForChild(\"Client\"))"
+    ],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Gamepad.Source.txt",
+    "lines": 191,
+    "bytes": 6678,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent:WaitForChild(\"BaseCharacterController\"))"
+    ],
+    "functions": [
+      [
+        "setmetatable_result1_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.GetHighestPriorityGamepad",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.BindContextActions",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2, arg3"
+      ],
+      [
+        "",
+        "",
+        "arg1_3, arg2, arg3"
+      ],
+      [
+        "setmetatable_result1_upvr.UnbindContextActions",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.OnNewGamepadConnected",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.OnCurrentGamepadDisconnected",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.ConnectGamepadConnectionListeners",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5"
+      ],
+      [
+        "setmetatable_result1_upvr.DisconnectGamepadConnectionListeners",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.MG 42.Source.txt",
+    "lines": 839,
+    "bytes": 23963,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Hit Sounds.Source.txt",
+    "lines": 14,
+    "bytes": 451,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Colt Python.Source.txt",
+    "lines": 748,
+    "bytes": 23670,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.MP-443 Grach.Source.txt",
+    "lines": 689,
+    "bytes": 19314,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Molotov.Source.txt",
+    "lines": 166,
+    "bytes": 4492,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.MP5A2.Source.txt",
+    "lines": 726,
+    "bytes": 20958,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Taurus Judge.Source.txt",
+    "lines": 749,
+    "bytes": 23346,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.BanList.Source.txt",
+    "lines": 1,
+    "bytes": 52,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Chunk.Source.txt",
+    "lines": 108,
+    "bytes": 3115,
+    "errors": 0,
+    "warnings": 1,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "GetXZSurroundingChunks",
+        ""
+      ],
+      [
+        "getAllChunks",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "GetSurroundingChunks",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "getAllChunks",
+        ""
+      ],
+      [
+        "module.GetChunk",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ],
+      [
+        "INLINED_3",
+        "",
+        ""
+      ],
+      [
+        "INLINED_4",
+        "",
+        ""
+      ],
+      [
+        "module.GetChunkCoords",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ConnectionUtil.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Interact.Source.txt",
+    "lines": 207,
+    "bytes": 7625,
+    "errors": 26,
+    "warnings": 0,
+    "requires": [
+      "game.ReplicatedStorage.Modules.FortificationsInfo)",
+      "script.Parent.Bullets)",
+      "script.Parent.Gui)",
+      "script.Parent).Interact()",
+      "script.Parent).Interact()"
+    ],
+    "functions": [
+      [
+        "CheckCanPick",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.ReturnCanPick",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Reset",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Update",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2_2"
+      ],
+      [
+        "INLINED_2",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "module_upvr.ReturnTarget",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.KAC PDW.Source.txt",
+    "lines": 641,
+    "bytes": 17337,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Flamethrower.Source.txt",
+    "lines": 754,
+    "bytes": 23263,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Collision Group.Source.txt",
+    "lines": 15,
+    "bytes": 339,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.Set",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CMMG Mk47 Mutant.Source.txt",
+    "lines": 643,
+    "bytes": 17885,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Specific Perks.Source.txt",
+    "lines": 19,
+    "bytes": 439,
+    "errors": 1,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module.Check",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Benelli M4.Source.txt",
+    "lines": 655,
+    "bytes": 18133,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Spectate.Source.txt",
+    "lines": 203,
+    "bytes": 6322,
+    "errors": 17,
+    "warnings": 2,
+    "requires": [
+      "script.Parent.Gui).UpdateSpectateInfo(arg1, var5_upvw)"
+    ],
+    "functions": [
+      [
+        "module_upvr.UpdateAngle",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.ChangeZoom",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetRightDown",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.RightDown",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.AddNum",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetSpectating",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetFreecam",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Spectating",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Freecam",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.ChangeFOV",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.ChangeSpeed",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.ChangeRotSpeed",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetFOV",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetSpeed",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetRotateSpeed",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetSpectatablePlayers",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.UpdateFreeCamOrbs",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetCamera",
+        "",
+        ""
+      ]
+    ],
+    "remotes": [
+      "FireServer"
+    ]
+  },
+  {
+    "file": "ModuleScript.ClassicCamera.Source.txt",
+    "lines": 78,
+    "bytes": 3459,
+    "errors": 7,
+    "warnings": 0,
+    "requires": [
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\"))",
+      "script.Parent:WaitForChild(\"CameraInput\"))",
+      "script.Parent:WaitForChild(\"CameraUtils\"))",
+      "script.Parent:WaitForChild(\"BaseCamera\"))"
+    ],
+    "functions": [
+      [
+        "setmetatable_result1_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.GetCameraToggleOffset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.SetCameraMovementMode",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Update",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Sabre.Source.txt",
+    "lines": 219,
+    "bytes": 6396,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AK-47.Source.txt",
+    "lines": 644,
+    "bytes": 17042,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Client.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.GamepassClient.Source.txt",
+    "lines": 71,
+    "bytes": 2011,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent.Parent.Client.Gui).CanBuySkins()",
+      "script.Parent.Parent.Client.Gui).UpdateGamepassPrices(var3_upvw)",
+      "script.Parent.Parent.Client.Gui).UpdateDevProductPrices(var4_upvw)",
+      "arg1.SharedModules.GamepassInfo)[tostring(v)]] = true",
+      "arg1.SharedModules.GamepassInfo)[tostring(arg1_5)]] = true"
+    ],
+    "functions": [
+      [
+        "module.GetGamepassToPrice",
+        "",
+        ""
+      ],
+      [
+        "module.GetDevProductToPrice",
+        "",
+        ""
+      ],
+      [
+        "module.OwnsGamepass",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5"
+      ],
+      [
+        "module.Initiate",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.SPAS-12.Source.txt",
+    "lines": 755,
+    "bytes": 19924,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Aero Survival Rifle.Source.txt",
+    "lines": 758,
+    "bytes": 22319,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Ray.Source.txt",
+    "lines": 37,
+    "bytes": 1445,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1, arg2, arg3, arg4, arg5, arg6"
+      ],
+      [
+        "",
+        "Cast",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2, arg3"
+      ],
+      [
+        "",
+        "CastWithParams",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CollectedAssetIDs.Source.txt",
+    "lines": 1,
+    "bytes": 8060,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AIController.Source.txt",
+    "lines": 932,
+    "bytes": 33652,
+    "errors": 35,
+    "warnings": 11,
+    "requires": [
+      "game.ReplicatedStorage.SharedModules.AIAnimations)",
+      "script.Parent.Parent.Client.Sounds)",
+      "game.ReplicatedStorage.Modules[\"Hit Sounds\"])",
+      "script.Parent.Parent.Client.Effects)",
+      "ReplicatedStorage_upvr.Modules[\"AI Sounds\"])",
+      "game.ReplicatedStorage.Modules[\"AI Sounds\"])",
+      "game.ReplicatedStorage.Modules[\"Infected Info\"])",
+      "game.ReplicatedStorage.SharedModules.Utilities.Compress)",
+      "ReplicatedStorage_upvr.SharedModules.Utilities.Chunk)",
+      "arg1.SharedModules.Utilities.AI)",
+      "arg1.SharedModules.Utilities.Model)"
+    ],
+    "functions": [
+      [
+        "RigSetup_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "RigSetup",
+        ""
+      ],
+      [
+        "module_upvr.RigBody",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Dress",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetKeyToBody",
+        "",
+        ""
+      ],
+      [
+        "HandleDeath_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "HandleDeath",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "CreatePathVisuals_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "CreatePathVisuals",
+        ""
+      ],
+      [
+        "module_upvr.PlayAnimation",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2, arg3"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5, arg2, arg3"
+      ],
+      [
+        "CreateBody_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "CreateBody",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_7, arg2, arg3, arg4, arg5, arg6"
+      ],
+      [
+        "",
+        "",
+        "arg1_8"
+      ],
+      [
+        "",
+        "",
+        "arg1_9, arg2, arg3, arg4, arg5"
+      ],
+      [
+        "",
+        "",
+        "arg1_10"
+      ],
+      [
+        "PlayLocalEffectSound_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "PlayLocalEffectSound",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_12, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1_13, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1_14, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1_15"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_16, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1_17, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1_18, arg2"
+      ],
+      [
+        "",
+        "",
+        "arg1_19, arg2"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_20"
+      ],
+      [
+        "INLINED_3",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Desert Eagle.Source.txt",
+    "lines": 601,
+    "bytes": 15992,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.World Effects.Source.txt",
+    "lines": 114,
+    "bytes": 3502,
+    "errors": 6,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.ResetHeli",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetEffectObjects",
+        "",
+        ""
+      ],
+      [
+        "Check_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "Check",
+        ""
+      ],
+      [
+        "module_upvr.UpdateObjects",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.ControlModule.Source.txt",
+    "lines": 635,
+    "bytes": 25102,
+    "errors": 36,
+    "warnings": 3,
+    "requires": [
+      "script:WaitForChild(\"Keyboard\"))",
+      "script:WaitForChild(\"Gamepad\"))",
+      "script:WaitForChild(\"DynamicThumbstick\"))",
+      "script:WaitForChild(\"TouchThumbstick\"))",
+      "script:WaitForChild(\"ClickToMoveController\"))",
+      "script:WaitForChild(\"VehicleController\"))",
+      "script:WaitForChild(\"TouchJump\"))"
+    ],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "module_upvr.GetMoveVector",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "NormalizeAngle",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "AverageAngle",
+        ""
+      ],
+      [
+        "module_upvr.GetEstimatedVRTorsoFrame",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetActiveController",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.UpdateActiveControlModuleEnabled",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Disable",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SelectComputerMovementModule",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SelectTouchModule",
+        "",
+        ""
+      ],
+      [
+        "getGamepadRightThumbstickPosition_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "getGamepadRightThumbstickPosition",
+        ""
+      ],
+      [
+        "module_upvr.calculateRawMoveVector",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnRenderStepped",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.updateVRMoveVector",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnHumanoidSeated",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnCharacterAdded",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2_2"
+      ],
+      [
+        "module_upvr.OnCharacterRemoving",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.UpdateTouchGuiVisibility",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SwitchToController",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.UpdateMovementMode",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.CreateTouchGuiContainer",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetClickToMoveController",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.TouchThumbstick.Source.txt",
+    "lines": 219,
+    "bytes": 8316,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [
+      "script.Parent:WaitForChild(\"BaseCharacterController\"))"
+    ],
+    "functions": [
+      [
+        "setmetatable_result1_2_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.OnInputEnded",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_2_upvr.Create",
+        "",
+        ""
+      ],
+      [
+        "ResizeThumbstick",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "DoMove",
+        ""
+      ],
+      [
+        "MoveStick_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "MoveStick",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_4"
+      ],
+      [
+        "",
+        "",
+        "arg1_5, arg2_2"
+      ],
+      [
+        "",
+        "",
+        "arg1_6, arg2_3"
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Mossberg 500.Source.txt",
+    "lines": 736,
+    "bytes": 19144,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.FN FAL.Source.txt",
+    "lines": 688,
+    "bytes": 19158,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CBJ-MS.Source.txt",
+    "lines": 672,
+    "bytes": 19014,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.BaseOcclusion.Source.txt",
+    "lines": 34,
+    "bytes": 1064,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1, ..."
+      ],
+      [
+        "",
+        "__call",
+        ""
+      ],
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.CharacterAdded",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.CharacterRemoving",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnCameraSubjectChanged",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetOcclusionMode",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.Update",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.MouseLockController.Source.txt",
+    "lines": 183,
+    "bytes": 6731,
+    "errors": 8,
+    "warnings": 2,
+    "requires": [
+      "script.Parent:WaitForChild(\"CameraUtils\"))"
+    ],
+    "functions": [
+      [
+        "module_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetIsMouseLocked",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetBindableToggleEvent",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetMouseLockOffset",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.UpdateMouseLockAvailability",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnBoundKeysObjectChanged",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.OnMouseLockToggled",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.DoMouseLockSwitch",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.BindContextActions",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2, arg3"
+      ],
+      [
+        "module_upvr.UnbindContextActions",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.IsMouseLocked",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.EnableMouseLock",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "LocalScript.GuiAdapt.Source.txt",
+    "lines": 7,
+    "bytes": 159,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.TouchJump.Source.txt",
+    "lines": 195,
+    "bytes": 6843,
+    "errors": 0,
+    "warnings": 1,
+    "requires": [
+      "CommonUtils:WaitForChild(\"CharacterUtil\"))",
+      "script.Parent:WaitForChild(\"BaseCharacterController\"))",
+      "CommonUtils:WaitForChild(\"ConnectionUtil\"))"
+    ],
+    "functions": [
+      [
+        "setmetatable_result1_upvr.new",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr._reset",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.EnableButton",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.UpdateEnabled",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr._setupConfigurations",
+        "",
+        ""
+      ],
+      [
+        "update_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "update",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_3"
+      ],
+      [
+        "",
+        "",
+        "arg1_4, arg2"
+      ],
+      [
+        "setmetatable_result1_upvr.Enable",
+        "",
+        ""
+      ],
+      [
+        "setmetatable_result1_upvr.Create",
+        "",
+        ""
+      ],
+      [
+        "ResizeJumpButton",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_5"
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Explosions.Source.txt",
+    "lines": 403,
+    "bytes": 11445,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.AI.Source.txt",
+    "lines": 713,
+    "bytes": 21881,
+    "errors": 1,
+    "warnings": 1,
+    "requires": [
+      "ReplicatedStorage_upvr:WaitForChild(\"SharedModules\"):WaitForChild(\"Utilities\"):WaitForChild(\"Model\"))"
+    ],
+    "functions": [
+      [
+        "DressHeadGear_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "DressHeadGear",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "MakeLimbBoxes",
+        ""
+      ],
+      [
+        "ColorSkin_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "ColorSkin",
+        ""
+      ],
+      [
+        "INLINED_3",
+        "",
+        ""
+      ],
+      [
+        "ColorBrickColor_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "ColorBrickColor",
+        ""
+      ],
+      [
+        "DestroyHeadAndJoints_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "DestroyHeadAndJoints",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "EscortCharDress",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "BloaterDress",
+        ""
+      ],
+      [
+        "module_upvr.GenericDress",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "GenericHeadshotModel",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "BloaterHeadshotModel",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "Headshot",
+        ""
+      ],
+      [
+        "INLINED_4",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "GenericDecapModel",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "BloaterDecapModel",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2"
+      ],
+      [
+        "",
+        "Decapitation",
+        ""
+      ],
+      [
+        "INLINED_5",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2, arg3"
+      ],
+      [
+        "",
+        "BursterDeath",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1, arg2, arg3, arg4"
+      ],
+      [
+        "",
+        "GenericDeath",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.GetGenericSounds",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.SetFire",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.RemoveFire",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.FortificationsInfo.Source.txt",
+    "lines": 412,
+    "bytes": 17095,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.WeldModel.Source.txt",
+    "lines": 25,
+    "bytes": 734,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module_upvr.Weld",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.CameraUtils.Source.txt",
+    "lines": 6,
+    "bytes": 217,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Tween.Source.txt",
+    "lines": 87,
+    "bytes": 2606,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module.TweenObject",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "module.PlayTweens",
+        "",
+        ""
+      ],
+      [
+        "module.PauseTweens",
+        "",
+        ""
+      ],
+      [
+        "module.StopTweens",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1_2, arg2, arg3, arg4"
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Katana.Source.txt",
+    "lines": 219,
+    "bytes": 6348,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Mouse.Source.txt",
+    "lines": 18,
+    "bytes": 489,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "module.GetPosition",
+        "",
+        ""
+      ],
+      [
+        "module.Run",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Defibrillator.Source.txt",
+    "lines": 99,
+    "bytes": 2265,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.PathDisplay.Source.txt",
+    "lines": 161,
+    "bytes": 5547,
+    "errors": 9,
+    "warnings": 1,
+    "requires": [
+      "script.Parent.Parent:WaitForChild(\"CommonUtils\"):WaitForChild(\"FlagUtil\")).getUserFlag(\"UserRaycastUpdateAPI\")"
+    ],
+    "functions": [
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "retrieveFromPool",
+        ""
+      ],
+      [
+        "_",
+        "",
+        ""
+      ],
+      [
+        "",
+        "returnToPool",
+        ""
+      ],
+      [
+        "renderPoint_upvr",
+        "",
+        ""
+      ],
+      [
+        "",
+        "renderPoint",
+        ""
+      ],
+      [
+        "module_upvr.setCurrentPoints",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.clearRenderedPath",
+        "",
+        ""
+      ],
+      [
+        "module_upvr.renderPath",
+        "",
+        ""
+      ],
+      [
+        "INLINED",
+        "",
+        ""
+      ]
+    ],
+    "remotes": []
+  },
+  {
+    "file": "ModuleScript.Compress.Source.txt",
+    "lines": 37,
+    "bytes": 1669,
+    "errors": 0,
+    "warnings": 0,
+    "requires": [],
+    "functions": [
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "CompressAngle",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "DecompressAngle",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "CompressPos",
+        ""
+      ],
+      [
+        "",
+        "",
+        "arg1"
+      ],
+      [
+        "",
+        "DecompressPos",
+        ""
+      ]
+    ],
+    "remotes": []
+  }
+]

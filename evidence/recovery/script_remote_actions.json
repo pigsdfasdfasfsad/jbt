@@ -1,0 +1,68 @@
+{
+  "source": "scripts.zip static source scan",
+  "note": "Static literal first-argument remote/action names only. This is not RemoteSpy runtime-call data.",
+  "unique_actions": 6,
+  "literal_call_occurrences": 8,
+  "actions": [
+    {
+      "name": "CallA10",
+      "methods": [
+        "FireServer"
+      ],
+      "occurrences": 1,
+      "sources": [
+        "ModuleScript.CAS Radio.Source.txt"
+      ]
+    },
+    {
+      "name": "GSCommand",
+      "methods": [
+        "FireServer"
+      ],
+      "occurrences": 1,
+      "sources": [
+        "ModuleScript.Dog Whistle.Source.txt"
+      ]
+    },
+    {
+      "name": "GlobalReplicate",
+      "methods": [
+        "FireServer"
+      ],
+      "occurrences": 1,
+      "sources": [
+        "ModuleScript.Spectate.Source.txt"
+      ]
+    },
+    {
+      "name": "aa",
+      "methods": [
+        "FireServer"
+      ],
+      "occurrences": 1,
+      "sources": [
+        "ModuleScript.Bullets.Source.txt"
+      ]
+    },
+    {
+      "name": "offtrack",
+      "methods": [
+        "Fire"
+      ],
+      "occurrences": 2,
+      "sources": [
+        "ModuleScript.VRNavigation.Source.txt"
+      ]
+    },
+    {
+      "name": "targetPoint",
+      "methods": [
+        "Fire"
+      ],
+      "occurrences": 2,
+      "sources": [
+        "ModuleScript.VRNavigation.Source.txt"
+      ]
+    }
+  ]
+}

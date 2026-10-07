@@ -1,0 +1,194 @@
+[
+  {
+    "feature": "Weapon roster and literal stats",
+    "grade": "A",
+    "evidence": "98definitions;91weapons; field lines",
+    "missing": "Version/provenance on recovered files; server overrides"
+  },
+  {
+    "feature": "Gun models and first-person poses",
+    "grade": "A/C",
+    "evidence": "Model hierarchy, GripCF/Rels and timeline channels",
+    "missing": "External meshes/textures; exact interpreter"
+  },
+  {
+    "feature": "Reload and chamber runtime",
+    "grade": "C",
+    "evidence": "Sequence segments and reference times",
+    "missing": "Commit/cancel/repeat semantics"
+  },
+  {
+    "feature": "Damage and penetration pipeline",
+    "grade": "B/C",
+    "evidence": "Head2.5reference, rawDamage/MaxPen, client hit routes",
+    "missing": "Server multipliers/order/falloff/wall policy"
+  },
+  {
+    "feature": "Firearm hitscan versus travel",
+    "grade": "C",
+    "evidence": "Bullet visuals; wiki hitscan",
+    "missing": "Original authoritative hit timing"
+  },
+  {
+    "feature": "RPG and GL raw trajectory",
+    "grade": "A/C",
+    "evidence": "Projectile speed/gravity/distance",
+    "missing": "Blast/falloff/server hit policy"
+  },
+  {
+    "feature": "Infected identity/config",
+    "grade": "A",
+    "evidence": "Nine Stats records, typeIDs and appearance roles",
+    "missing": "Effective per-mode wave scale"
+  },
+  {
+    "feature": "Basic infected navigation",
+    "grade": "B/C",
+    "evidence": "Path utility, visuals, nearest-target description",
+    "missing": "Original decision/path scheduling, attack cooldown"
+  },
+  {
+    "feature": "Bolter/Burster/Bloater/Juggernaut",
+    "grade": "B/C",
+    "evidence": "Abilities, roles, some radii/damage",
+    "missing": "FSM timings, hit windows and immunities conflicts"
+  },
+  {
+    "feature": "Waves and modes",
+    "grade": "B/C",
+    "evidence": "Timed mode descriptions and availability",
+    "missing": "Spawns/intensity/player scaling/transitions"
+  },
+  {
+    "feature": "Wave reward function",
+    "grade": "A/C",
+    "evidence": "Bonuses arithmetic",
+    "missing": "Arguments, exponent repair, caller and streak use"
+  },
+  {
+    "feature": "Level function",
+    "grade": "A/B",
+    "evidence": "EXP function and target-level example",
+    "missing": "Server caller; reference table drift"
+  },
+  {
+    "feature": "Kill/assist/objective rewards",
+    "grade": "C",
+    "evidence": "Kill values, references, reward images/update",
+    "missing": "Rounding, stack order, versioned payout/participation"
+  },
+  {
+    "feature": "Player movement and health",
+    "grade": "C/D",
+    "evidence": "Controls and feedback examples",
+    "missing": "Exact speeds/physics/maxHP/camera controller"
+  },
+  {
+    "feature": "Stamina or crouching",
+    "grade": "D",
+    "evidence": "No adequate implementation evidence",
+    "missing": "Do not add by default"
+  },
+  {
+    "feature": "Items and armor behavior",
+    "grade": "B/C",
+    "evidence": "References, pickup models, weapon ammo fields",
+    "missing": "Spawn weights, usage timing, durability accounting"
+  },
+  {
+    "feature": "Fortification raw data",
+    "grade": "A",
+    "evidence": "FortificationsInfo",
+    "missing": "Placement/controller/repair/destruction/trigger policy"
+  },
+  {
+    "feature": "Objective workflows",
+    "grade": "B/C",
+    "evidence": "Six families, item counts, rings and supply images",
+    "missing": "Schedules, timings, routes, current contribution rules"
+  },
+  {
+    "feature": "Perk descriptions/unlocks",
+    "grade": "A",
+    "evidence": "21original descriptions/icons/levels",
+    "missing": "Runtime/stacking/perk ambiguity"
+  },
+  {
+    "feature": "Laboratory primitives and markers",
+    "grade": "A/B",
+    "evidence": "Full copied world and197markerParts",
+    "missing": "Retail version validation"
+  },
+  {
+    "feature": "Laboratory meshes and CSG",
+    "grade": "C/D",
+    "evidence": "IDs, bounds, visual references",
+    "missing": "Authorized geometry blobs or replacements"
+  },
+  {
+    "feature": "Other13CMaps fragments",
+    "grade": "A/C",
+    "evidence": "Transforms/walls/LODlocalparts",
+    "missing": "Complete worlds and marker data"
+  },
+  {
+    "feature": "Market/Skyscraper/Dealership",
+    "grade": "B/C",
+    "evidence": "Images, map descriptions",
+    "missing": "Geometry, generator routes/markers"
+  },
+  {
+    "feature": "Airport and Test Map",
+    "grade": "B/C",
+    "evidence": "Images, roster and tinyTestMapset",
+    "missing": "Historical target and full geometry"
+  },
+  {
+    "feature": "Metro",
+    "grade": "D",
+    "evidence": "Icon/name only",
+    "missing": "Almost all gameplay/world evidence"
+  },
+  {
+    "feature": "Retail HUD static layout",
+    "grade": "A/B",
+    "evidence": "Copied GUI and screenshots",
+    "missing": "Transitions/controller and feedback timing"
+  },
+  {
+    "feature": "Menus/loadout/shop/spectator",
+    "grade": "B/C",
+    "evidence": "GUI, lobby anchors and references",
+    "missing": "Full retail behavior"
+  },
+  {
+    "feature": "Lighting/weather/ambience",
+    "grade": "B/C",
+    "evidence": "Images, sky/postprocess objects",
+    "missing": "Map Lighting scripts are stubs; precise profiles"
+  },
+  {
+    "feature": "Sounds and skeletal clips",
+    "grade": "D for bytes",
+    "evidence": "Asset IDs, roles, volumes and sound slice timings",
+    "missing": "Authorized media/keyframe data"
+  },
+  {
+    "feature": "Death/ragdoll/gore",
+    "grade": "A/B/C",
+    "evidence": "Joints, constraints, controller messages, images/clips",
+    "missing": "Complete cleanup/hit policy and version"
+  },
+  {
+    "feature": "Cosmetics/events/backend economy",
+    "grade": "B/C/D",
+    "evidence": "Skinimages, descriptions and partial tables",
+    "missing": "Odds/entitlements/current backend"
+  },
+  {
+    "feature": "Local save and offline hosting",
+    "grade": "Proposed",
+    "evidence": "Engineering replacement for Roblox persistence/server",
+    "missing": "No original behavior needed for transport replacement"
+  }
+]

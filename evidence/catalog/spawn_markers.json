@@ -1,0 +1,7757 @@
+[
+ {
+  "class": "Part",
+  "ref": "TA4078",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-215.400009",
+    "Y": "35.4999809",
+    "Z": "-258.799866",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4079",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-215.400009",
+    "Y": "35.4999809",
+    "Z": "-451.999878",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4080",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-119.200012",
+    "Y": "35.4999847",
+    "Z": "-605.399902",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4081",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "134.599991",
+    "Y": "35.4999962",
+    "Z": "-605.399902",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4082",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-177.799866",
+    "Y": "4.90012407",
+    "Z": "-555.300171",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4083",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-4.8999176",
+    "Y": "4.89998293",
+    "Z": "-757.500061",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4084",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "23.7000618",
+    "Y": "4.89998245",
+    "Z": "-757.400085",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4085",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "307.099976",
+    "Y": "40.099968",
+    "Z": "-601.999451",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4086",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "244.599976",
+    "Y": "40.099968",
+    "Z": "-274.899475",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4087",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-97.8000031",
+    "Y": "40.4999809",
+    "Z": "-326.499512",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4088",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-15.3000107",
+    "Y": "40.4999847",
+    "Z": "-337.599487",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4089",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "54",
+    "Y": "40.4999847",
+    "Z": "-331.599487",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4090",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "14.5",
+    "Y": "12.8968754",
+    "Z": "321.399994",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4091",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-286.399994",
+    "Y": "12.8968754",
+    "Z": "74.3000031",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4092",
+  "name": "InfectedSpawn",
+  "parent": "TA4077",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "385.399994",
+    "Y": "12.8968754",
+    "Z": "58.6999969",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4294901760",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "InfectedSpawn",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected/InfectedSpawn"
+ },
+ {
+  "class": "Folder",
+  "ref": "TA4077",
+  "name": "Infected",
+  "parent": "TA4076",
+  "props": {
+   "AttributesSerialize": "",
+   "Name": "Infected",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Infected"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4094",
+  "name": "1",
+  "parent": "TA4093",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "2.60000229",
+    "Y": "12.8999949",
+    "Z": "85",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "1",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player/1"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4095",
+  "name": "6",
+  "parent": "TA4093",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-8.89999771",
+    "Y": "12.8999949",
+    "Z": "85",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "6",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player/6"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4096",
+  "name": "5",
+  "parent": "TA4093",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-19.3999977",
+    "Y": "12.8999949",
+    "Z": "85",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "5",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player/5"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4097",
+  "name": "8",
+  "parent": "TA4093",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "34.6000023",
+    "Y": "12.8999949",
+    "Z": "85",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "8",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player/8"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4098",
+  "name": "4",
+  "parent": "TA4093",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "24.1000023",
+    "Y": "12.8999949",
+    "Z": "85",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "4",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player/4"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4099",
+  "name": "7",
+  "parent": "TA4093",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-19.3999977",
+    "Y": "12.8999949",
+    "Z": "77",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "7",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player/7"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4100",
+  "name": "2",
+  "parent": "TA4093",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "34.6000023",
+    "Y": "12.8999949",
+    "Z": "77",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "2",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player/2"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4101",
+  "name": "3",
+  "parent": "TA4093",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "12.6000023",
+    "Y": "12.8999949",
+    "Z": "85",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "1",
+    "Y": "0.200000003",
+    "Z": "1"
+   },
+   "AttributesSerialize": "",
+   "Name": "3",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player/3"
+ },
+ {
+  "class": "Folder",
+  "ref": "TA4093",
+  "name": "Player",
+  "parent": "TA4076",
+  "props": {
+   "AttributesSerialize": "",
+   "Name": "Player",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns/Player"
+ },
+ {
+  "class": "Folder",
+  "ref": "TA4076",
+  "name": "Spawns",
+  "parent": "GEN3",
+  "props": {
+   "AttributesSerialize": "",
+   "Name": "Spawns",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawns"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4104",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-201.249847",
+    "Y": "5.6499958",
+    "Z": "-258.099823",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4105",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-157.054688",
+    "Y": "8.34999275",
+    "Z": "-333.373077",
+    "R00": "-0.707134247",
+    "R01": "0",
+    "R02": "0.707079291",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-0.707079291",
+    "R21": "0",
+    "R22": "-0.707134247"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4106",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-144.449844",
+    "Y": "8.34999466",
+    "Z": "-334.849854",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4107",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-145.949829",
+    "Y": "5.64999723",
+    "Z": "-374.699829",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4108",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-145.799835",
+    "Y": "8.34999657",
+    "Z": "-392.649872",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4109",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-128.399841",
+    "Y": "5.64999962",
+    "Z": "-390.149811",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4110",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-189.610977",
+    "Y": "6.41264772",
+    "Z": "-292.612579",
+    "R00": "0.342042685",
+    "R01": "-0",
+    "R02": "-0.939684391",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.939684391",
+    "R21": "0",
+    "R22": "0.342042685"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4111",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-141.499847",
+    "Y": "5.64999723",
+    "Z": "-369.249847",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4112",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-186.049835",
+    "Y": "5.6499958",
+    "Z": "-369.399841",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4113",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-238.949875",
+    "Y": "5.64999199",
+    "Z": "-324.699799",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4114",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-232.599869",
+    "Y": "5.64999008",
+    "Z": "-346.249817",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4115",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-213.94986",
+    "Y": "5.84998703",
+    "Z": "-439.749969",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4116",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-65.0999756",
+    "Y": "5.64999247",
+    "Z": "-396.049988",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4117",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-78.8999786",
+    "Y": "5.65000153",
+    "Z": "-351.849945",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4118",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "28.787529",
+    "Y": "6.3500123",
+    "Z": "-321.949951",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4119",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "43.0000305",
+    "Y": "6.35001373",
+    "Z": "-322.049927",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4120",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-253.649857",
+    "Y": "5.64999104",
+    "Z": "-341.999817",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4121",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "56.1000671",
+    "Y": "9.35002804",
+    "Z": "-321.950043",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4122",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-148.999878",
+    "Y": "8.34999657",
+    "Z": "-371.89978",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4123",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-247.599854",
+    "Y": "5.64999437",
+    "Z": "-380.649811",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4124",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "91.6500092",
+    "Y": "5.75545549",
+    "Z": "-356.850037",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4125",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "74.4500046",
+    "Y": "5.75545597",
+    "Z": "-370.650024",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4126",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-139.999878",
+    "Y": "8.34999943",
+    "Z": "-273.849884",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4127",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-245.399857",
+    "Y": "5.64999676",
+    "Z": "-413.249817",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4128",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-223.249832",
+    "Y": "5.64999104",
+    "Z": "-400.69989",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4129",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "78.4500046",
+    "Y": "5.75545502",
+    "Z": "-382.25",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4130",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "74.1000748",
+    "Y": "6.35001087",
+    "Z": "-321.949951",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4131",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-199.999832",
+    "Y": "9.3499794",
+    "Z": "-241.249832",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4132",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-73.9317856",
+    "Y": "5.75547028",
+    "Z": "-282.349976",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4133",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-141.599854",
+    "Y": "8.34999275",
+    "Z": "-240.849792",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4134",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-185.299835",
+    "Y": "6.34999371",
+    "Z": "-241.249832",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4135",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-168.149857",
+    "Y": "5.64999533",
+    "Z": "-341.199829",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4136",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-138.549835",
+    "Y": "5.64999676",
+    "Z": "-345.699829",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4137",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-181.949829",
+    "Y": "5.64999723",
+    "Z": "-264.199799",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4138",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "196.099976",
+    "Y": "25.0499668",
+    "Z": "-599.947632",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4139",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "220.999969",
+    "Y": "5.65003204",
+    "Z": "-476.649963",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4140",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "195.599976",
+    "Y": "23.2499676",
+    "Z": "-264.052216",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4141",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "237.499969",
+    "Y": "23.2499676",
+    "Z": "-317.851288",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4142",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "72.1499939",
+    "Y": "5.650002",
+    "Z": "-268.800018",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4143",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "264.899963",
+    "Y": "5.65003204",
+    "Z": "-362.649994",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4144",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "232.499969",
+    "Y": "5.65003252",
+    "Z": "-296.249969",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4145",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "23.7000122",
+    "Y": "5.650002",
+    "Z": "-266.450012",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4146",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "237.299973",
+    "Y": "23.2499676",
+    "Z": "-521.048645",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4147",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "177.999969",
+    "Y": "7.44996691",
+    "Z": "-599.947632",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4148",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-94.731781",
+    "Y": "5.75547504",
+    "Z": "-294.949921",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4149",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "257.799957",
+    "Y": "7.44996691",
+    "Z": "-617.247681",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4150",
+  "name": "FortificationPickupBox",
+  "parent": "TA4103",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "219.299988",
+    "Y": "23.2499676",
+    "Z": "-435.149841",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4292178749",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "FortificationPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes/FortificationPickupBox"
+ },
+ {
+  "class": "Folder",
+  "ref": "TA4103",
+  "name": "Fortification Spawn Boxes",
+  "parent": "TA4102",
+  "props": {
+   "AttributesSerialize": "",
+   "Name": "Fortification Spawn Boxes",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Fortification Spawn Boxes"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4152",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-245.399826",
+    "Y": "25.9499855",
+    "Z": "-306.949768",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4153",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-174.249847",
+    "Y": "25.9500046",
+    "Z": "-342.699829",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4154",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-200.949829",
+    "Y": "23.2499962",
+    "Z": "-272.599823",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4155",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "231.999954",
+    "Y": "25.0499573",
+    "Z": "-599.947632",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4156",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-245.799835",
+    "Y": "23.2499828",
+    "Z": "-336.44989",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4157",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-134.099838",
+    "Y": "25.9500027",
+    "Z": "-318.849823",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4158",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-182.349884",
+    "Y": "25.9500027",
+    "Z": "-255.29985",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4159",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-181.54982",
+    "Y": "23.2499981",
+    "Z": "-271.899841",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4160",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-198.299835",
+    "Y": "23.2499962",
+    "Z": "-372.349884",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4161",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-127.649872",
+    "Y": "25.9500046",
+    "Z": "-368.299774",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4162",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-186.599838",
+    "Y": "23.2499943",
+    "Z": "-325.049835",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4163",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-194.099854",
+    "Y": "25.9499989",
+    "Z": "-286.549896",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4164",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-152.19986",
+    "Y": "23.2499962",
+    "Z": "-343.049835",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4165",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-165.54985",
+    "Y": "25.9500046",
+    "Z": "-254.399902",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4166",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-145.549881",
+    "Y": "25.9500027",
+    "Z": "-273.399872",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4167",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-127.649864",
+    "Y": "25.9500046",
+    "Z": "-384.899811",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4168",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-145.249847",
+    "Y": "23.2499981",
+    "Z": "-391.799835",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4169",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-243.699844",
+    "Y": "25.9499912",
+    "Z": "-409.949738",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4170",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-244.749832",
+    "Y": "25.9499874",
+    "Z": "-364.399872",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4171",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "4.70016479",
+    "Y": "23.249979",
+    "Z": "-515.849854",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4172",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "15.1001158",
+    "Y": "23.2499733",
+    "Z": "-500.149841",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4173",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "0.516662598",
+    "Y": "8.11999226",
+    "Z": "-486.756256",
+    "R00": "0.342042685",
+    "R01": "-0",
+    "R02": "-0.939684391",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.939684391",
+    "R21": "0",
+    "R22": "0.342042685"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4174",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "15.5001402",
+    "Y": "5.6499958",
+    "Z": "-423.94989",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4175",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-29.3998566",
+    "Y": "23.2499924",
+    "Z": "-480.249847",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4176",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-33.3998718",
+    "Y": "25.9499912",
+    "Z": "-501.199829",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4177",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-53.8998451",
+    "Y": "25.9499912",
+    "Z": "-484.599792",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4178",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-54.4998474",
+    "Y": "23.2499886",
+    "Z": "-503.849854",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4179",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-33.3748474",
+    "Y": "25.9749908",
+    "Z": "-454.124878",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4180",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-43.574852",
+    "Y": "26.024992",
+    "Z": "-436.724854",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4181",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-77.9748306",
+    "Y": "25.974987",
+    "Z": "-453.924866",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4182",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-53.3248596",
+    "Y": "26.0249901",
+    "Z": "-455.224884",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4183",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-104.823456",
+    "Y": "25.9724216",
+    "Z": "-583.523804",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4184",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-63.7498169",
+    "Y": "25.9733639",
+    "Z": "-587.324829",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4185",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-28.7747688",
+    "Y": "25.9741726",
+    "Z": "-569.575073",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4186",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-51.9997864",
+    "Y": "25.9736309",
+    "Z": "-581.674866",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4187",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "62.9251862",
+    "Y": "25.9749985",
+    "Z": "-587.674866",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4188",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "120.17395",
+    "Y": "25.9749947",
+    "Z": "-582.723816",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4189",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "41.0251312",
+    "Y": "25.9750061",
+    "Z": "-578.774963",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4190",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "148.579468",
+    "Y": "26.0219307",
+    "Z": "-481.218536",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4191",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "48.576004",
+    "Y": "25.9750042",
+    "Z": "-430.207947",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4192",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "59.2251587",
+    "Y": "26.0249901",
+    "Z": "-449.474884",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4193",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "62.2500916",
+    "Y": "25.9749966",
+    "Z": "-474.275024",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4194",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "55.6751404",
+    "Y": "25.9750004",
+    "Z": "-501.874756",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4195",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "93.0259094",
+    "Y": "25.9750023",
+    "Z": "-465.657898",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4196",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "73.0251389",
+    "Y": "26.0249882",
+    "Z": "-452.874908",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4197",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "37.1001587",
+    "Y": "23.2499981",
+    "Z": "-452.44986",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4198",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "98.1498718",
+    "Y": "8.42193222",
+    "Z": "-572.383789",
+    "R00": "-0.0871315002",
+    "R01": "0",
+    "R02": "0.996196866",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-0.996196866",
+    "R21": "0",
+    "R22": "-0.0871315002"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4199",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "136.750122",
+    "Y": "5.6500001",
+    "Z": "-477.900116",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4200",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "111.100098",
+    "Y": "5.64999819",
+    "Z": "-429.850006",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4201",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "88.0001144",
+    "Y": "5.64999723",
+    "Z": "-423.650024",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4202",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "123.475159",
+    "Y": "8.37500763",
+    "Z": "-457.875031",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4203",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "110.150085",
+    "Y": "8.37499809",
+    "Z": "-462.524994",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4204",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "100.100075",
+    "Y": "8.37499809",
+    "Z": "-456.574982",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4205",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "96.650116",
+    "Y": "8.37499809",
+    "Z": "-470.325012",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4206",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "127.075073",
+    "Y": "8.37500477",
+    "Z": "-482.924957",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4207",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "110.725052",
+    "Y": "8.37500286",
+    "Z": "-482.974945",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4208",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "75.8251648",
+    "Y": "8.37501144",
+    "Z": "-460.324951",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4209",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "76.0251312",
+    "Y": "8.37501049",
+    "Z": "-479.074951",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4210",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "100.825806",
+    "Y": "8.37500286",
+    "Z": "-486.625122",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4211",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "125.775841",
+    "Y": "8.37500381",
+    "Z": "-486.625153",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4212",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "115.100159",
+    "Y": "8.4249897",
+    "Z": "-506.599854",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4213",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "106.100143",
+    "Y": "8.42498875",
+    "Z": "-517.491516",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4214",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "111.250145",
+    "Y": "8.42499065",
+    "Z": "-531.5",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4215",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "110.200142",
+    "Y": "8.42499065",
+    "Z": "-548.941528",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4216",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "97.8951187",
+    "Y": "8.37499714",
+    "Z": "-558.374817",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4217",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "63.9251099",
+    "Y": "8.37500954",
+    "Z": "-555.875",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4218",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "68.950119",
+    "Y": "8.42998219",
+    "Z": "-517.099976",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4219",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "75.1000977",
+    "Y": "5.64999342",
+    "Z": "-530.949951",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4220",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "82.0238647",
+    "Y": "8.37499809",
+    "Z": "-500.323883",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4221",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "79.2501144",
+    "Y": "8.42997932",
+    "Z": "-437.800018",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4222",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "65.4251099",
+    "Y": "8.37499714",
+    "Z": "-423.675079",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4223",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-70.6998596",
+    "Y": "8.4249897",
+    "Z": "-483.041504",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4224",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-70.1498566",
+    "Y": "8.4249897",
+    "Z": "-465.699921",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4225",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-75.1498413",
+    "Y": "8.42499065",
+    "Z": "-454.691467",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4226",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-65.8998718",
+    "Y": "8.42498779",
+    "Z": "-440.69989",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4227",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-52.0904083",
+    "Y": "8.42193794",
+    "Z": "-372.934662",
+    "R00": "-0.342042685",
+    "R01": "0",
+    "R02": "0.939684391",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-0.939684391",
+    "R21": "0",
+    "R22": "-0.342042685"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4228",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-16.5176163",
+    "Y": "8.065588",
+    "Z": "-344.081085",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4229",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-38.3860779",
+    "Y": "5.75545454",
+    "Z": "-355.436157",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4230",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-72.7817078",
+    "Y": "8.45361328",
+    "Z": "-302.949738",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4231",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-59.8817139",
+    "Y": "8.45360947",
+    "Z": "-277.649841",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4232",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-83.581749",
+    "Y": "8.45360374",
+    "Z": "-285.94986",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4233",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-98.8817825",
+    "Y": "5.75546551",
+    "Z": "-276.799957",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4234",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-20.0860901",
+    "Y": "5.75545597",
+    "Z": "-286.136139",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4235",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-34.7049484",
+    "Y": "8.06558895",
+    "Z": "-274.144012",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4236",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "39.7859116",
+    "Y": "8.42194462",
+    "Z": "-290.318573",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4237",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "71.3347702",
+    "Y": "8.42194462",
+    "Z": "-302.349335",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4238",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "95.4072647",
+    "Y": "8.42194462",
+    "Z": "-300.57724",
+    "R00": "0.573598742",
+    "R01": "-0",
+    "R02": "-0.81913656",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.81913656",
+    "R21": "0",
+    "R22": "0.573598742"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4239",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "112.299988",
+    "Y": "5.65000153",
+    "Z": "-326.850006",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4240",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "52.0999451",
+    "Y": "7.84610081",
+    "Z": "-339.483154",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4241",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "39.3999825",
+    "Y": "7.84610033",
+    "Z": "-353.683136",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4242",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "31.5557728",
+    "Y": "7.84610224",
+    "Z": "-366.249939",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4243",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "9.69998741",
+    "Y": "5.65000868",
+    "Z": "-367.949951",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4244",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-18.6999969",
+    "Y": "5.65001631",
+    "Z": "-388.349945",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4245",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "91.4622192",
+    "Y": "8.22538662",
+    "Z": "-391.002777",
+    "R00": "0.984812498",
+    "R01": "-0",
+    "R02": "-0.173621148",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.173621148",
+    "R21": "0",
+    "R22": "0.984812498"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4246",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "85.7009277",
+    "Y": "8.42998886",
+    "Z": "-209.458878",
+    "R00": "0.642763317",
+    "R01": "-0",
+    "R02": "-0.766064942",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.766064942",
+    "R21": "0",
+    "R22": "0.642763317"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4247",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-26.6578465",
+    "Y": "8.37198067",
+    "Z": "-200.658005",
+    "R00": "0.939700544",
+    "R01": "-0",
+    "R02": "-0.341998369",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.341998369",
+    "R21": "0",
+    "R22": "0.939700544"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4248",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-57.7661591",
+    "Y": "8.42998791",
+    "Z": "-202.110962",
+    "R00": "0.866007268",
+    "R01": "-0",
+    "R02": "-0.500031412",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.500031412",
+    "R21": "0",
+    "R22": "0.866007268"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4249",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-78.9362488",
+    "Y": "8.42998886",
+    "Z": "-218.071503",
+    "R00": "0.707134247",
+    "R01": "-0",
+    "R02": "-0.707079291",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.707079291",
+    "R21": "0",
+    "R22": "0.707134247"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4250",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-44.6231995",
+    "Y": "8.37197876",
+    "Z": "-222.885925",
+    "R00": "0.965929627",
+    "R01": "-0",
+    "R02": "-0.258804798",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "0.258804798",
+    "R21": "0",
+    "R22": "0.965929627"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4251",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "42.2506561",
+    "Y": "8.37197876",
+    "Z": "-201.333038",
+    "R00": "0.939700544",
+    "R01": "0",
+    "R02": "0.341998369",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-0.341998369",
+    "R21": "0",
+    "R22": "0.939700544"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4252",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "59.5145035",
+    "Y": "8.37197781",
+    "Z": "-222.49263",
+    "R00": "0.965929627",
+    "R01": "0",
+    "R02": "0.258804798",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-0.258804798",
+    "R21": "0",
+    "R22": "0.965929627"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4253",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-104.399902",
+    "Y": "5.64999914",
+    "Z": "-572.450073",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4254",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-52.8748779",
+    "Y": "8.37498283",
+    "Z": "-590.075073",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4255",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-34.6998901",
+    "Y": "5.64997864",
+    "Z": "-668.950073",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4256",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-52.9248657",
+    "Y": "8.37498474",
+    "Z": "-680.375122",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4257",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-41.2998886",
+    "Y": "5.64998055",
+    "Z": "-699.350098",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4258",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-17.0265808",
+    "Y": "8.42191696",
+    "Z": "-685.75293",
+    "R00": "-0.642763734",
+    "R01": "0",
+    "R02": "0.766064942",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-0.766064942",
+    "R21": "0",
+    "R22": "-0.642763734"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4259",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "4.00011921",
+    "Y": "5.64998007",
+    "Z": "-661.550049",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4260",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "-52.8248291",
+    "Y": "8.37498569",
+    "Z": "-623.475098",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4261",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "68.125061",
+    "Y": "8.37498474",
+    "Z": "-680.475098",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4262",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "60.2000771",
+    "Y": "5.64997911",
+    "Z": "-708.550049",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4263",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "54.875061",
+    "Y": "8.3749876",
+    "Z": "-667.275085",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4264",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "60.1500702",
+    "Y": "5.64998198",
+    "Z": "-646.700073",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4265",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "68.2500763",
+    "Y": "5.64998102",
+    "Z": "-655.100037",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4266",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "28.2501106",
+    "Y": "5.64998102",
+    "Z": "-675.600037",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4267",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "20.9000854",
+    "Y": "5.64998245",
+    "Z": "-650.450073",
+    "R00": "0",
+    "R01": "0",
+    "R02": "1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "-1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4268",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "28.3501587",
+    "Y": "5.64998245",
+    "Z": "-629.80011",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4269",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "9.42505836",
+    "Y": "8.37498474",
+    "Z": "-635.275024",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4270",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "68.1250687",
+    "Y": "8.37498379",
+    "Z": "-590.275085",
+    "R00": "-1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "-1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4271",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "27.2001343",
+    "Y": "5.64998341",
+    "Z": "-616.850098",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4272",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "9.625",
+    "Y": "8.37498474",
+    "Z": "-578.575073",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4273",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "136.750122",
+    "Y": "5.84999084",
+    "Z": "-592.549927",
+    "R00": "1",
+    "R01": "0",
+    "R02": "0",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "0",
+    "R21": "0",
+    "R22": "1"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4274",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "213.999939",
+    "Y": "7.44996643",
+    "Z": "-604.747681",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4275",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "253.999969",
+    "Y": "5.65003157",
+    "Z": "-540.950012",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4276",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "302.299988",
+    "Y": "5.65003109",
+    "Z": "-454.75",
+    "R00": "-1.1920929e-07",
+    "R01": "0",
+    "R02": "1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "-1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4277",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "209.899994",
+    "Y": "5.65003109",
+    "Z": "-333.949982",
+    "R00": "-1.1920929e-07",
+    "R01": "-0",
+    "R02": "-1.00000012",
+    "R10": "0",
+    "R11": "1",
+    "R12": "-0",
+    "R20": "1.00000012",
+    "R21": "0",
+    "R22": "-1.1920929e-07"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Part",
+  "ref": "TA4278",
+  "name": "ItemPickupBox",
+  "parent": "TA4151",
+  "props": {
+   "Anchored": true,
+   "CFrame": {
+    "X": "161.099976",
+    "Y": "23.2499619",
+    "Z": "-452.049866",
+    "R00": "0",
+    "R01": "0",
+    "R02": "-1",
+    "R10": "0",
+    "R11": "1",
+    "R12": "0",
+    "R20": "1",
+    "R21": "0",
+    "R22": "0"
+   },
+   "CanCollide": false,
+   "CastShadow": false,
+   "CollisionGroup": "Default",
+   "CollisionGroupId": 4,
+   "Color3uint8": "4278255360",
+   "Material": 288,
+   "Transparency": 1.0,
+   "size": {
+    "X": "2.30000019",
+    "Y": "1.70000005",
+    "Z": "3"
+   },
+   "AttributesSerialize": "",
+   "Name": "ItemPickupBox",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes/ItemPickupBox"
+ },
+ {
+  "class": "Folder",
+  "ref": "TA4151",
+  "name": "Item Spawn Boxes",
+  "parent": "TA4102",
+  "props": {
+   "AttributesSerialize": "",
+   "Name": "Item Spawn Boxes",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes/Item Spawn Boxes"
+ },
+ {
+  "class": "Folder",
+  "ref": "TA4102",
+  "name": "Spawn Boxes",
+  "parent": "GEN3",
+  "props": {
+   "AttributesSerialize": "",
+   "Name": "Spawn Boxes",
+   "Tags": "yuZpQdnvvUBOTYh1jqZ2cA=="
+  },
+  "path": "/Workspace/Ignore/Spawn Boxes"
+ }
+]

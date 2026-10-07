@@ -1,0 +1,569 @@
+[
+  {
+    "name": "Prison",
+    "items": 3070,
+    "parts": 1702,
+    "classes": {
+      "ModuleScript": 1,
+      "PathfindingModifier": 1234,
+      "WedgePart": 87,
+      "Part": 1333,
+      "Model": 68,
+      "Folder": 16,
+      "NumberValue": 7,
+      "PitchShiftSoundEffect": 5,
+      "Sound": 7,
+      "Sky": 1,
+      "BloomEffect": 1,
+      "SunRaysEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "Atmosphere": 1,
+      "MeshPart": 178,
+      "Texture": 16,
+      "UnionOperation": 104,
+      "Decal": 7,
+      "StringValue": 1,
+      "BoolValue": 1
+    },
+    "walls": 1324,
+    "local_map_parts": 372,
+    "aabb_min": [
+      -248.9999466,
+      -29.71232727185856,
+      -862.0999449999999
+    ],
+    "aabb_max": [
+      388.0001144,
+      440.100067,
+      257.400055
+    ],
+    "aabb_size": [
+      637.0,
+      469.812,
+      1119.5
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Expressway",
+    "items": 608,
+    "parts": 303,
+    "classes": {
+      "ModuleScript": 1,
+      "Part": 279,
+      "Folder": 16,
+      "PathfindingModifier": 274,
+      "WedgePart": 2,
+      "NumberValue": 4,
+      "Sound": 4,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "Sky": 1,
+      "Atmosphere": 1,
+      "MeshPart": 3,
+      "Model": 1,
+      "UnionOperation": 19,
+      "BoolValue": 1
+    },
+    "walls": 278,
+    "local_map_parts": 22,
+    "aabb_min": [
+      -952.0825049316733,
+      20.85032845,
+      -854.2169125700913
+    ],
+    "aabb_max": [
+      651.6698752819987,
+      91.0000853,
+      41.63737644745616
+    ],
+    "aabb_size": [
+      1603.752,
+      70.15,
+      895.854
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Cabin",
+    "items": 1822,
+    "parts": 924,
+    "classes": {
+      "ModuleScript": 1,
+      "Folder": 13,
+      "PathfindingModifier": 871,
+      "WedgePart": 9,
+      "Part": 884,
+      "NumberValue": 1,
+      "Sound": 1,
+      "Atmosphere": 1,
+      "Sky": 1,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "SunRaysEffect": 1,
+      "MeshPart": 29,
+      "Model": 6,
+      "UnionOperation": 2
+    },
+    "walls": 888,
+    "local_map_parts": 36,
+    "aabb_min": [
+      -434.1000364,
+      -11.3999939,
+      -314.600006
+    ],
+    "aabb_max": [
+      267.2999876,
+      154.5000122,
+      348.600006
+    ],
+    "aabb_size": [
+      701.4,
+      165.9,
+      663.2
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Cargo",
+    "items": 780,
+    "parts": 381,
+    "classes": {
+      "ModuleScript": 1,
+      "Folder": 13,
+      "PathfindingModifier": 321,
+      "Part": 350,
+      "WedgePart": 4,
+      "NumberValue": 30,
+      "Sound": 30,
+      "Sky": 1,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "SunRaysEffect": 1,
+      "UnionOperation": 27
+    },
+    "walls": 324,
+    "local_map_parts": 27,
+    "aabb_min": [
+      -464.05001335000003,
+      107.096886,
+      -316.4099909248017
+    ],
+    "aabb_max": [
+      313.370056,
+      323.79990355,
+      292.81450192480173
+    ],
+    "aabb_size": [
+      777.42,
+      216.703,
+      609.224
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Carnival",
+    "items": 1134,
+    "parts": 551,
+    "classes": {
+      "ModuleScript": 1,
+      "PathfindingModifier": 511,
+      "Part": 544,
+      "WedgePart": 7,
+      "Folder": 13,
+      "NumberValue": 27,
+      "Sound": 27,
+      "Atmosphere": 1,
+      "Sky": 1,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 1
+    },
+    "walls": 526,
+    "local_map_parts": 0,
+    "aabb_min": [
+      -230.12643409999998,
+      -50.75122882331658,
+      -828.198791
+    ],
+    "aabb_max": [
+      332.00630945,
+      92.9000044,
+      558.0985469905195
+    ],
+    "aabb_size": [
+      562.133,
+      143.651,
+      1386.297
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Ranch",
+    "items": 3095,
+    "parts": 1647,
+    "classes": {
+      "ModuleScript": 1,
+      "Part": 1431,
+      "WedgePart": 93,
+      "Folder": 18,
+      "PathfindingModifier": 1266,
+      "NumberValue": 39,
+      "Sound": 39,
+      "Atmosphere": 1,
+      "Sky": 1,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 2,
+      "SunRaysEffect": 1,
+      "MeshPart": 56,
+      "BoolValue": 2,
+      "StringValue": 14,
+      "Decal": 32,
+      "UnionOperation": 67,
+      "Model": 31
+    },
+    "walls": 1457,
+    "local_map_parts": 152,
+    "aabb_min": [
+      -830.430786105,
+      31.298113810000004,
+      -866.2729109433928
+    ],
+    "aabb_max": [
+      615.400024,
+      349.29997835,
+      711.0877690350001
+    ],
+    "aabb_size": [
+      1445.831,
+      318.002,
+      1577.361
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "District",
+    "items": 1209,
+    "parts": 690,
+    "classes": {
+      "ModuleScript": 1,
+      "MeshPart": 199,
+      "Part": 373,
+      "WedgePart": 71,
+      "Folder": 13,
+      "PathfindingModifier": 346,
+      "SpecialMesh": 7,
+      "DistortionSoundEffect": 1,
+      "NumberValue": 8,
+      "Sound": 8,
+      "Sky": 1,
+      "SunRaysEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "Model": 2,
+      "UnionOperation": 47,
+      "Texture": 130
+    },
+    "walls": 488,
+    "local_map_parts": 195,
+    "aabb_min": [
+      -319.66248462910164,
+      -4.886692202407738,
+      -224.7574932275853
+    ],
+    "aabb_max": [
+      281.8433974329392,
+      54.003784249999995,
+      322.51136922758525
+    ],
+    "aabb_size": [
+      601.506,
+      58.89,
+      547.269
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Laboratory",
+    "items": 5119,
+    "parts": 3243,
+    "classes": {
+      "ModuleScript": 1,
+      "Folder": 13,
+      "PathfindingModifier": 1517,
+      "Part": 1476,
+      "WedgePart": 56,
+      "UnionOperation": 37,
+      "SpecialMesh": 21,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "Sky": 1,
+      "MeshPart": 1674,
+      "Model": 321
+    },
+    "walls": 1538,
+    "local_map_parts": 1705,
+    "aabb_min": [
+      -255.901542928888,
+      1.4999956799999996,
+      -748.00013419
+    ],
+    "aabb_max": [
+      321.1674487365741,
+      82.40000345,
+      95.90001153
+    ],
+    "aabb_size": [
+      577.069,
+      80.9,
+      843.9
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Bypass",
+    "items": 3039,
+    "parts": 1885,
+    "classes": {
+      "ModuleScript": 1,
+      "PathfindingModifier": 768,
+      "Part": 1135,
+      "WedgePart": 33,
+      "Folder": 18,
+      "NumberValue": 80,
+      "Sound": 80,
+      "PitchShiftSoundEffect": 10,
+      "Atmosphere": 1,
+      "Sky": 1,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "SunRaysEffect": 1,
+      "MeshPart": 567,
+      "UnionOperation": 150,
+      "Model": 115,
+      "Decal": 58,
+      "SpotLight": 2,
+      "BoolValue": 2,
+      "StringValue": 15
+    },
+    "walls": 954,
+    "local_map_parts": 852,
+    "aabb_min": [
+      -631.4501341196047,
+      2.0622596999999985,
+      -415.80717485522956
+    ],
+    "aabb_max": [
+      259.7998953959986,
+      451.495239,
+      1386.4497612061532
+    ],
+    "aabb_size": [
+      891.25,
+      449.433,
+      1802.257
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Test Map",
+    "items": 18,
+    "parts": 2,
+    "classes": {
+      "ModuleScript": 1,
+      "Folder": 13,
+      "PathfindingModifier": 2,
+      "Part": 2
+    },
+    "walls": 2,
+    "local_map_parts": 0,
+    "aabb_min": [
+      107.68848825,
+      20.000005700000003,
+      11.857967349999996
+    ],
+    "aabb_max": [
+      141.08848975,
+      36.3000049,
+      65.25796885
+    ],
+    "aabb_size": [
+      33.4,
+      16.3,
+      53.4
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Stadium",
+    "items": 1991,
+    "parts": 1026,
+    "classes": {
+      "ModuleScript": 1,
+      "Part": 778,
+      "Folder": 16,
+      "PathfindingModifier": 800,
+      "WedgePart": 62,
+      "UnionOperation": 51,
+      "NumberValue": 10,
+      "Sound": 10,
+      "DepthOfFieldEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "BloomEffect": 1,
+      "Sky": 1,
+      "Atmosphere": 1,
+      "MeshPart": 135,
+      "Decal": 9,
+      "Model": 13,
+      "Texture": 100,
+      "BoolValue": 1
+    },
+    "walls": 817,
+    "local_map_parts": 200,
+    "aabb_min": [
+      -133.56672641071344,
+      -21.25077441,
+      -518.5436505792129
+    ],
+    "aabb_max": [
+      402.83412630299404,
+      165.0001755,
+      112.39582952947875
+    ],
+    "aabb_size": [
+      536.401,
+      186.251,
+      630.939
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Mill",
+    "items": 2821,
+    "parts": 1548,
+    "classes": {
+      "ModuleScript": 1,
+      "Part": 1305,
+      "Folder": 18,
+      "PathfindingModifier": 1055,
+      "WedgePart": 9,
+      "NumberValue": 34,
+      "Sound": 34,
+      "EqualizerSoundEffect": 9,
+      "Atmosphere": 1,
+      "Sky": 1,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 2,
+      "SunRaysEffect": 1,
+      "MeshPart": 164,
+      "Model": 48,
+      "UnionOperation": 70,
+      "BoolValue": 2,
+      "Decal": 43,
+      "StringValue": 19,
+      "ImageLabel": 1,
+      "SurfaceGui": 1,
+      "SpotLight": 1,
+      "SpecialMesh": 1
+    },
+    "walls": 1248,
+    "local_map_parts": 267,
+    "aabb_min": [
+      -963.8705152415575,
+      0.7001800000000031,
+      -757.7384759749262
+    ],
+    "aabb_max": [
+      767.3027364809511,
+      529.900000455,
+      686.3802894411938
+    ],
+    "aabb_size": [
+      1731.173,
+      529.2,
+      1444.119
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Manor",
+    "items": 3294,
+    "parts": 2463,
+    "classes": {
+      "ModuleScript": 1,
+      "Part": 810,
+      "WedgePart": 27,
+      "Folder": 13,
+      "PathfindingModifier": 785,
+      "SpecialMesh": 20,
+      "NumberValue": 3,
+      "Sound": 3,
+      "BloomEffect": 1,
+      "ColorCorrectionEffect": 1,
+      "Sky": 1,
+      "Atmosphere": 1,
+      "MeshPart": 24,
+      "Model": 2,
+      "UnionOperation": 1602
+    },
+    "walls": 829,
+    "local_map_parts": 1633,
+    "aabb_min": [
+      -372.4999847,
+      -9.272252018565535,
+      -567.99992693
+    ],
+    "aabb_max": [
+      302.70522608539125,
+      256.7999974,
+      486.60002462599994
+    ],
+    "aabb_size": [
+      675.205,
+      266.072,
+      1054.6
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  },
+  {
+    "name": "Laboratory world",
+    "items": 46058,
+    "parts": 34268,
+    "classes": {
+      "Folder": 21,
+      "SpecialMesh": 337,
+      "Part": 18635,
+      "MeshPart": 12587,
+      "Model": 7576,
+      "SpotLight": 954,
+      "PointLight": 31,
+      "Texture": 2119,
+      "Decal": 88,
+      "StringValue": 572,
+      "UnionOperation": 3013,
+      "SurfaceLight": 21,
+      "ImageLabel": 34,
+      "SurfaceGui": 34,
+      "WedgePart": 33,
+      "ParticleEmitter": 1,
+      "BlockMesh": 1,
+      "ModuleScript": 1
+    },
+    "walls": 0,
+    "local_map_parts": 34268,
+    "aabb_min": [
+      -497.66751335000004,
+      -40.599936029999995,
+      -762.4001551499999
+    ],
+    "aabb_max": [
+      568.0357354350001,
+      57.615492061021925,
+      321.437417525
+    ],
+    "aabb_size": [
+      1065.703,
+      98.215,
+      1083.838
+    ],
+    "aabb_scope": "all serialized parts including barriers/background/LOD; not playable footprint"
+  }
+]

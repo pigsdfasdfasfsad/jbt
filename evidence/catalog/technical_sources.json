@@ -1,0 +1,86 @@
+[
+  {
+    "id": "T01",
+    "title": "Godot Windows export",
+    "url": "https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_windows.html",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T02",
+    "title": "Godot C# support",
+    "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/index.html",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T03",
+    "title": "Godot navigation performance",
+    "url": "https://docs.godotengine.org/en/stable/tutorials/navigation/navigation_optimizing_performance.html",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T04",
+    "title": "Godot MultiMesh performance",
+    "url": "https://docs.godotengine.org/en/stable/tutorials/performance/using_multimesh.html",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T05",
+    "title": "Godot thread-safe APIs",
+    "url": "https://docs.godotengine.org/en/stable/tutorials/performance/thread_safe_apis.html",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T06",
+    "title": "Unity Windows standalone binaries",
+    "url": "https://docs.unity3d.com/Manual/WindowsStandaloneBinaries.html",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T07",
+    "title": "Unreal packaging",
+    "url": "https://dev.epicgames.com/documentation/unreal-engine/packaging-your-project",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T08",
+    "title": "Roblox CFrame",
+    "url": "https://create.roblox.com/docs/reference/engine/datatypes/CFrame",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T09",
+    "title": "Roblox UnionOperation",
+    "url": "https://create.roblox.com/docs/reference/engine/classes/UnionOperation",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T10",
+    "title": "Lua5.1operator precedence",
+    "url": "https://www.lua.org/manual/5.1/manual.html#2.5.6",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T11",
+    "title": "Unity AI Navigation",
+    "url": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  },
+  {
+    "id": "T12",
+    "title": "Unreal MassEntity",
+    "url": "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-mass-entity-in-unreal-engine",
+    "checked": "2026-10-05",
+    "kind": "official primary documentation"
+  }
+]

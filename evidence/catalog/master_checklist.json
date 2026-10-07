@@ -1,0 +1,101 @@
+{
+  "Evidence and provenance": [
+    "Six archives hashed and every extracted file indexed",
+    "225 scripts classified and decompiler/stub defects tracked",
+    "91 weapons and seven equipment records source-linked",
+    "Nine infected, 21 perks, four forts and six objectives represented",
+    "Both place versions and exact script matches recorded",
+    "Important mechanics have evidence, confidence and unknown records",
+    "All 26 conflicts resolved or retained as explicit decisions",
+    "Original full source availability recorded",
+    "Visual review scope and image metadata retained",
+    "Capture provenance and measurement limitations retained",
+    "Every shipping asset has rights and local bytes resolved"
+  ],
+  "Toolchain and offline shell": [
+    "Isolated repository and engine/SDK/templates pinned",
+    "Pure domain has no Godot dependency",
+    "Typed commands/events and authority boundary tested",
+    "Fixed clock, fire scheduling and solo pause tested",
+    "Clean offline Windows launch needs no Roblox/account/server",
+    "Every runtime and asset dependency packaged locally"
+  ],
+  "Data and maps": [
+    "Static extraction never executes uploaded scripts",
+    "Fields retain units, line spans and hashes",
+    "Unknowns and calibration overrides remain separate",
+    "Transform, basis, scale, hierarchy and joint fixtures pass",
+    "Lab and 197 marker Parts imported with correct groups",
+    "Invisible walls and LOD fragments handled correctly",
+    "Missing mesh/CSG/terrain blockers resolved for release maps",
+    "Every map passes room/door/window/route/spawn/loot/objective gates",
+    "Lighting, sky, weather and ambience revisions calibrated",
+    "Selected twelve standard maps pass production gates",
+    "Three Endless maps have verified generator/supply routes",
+    "Airport/Test Map/Metro scope explicit; cut concepts separate"
+  ],
+  "Player weapons and damage": [
+    "Movement and camera calibrated against original evidence",
+    "No unproven stamina/crouching/sliding in default mode",
+    "First-person hands, grip, recoil and FOV match references",
+    "49 primary, 25 secondary and 17 melee weapons supported",
+    "All reload families pass commit/cancel/chamber/conservation tests",
+    "Cadence, spread, range, region and penetration pipeline verified",
+    "Projectile, flame, spin-up and melee families compared",
+    "Special kill causes and rewards verified",
+    "Player HP, armor, healing, bypass and death verified",
+    "Spectator/revive preserve solo and future co-op cases"
+  ],
+  "Infected and waves": [
+    "Nine types have verified effective stat/appearance policies",
+    "Navigation, nearest-human chase and chokepoints verified",
+    "Bolter commitment/recovery/attacks verified",
+    "Burster suppression/gas/armor/mask rules verified",
+    "Bloater throw and cluster blast verified",
+    "Juggernaut direction, charge, spores and silhouette verified",
+    "Hazmat fire and Riot melee conflicts settled",
+    "Spawn curves and player-count scaling documented",
+    "Mode timers/transitions/type eligibility/win/loss tested",
+    "Endless generator and five-wave supply cadence verified",
+    "LOD never suppresses damage or reward simulation"
+  ],
+  "Items forts and objectives": [
+    "Six items and three throwables tested",
+    "Spawn weighting, respawns and capacities verified",
+    "Per-weapon ammo grants/caps and no-reserve cases correct",
+    "Healing, energy, masks and armor lifecycle verified",
+    "Hammer preview, placement, orientation and swings verified",
+    "Wire, Clap, Jack and mounted 50 Cal behavior verified",
+    "Placement rules and Craftsman modifiers tested",
+    "Load ten and Repair ten/twelve recipes verified",
+    "Radio/Unpack timing, contribution and grounding verified",
+    "Tanker HP/blast/contribution/bonus exclusions verified",
+    "Escort route/range/speed/untargetability verified",
+    "Objective schedules and current participation rewards verified",
+    "Support-equipment effects and gates completed"
+  ],
+  "Progression perks and saves": [
+    "Reward caller, rounding, streak and unused-table meanings resolved",
+    "Level curve, target argument and level-up credits tested",
+    "All 21 perks and stacking/conditions tested",
+    "Three base slots and fourth-slot policy explicit",
+    "Prices, unlocks, purchases and loadout validation complete",
+    "Cosmetics/events/paid-content offline acquisition explicit",
+    "Versioned checksummed atomic saves and three backups implemented",
+    "Fault/corruption/migration/duplicate receipt fixtures pass",
+    "No online account, DataStore or Marketplace dependency",
+    "Progression survives repeated disconnected relaunch"
+  ],
+  "Presentation performance and release": [
+    "Retail HUD geometry, typography and transitions compared",
+    "Gun/infected/objective/audio signatures compared",
+    "Map atmosphere and quirks preserved; deliberate fixes logged",
+    "Horde/physics/audio/animation/FX budgets measured",
+    "Baseline 250/150 and primary 400/250 stress reported",
+    "Frame percentiles, RAM, loading and spawn targets pass",
+    "Eight-hour soak, leak and stale-callback tests pass",
+    "Clean offline Windows and 24-hour play gates pass",
+    "Release contains no lazy downloads or unresolved rights",
+    "Executable and build/dependency/fidelity manifests delivered"
+  ]
+}

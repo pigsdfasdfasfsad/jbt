@@ -1,0 +1,941 @@
+{
+  "AI Sounds": {
+    "source": "extracted/04-scripts/scripts/ModuleScript.AI Sounds.Source.txt",
+    "sha256": "8e0197b466f146f30c8e529b92ce664c989931397a389608ed8d6b7eea8cbb23",
+    "tables": {
+      "module.Juggernaut": {
+        "value": {
+          "HitScream": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://10312742789",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.37
+                },
+                {
+                  "Start": 1.45,
+                  "Stop": 2.73
+                },
+                {
+                  "Start": 2.73,
+                  "Stop": 4.36
+                },
+                {
+                  "Start": 4.36,
+                  "Stop": 5.75
+                },
+                {
+                  "Start": 5.75,
+                  "Stop": 6.9
+                },
+                {
+                  "Start": 6.9,
+                  "Stop": 8.28
+                },
+                {
+                  "Start": 8.28,
+                  "Stop": 9.79
+                }
+              ]
+            }
+          },
+          "Scream": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://10312741837",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 7.697
+                }
+              ]
+            }
+          },
+          "Idle": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://10312739906",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 3.2
+                },
+                {
+                  "Start": 3.25,
+                  "Stop": 6.5
+                }
+              ]
+            }
+          },
+          "MetalHit": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://10630167366",
+              "TimeStamps": [
+                {
+                  "Start": 55.74,
+                  "Stop": 58.4
+                },
+                {
+                  "Start": 58.69,
+                  "Stop": 62.16
+                },
+                {
+                  "Start": 62.9,
+                  "Stop": 64.6
+                },
+                {
+                  "Start": 65.14,
+                  "Stop": 67.4
+                },
+                {
+                  "Start": 67.87,
+                  "Stop": 71.47
+                },
+                {
+                  "Start": 72.07,
+                  "Stop": 73.66
+                },
+                {
+                  "Start": 74.2,
+                  "Stop": 78
+                }
+              ]
+            }
+          }
+        },
+        "line": 9
+      },
+      "module.Bloater": {
+        "value": {
+          "Idle": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://9084185396",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.95
+                },
+                {
+                  "Start": 2.8,
+                  "Stop": 5.75
+                },
+                {
+                  "Start": 6.1,
+                  "Stop": 9.4
+                },
+                {
+                  "Start": 9.85,
+                  "Stop": 12.7
+                },
+                {
+                  "Start": 13,
+                  "Stop": 17.2
+                }
+              ]
+            }
+          },
+          "HitScream": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://9084115922",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.8
+                },
+                {
+                  "Start": 2,
+                  "Stop": 3.75
+                },
+                {
+                  "Start": 4,
+                  "Stop": 6.2
+                },
+                {
+                  "Start": 6.4,
+                  "Stop": 7.98
+                },
+                {
+                  "Start": 8.3,
+                  "Stop": 10
+                }
+              ]
+            }
+          },
+          "Scream": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://1505301507",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 3.942
+                }
+              ]
+            }
+          }
+        },
+        "line": 90
+      },
+      "module.Bolter": {
+        "value": {
+          "Bolt": {
+            "Female": {
+              "Id": "rbxassetid://9084540906",
+              "BaseVolume": 2.5,
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.05
+                },
+                {
+                  "Start": 1.58,
+                  "Stop": 2.34
+                },
+                {
+                  "Start": 2.9,
+                  "Stop": 3.6
+                },
+                {
+                  "Start": 4.15,
+                  "Stop": 4.78
+                },
+                {
+                  "Start": 5.26,
+                  "Stop": 5.76
+                },
+                {
+                  "Start": 6.29,
+                  "Stop": 6.78
+                }
+              ]
+            },
+            "Male": {
+              "Id": "rbxassetid://9084540906",
+              "BaseVolume": 2.5,
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.05
+                },
+                {
+                  "Start": 1.58,
+                  "Stop": 2.34
+                },
+                {
+                  "Start": 2.9,
+                  "Stop": 3.6
+                },
+                {
+                  "Start": 4.15,
+                  "Stop": 4.78
+                },
+                {
+                  "Start": 5.26,
+                  "Stop": 5.76
+                },
+                {
+                  "Start": 6.29,
+                  "Stop": 6.78
+                }
+              ]
+            }
+          },
+          "Idle": {
+            "Female": {
+              "Id": "rbxassetid://9083973290",
+              "BaseVolume": 2.5,
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.7
+                },
+                {
+                  "Start": 2.39,
+                  "Stop": 4.24
+                },
+                {
+                  "Start": 4.93,
+                  "Stop": 6.81
+                },
+                {
+                  "Start": 7.42,
+                  "Stop": 9.49
+                },
+                {
+                  "Start": 10.36,
+                  "Stop": 12.1
+                },
+                {
+                  "Start": 12.57,
+                  "Stop": 15.58
+                },
+                {
+                  "Start": 16.32,
+                  "Stop": 18.31
+                }
+              ]
+            },
+            "Male": {
+              "Id": "rbxassetid://9083973290",
+              "BaseVolume": 2.5,
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.7
+                },
+                {
+                  "Start": 2.39,
+                  "Stop": 4.24
+                },
+                {
+                  "Start": 4.93,
+                  "Stop": 6.81
+                },
+                {
+                  "Start": 7.42,
+                  "Stop": 9.49
+                },
+                {
+                  "Start": 10.36,
+                  "Stop": 12.1
+                },
+                {
+                  "Start": 12.57,
+                  "Stop": 15.58
+                },
+                {
+                  "Start": 16.32,
+                  "Stop": 18.31
+                }
+              ]
+            }
+          },
+          "HitScream": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://9084608801",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 0.5
+                },
+                {
+                  "Start": 0.96,
+                  "Stop": 1.47
+                },
+                {
+                  "Start": 2.09,
+                  "Stop": 3.05
+                },
+                {
+                  "Start": 3.72,
+                  "Stop": 4.64
+                },
+                {
+                  "Start": 5.2,
+                  "Stop": 6.11
+                }
+              ]
+            },
+            "Female": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://9084608801",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 0.5
+                },
+                {
+                  "Start": 0.96,
+                  "Stop": 1.47
+                },
+                {
+                  "Start": 2.09,
+                  "Stop": 3.05
+                },
+                {
+                  "Start": 3.72,
+                  "Stop": 4.64
+                },
+                {
+                  "Start": 5.2,
+                  "Stop": 6.11
+                }
+              ]
+            }
+          },
+          "Scream": {
+            "Male": {
+              "BaseVolume": 10,
+              "Id": "rbxassetid://9084577543",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.25
+                },
+                {
+                  "Start": 1.86,
+                  "Stop": 3.55
+                },
+                {
+                  "Start": 4.07,
+                  "Stop": 5.57
+                },
+                {
+                  "Start": 6.18,
+                  "Stop": 9.29
+                },
+                {
+                  "Start": 9.77,
+                  "Stop": 10.67
+                },
+                {
+                  "Start": 11.16,
+                  "Stop": 12.82
+                },
+                {
+                  "Start": 13.3,
+                  "Stop": 14.57
+                }
+              ]
+            },
+            "Female": {
+              "BaseVolume": 10,
+              "Id": "rbxassetid://9084577543",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.25
+                },
+                {
+                  "Start": 1.86,
+                  "Stop": 3.55
+                },
+                {
+                  "Start": 4.07,
+                  "Stop": 5.57
+                },
+                {
+                  "Start": 6.18,
+                  "Stop": 9.29
+                },
+                {
+                  "Start": 9.77,
+                  "Stop": 10.67
+                },
+                {
+                  "Start": 11.16,
+                  "Stop": 12.82
+                },
+                {
+                  "Start": 13.3,
+                  "Stop": 14.57
+                }
+              ]
+            }
+          }
+        },
+        "line": 146
+      },
+      "module.Other": {
+        "value": {
+          "Idle": {
+            "Female": {
+              "Id": "rbxassetid://9084568740",
+              "BaseVolume": 2.5,
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1
+                },
+                {
+                  "Start": 2.98,
+                  "Stop": 3.93
+                },
+                {
+                  "Start": 5.9,
+                  "Stop": 8.15
+                },
+                {
+                  "Start": 10,
+                  "Stop": 11.58
+                },
+                {
+                  "Start": 13.5,
+                  "Stop": 15.6
+                },
+                {
+                  "Start": 17.55,
+                  "Stop": 19.36
+                },
+                {
+                  "Start": 21.3,
+                  "Stop": 24.99
+                },
+                {
+                  "Start": 26.92,
+                  "Stop": 32.1
+                },
+                {
+                  "Start": 34,
+                  "Stop": 38.65
+                },
+                {
+                  "Start": 40.5,
+                  "Stop": 41.65
+                },
+                {
+                  "Start": 43.6,
+                  "Stop": 44.66
+                },
+                {
+                  "Start": 46.62,
+                  "Stop": 47.36
+                },
+                {
+                  "Start": 49.3,
+                  "Stop": 50.55
+                },
+                {
+                  "Start": 52.46,
+                  "Stop": 53.58
+                },
+                {
+                  "Start": 55.52,
+                  "Stop": 57.48
+                },
+                {
+                  "Start": 59.44,
+                  "Stop": 60.36
+                },
+                {
+                  "Start": 62.3,
+                  "Stop": 63.14
+                },
+                {
+                  "Start": 65.1,
+                  "Stop": 66.62
+                }
+              ]
+            },
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://9084554861",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.92
+                },
+                {
+                  "Start": 3.89,
+                  "Stop": 6.18
+                },
+                {
+                  "Start": 8.16,
+                  "Stop": 10.22
+                },
+                {
+                  "Start": 12.22,
+                  "Stop": 14.38
+                },
+                {
+                  "Start": 16.34,
+                  "Stop": 17.9
+                },
+                {
+                  "Start": 19.86,
+                  "Stop": 23.17
+                },
+                {
+                  "Start": 25.13,
+                  "Stop": 26.87
+                },
+                {
+                  "Start": 28.83,
+                  "Stop": 32.36
+                },
+                {
+                  "Start": 34.31,
+                  "Stop": 35.6
+                },
+                {
+                  "Start": 37.6,
+                  "Stop": 39.13
+                },
+                {
+                  "Start": 41.08,
+                  "Stop": 42.22
+                },
+                {
+                  "Start": 44.18,
+                  "Stop": 45.78
+                },
+                {
+                  "Start": 47.76,
+                  "Stop": 49.24
+                },
+                {
+                  "Start": 51.2,
+                  "Stop": 53.66
+                },
+                {
+                  "Start": 55.62,
+                  "Stop": 58.03
+                },
+                {
+                  "Start": 60.02,
+                  "Stop": 62.13
+                },
+                {
+                  "Start": 64.1,
+                  "Stop": 67.08
+                }
+              ]
+            }
+          },
+          "HitScream": {
+            "Male": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://9084562383",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 0.47
+                },
+                {
+                  "Start": 2.5,
+                  "Stop": 3.3
+                },
+                {
+                  "Start": 5.4,
+                  "Stop": 6.45
+                },
+                {
+                  "Start": 8.63,
+                  "Stop": 9.52
+                },
+                {
+                  "Start": 11.58,
+                  "Stop": 12.5
+                }
+              ]
+            },
+            "Female": {
+              "BaseVolume": 2.5,
+              "Id": "rbxassetid://9084589629",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 0.6
+                },
+                {
+                  "Start": 2.53,
+                  "Stop": 3.2
+                },
+                {
+                  "Start": 5.12,
+                  "Stop": 5.73
+                },
+                {
+                  "Start": 7.66,
+                  "Stop": 8.2
+                },
+                {
+                  "Start": 10.16,
+                  "Stop": 10.7
+                }
+              ]
+            }
+          },
+          "Scream": {
+            "Male": {
+              "BaseVolume": 10,
+              "Id": "rbxassetid://9084231514",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.3
+                },
+                {
+                  "Start": 3.45,
+                  "Stop": 4.98
+                },
+                {
+                  "Start": 6.9,
+                  "Stop": 8.6
+                },
+                {
+                  "Start": 10.5,
+                  "Stop": 12.1
+                },
+                {
+                  "Start": 14,
+                  "Stop": 14.9
+                }
+              ]
+            },
+            "Female": {
+              "BaseVolume": 10,
+              "Id": "rbxassetid://9084373291",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 1.93
+                },
+                {
+                  "Start": 3.88,
+                  "Stop": 5.4
+                },
+                {
+                  "Start": 7.38,
+                  "Stop": 8.9
+                },
+                {
+                  "Start": 10.88,
+                  "Stop": 11.92
+                }
+              ]
+            }
+          }
+        },
+        "line": 346
+      }
+    }
+  },
+  "Footsteps": {
+    "source": "extracted/04-scripts/scripts/ModuleScript.Footsteps.Source.txt",
+    "sha256": "8e705f2684a37c113c5fb10c23adccbb80b9b209bca514ef5fe1f05e78f824c1",
+    "tables": {}
+  },
+  "Player Sounds": {
+    "source": "extracted/04-scripts/scripts/ModuleScript.Player Sounds.Source.txt",
+    "sha256": "dc6e055b3a1ae46920d1a3aeac8849c05643b94c751723916bf64fc12824091b",
+    "tables": {
+      "returned_table": {
+        "value": {
+          "Sounds": {
+            "Scream": {
+              "Id": "rbxassetid://9083929120",
+              "TimeStamps": [
+                {
+                  "Start": 0,
+                  "Stop": 2.5
+                },
+                {
+                  "Start": 4.45,
+                  "Stop": 7.6
+                },
+                {
+                  "Start": 9.53,
+                  "Stop": 13.9
+                }
+              ]
+            }
+          }
+        },
+        "line": 1
+      }
+    }
+  },
+  "Hit Sounds": {
+    "source": "extracted/04-scripts/scripts/ModuleScript.Hit Sounds.Source.txt",
+    "sha256": "5f8898b3b2de900be3adb7520628762773a97c12adc5ef1dc1d414fc2281adde",
+    "tables": {
+      "returned_table": {
+        "value": {
+          "Basic": {
+            "BaseVolume": 1,
+            "Ids": [
+              "rbxassetid://85742799407731",
+              "rbxassetid://111116193655343",
+              "rbxassetid://87142318050977",
+              "rbxassetid://137682097524912",
+              "rbxassetid://117349423038505",
+              "rbxassetid://138325278282773"
+            ]
+          },
+          "Headshot": {
+            "BaseVolume": 3,
+            "Ids": [
+              "rbxassetid://93206308277014",
+              "rbxassetid://129687396554372"
+            ]
+          },
+          "Decapitation": {
+            "BaseVolume": 3,
+            "Ids": [
+              "rbxassetid://72138783317080"
+            ]
+          }
+        },
+        "line": 1
+      }
+    }
+  },
+  "AIAnimations": {
+    "source": "extracted/04-scripts/scripts/ModuleScript.AIAnimations.Source.txt",
+    "sha256": "b83a3278c4e6345c4be38774b5581d8e25d3242f2c233588ec6790d3c99e2a69",
+    "tables": {}
+  },
+  "FortificationsInfo": {
+    "source": "extracted/04-scripts/scripts/ModuleScript.FortificationsInfo.Source.txt",
+    "sha256": "367ddb87306d39db7b8de3236e988a500d0c6e11acf21028b18b6ce542175d20",
+    "tables": {}
+  },
+  "Perks": {
+    "source": "extracted/04-scripts/scripts/ModuleScript.Perks.Source.txt",
+    "sha256": "d9a832648a6393cdd6fa71d178408b78cce1589120cf62e0c08e19f5eee50519",
+    "tables": {
+      "returned_table": {
+        "value": {
+          "Survivalist": {
+            "Hardened Sight": {
+              "Level": 10,
+              "Icon": "rbxassetid://2600767053",
+              "Desc": "Lowers low health effect by 50%."
+            },
+            "Bruiser": {
+              "Level": 20,
+              "Icon": "rbxassetid://2600767158",
+              "Desc": "Lowers all damage effects by 65%"
+            },
+            "Medic": {
+              "Level": 30,
+              "Icon": "rbxassetid://2600767687",
+              "Desc": "Bandages heal 30% more."
+            },
+            "Caffeinated": {
+              "Level": 45,
+              "Icon": "rbxassetid://2600768023",
+              "Desc": "Energy Drink effects last 10 seconds longer."
+            },
+            "Adrenaline Rush": {
+              "Level": 60,
+              "Icon": "rbxassetid://2600768196",
+              "Desc": "When under 35% health, health regenerates slowly to 35%."
+            },
+            "Speed Demon": {
+              "Level": 85,
+              "Icon": "rbxassetid://2600768578",
+              "Desc": "Sprint speed increases by 12%."
+            },
+            "Guardian Angel": {
+              "Level": 100,
+              "Icon": "rbxassetid://2600768700",
+              "Desc": "Revive a teammate if they die. Single use per teammate per wave."
+            }
+          },
+          "Craftsman": {
+            "Play Maker": {
+              "Level": 10,
+              "Icon": "rbxassetid://2600781777",
+              "Desc": "Carry 1 extra Clap Bomb."
+            },
+            "Efficiency": {
+              "Level": 20,
+              "Icon": "rbxassetid://2600781898",
+              "Desc": "One less hammer swing to deploy the 50 cal."
+            },
+            "Enhanced Electronics": {
+              "Level": 30,
+              "Icon": "rbxassetid://2600782323",
+              "Desc": "Increases Clap Bomb range by 40%."
+            },
+            "Fortifier": {
+              "Level": 45,
+              "Icon": "rbxassetid://2600782504",
+              "Desc": "Carry 2 extra Barbed Wire."
+            },
+            "Pyrotechnic": {
+              "Level": 60,
+              "Icon": "rbxassetid://2600783167",
+              "Desc": "Explosive forts do 35% more damage."
+            },
+            "Carpenter": {
+              "Level": 85,
+              "Icon": "rbxassetid://2600782950",
+              "Desc": "Build speed increases by 40%."
+            },
+            "Juggernaut": {
+              "Level": 100,
+              "Icon": "rbxassetid://2600783301",
+              "Desc": "Spawn in with a full set of makeshift armor. This new armor is twice as durable as regular armor."
+            }
+          },
+          "Marksman": {
+            "Dexterous": {
+              "Level": 10,
+              "Icon": "rbxassetid://2600785683",
+              "Desc": "Equip speed increases by 30%."
+            },
+            "Trigger Finger": {
+              "Level": 20,
+              "Icon": "rbxassetid://2600785784",
+              "Desc": "Rate of fire increases by 35% for pump action, bolt action, and semi-automatic weapons."
+            },
+            "Eagle Eyes": {
+              "Level": 30,
+              "Icon": "rbxassetid://2600786648",
+              "Desc": "Aiming speed increases by 40%."
+            },
+            "Heavy Hitter": {
+              "Level": 45,
+              "Icon": "rbxassetid://2600786347",
+              "Desc": "Upper body shots on infected deal 20% more damage."
+            },
+            "Steady Hand": {
+              "Level": 60,
+              "Icon": "rbxassetid://2600786228",
+              "Desc": "Recoil reduced by 50%."
+            },
+            "Brisk": {
+              "Level": 85,
+              "Icon": "rbxassetid://2600786860",
+              "Desc": "Reloading is 20% faster."
+            },
+            "Overwatch": {
+              "Level": 100,
+              "Icon": "rbxassetid://2600786956",
+              "Desc": "Unlock the Barrett M82A1. You can only use the Barrett M82A1 while this perk is equipped."
+            }
+          }
+        },
+        "line": 1
+      }
+    }
+  },
+  "NumToMapName": {
+    "source": "extracted/04-scripts/scripts/ModuleScript.NumToMapName.Source.txt",
+    "sha256": "36c016bf7472e9e9ff3763da53e5b582eed7b47d7ff2e8b40153f7ac2eb39c1a",
+    "tables": {
+      "returned_table": {
+        "value": [
+          "Bypass",
+          "Cabin",
+          "Cargo",
+          "District",
+          "Expressway",
+          "Laboratory",
+          "Manor",
+          "Mill",
+          "Prison",
+          "Ranch",
+          "Market",
+          "Test Map",
+          "Skyscraper",
+          "Carnival",
+          null,
+          "Dealership",
+          "Stadium",
+          null
+        ],
+        "line": 1
+      }
+    }
+  }
+}

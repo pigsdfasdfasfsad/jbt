@@ -1,0 +1,27 @@
+[
+  {
+    "video": "infected walk and damaging player and shoot infected.mp4",
+    "metric": "left screen edge red minus blue exceeds baseline by 12 RGB levels",
+    "baseline": -21.325435374149638,
+    "events": [
+      {
+        "start_s": 0.7,
+        "end_s": 1.2,
+        "peak_red_minus_blue": 53.59
+      },
+      {
+        "start_s": 4.7,
+        "end_s": 5.2,
+        "peak_red_minus_blue": 56.11
+      },
+      {
+        "start_s": 5.733,
+        "end_s": 6.2,
+        "peak_red_minus_blue": 53.2
+      }
+    ],
+    "scope": "capture only, provenance unconfirmed",
+    "confidence": "video-measured",
+    "interpretation": "screen tint episodes, not proof of original attack interval"
+  }
+]

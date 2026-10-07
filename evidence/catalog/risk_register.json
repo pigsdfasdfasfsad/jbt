@@ -1,0 +1,163 @@
+[
+  {
+    "id": "R01",
+    "risk": "Original server absent",
+    "severity": "Critical",
+    "failure": "Spawn/AI/objective behavior becomes guessed",
+    "mitigation": "Recover authorized server/export; isolate provisional policies; block unsupported fidelity claims"
+  },
+  {
+    "id": "R02",
+    "risk": "Harness mistaken for original",
+    "severity": "Critical",
+    "failure": "Incorrect constants and reconstructed bugs propagate",
+    "mitigation": "Per-field provenance/hashes; compare exact sources; never promote RECOVERED comments"
+  },
+  {
+    "id": "R03",
+    "risk": "Mesh/CSG/terrain bytes missing",
+    "severity": "Critical",
+    "failure": "Map geometry cannot be rendered accurately",
+    "mitigation": "Importer proof early; authorized exports or separately authored replacements with comparison gates"
+  },
+  {
+    "id": "R04",
+    "risk": "Rights unresolved",
+    "severity": "Critical",
+    "failure": "A functional game cannot be distributed with unknown assets",
+    "mitigation": "Asset release allowlist, owner/license/permission records; replacement manifest"
+  },
+  {
+    "id": "R05",
+    "risk": "Map fragments mistaken for full worlds",
+    "severity": "High",
+    "failure": "13 quick imports appear complete but omit buildings/routes",
+    "mitigation": "Separate walls/local/LOD/world; per-map coverage and landmark audit"
+  },
+  {
+    "id": "R06",
+    "risk": "Mixed game versions",
+    "severity": "High",
+    "failure": "Weapon/objective/light changes form an inconsistent hybrid",
+    "mitigation": "Freeze target revision; retain conflict ledger and explicit compatibility profiles"
+  },
+  {
+    "id": "R07",
+    "risk": "Broken decompiler control flow",
+    "severity": "High",
+    "failure": "Zero damage, empty perks or wrong timings copied literally",
+    "mitigation": "Static extraction quarantine; caller tracing and behavioral tests before runtime port"
+  },
+  {
+    "id": "R08",
+    "risk": "Animation interpreter mismatch",
+    "severity": "High",
+    "failure": "Gun handling feels generic despite correct stats",
+    "mitigation": "Layered source channels/event commits; family-specific captures and cancellation fixtures"
+  },
+  {
+    "id": "R09",
+    "risk": "Movement evidence insufficient",
+    "severity": "High",
+    "failure": "Core recognizable feel is missed",
+    "mitigation": "Calibrated original course recordings; tune parameters in data, label provisional"
+  },
+  {
+    "id": "R10",
+    "risk": "Late-wave CPU/navigation cost",
+    "severity": "High",
+    "failure": "AI frame spikes and inconsistent attacks",
+    "mitigation": "Central batches/path cache/spatial grid, early stress, accurate action clocks and budgets"
+  },
+  {
+    "id": "R11",
+    "risk": "Map light/mesh draw overhead",
+    "severity": "High",
+    "failure": "Thousands of lights/objects overwhelm baseline",
+    "mitigation": "Static light bake/emissive profiles, chunk/material batching, pooled dynamic lights/FX"
+  },
+  {
+    "id": "R12",
+    "risk": "Audio and animation data absent",
+    "severity": "High",
+    "failure": "Atmosphere and signatures cannot match",
+    "mitigation": "Resolve authorized bytes; create timed replacements against stronger footage"
+  },
+  {
+    "id": "R13",
+    "risk": "Current reward/progression ambiguity",
+    "severity": "High",
+    "failure": "Offline grind/unlocks drift and saves migrate badly",
+    "mitigation": "Literal arithmetic fixtures; separate caller assumptions; versioned migrations/receipt ledger"
+  },
+  {
+    "id": "R14",
+    "risk": "Single-player balance changed silently",
+    "severity": "Medium",
+    "failure": "Default mode becomes a different game",
+    "mitigation": "n=1 original-session evidence; optional adapted mode separate from faithful profile"
+  },
+  {
+    "id": "R15",
+    "risk": "Perk stacking/wording ambiguity",
+    "severity": "Medium",
+    "failure": "Unintended speed/damage boosts",
+    "mitigation": "Eligible-stage resolver; independent examples and documented duration decisions"
+  },
+  {
+    "id": "R16",
+    "risk": "Save interruption/corruption",
+    "severity": "High",
+    "failure": "Progression lost or duplicated",
+    "mitigation": "Atomic same-volume writes, validation, backups, fault injection and idempotent receipts"
+  },
+  {
+    "id": "R17",
+    "risk": "Scope across91weapons/17maps",
+    "severity": "High",
+    "failure": "Endless content work before architecture proof",
+    "mitigation": "Complete Lab slice; family importer/data automation; measured map throughput and hard gates"
+  },
+  {
+    "id": "R18",
+    "risk": "Test video provenance",
+    "severity": "High",
+    "failure": "Development capture becomes retail benchmark",
+    "mitigation": "Capture build identity mandatory; keep capture-specific measurements separate"
+  },
+  {
+    "id": "R19",
+    "risk": "Threading/pool stale callbacks",
+    "severity": "High",
+    "failure": "Rare crashes or wrong-entity damage",
+    "mitigation": "Generation IDs/nav revisions, bounded queues, main-thread engine adapters, soak tests"
+  },
+  {
+    "id": "R20",
+    "risk": "Offline package dependency",
+    "severity": "High",
+    "failure": "Works on developer PC but not disconnected laptop",
+    "mitigation": "Clean Windows no-engine/no.NET-preinstall audit; package dependency manifest"
+  },
+  {
+    "id": "R21",
+    "risk": "Engine upgrades during tuning",
+    "severity": "Medium",
+    "failure": "Physics/navigation/visual baselines shift",
+    "mitigation": "Pin engine/export templates/SDK; upgrade only with regression and evidence gate"
+  },
+  {
+    "id": "R22",
+    "risk": "Apparent performance fix changes gameplay",
+    "severity": "High",
+    "failure": "Invisible zombies stop attacking or pressure is capped",
+    "mitigation": "Domain continues at all LODs; performance budget separate from spawn design; replay parity"
+  },
+  {
+    "id": "R23",
+    "risk": "Visual resemblance without functional fidelity",
+    "severity": "High",
+    "failure": "Correct names/models hide wrong pacing/handling",
+    "mitigation": "Combined source, simulation, action-video, map and atmosphere gates"
+  }
+]

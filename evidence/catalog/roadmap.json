@@ -1,0 +1,404 @@
+[
+  {
+    "stage": 0,
+    "title": "Evidence baseline and repository",
+    "purpose": "Establish a reproducible source/evidence contract before writing gameplay.",
+    "systems_modules": "Evidence/Manifest; Evidence/Decisions; Tools/ValidateEvidence; Content/Schemas; docs/task-cards; build/version-lock",
+    "dependencies": "This investigation and authorized access to its artifacts.",
+    "source_references": "All archive hashes; E001-E065; C01-C26; weapon_catalog; file_manifest.",
+    "implementation_tasks": [
+      "Create an isolated TWR-Standalone repository. Record source archives by hash and keep raw evidence outside release content paths.",
+      "Import evidence indexes and define original, secondary, harness, capture and proposed provenance labels.",
+      "Pin a tested Godot .NET build, SDK and export templates. Define units, IDs, version policy and task-card schema.",
+      "Add evidence/content schemas, import fixtures and an acceptance gate register."
+    ],
+    "validation_tests": [
+      "Recompute all six archive hashes and 8,033 manifest records; verify 225 scripts, 98 definitions, 91 weapons, nine infected and 21 perks.",
+      "Failure fixtures reject changed hashes, unknown values encoded as zero, unresolved evidence IDs and harness constants mislabeled original.",
+      "No gameplay code or asset runtime downloads are introduced."
+    ],
+    "completion_criteria": "Commit a reproducible source baseline, decision ledger, toolchain lock and bounded next task cards. Keep all open conflicts."
+  },
+  {
+    "stage": 1,
+    "title": "Offline executable and local authority shell",
+    "purpose": "Prove Windows packaging and the simulation boundary before gameplay.",
+    "systems_modules": "Runtime/SessionHost; Core/Clock; Contracts/Commands; Contracts/Events; Game.Godot/Bootstrap; build/Windows",
+    "dependencies": "Stage0.",
+    "source_references": "E001; T01-T02; section7.",
+    "implementation_tasks": [
+      "Create the Godot frontend and pure C# domain projects, fixed clock, command queue, state snapshots and events.",
+      "Add local profile selection, settings shell, diagnostics and solo pause.",
+      "Export a Windows build with every required local runtime dependency."
+    ],
+    "validation_tests": [
+      "Launch on a clean disconnected Windows 11 system with no Roblox and no assumed .NET preinstallation.",
+      "A 60-second clock/replay produces identical domain results across render rates; pause resumes without an accumulated catch-up burst.",
+      "The domain builds without Godot; presentation has no direct authoritative mutation path."
+    ],
+    "completion_criteria": "The offline executable boots, selects a local profile and exits with a reproducible package manifest."
+  },
+  {
+    "stage": 2,
+    "title": "Safe source extraction and normalized definitions",
+    "purpose": "Convert evidence to typed data without executing Luau or erasing malformed fields.",
+    "systems_modules": "Tools/LuauData; Tools/RobloxXml; Content/Schemas; Content/Generated; Tests/Import",
+    "dependencies": "Stage0; Stage1 for resource loading.",
+    "source_references": "E003-E010, E015-E018, E022-E027; weapon_catalog; shared/expanded tables.",
+    "implementation_tasks": [
+      "Implement safe literal/expression extraction and XML referent traversal with source spans and hashes.",
+      "Normalize units and references while retaining raw expressions, animation channels, sound slices and malformed records.",
+      "Generate all 98 definitions, nine infected, 21 perks and four fortification records; expose unresolved asset bindings.",
+      "Compile definitions repeatably; never execute uploaded source code."
+    ],
+    "validation_tests": [
+      "All imported literal values match frozen evidence; repeated compilation produces identical canonical checksums.",
+      "Independent Glock, Sawn Off, MG42, perk, XP and reward fixtures pass.",
+      "Dynamic script calls are rejected; Sawn Off Dimensions is quarantined; assignment-based sound tables are retained."
+    ],
+    "completion_criteria": "The shell loads a validated registry with complete evidence links and explicit unknown fields."
+  },
+  {
+    "stage": 3,
+    "title": "Laboratory map conversion proof",
+    "purpose": "Retire the largest asset/geometry risk before building gameplay on a fake map.",
+    "systems_modules": "Tools/SceneIR; Tools/GodotImport; Content/Maps/Laboratory; World/Collision; World/Nav",
+    "dependencies": "Stages1-2; authorized geometry or explicit diagnostic placeholders.",
+    "source_references": "E012-E014, E053-E056; TestPlace_items; map_catalog; markers.",
+    "implementation_tasks": [
+      "Import a connected Lab corridor, research room, stair and garage chunk with primitive geometry, collision and navigation.",
+      "Validate scale, basis, hierarchy, invisible walls and local/LOD duplication handling.",
+      "Generate a missing mesh/CSG/terrain worklist with authorized export or replacement paths.",
+      "Add source-coordinate marker overlays and landmark camera fixtures."
+    ],
+    "validation_tests": [
+      "Source transform error is at most 1e-4 stud; axis, 90-degree rotation and parent-local fixtures pass.",
+      "Chosen routes traverse correctly; invisible walls are not rendered and actors cannot clip through them.",
+      "Source marker groups contain 15 infected, eight player, 127 item and 47 fortification Parts.",
+      "Repeated imports are canonical; no Union bounding-box proxy is marked final art."
+    ],
+    "completion_criteria": "Useful Lab geometry and navigation are proven. Critical missing geometry has a concrete resolution path or an explicit blocked gate."
+  },
+  {
+    "stage": 4,
+    "title": "Player camera and first person rig",
+    "purpose": "Establish recognizable motion and weapon framing with measured tunable parameters.",
+    "systems_modules": "Player/Controller; Input/Bindings; Presentation/Camera; Animation/FirstPersonRig; World/Movement",
+    "dependencies": "Stages1-3; selected player/weapon pose data.",
+    "source_references": "E006, E020-E021, E057-E059; controls and GripCF/CamAim data; U06-U07.",
+    "implementation_tasks": [
+      "Implement walking, sprinting, jumping, slow movement and ADS action state without unproven crouching or stamina.",
+      "Build R6-style arms and source-relative weapon/camera channels; add sensitivity and input settings.",
+      "Create a calibrated movement course and comparison captures.",
+      "Label unverified speeds, gravity and maximum health as proposed values."
+    ],
+    "validation_tests": [
+      "Over ten fixed seconds the selected movement speed yields distance within 0.5%; input behavior remains consistent at 30/60/144 FPS.",
+      "Chosen source FOV and pose keyframes match; compiled durations agree within 1 ms.",
+      "Lab stairs/doors traverse without unintended snagging; pause freezes gameplay clocks."
+    ],
+    "completion_criteria": "The controller and rig pass engineering tests; retail movement remains blocked until calibrated original evidence resolves U06."
+  },
+  {
+    "stage": 5,
+    "title": "Weapon actions and ammunition vertical core",
+    "purpose": "Prove original-style timelines and ammo conservation for two gun families.",
+    "systems_modules": "Weapons/WeaponState; Weapons/ActionPolicy; Animation/TimelineSampler; Weapons/Ammo; Presentation/Weapon",
+    "dependencies": "Stages2 and 4; moving-part models and selected unknown decisions.",
+    "source_references": "E004-E008; Glock17, Sawn Off animations; U09-U10.",
+    "implementation_tasks": [
+      "Implement layered animation channels, easing, moving parts and committed action events.",
+      "Add Glock and Sawn Off fire, equip, aim, reload and switch behavior with an explicit chamber/reload profile.",
+      "Emit accepted shot, audio and muzzle events; use MG42 only as a high-cadence diagnostic.",
+      "Test ammunition conservation across interrupted, empty and tactical reloads."
+    ],
+    "validation_tests": [
+      "Glock shot spacing is 150 ms and MG42 diagnostic spacing 50 ms, without render-rate drift.",
+      "Magazine/reserve limits are correct; canceled actions cannot create rounds or permit prohibited-phase firing.",
+      "Every timeline has annotated action commit and cancellation fixtures; segment durations match source."
+    ],
+    "completion_criteria": "Two gun families work through one traceable framework; uncertain runtime commit rules remain named provisional decisions."
+  },
+  {
+    "stage": 6,
+    "title": "Damage basic infected and early horde stress",
+    "purpose": "Prove combat authority and scalable chase before specials.",
+    "systems_modules": "Damage/Pipeline; Infected/State; AI/HordeCoordinator; AI/PathCache; Presentation/Infected; Physics/Death",
+    "dependencies": "Stages3-5.",
+    "source_references": "E002-E003, E012, E015, E019, E033-E035; U04-U08.",
+    "implementation_tasks": [
+      "Implement Civilian and Sprinter from a selected source profile, nearest-human pursuit and claw attack state.",
+      "Add region hit proxies, death causes, idempotent kill receipts, gore and ragdoll presentation.",
+      "Create spatial grids, path budgets, pools and profiling counters; benchmark 250 live infected early.",
+      "Keep attack intervals and mode scaling provisional where original rules are missing."
+    ],
+    "validation_tests": [
+      "Selected head/body/limb damage fixtures pass; repeated lethal contacts award only once.",
+      "All chosen routes navigate correctly without barrier clipping or presentation-based immunity.",
+      "Report 250-live/150-visible baseline frame timings, path latency and spawn bursts."
+    ],
+    "completion_criteria": "Basic combat is sustainable and repeatable; unresolved AI timing and scaling remain separate fidelity blockers."
+  },
+  {
+    "stage": 7,
+    "title": "Timed match and wave director",
+    "purpose": "Connect combat into a source-framed survival loop.",
+    "systems_modules": "Match/StateMachine; Waves/Director; Waves/SpawnPolicy; Match/Ready; Progression/SurvivalLedger",
+    "dependencies": "Stage6; Stage2mode definitions.",
+    "source_references": "E022-E023, E030-E032; mode references; U02-U04.",
+    "implementation_tasks": [
+      "Implement ready/loading/start/wave/intermission/results/win/loss transitions with authoritative timers.",
+      "Add eligible-type tables and seeded provisional spawn policies, with human count as a separate input.",
+      "Track survival qualification and configured cleanup/retention at transitions.",
+      "Keep spawn curves replaceable in data."
+    ],
+    "validation_tests": [
+      "Regular expires at 300 seconds with live infected and wins after wave ten; solo death fails the match.",
+      "Riot/Bloater eligibility starts at wave two; Juggernaut is excluded from Regular.",
+      "Simultaneous death/expiry is ordered deterministically; pause/render rate do not affect timers or RNG decisions."
+    ],
+    "completion_criteria": "Three-wave integration and full finite-loop fixtures pass, while unknown original spawn curves remain provisional."
+  },
+  {
+    "stage": 8,
+    "title": "Loot HUD objective and robust profile slice",
+    "purpose": "Make the architecture useful as a small full game loop.",
+    "systems_modules": "Items/Inventory; Items/LootDirector; Interactions; Objectives/Unpack; UI/HUD; Persistence/ProfileStore",
+    "dependencies": "Stages5-7; source GUI/marker data; decided profile schema.",
+    "source_references": "E038-E044, E048, E050, E057; U11, U13-U14.",
+    "implementation_tasks": [
+      "Add ammo, bandages, medkit and gas-mask pickup/use, capacities and death/wave lifecycle.",
+      "Implement Unpack secure progress, contribution, grounding and supplies at a validated Lab location.",
+      "Build the retail-layout HUD and local XP/credits/loadout/purchase profile with atomic saves, backups and receipts.",
+      "Add the Burster death/gas branch needed by the slice and complete a ten-wave fixture."
+    ],
+    "validation_tests": [
+      "Ammo respects per-definition grants/caps; Medic fixture heals 26 from base 20; masks block gas but not initial spore blast.",
+      "Secure progress needs occupancy; supply is unavailable until grounded; completion rewards apply once.",
+      "HUD anchors/scales meet the proposed 4-pixel/2% comparison bounds; disconnected relaunch restores progression.",
+      "Save fault injection and duplicate reward/purchase tests pass."
+    ],
+    "completion_criteria": "A persistent first slice works; unresolved current objective reward amounts remain C."
+  },
+  {
+    "stage": 9,
+    "title": "Complete Laboratory slice and early atmosphere",
+    "purpose": "Validate target feel and full map workflow before multiplying content.",
+    "systems_modules": "Content/Maps/Laboratory; Audio/Profiles; Effects; UI/Menus; Diagnostics/Comparison",
+    "dependencies": "Stages3-8; authorized/recreated assets and calibrated references.",
+    "source_references": "E053-E061; Lab image versions; kill/HUD reference; U16-U21.",
+    "implementation_tasks": [
+      "Expand the proof chunk into full traversable Lab; resolve critical mesh/CSG and marker dependencies.",
+      "Finish lobby/menu, source HUD, weapon/infected audio and selected Lab lighting/weather profile.",
+      "Capture a complete ten-wave playthrough, death/results, gun actions, Unpack and map landmarks.",
+      "Keep discrepancy records and calibration revisions."
+    ],
+    "validation_tests": [
+      "A clean offline launch reaches Lab, completes ten waves, awards results and restores the profile on relaunch.",
+      "All intended routes/spawns/objective placements pass; no critical geometry placeholders remain.",
+      "Map loading, frame/RAM budgets and gun/HUD/lighting/audio comparisons have recorded outcomes."
+    ],
+    "completion_criteria": "The full slice passes engineering gates. Critical unresolved art/media or retail behavior still blocks a high-fidelity release claim."
+  },
+  {
+    "stage": 10,
+    "title": "Complete weapon families and catalog",
+    "purpose": "Extend the proven framework to all91weapons without per-gun forks.",
+    "systems_modules": "Weapons/Families; Weapons/Projectiles; Animation/TimelineCompiler; Content/Weapons; Tests/Weapons",
+    "dependencies": "Stages5, 6, 9; missing timeline/model evidence resolved per family.",
+    "source_references": "All weapon_catalog records; E009-E011, E033, E049; U08-U10.",
+    "implementation_tasks": [
+      "Add shell-fed, magazine, chambered, pump/bolt, revolver, belt, launcher, flame, spin-up and melee policies.",
+      "Populate all 49 primaries, 25 secondaries, 17 melees and seven equipment records; unavailable event assets remain blocked.",
+      "Implement all evidenced region, penetration, spread, projectile and death-cause policies.",
+      "Compare an exemplar of every family, then validate every weapon\u2019s data, poses and bindings."
+    ],
+    "validation_tests": [
+      "All 91 weapon records load with exact selected-source damage/RPM/ammo/price/level values.",
+      "Every relevant family has empty/tactical/standard/cancel/blocked-fire and multi-target fixtures.",
+      "Event, Overwatch/Barrett and Minigun restrictions pass; no unresolved asset dependency ships."
+    ],
+    "completion_criteria": "All evidenced weapon families use the common framework; individual blocked assets and runtime unknowns remain listed."
+  },
+  {
+    "stage": 11,
+    "title": "Complete special infected and status effects",
+    "purpose": "Reproduce distinct threat patterns, not merely differentstats.",
+    "systems_modules": "Infected/Specials; Damage/Immunity; AI/AttackScheduler; Effects/Areas; Content/Infected",
+    "dependencies": "Stages6 and 9; family damage/status APIs.",
+    "source_references": "E003, E015, E032, E035-E037; all9type references; U04-U05.",
+    "implementation_tasks": [
+      "Complete Military, Riot, Hazmat, Bolter, Bloater, Juggernaut and Burster behavior.",
+      "Add leap commitment/recovery, cluster trajectories, frontal immunity, charge, gas, stagger and cause-dependent deaths.",
+      "Resolve or explicitly version HP/fire/melee contradictions.",
+      "Add type scheduling, role-specific animation and local audio."
+    ],
+    "validation_tests": [
+      "Nine infected and Escort remain distinct roles; chosen effective health/speed/damage profiles pass fixtures.",
+      "Bolter cannot steer a committed leap; Juggernaut front/rear/fire/explosive and Burster suppression cases pass.",
+      "Mixed late-wave stress meets budgets; action cooldowns remain independent of animation LOD."
+    ],
+    "completion_criteria": "Each special has a tested FSM and controlled comparison capture; unknown timing/scaling still gates fidelity."
+  },
+  {
+    "stage": 12,
+    "title": "Fortification construction and mounted combat",
+    "purpose": "Recover the Hammer workflow and four fortification interactions.",
+    "systems_modules": "Fortifications/Placement; Fortifications/Build; Fortifications/Triggers; Weapons/Mounted; UI/Build",
+    "dependencies": "Stages8, 10, 11; source footprints/placement evidence.",
+    "source_references": "E026, E038, E049; FortificationsInfo; U12.",
+    "implementation_tasks": [
+      "Implement placement previews, footprint/surface/overlap validation and accepted Hammer swings.",
+      "Add Wire, Clap Bomb, Jack and mounted 50 Cal capacity, trigger/fuse/ammo/traverse state.",
+      "Apply Craftsman modifiers with capacity distinct from carried charges.",
+      "Test deployed cleanup and gunner release; document any deliberate bug fix."
+    ],
+    "validation_tests": [
+      "Build swings are 3/2/1/1; Efficiency reduces 50 Cal to two; invalid placement cannot consume an item.",
+      "Wire once-per-contact, Clap facing policy and Jack fuse pass; Pyro yields 567/506.25 from raw Clap/Jack damage.",
+      "Mounted ammunition/traverse/shared use and wave-transition release work."
+    ],
+    "completion_criteria": "The full build/use/lifecycle workflow passes. Unproven repair/fort-health mechanics are not fabricated."
+  },
+  {
+    "stage": 13,
+    "title": "All objective families and support equipment",
+    "purpose": "Complete six optional objectives and associated supply/support interactions.",
+    "systems_modules": "Objectives/Fill; Secure; Damage; Escort; Objectives/Director; Supply/Flight; Equipment/Support",
+    "dependencies": "Stages8, 10-12; objective/map-marker evidence and equipment models.",
+    "source_references": "E043-E048 and E063-E065; CAS Radio, Dog Whistle, Defibrillator; GSClient/GermanShepard/A10 client traces; U13-U14.",
+    "implementation_tasks": [
+      "Complete all six objective families with map availability, recipes, routes and contribution ledgers.",
+      "Implement helicopter approach/grounding/supplies and separate participation/completion/wave receipts.",
+      "Investigate CAS Radio, Dog Whistle and Defibrillator authoritative effects, cooldowns and entitlements before coding uncertain rules.",
+      "Preserve Escort untargetability and tanker-caused bonus exclusions."
+    ],
+    "validation_tests": [
+      "Load requires ten items; Repair ten/twelve; only one item can be carried; Secure, Damage and Escort use the selected contribution profile.",
+      "Each available map has validated legal objective locations/routes; wrong-map selection fails.",
+      "Rewards never double-pay; no premature pallet pickup; Escort stops without a nearby human and cannot be infected-targeted."
+    ],
+    "completion_criteria": "Six workflows pass. Current schedules, rewards and support-equipment unknowns remain explicit fidelity gates."
+  },
+  {
+    "stage": 14,
+    "title": "Complete progression perks and cosmetic economy",
+    "purpose": "Connect faithful unlocks/modifiers to local persistent acquisition.",
+    "systems_modules": "Progression/Rewards; Progression/Levels; Perks/Resolver; Economy/Transactions; Cosmetics; UI/Shop",
+    "dependencies": "Stages10-13; Stage8save/receipts.",
+    "source_references": "E022-E025, E050-E052; price/unlocktables; U14-U15, U23.",
+    "implementation_tasks": [
+      "Complete all 21 perks, slot validation, usage conditions and source prices/unlocks.",
+      "Resolve reward/streak/rounding/revive/objective versions with recorded compatibility decisions.",
+      "Implement ordinary purchases and skins; define former paid/event/daily/case/booster offline policies separately.",
+      "Migrate profile revisions safely."
+    ],
+    "validation_tests": [
+      "Independent perks and eligible combinations pass; Speed Demon leaves walking unchanged; Barrett is gated; capacity perks grant no items.",
+      "XP boundaries, multi-level credits and duplicate kill/wave/objective/purchase receipts pass.",
+      "Three base slots remain; a fourth requires the selected local entitlement policy."
+    ],
+    "completion_criteria": "Ordinary offline progression and all perks work; backend/event adaptations are explicit evidence-linked decisions."
+  },
+  {
+    "stage": 15,
+    "title": "All modes single player and lifecycle cases",
+    "purpose": "Finish Classic/Hardcore/Endless without introducing networking.",
+    "systems_modules": "Match/Modes; Waves/Scaling; Objectives/Generator; Player/DeathRevive; UI/ResultsSpectator",
+    "dependencies": "Stages11-14; Endless map or proxy test world available.",
+    "source_references": "E030-E032, E041, E047; mode/generator references; U02-U05, U24-U25.",
+    "implementation_tasks": [
+      "Complete selected ten-wave Classic, fifteen-wave Hardcore and Endless 225-second/45-second profiles.",
+      "Add generator failure, supply cadence and one-human population behavior; keep any adapted solo mode separate.",
+      "Test teammate revive/consent in multi-human fixtures without adding solo self-revive.",
+      "Cover death, spectator, pause, scene transitions and simultaneous results."
+    ],
+    "validation_tests": [
+      "Juggernaut eligibility is Classic seven, Hardcore ten and Endless twenty-five; Endless has no optional objectives and drops supplies every fifth wave.",
+      "Generator destruction fails with a living human; all-human death fails; solo pause freezes all clocks.",
+      "Revive is once per recipient/wave, returns 50% HP/full ammo and no armor/loot/streak; action is unavailable alone."
+    ],
+    "completion_criteria": "All mode loops pass engineering tests with explicit version and scaling decisions."
+  },
+  {
+    "stage": 16,
+    "title": "Map production and per map gameplay",
+    "purpose": "Reconstruct the intended roster through repeatable importer/authoring gates.",
+    "systems_modules": "Content/Maps; Tools/MapAudit; World/NavRegions; Maps/LightingAudio; Tests/MapTraversal",
+    "dependencies": "Stage9pipeline; Stages12-15gameplay systems; authorized complete map data or adequate replacement reference coverage.",
+    "source_references": "E013-E014, E053-E056, E062; all map profiles/image catalog; U16-U18, U22.",
+    "implementation_tasks": [
+      "Produce the best validated smaller map next, likely Cabin after obtaining complete geometry; then remaining standard maps by evidence readiness.",
+      "Produce Market, Skyscraper and Dealership with verified generator/navigation/supply routes.",
+      "Require player/infected/loot/fort/objective markers and map-specific atmosphere for every map.",
+      "Keep Airport historical, Test Map restricted and Metro blocked until adequate target evidence exists."
+    ],
+    "validation_tests": [
+      "Every map passes landmark, collision, traversal, spawning and objective-route tests.",
+      "No critical unresolved assets/proxies remain; manual reconstructions have calibrated comparison reports.",
+      "Mode availability, objective placement, loading and per-map performance budgets pass."
+    ],
+    "completion_criteria": "The selected released roster is complete; historical/candidate content is never counted without an explicit scope and evidence gate."
+  },
+  {
+    "stage": 17,
+    "title": "Audio visual and quirk fidelity convergence",
+    "purpose": "Close comparison differences across all integrated content.",
+    "systems_modules": "Presentation/Calibration; Audio/Mix; Animation; Effects; UI/Themes; Evidence/Compatibility",
+    "dependencies": "Each content stage already has a basic fidelity gate; Stage16full content.",
+    "source_references": "E004-E021, E057-E061; reference images/retailnewcaptures; U09, U18-U21.",
+    "implementation_tasks": [
+      "Compare gun framing/recoil/reloads, build/attack timing, HUD/feed/transitions, map fog/light/weather and audio attenuation.",
+      "Resolve media through authorized exports or recorded recreated equivalents.",
+      "Audit source quirks and deliberate fixes; reject silent generic FPS modernization.",
+      "Freeze release comparison captures and calibration revisions."
+    ],
+    "validation_tests": [
+      "All A/B feature comparisons meet declared tolerances; remaining C/D gaps are listed.",
+      "Test HUD/harness lighting never substitutes for the selected retail reference.",
+      "Default settings preserve recognizable actions/scenes; every override has a decision ID."
+    ],
+    "completion_criteria": "The fidelity matrix includes implementation tests and captures; critical recognition gaps are resolved or release claims narrowed honestly."
+  },
+  {
+    "stage": 18,
+    "title": "Performance regression and long offline soak",
+    "purpose": "Meet the baseline performance targets while preserving authentic gameplay.",
+    "systems_modules": "Diagnostics/Profiler; AI/Budgets; World/Streaming; Rendering/LOD; Physics/Pools; Tests/Soak",
+    "dependencies": "Early Stage6benchmark, Stage16maps, Stage17profiles.",
+    "source_references": "T03-T05; source map/particle counts; section 20 proposed budgets.",
+    "implementation_tasks": [
+      "Profile CPU/GPU/navigation/rigs/physics/audio/memory in release builds.",
+      "Tune pooling, path caching, LOD, chunking and light baking without dropping attacks, damage, loot or rewards.",
+      "Run mixed late-wave hordes, explosions/forts, fifty-spawn bursts, repeated map loads and an eight-hour soak.",
+      "Record baseline and Ryzen AI Max+ 395/Radeon8060S benchmarks."
+    ],
+    "validation_tests": [
+      "Baseline 1080p medium targets 60 FPS with p95 at most 16.67 ms and p99 at most 25 ms under 250-live/150-visible stress.",
+      "No repeated spawn frames above 33.3 ms; target peak working RAM at most 4 GiB; cold/warm loading at most ten/three seconds.",
+      "After warmup/repeated loads, memory growth is at most 5%; no stale pool/path callbacks or audio overflow."
+    ],
+    "completion_criteria": "Measured release performance passes selected budgets; benchmark population remains separate from original unknown spawn counts."
+  },
+  {
+    "stage": 19,
+    "title": "Windows packaging and final offline acceptance",
+    "purpose": "Ship reproducible fully offline install and test long-term local operation.",
+    "systems_modules": "build/Windows; Tools/PackageAudit; Tests/Offline; docs/Release; profile migrations",
+    "dependencies": "All critical gates; rights-approved asset manifest; Stage18.",
+    "source_references": "Primary goal; T01; asset_rights_register; all traceability/acceptance records.",
+    "implementation_tasks": [
+      "Package ThoseWhoRemainOffline.exe, every required asset and local runtime dependency in an installer/portable distribution.",
+      "Audit licenses, external URLs, dynamic downloads and online SDKs/telemetry.",
+      "Test standard-user clean Windows installation, disconnected operation, read-only install location and save recovery.",
+      "Publish build/dependency manifests, controls/local-profile guide and known fidelity limitations."
+    ],
+    "validation_tests": [
+      "A fresh offline system launches without Roblox, Roblox Studio, accounts, servers or internet; all included content is usable.",
+      "No required DNS/socket/HTTP or Roblox asset requests occur during a network-blocked run.",
+      "Profiles survive 100 launches; corrupt primary recovery works; uninstall policy preserves profiles.",
+      "Complete a 24-hour disconnected play/restart/map-load sequence and repeat baseline performance checks."
+    ],
+    "completion_criteria": "A reproducible offline Windows release ships with rights resolved, critical gates passed and an honest fidelity status."
+  }
+]
