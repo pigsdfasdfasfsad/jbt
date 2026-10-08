@@ -51,7 +51,6 @@ public partial class ThrowableHazardRuntime : Node3D
             {
                 if(node is not InfectedAgent infected || !GodotObject.IsInstanceValid(infected))continue;
                 if(infected.GlobalPosition.DistanceTo(GlobalPosition)>EffectiveRadius)continue;
-                if(infected.InfectedType=="Hazmat")continue;
 
                 if(HazardType=="Molotov")
                     infected.ApplyDamage(MolotovTickDamage,false,"Fire");

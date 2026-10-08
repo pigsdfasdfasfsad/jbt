@@ -70,6 +70,22 @@ public partial class Bootstrap : Node
             if (visual.GetChildCount() == 0)
                 throw new InvalidOperationException("Missing offline infected visual: " + type);
         }
+        var hazmat = new InfectedAgent { InfectedType = "Hazmat", Health = 100 };
+        stage.AddChild(hazmat);
+        hazmat.ApplyDamage(10, false, "Fire");
+        if (Math.Abs(hazmat.Health - 90f) > 0.01f)
+            throw new InvalidOperationException("Hazmat incorrectly immune to fire.");
+        var bloater = new InfectedAgent { InfectedType = "Bloater", Health = 100 };
+        stage.AddChild(bloater);
+        bloater.ApplyDamage(10, false, "Fire");
+        if (Math.Abs(bloater.Health - 70f) > 0.01f)
+            throw new InvalidOperationException("Bloater source fire modifier not applied.");
+        var riot = new InfectedAgent { InfectedType = "Riot", Health = 100 };
+        stage.AddChild(riot);
+        riot.ApplyDamage(10, false, "Melee");
+        if (Math.Abs(riot.Health - 95f) > 0.01f)
+            throw new InvalidOperationException("Riot source melee modifier not applied.");
+        GD.Print("TWR_SMOKE_INFECTED_MODIFIERS_OK");
         GD.Print("TWR_SMOKE_INFECTED_VISUALS_OK types=" + types.Length);
         GetTree().Quit(0);
     }

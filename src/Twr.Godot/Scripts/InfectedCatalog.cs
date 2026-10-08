@@ -16,6 +16,24 @@ public static class InfectedCatalog
         new("Bloater", 487.5, 60, 7, true)
     ];
 
+    // Verified from the recovered ModuleScript.Infected Info.Source.txt
+    // manipulators table. Fire is a damage multiplier, Smoke scales gas
+    // slowdown intensity, and Melee scales direct melee damage.
+    public static float DamageMultiplier(string name, string damageKind) =>
+        (name, damageKind) switch
+        {
+            ("Bloater", "Fire") => 3.0f,
+            ("Riot", "Melee") => 0.5f,
+            _ => 1.0f
+        };
+
+    public static float SmokeMultiplier(string name) => name switch
+    {
+        "Hazmat" or "Burster" => 0.0f,
+        "Bolter" => 0.5f,
+        _ => 1.0f
+    };
+
     public static (int Credits, int Xp) BonusReward(string name) => name switch
     {
         "Bolter" => (8, 4),

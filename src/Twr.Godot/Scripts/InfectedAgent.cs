@@ -194,14 +194,18 @@ public partial class InfectedAgent : CharacterBody3D
     public void ApplySlow(float factor, double seconds)
     {
         if (factor <= 0 || factor >= 1 || seconds <= 0) return;
-        _slowFactor = Math.Min(_slowFactor, factor);
+        var intensity = InfectedCatalog.SmokeMultiplier(InfectedType);
+        if (intensity <= 0) return; // Hazmat/Burster source smoke immunity.
+        var effectiveFactor = 1f - (1f - factor) * intensity;
+        _slowFactor = Math.Min(_slowFactor, effectiveFactor);
         _slowTime = Math.Max(_slowTime, seconds);
     }
 
     public void ApplyDamage(float amount, bool headshot = false, string damageKind = "Generic")
     {
         if (amount <= 0 || Health <= 0) return;
-        var applied = headshot ? amount * 2.5f : amount; // VERIFIED head multiplier.
+        var applied = amount * InfectedCatalog.DamageMultiplier(InfectedType, damageKind);
+        if (headshot) applied *= 2.5f; // VERIFIED head multiplier.
         Health = Math.Max(0, Health - applied);
         if (Health > 0) return;
         Died?.Invoke(this, new InfectedDeathContext(headshot, damageKind));
