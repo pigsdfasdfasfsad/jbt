@@ -30,7 +30,12 @@ def test_molotov_and_nerve_gas_lingering_rules_are_distinct():
     p=read("src/Twr.Godot/Scripts/ThrowableProjectileRuntime.cs")
     h=read("src/Twr.Godot/Scripts/ThrowableHazardRuntime.cs")
     assert 'ThrowableType=="Molotov" ? 32.0 : 34.0' in p
-    assert 'if(infected.InfectedType=="Hazmat")continue;' in h
+    assert 'if(infected.InfectedType=="Hazmat")continue;' not in h
+    infected=read("src/Twr.Godot/Scripts/InfectedAgent.cs")
+    catalog=read("src/Twr.Godot/Scripts/InfectedCatalog.cs")
+    assert 'InfectedCatalog.SmokeMultiplier' in infected
+    assert 'InfectedCatalog.DamageMultiplier' in infected
+    assert '"Hazmat" or "Burster" => 0.0f' in catalog
     assert 'infected.ApplyDamage(MolotovTickDamage,false,"Fire")' in h
     assert "infected.ApplySlow(NerveGasSlowFactor,2.5)" in h
     assert "MolotovTickDamage=18f" in h

@@ -5,7 +5,8 @@ def read(path): return (ROOT/path).read_text()
 def test_headshot_multiplier_is_exact_and_hitbox_boundary_is_labeled():
     infected=read("src/Twr.Godot/Scripts/InfectedAgent.cs")
     player=read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
-    assert "amount * 2.5f" in infected
+    assert "if (headshot) applied *= 2.5f;" in infected
+    assert "InfectedCatalog.DamageMultiplier(InfectedType, damageKind)" in infected
     assert "VERIFIED head multiplier" in infected
     assert "APPROXIMATED geometric boundary" in player
 
