@@ -17,6 +17,9 @@ public partial class WeaponDialHud : Control
     private float _ratio = 1f;
     private bool _melee;
     private bool _throwable;
+    private float _healthFraction = 1f;
+    private float _armorFraction;
+    private float _xpFraction;
     private string _display = "";
     private int _lastMag = -1;
     private int _lastReserve = -1;
@@ -48,19 +51,27 @@ public partial class WeaponDialHud : Control
 
     public void Display(
         string name, int loaded, int reserve, int magazineCapacity,
-        string category, bool melee, bool throwable)
+        string category, bool melee, bool throwable,
+        float healthFraction = 1f, float armorFraction = 0f,
+        float xpFraction = 0f)
     {
         var nextRatio = melee ? 1f :
             Math.Clamp(loaded / (float)Math.Max(1, magazineCapacity), 0f, 1f);
         var changed = Math.Abs(_ratio - nextRatio) > 0.0001f ||
             _melee != melee || _throwable != throwable || _display != category ||
-            _lastMag != loaded || _lastReserve != reserve;
+            _lastMag != loaded || _lastReserve != reserve ||
+            Math.Abs(_healthFraction-healthFraction) > .0001f ||
+            Math.Abs(_armorFraction-armorFraction) > .0001f ||
+            Math.Abs(_xpFraction-xpFraction) > .0001f;
         _ratio = nextRatio;
         _melee = melee;
         _throwable = throwable;
         _display = category;
         _lastMag = loaded;
         _lastReserve = reserve;
+        _healthFraction = Math.Clamp(healthFraction,0f,1f);
+        _armorFraction = Math.Clamp(armorFraction,0f,1f);
+        _xpFraction = Math.Clamp(xpFraction,0f,1f);
 
         _magazine.Text = melee ? "--" : loaded.ToString("00");
         _reserve.Text = melee ? "MELEE" : throwable ? "READY" : reserve.ToString("000");
@@ -73,8 +84,18 @@ public partial class WeaponDialHud : Control
     {
         var center = new Vector2(134f, 133f);
         DrawCircle(center, 119f, new Color(0.035f, 0.042f, 0.048f, 0.68f));
+        // The original StarterGui/Main/Aligned/BottomRight/HUD source
+        // contains 208 EXP, 125 Health, and 92 BodyArmor increments.
+        // Without the source ImageLabel texture binaries, draw the same
+        // logical incremental rings as native Godot vector geometry.
+        DrawSourceRing(center, 119f, 208, _xpFraction,
+            new Color(.77f,.66f,.28f), 3.1f);
+        DrawSourceRing(center, 113f, 125, _healthFraction,
+            new Color(.35f,.72f,.38f), 4.0f);
+        DrawSourceRing(center, 104f, 92, _armorFraction,
+            new Color(.36f,.57f,.90f), 3.7f);
         DrawArc(center, 119f, -Mathf.Pi * 0.83f, Mathf.Pi * 1.17f,
-            96, Ring, 5.5f, true);
+            96, Ring, 1.0f, true);
         DrawArc(center, 108f, -Mathf.Pi * 0.76f, Mathf.Pi * 1.06f,
             96, new Color(0.17f, 0.20f, 0.19f, 0.97f), 8.4f, true);
 
@@ -114,6 +135,21 @@ public partial class WeaponDialHud : Control
             DrawLine(new Vector2(207,122),new Vector2(221,146),silhouette,9f,true);
             DrawRect(new Rect2(230,107,11,4),silhouette);
             DrawRect(new Rect2(174,100,19,5),silhouette);
+        }
+    }
+
+    private void DrawSourceRing(
+        Vector2 center, float radius, int originalSegments,
+        float fraction, Color fullColor, float thickness)
+    {
+        var off = new Color(.13f,.17f,.19f,.57f);
+        for (var i = 0; i < originalSegments; i++)
+        {
+            var start = -Mathf.Pi*.83f + Mathf.Tau*i/originalSegments;
+            var end = start + Mathf.Tau/originalSegments*.67f;
+            DrawArc(center,radius,start,end,2,
+                i < originalSegments*fraction ? fullColor : off,
+                thickness,true);
         }
     }
 

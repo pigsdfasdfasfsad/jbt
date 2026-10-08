@@ -249,10 +249,15 @@ public partial class GameplayHud : CanvasLayer
         _healthBar.OffsetRight = 383f * hpFraction;
         _healthBar.Color = hpFraction > .35f
             ? new Color(.33f,.65f,.35f) : new Color(.80f,.22f,.18f);
+        var maxArmor = player.ArmorKind == "Juggernaut" ? 80f : 40f;
+        var armorRatio = Math.Clamp(player.ArmorDurability / maxArmor,0f,1f);
+        var xpRequired = ProgressionRules.RequiredForNextLevel(player.Level);
+        var xpRatio = xpRequired > 0
+            ? Math.Clamp(player.Xp / (float)xpRequired,0f,1f) : 0f;
         if (throwableName is not null)
             _weaponDial.Display(throwableName,
                 player.Inventory.GetValueOrDefault(throwableName), 0, 1,
-                "THROWABLE", false, true);
+                "THROWABLE", false, true, hpFraction, armorRatio, xpRatio);
         else
         {
             var definition = RuntimeWeaponCatalog.Get(weaponName);
@@ -264,7 +269,7 @@ public partial class GameplayHud : CanvasLayer
                     definition.IsShotgun ? "SHOTGUN" :
                     definition.IsLauncher ? "LAUNCHER" :
                     definition.Slot == "Secondary" ? "SIDEARM" : "PRIMARY",
-                definition.IsMelee, false);
+                definition.IsMelee, false, hpFraction, armorRatio, xpRatio);
         }
 
         var healthRatio=player.MaxHealth<=0 ? 1f : player.Health/player.MaxHealth;
