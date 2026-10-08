@@ -9,7 +9,7 @@ public partial class InfectedAgent : CharacterBody3D
     public string InfectedType { get; set; } = "Civilian";
     public float Health { get; set; } = 65;
     public float Damage { get; set; } = 8;
-    public float MoveSpeed { get; set; } = 15;
+    public float MoveSpeed { get; set; } = 15f * RobloxUnits.MetersPerStud;
     public Action<InfectedAgent, InfectedDeathContext>? Died { get; set; }
     public Action<InfectedAgent>? SpecialAttackRequested { get; set; }
 

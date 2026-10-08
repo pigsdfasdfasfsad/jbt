@@ -561,7 +561,7 @@ public partial class GameplayRoot : Node3D
             InfectedType = definition.Name,
             Health = (float)definition.Health * scale,
             Damage = (float)definition.Damage * scale,
-            MoveSpeed = (float)definition.WalkSpeed * speedScale,
+            MoveSpeed = (float)definition.WalkSpeed * speedScale * RobloxUnits.MetersPerStud,
             Position = RandomSpawnPoint()
         };
         infected.Died = OnInfectedDied;

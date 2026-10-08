@@ -34,8 +34,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private string _equippedWeapon = StarterLoadoutService.Glock17;
     private string? _heldThrowable;
 
-    private const float WalkSpeed = 17f;
-    private const float SprintSpeed = 24f; // APPROXIMATED: retail absolute sprint speed is not recovered
+    // Roblox game speeds are authored in studs/s; the Godot world uses metres.
+    private const float WalkSpeed = 17f * RobloxUnits.MetersPerStud;
+    private const float SprintSpeed = 24f * RobloxUnits.MetersPerStud; // APPROXIMATED: retail absolute sprint speed is not recovered
     private const float JumpVelocity = 7f; // APPROXIMATED
     private const float Gravity = 22f; // reconstruction physics tuning
     private const float MouseSensitivity = 0.0022f;
@@ -498,7 +499,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
     {
         var dir = direction.Normalized();
         var origin = _camera.GlobalPosition;
-        var remaining = Math.Max(0.1f, range);
+        // Recovered weapon Distance/Range values are authored in Roblox studs.
+        var remaining = Math.Max(0.1f, range * RobloxUnits.MetersPerStud);
         var exclude = new global::Godot.Collections.Array<Rid> { GetRid() };
 
         for (var penetration = 0; penetration <= Math.Max(0, spec.MaxPen); penetration++)

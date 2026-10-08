@@ -16,7 +16,7 @@ namespace Twr.Godot;
 public static class LaboratorySourceLoader
 {
     private const string PackName = "Laboratory.scene.jsonl.gz";
-    private const float Stud = 0.28f;
+    private const float Stud = RobloxUnits.MetersPerStud;
 
     private sealed class RenderBatch
     {
