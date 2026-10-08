@@ -31,6 +31,11 @@ public partial class Bootstrap : Node
             RunInfectedModelSmoke();
             return;
         }
+        if (args.Contains("--smoke-weapon-models", StringComparer.Ordinal))
+        {
+            RunWeaponModelSmoke();
+            return;
+        }
 
         ShowMenu();
         if (args.Contains("--smoke-play", StringComparer.Ordinal))
@@ -91,6 +96,36 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Riot source melee modifier not applied.");
         GD.Print("TWR_SMOKE_INFECTED_MODIFIERS_OK");
         GD.Print("TWR_SMOKE_INFECTED_VISUALS_OK types=" + types.Length);
+        GetTree().Quit(0);
+    }
+
+    private void RunWeaponModelSmoke()
+    {
+        var stage = new Node3D { Name = "WeaponModelSmoke" };
+        AddChild(stage);
+        var names = new[] {
+            "Glock 17", "Sawn Off Shotgun", "AK-47",
+            "RPG-7", "Flamethrower", "2x4"
+        };
+        foreach (var name in names)
+        {
+            var spec = RuntimeWeaponCatalog.Get(name);
+            if (spec.Name != name)
+                throw new InvalidOperationException("Weapon catalog missing: " + name);
+            var model = new WeaponViewModelRuntime { Name = name };
+            stage.AddChild(model);
+            model.SetWeapon(spec);
+            if (model.VisualPartCount < 2)
+                throw new InvalidOperationException("Weapon model missing parts: " + name);
+            model.Fire();
+            model.Reload(Math.Max(0.2, spec.ReloadSeconds));
+        }
+        var throwable = new WeaponViewModelRuntime { Name = "Throwable" };
+        stage.AddChild(throwable);
+        throwable.SetThrowable("Molotov");
+        if (throwable.VisualPartCount < 2)
+            throw new InvalidOperationException("Throwable model missing components.");
+        GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
         GetTree().Quit(0);
     }
 

@@ -16,7 +16,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public Vector3 AimDirection => -_camera.GlobalTransform.Basis.Z;
 
     private Camera3D _camera = null!;
-    private MeshInstance3D _viewModel = null!;
+    private WeaponViewModelRuntime _viewModel = null!;
     private readonly RandomNumberGenerator _rng = new();
     private float _pitch;
     private bool _jumpRequested;
@@ -61,18 +61,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         };
         AddChild(_camera);
 
-        _viewModel = new MeshInstance3D
-        {
-            Mesh = new BoxMesh
-            {
-                Material = new StandardMaterial3D
-                {
-                    AlbedoColor = new Color(0.10f, 0.10f, 0.11f),
-                    Metallic = 0.65f,
-                    Roughness = 0.28f
-                }
-            }
-        };
+        _viewModel = new WeaponViewModelRuntime { Name = "WeaponViewModel" };
         _camera.AddChild(_viewModel);
 
         LoadProfileWeapons();
@@ -256,37 +245,31 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private void ApplyViewModel()
     {
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
-        var box = (BoxMesh)_viewModel.Mesh;
+        _viewModel.SetWeapon(spec);
 
         if (spec.IsMelee)
         {
             _viewModel.Position = new Vector3(0.38f, -0.28f, -0.75f);
             _viewModel.RotationDegrees = new Vector3(-12, 0, -18);
-            box.Size = new Vector3(0.10f, 0.78f, 0.10f);
         }
         else if (spec.IsLauncher)
         {
             _viewModel.Position = new Vector3(0.33f, -0.25f, -0.82f);
             _viewModel.RotationDegrees = new Vector3(-3, 2, 0);
-            box.Size = new Vector3(0.23f, 0.23f, 1.18f);
         }
         else if (spec.IsShotgun)
         {
             _viewModel.Position = new Vector3(0.30f, -0.24f, -0.75f);
             _viewModel.RotationDegrees = new Vector3(-4, 3, 0);
-            box.Size = new Vector3(0.22f, 0.18f, 0.95f);
         }
         else
         {
             _viewModel.Position = new Vector3(0.28f, -0.22f, -0.70f);
             _viewModel.RotationDegrees = new Vector3(-4, 4, 0);
-            box.Size = spec.Slot == "Primary"
-                ? new Vector3(0.18f, 0.20f, 0.95f)
-                : new Vector3(0.16f, 0.18f, 0.62f);
         }
 
-        _hipViewPosition=_viewModel.Position;
-        _hipViewRotation=_viewModel.Rotation;
+        _hipViewPosition = _viewModel.Position;
+        _hipViewRotation = _viewModel.Rotation;
     }
 
     private void SelectThrowable(string type)
@@ -298,8 +281,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _reloadWeapon=null;
         _actionCooldown=0;
         _viewModel.Visible=true;
-        var box=(BoxMesh)_viewModel.Mesh;
-        box.Size=new Vector3(0.22f,0.30f,0.22f);
+        _viewModel.SetThrowable(type);
         _viewModel.Position=new Vector3(0.32f,-0.25f,-0.58f);
         _viewModel.RotationDegrees=Vector3.Zero;
     }
@@ -350,6 +332,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var reloadSpeed = Runtime?.HasPerk("Brisk") == true ? 1.2 : 1.0;
         _reloadTimer = Math.Max(0.05, spec.ReloadSeconds / reloadSpeed);
         _reloadWeapon = spec.Name;
+        _viewModel.Reload(_reloadTimer);
     }
 
     private void TryUseWeapon()
@@ -360,6 +343,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         if (spec.IsMelee)
         {
             _actionCooldown = Math.Max(0.05, spec.ActionSeconds);
+            _viewModel.Fire();
             FireHitscan(spec, -_camera.GlobalTransform.Basis.Z, spec.Range, spec.Damage, "Melee", true);
             return;
         }
@@ -372,6 +356,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         if (!Runtime.SpendAmmo(spec.Name, 1)) return;
         _actionCooldown = FireInterval(spec);
+        _viewModel.Fire();
         ApplyRecoil(spec);
 
         if (spec.IsLauncher)

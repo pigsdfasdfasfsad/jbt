@@ -106,6 +106,20 @@ try {
   if (-not ($fullOutput | Where-Object { "$_" -match 'TWR_SMOKE_COMPLETE_OK maps=10 waves=150' })) {
     throw 'Exported 15-wave completion smoke did not report the required completion marker.'
   }
+  # Instantiate representative categories of offline first-person weapon models.
+  $weaponStdout = Join-Path $Output 'weapon-models.stdout.txt'
+  $weaponStderr = Join-Path $Output 'weapon-models.stderr.txt'
+  Remove-Item $weaponStdout,$weaponStderr -Force -ErrorAction SilentlyContinue
+  $weaponModels = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','120','--','--smoke-weapon-models') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $weaponStdout -RedirectStandardError $weaponStderr
+  $weaponOutput = @()
+  if (Test-Path $weaponStdout) { $weaponOutput += Get-Content $weaponStdout }
+  if (Test-Path $weaponStderr) { $weaponOutput += Get-Content $weaponStderr }
+  $weaponOutput | ForEach-Object { Write-Host $_ }
+  if ($weaponModels.ExitCode -ne 0) { throw "Weapon visual smoke failed with exit code $($weaponModels.ExitCode)" }
+  if (-not ($weaponOutput | Where-Object { "$_" -match 'TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1' })) {
+    throw 'Weapon visual smoke did not verify representative models.'
+  }
+
   # Instantiate all eight offline infected presentation types in exported Godot.
   $modelStdout = Join-Path $Output 'infected-models.stdout.txt'
   $modelStderr = Join-Path $Output 'infected-models.stderr.txt'
