@@ -21,6 +21,7 @@ public static class LaboratorySourceLoader
     private sealed class RenderBatch
     {
         public Mesh Mesh = null!;
+        public StandardMaterial3D Material = null!;
         public bool CastShadow;
         public readonly List<Transform3D> Instances = [];
     }
@@ -37,7 +38,7 @@ public static class LaboratorySourceLoader
 
         var stage = new Node3D { Name = "RecoveredLaboratory" };
         var batches = new Dictionary<string, RenderBatch>(StringComparer.Ordinal);
-        var collisions = new List<(Transform3D Transform, Vector3 Size)>();
+        var collisions = new List<(Transform3D Transform, Vector3 Size, bool Wedge)>();
         var emitters = new List<LaboratorySourceLight>();
         var infected = new List<Vector3>();
         var players = new List<(string Name, Vector3 Position)>();
@@ -73,7 +74,7 @@ public static class LaboratorySourceLoader
                     case "collision":
                     {
                         var size = Extents(record);
-                        collisions.Add((ToTransform(record, size, false), size));
+                        collisions.Add((ToTransform(record, size, false), size, false));
                         break;
                     }
                     case "light":
@@ -110,6 +111,7 @@ public static class LaboratorySourceLoader
                 stage.AddChild(new MultiMeshInstance3D
                 {
                     Multimesh = mm,
+                    MaterialOverride = batch.Material,
                     CastShadow = batch.CastShadow
                         ? GeometryInstance3D.ShadowCastingSetting.On
                         : GeometryInstance3D.ShadowCastingSetting.Off
@@ -123,13 +125,15 @@ public static class LaboratorySourceLoader
                 Name = "LaboratoryCollision",
                 CollisionLayer = 1
             };
-            var shapeCache = new Dictionary<Vector3, BoxShape3D>();
-            foreach (var (t, size) in collisions)
+            var shapeCache = new Dictionary<(Vector3, bool), Shape3D>();
+            foreach (var (t, size, wedge) in collisions)
             {
-                if (!shapeCache.TryGetValue(size, out var shape))
+                if (!shapeCache.TryGetValue((size, wedge), out var shape))
                 {
-                    shape = new BoxShape3D { Size = size };
-                    shapeCache[size] = shape;
+                    shape = wedge
+                        ? RobloxPrimitiveGeometry.WedgeCollision(size)
+                        : new BoxShape3D { Size = size };
+                    shapeCache[(size, wedge)] = shape;
                 }
                 worldBody.AddChild(new CollisionShape3D
                 {
@@ -191,7 +195,7 @@ public static class LaboratorySourceLoader
 
     private static void AddGeometry(
         JsonElement r, Dictionary<string, RenderBatch> batches,
-        List<(Transform3D Transform, Vector3 Size)> colliders)
+        List<(Transform3D Transform, Vector3 Size, bool Wedge)> colliders)
     {
         var opacity = Num(r, "opacity", 1);
         var size = Extents(r);
@@ -199,7 +203,8 @@ public static class LaboratorySourceLoader
         // A source-visible mesh may be fully transparent while retaining its
         // collision. Physics must not be gated on opacity or drawing.
         if (Flag(r, "collidable"))
-            colliders.Add((ToTransform(r, size, false), size));
+            colliders.Add((ToTransform(r, size, false), size,
+                cls == "WedgePart"));
         if (opacity < 0.001f) return;
         var rgb = Vec(r, "rgb");
         var color = new Color(rgb[0] / 255f, rgb[1] / 255f, rgb[2] / 255f, opacity);
@@ -217,27 +222,30 @@ public static class LaboratorySourceLoader
         if (!batches.TryGetValue(key, out var batch))
         {
             var mesh = prepared ?? ProxyMesh(cls, Str(r, "shape"));
-            mesh = (Mesh)mesh.Duplicate();
-            if (mesh is PrimitiveMesh primitive)
+            var materialCode = Str(r, "mat");
+            var metallic = materialCode is "1088" or "1056" or "1040";
+            var neon = materialCode == "288";
+            var glass = materialCode == "1568";
+            // MaterialOverride also works on imported ArrayMesh resources,
+            // unlike setting PrimitiveMesh.Material only for fallback boxes.
+            var material = new StandardMaterial3D
             {
-                var materialCode = Str(r, "mat");
-                var metallic = materialCode is "1088" or "1056" or "1040";
-                var neon = materialCode == "288";
-                var glass = materialCode == "1568";
-                primitive.Material = new StandardMaterial3D
-                {
-                    AlbedoColor = color,
-                    AlbedoTexture = preparedTexture,
-                    Metallic = metallic ? 0.75f : 0.02f,
-                    Roughness = metallic ? 0.42f : glass ? 0.11f : 0.88f,
-                    EmissionEnabled = neon,
-                    Emission = color,
-                    Transparency = opacity < 0.995f || preparedTexture is not null
-                        ? BaseMaterial3D.TransparencyEnum.Alpha
-                        : BaseMaterial3D.TransparencyEnum.Disabled
-                };
-            }
-            batch = new RenderBatch { Mesh = mesh, CastShadow = shadow };
+                AlbedoColor = color,
+                AlbedoTexture = preparedTexture,
+                Metallic = metallic ? 0.75f : 0.02f,
+                Roughness = metallic ? 0.42f : glass ? 0.11f : 0.88f,
+                EmissionEnabled = neon,
+                Emission = color,
+                Transparency = opacity < 0.995f || preparedTexture is not null
+                    ? BaseMaterial3D.TransparencyEnum.Alpha
+                    : BaseMaterial3D.TransparencyEnum.Disabled
+            };
+            batch = new RenderBatch
+            {
+                Mesh = mesh,
+                Material = material,
+                CastShadow = shadow
+            };
             batches.Add(key, batch);
         }
         batch.Instances.Add(ToTransform(r, size, true));
@@ -259,6 +267,8 @@ public static class LaboratorySourceLoader
 
     private static Mesh ProxyMesh(string cls, string shape)
     {
+        if (cls == "WedgePart")
+            return RobloxPrimitiveGeometry.WedgeMesh();
         if (cls == "Part" && shape == "0")
             return new SphereMesh { Radius = 0.5f, Height = 1f };
         if (cls == "Part" && shape == "2")

@@ -30,7 +30,8 @@ def generate(path: Path) -> None:
             for i in range(30000):
                 write(stream, {
                     'kind': 'geometry', 'ref': f'testgeo{i}',
-                    'name': 'SyntheticFloor', 'class': 'Part',
+                    'name': 'SyntheticWedge' if i == 1 else 'SyntheticFloor',
+                    'class': 'WedgePart' if i == 1 else 'Part',
                     't': [i % 200, 0, i // 200], 'r': IDENTITY,
                     's': [2.0, 0.5, 2.0], 'shape': '1',
                     'rgb': [100, 110, 130], 'opacity': (0.0 if i == 0 else 1.0),

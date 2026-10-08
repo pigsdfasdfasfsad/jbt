@@ -72,3 +72,16 @@ def test_laboratory_prepared_textures_require_local_asset_files():
     assert 'AlbedoTexture = preparedTexture' in loader
     assert 'batchTextureKey = preparedTexture is null ? "" : textureId' in loader
     assert 'HttpClient' not in loader
+
+def test_prepared_mesh_materials_apply_to_all_mesh_kinds_and_wedges():
+    loader = (ROOT/'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
+    geometry = (ROOT/'src/Twr.Godot/Scripts/RobloxPrimitiveGeometry.cs').read_text()
+    fixture = (ROOT/'tools/maps/make_lab_smoke_fixture.py').read_text()
+    assert 'MaterialOverride = batch.Material' in loader
+    assert 'Material = material,' in loader
+    assert 'RobloxPrimitiveGeometry.WedgeMesh()' in loader
+    assert 'RobloxPrimitiveGeometry.WedgeCollision(size)' in loader
+    assert 'cls == "WedgePart"' in loader
+    assert 'new ConvexPolygonShape3D { Points = vertices }' in geometry
+    assert 'mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surface)' in geometry
+    assert "'class': 'WedgePart' if i == 1 else 'Part'" in fixture
