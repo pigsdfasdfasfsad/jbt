@@ -85,12 +85,15 @@ Do not bypass owner-specific audio access controls.
   all ten maps, representative original infected model assembly and weapon
   assembly. Private Roblox asset data is never uploaded to GitHub.
 
-Latest independently verified reference:
-https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37856896072
-(322 passing automated tests, zero compiler warnings, all ten synthetic
-source-map smoke plus six original R6 assembly smoke).
-Later weapon and lighting commits must each pass CI independently before
-their runtime success is claimed.
+Latest independently verified compiled Windows reference:
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37858298382
+(329 passing automated tests, zero compiler warnings, ten synthetic
+source-map smoke plus six original R6 zombie assemblies, six original
+source weapon assemblies, loaded original per-map Lighting parameters
+and Expressway waypoint route smoke). Original HUD's 208 XP, 125 health
+and 92 armor increment counts are represented in native vector drawing.
+Original UI image textures are still external Roblox ID references.
+**Synthetic tests do not establish real graphical map fidelity.**
 
 ## Private delivery and installation
 
