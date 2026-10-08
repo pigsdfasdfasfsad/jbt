@@ -125,6 +125,15 @@ public partial class Bootstrap : Node
         throwable.SetThrowable("Molotov");
         if (throwable.VisualPartCount < 2)
             throw new InvalidOperationException("Throwable model missing components.");
+        var metadata = FidelityCaptureRuntime.MetadataJson(
+            "Laboratory", Vector3.Zero, Basis.Identity, 60f, "test.png");
+        using (var json = global::System.Text.Json.JsonDocument.Parse(metadata))
+        {
+            if (json.RootElement.GetProperty("format").GetString() != "twr-fidelity-camera-v1" ||
+                json.RootElement.GetProperty("map").GetString() != "Laboratory")
+                throw new InvalidOperationException("Fidelity camera metadata contract failed.");
+        }
+        GD.Print("TWR_SMOKE_FIDELITY_METADATA_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
         GetTree().Quit(0);
     }

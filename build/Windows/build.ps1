@@ -119,6 +119,9 @@ try {
   if (-not ($weaponOutput | Where-Object { "$_" -match 'TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1' })) {
     throw 'Weapon visual smoke did not verify representative models.'
   }
+  if (-not ($weaponOutput | Where-Object { "$_" -match 'TWR_SMOKE_FIDELITY_METADATA_OK' })) {
+    throw 'Fidelity camera metadata serialization did not pass.'
+  }
 
   # Instantiate all eight offline infected presentation types in exported Godot.
   $modelStdout = Join-Path $Output 'infected-models.stdout.txt'

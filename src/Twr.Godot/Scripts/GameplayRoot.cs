@@ -147,6 +147,13 @@ public partial class GameplayRoot : Node3D
     {
         if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;
 
+        if (!_finished && key.Keycode == Key.F12)
+        {
+            FidelityCaptureRuntime.TryCapture(GetViewport(), _player.CaptureCamera, MapName);
+            GetViewport().SetInputAsHandled();
+            return;
+        }
+
         if (!_finished && (key.Keycode is Key.P or Key.Escape))
         {
             OpenPause();

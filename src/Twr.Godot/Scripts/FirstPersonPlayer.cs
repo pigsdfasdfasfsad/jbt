@@ -12,6 +12,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public string? HeldThrowableName => _heldThrowable;
     public bool HammerMode { get; private set; }
     public bool MountedMode {get;private set;}
+    public Camera3D CaptureCamera => _camera;
     public Vector3 AimOrigin => _camera.GlobalPosition;
     public Vector3 AimDirection => -_camera.GlobalTransform.Basis.Z;
 
