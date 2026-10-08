@@ -21,11 +21,31 @@ public partial class Bootstrap : Node
             RunFullCompletionSmoke();
             return;
         }
+        if (args.Contains("--smoke-lab-source", StringComparer.Ordinal))
+        {
+            RunLaboratorySourceSmoke();
+            return;
+        }
 
         ShowMenu();
         if (args.Contains("--smoke-play", StringComparer.Ordinal))
             StartGame("Manor");
         GD.Print("TWR Offline: playable Regular-mode reconstruction runtime initialized.");
+    }
+
+    // Unlike the domain-only completion smoke, this test instantiates the
+    // packaged Laboratory importer against an explicit synthetic test pack.
+    private void RunLaboratorySourceSmoke()
+    {
+        var testRoot = new Node3D { Name = "LaboratorySourceSmoke" };
+        AddChild(testRoot);
+        if (!LaboratorySourceLoader.TryBuild(testRoot, out var layout) ||
+            layout.InfectedSpawns.Count != 15 ||
+            testRoot.GetNodeOrNull<Node3D>("RecoveredLaboratory") is null)
+            throw new InvalidOperationException(
+                "Laboratory source-pack smoke failed to instantiate the scene.");
+        GD.Print("TWR_SMOKE_LAB_SOURCE_OK infected_spawns=" + layout.InfectedSpawns.Count);
+        GetTree().Quit(0);
     }
 
     private void RunFullCompletionSmoke()

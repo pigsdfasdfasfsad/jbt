@@ -45,3 +45,16 @@ or upload downloadable Windows builds to GitHub Actions or GitHub Releases.
 Previously uploaded Windows build artifacts are removed during the next CI run.
 
 The project owner distributes packaged builds separately, outside GitHub.
+
+## Laboratory source-pack runtime verification
+
+Laboratory can load an external, owner-held `Content/Maps/Laboratory.scene.jsonl.gz`
+beside the Windows executable. Original Roblox geometry bytes remain out of Git.
+
+The Windows workflow now generates a **synthetic**, explicitly marked Laboratory
+scene with 30,000 dummy render instances, 1,000 dummy colliders, 801 dummy lights,
+15 infected spawn markers, and 8 player spawn markers. It loads that pack through
+the **exported Windows executable** and requires both `TWR_LAB_SOURCE_LOADED`
+and `TWR_SMOKE_LAB_SOURCE_OK` in the process log. The fixture is deleted at
+the end of the smoke step and is never distributed. This validates loader
+execution and pack discovery, **not** fidelity to the original Laboratory.

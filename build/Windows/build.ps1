@@ -106,6 +106,31 @@ try {
   if (-not ($fullOutput | Where-Object { "$_" -match 'TWR_SMOKE_COMPLETE_OK maps=10 waves=150' })) {
     throw 'Exported 15-wave completion smoke did not report the required completion marker.'
   }
+  # The real source pack is owner-only and must never be uploaded to GitHub.
+  # Exercise the exported loader with a clearly marked synthetic CI fixture.
+  $fixture = Join-Path $Output 'Content\Maps\Laboratory.scene.jsonl.gz'
+  $fixtureStdout = Join-Path $Output 'lab-source-smoke.stdout.txt'
+  $fixtureStderr = Join-Path $Output 'lab-source-smoke.stderr.txt'
+  try {
+    python (Join-Path $Repo 'tools\maps\make_lab_smoke_fixture.py') --output $fixture
+    Remove-Item $fixtureStdout,$fixtureStderr -Force -ErrorAction SilentlyContinue
+    $lab = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-lab-source') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $fixtureStdout -RedirectStandardError $fixtureStderr
+    $labOutput = @()
+    if (Test-Path $fixtureStdout) { $labOutput += Get-Content $fixtureStdout }
+    if (Test-Path $fixtureStderr) { $labOutput += Get-Content $fixtureStderr }
+    $labOutput | ForEach-Object { Write-Host $_ }
+    if ($lab.ExitCode -ne 0) { throw "Synthetic Laboratory source-load smoke failed with exit code $($lab.ExitCode)" }
+    if ($labOutput | Where-Object { "$_" -match '(^|\s)ERROR:' }) { throw 'Synthetic Laboratory source-load smoke reported ERROR output.' }
+    if (-not ($labOutput | Where-Object { "$_" -match 'TWR_LAB_SOURCE_LOADED' })) {
+      throw 'Laboratory source loader did not report a completed scene load.'
+    }
+    if (-not ($labOutput | Where-Object { "$_" -match 'TWR_SMOKE_LAB_SOURCE_OK infected_spawns=15' })) {
+      throw 'Laboratory source-pack smoke did not report required marker.'
+    }
+  } finally {
+    # Never leave synthetic test map data inside the normal build output.
+    Remove-Item $fixture -Force -ErrorAction SilentlyContinue
+  }
 } finally { Pop-Location }
 
 Write-Host 'Windows export and playable smoke pass completed.'

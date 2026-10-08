@@ -136,6 +136,9 @@ public static class LaboratorySourceLoader
                 });
             stage.AddChild(worldBody);
             AddNightEnvironment(stage);
+            // SpotLight3D.LookAt requires its node to be inside the scene tree.
+            // Mount the map before initializing source-facing spotlights.
+            root.AddChild(stage);
 
             var playerSpawn = players
                 .OrderBy(p => p.Name, StringComparer.Ordinal)
@@ -157,7 +160,6 @@ public static class LaboratorySourceLoader
                     playerSpawn + new Vector3(7, 0, -5),
                     playerSpawn + new Vector3(-7, 0, -5)
                 });
-            root.AddChild(stage);
             GD.Print($"TWR_LAB_SOURCE_LOADED geometry={count["geometry"]} " +
                 $"server_walls={count["collision"]} physical_shapes={collisions.Count} " +
                 $"source_lights={emitters.Count} active_lights={Math.Min(ActiveLightLimit, emitters.Count)} " +
