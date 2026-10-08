@@ -23,4 +23,5 @@ def test_level_up_consumes_xp_and_grants_credit_reward():
 def test_hud_shows_level_and_next_level_requirement():
     s=read("src/Twr.Godot/Scripts/GameplayHud.cs")
     assert "ProgressionRules.RequiredForNextLevel(player.Level)" in s
-    assert "LEVEL {player.Level}" in s
+    assert "LVL {player.Level}" in s
+    assert "_credits.Text" in s

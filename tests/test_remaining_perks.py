@@ -17,7 +17,7 @@ def test_hardened_sight_and_bruiser_reduce_reconstructed_screen_effects():
     assert "baseLowAlpha*=0.5f" in hud
     assert 'HasPerk("Bruiser")' in hud
     assert "alpha*=0.35f" in hud
-    assert "APPROXIMATED base presentation" in hud
+    assert "APPROXIMATED original injury overlays" in hud
     assert "Bruiser's 65% reduction is VERIFIED" in hud
 
 def test_damage_event_drives_hud_flash_without_presentation_authority():
