@@ -1,135 +1,157 @@
 # TWR Offline — Current Implementation Status
+Updated: 2026-10-08. Canonical checkpoint for continuing the existing Godot/C# game.
 
-Updated: 2026-10-08. This is the canonical handoff for future implementation passes.
-Do not interpret a successful CI result as completed game fidelity.
+## Target release and privacy
+- Windows 11 fully offline single-player in Godot 4 C#/.NET.
+- Ten source release maps, Regular mode, exactly 15 waves, no wave 16.
+- GitHub source branch: pigsdfasdfasfsad/jbt, twr-offline-dev.
+- No executable archive, original Roblox place bytes, or restricted asset
+  binaries are published to GitHub Releases or Actions artifacts.
 
-## Scope and release contract
+## Most recent independently verified Windows build
+- Code commit: b57ac9787bb84a2b59c0ed1b7915212aad484040
+- Successful Windows Actions run:
+  https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37827238421
+- 304 Python tests passed and all source/static/domain acceptance validators
+  passed; Godot .NET Windows export succeeded with zero compiler warnings.
+- Exported executable smoke markers:
+  TWR_SMOKE_COMPLETE_OK maps=10 waves=150;
+  TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1;
+  TWR_SMOKE_INFECTED_VISUALS_OK types=8;
+  TWR_SMOKE_FIDELITY_METADATA_OK;
+  TWR_SMOKE_LAB_SOURCE_OK infected_spawns=15 item_markers=127 fortification_markers=47.
+- Synthetic Laboratory CI fixture: 30,000 geometry items, 17,600 collision
+  shapes, 801 source lights, original-count spawn groups. Asset caches correctly
+  report 3 synthetic mesh IDs and 2 synthetic texture IDs unresolved.
+- **Critical distinction**: 150 simulated wave state transitions are not a
+  human playthrough, and a synthetic scene is NOT an original map visual test.
 
-- Repo/branch: pigsdfasdfasfsad/jbt / twr-offline-dev.
-- Godot 4 C#/.NET; fully offline Windows single-player.
-- Older-style Regular mode only; ten maps and exactly 15 waves.
-- Do not publish executable archives or private Roblox asset bytes on GitHub.
+## Implementation passes added after initial Laboratory reconstruction
+1. 6744312a / 75ad58fd: source wedge geometry and convex wedge colliders,
+   corrected prepared-mesh material overrides, source-part material handling,
+   and rebuilt tests. Previous failures were repaired in later green commits.
+2. 75ad58fd: infected capsules are centered 0.9m above exact source foot
+   markers, retaining original horizontal coordinates.
+3. 462fdd16 / a634a46d: separate source pools of 127 ItemPickupBox coordinates
+   and 47 FortificationPickupBox coordinates; runtime samples unique marker
+   positions instead of placing forts beside approximate item anchors.
+4. 5ae5c3dd: reproducible, source-hash-validated private marker extractor and
+   synthetic tests. The owner-held private pack v2 was generated locally and
+   verified. Its raw scene records are NOT in Git.
+5. d941ed06: SpecialMesh.Scale now affects visuals independently from the tiny
+   physical carrier Part.Size (important for remote Laboratory mountains).
+6. 99ce37ea / de7bc11b: category-specific animated, multi-part first-person
+   weapon fallbacks replace the single rectangular gun, with a prepared original
+   weapon scene resource hook. All 6 representative types pass Windows smoke.
+7. ff263c68: Roblox authored speed and weapon Distance/Range values are
+   converted from studs to Godot metres using 0.28m/stud.
+8. c5409705 / 46cb7b2a: F12 owner-local screenshot + camera-transform JSON
+   metadata capture for reference comparisons. CI validates metadata only.
+9. 2469d1bb: source grenade/fire/gas/spore area radii now use consistent
+   stud-to-metre conversion; projectile speeds and unproven falloff remain
+   explicitly approximate.
+10. e7f1b2ec: private asset installation audit; verifies owner-provided .res/.png
+    headers and records original source IDs missing without fetching assets.
+11. b57ac978: source-mesh and prepared-texture lookup caches reduce repeated
+    resource checking, and logs now count loaded/unresolved IDs.
 
-## Latest verified CI
+## Owner-held source artifact packages — private conversation downloads
+- TWR-Laboratory-Source-Pack-v2.zip:
+  Content/Maps/Laboratory.scene.jsonl.gz with 34,268 geometry records,
+  1,517 server-wall records, 836 lights, 15 infected spawn locations,
+  8 player spawn locations, and NEW original 127/47 pickup spawn markers.
+  Standalone original model/texture/UnionOperation binaries NOT included.
+- TWR-Infected-Assembly-Evidence.zip: 520 inert instance/attachment/mesh
+  references from infected asset hierarchies, no original mesh binaries.
+- TWR-All-Maps-Partial-Source-Evidence.zip: partial stored source fragments and
+  collision data for ten maps. NOT ten complete source-rendered maps.
+- TWR-Map-Visual-Reference-Set.zip: private gameplay reference images.
+- Original source archives currently accessible:
+  TestPlace.zip, scripts.zip, other scripts and information.zip,
+  images.zip, image-docs.zip, videos of game.zip.
 
-- Last implementation/ref-index commit: 337dc4da960d1f70c3ecb41c095671dc182b348e
-- Successful Actions run: https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37821020531
-- 282 Python tests pass; all static/evidence/domain validators pass.
-- Windows Godot/.NET executable export succeeded; 0 compiler warnings.
-- Domain-only simulation completed 10 maps x 15 waves = 150 state advances.
-- Exported game instantiated all 8 infected visual assembly types.
-- Exported game verified Hazmat fire, Bloater fire, and Riot melee modifiers.
-- Exported game loaded a **synthetic** Laboratory scene with 30,000
-  render records, 16,600 source-collidable render parts, 1,000 server walls,
-  801 lights, 15 infected spawn markers, and 8 player spawn markers.
-- This is not an actual real-source-pack graphical playtest.
+## Critical source availability
+- TestPlace.zip newer snapshot has a complete loaded Laboratory source scene
+  in Workspace/Map plus separate stored CMaps fragments for ten maps.
+- The separate previously referenced twr places.zip is NOT currently available
+  in this Project's visible files, Library search, or working container.
+  A complete original export for the remaining nine maps is NOT recovered.
+- A separate SouthernMansion_Forensic_v2.rbxlx was found in Library, but it
+  does not identify itself as original TWR Manor. Do not silently promote it
+  to authentic source map data.
+- 490 distinct Laboratory original MeshId references and 59 distinct
+  MeshPart TextureID references are present in the manifest. Asset references
+  are NOT binary meshes/textures. Decal/Texture face dependencies add more.
+- At least 3,013 Laboratory UnionOperation render binaries remain unrecovered.
+  Original CSG mesh data cannot be inferred from its part bounds alone.
 
-## Current major implementation work
+## Per-map acceptance status
 
-1. 2a10110c — source-collidable Laboratory geometry, including invisible
-   collision barriers, shared BoxShape resources, proxy material updates,
-   reduced draw batches when actual mesh resources are absent.
-2. 9b375f1a / 85c9745a — prepared original infected scenes supported at
-   Content/Assets/Infected/<Type>.tscn; the default visible capsule has been
-   replaced by animated humanoid proxies for the 8 Regular-mode types;
-   exported runtime smoke covers all eight types.
-3. 2ab00f46 / b1e5838d — verified Infected Info manipulators now apply:
-   Hazmat and Burster smoke immunity, Bolter half smoke intensity, Bloater
-   triple fire damage, Riot half melee damage. Molotov correctly hurts Hazmat.
-   Old assertions expecting the bug were updated.
-4. cc83d299 — prepared, local MeshPart textures can be loaded at
-   Content/Assets/Textures/<numeric asset ID>.png before export.
-5. 0cdca996 — 16,600 source-collision shape stress test, verified in CI.
-6. 337dc4da — public-safe ten-map screenshot indexer and source coverage.
-   The images themselves remain in the owner-held original ZIP.
-7. Previous work: source-positioned Laboratory scene import, exact recovered
-   infected spawn markers, moving-light streaming with 128-active emitter
-   budget, all-map fragment evidence, and private owner-side Windows packaging.
+| Map | Available evidence | Integrated runtime | Source models/materials | Actual visual/playtest |
+| --- | --- | --- | --- | --- |
+| Laboratory | Loaded source geometry, 174 pickups, spawns, 836 lights | Optional owner-held private scene pack; fallback blockout | Missing many original mesh/CSG/texture files | NOT VERIFIED |
+| Ranch | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| Mill | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| Bypass | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| Cabin | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| Cargo | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| District | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| Expressway | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| Prison | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| Manor | Partial stored fragment, 1,602 unresolved unions | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
 
-## Private extracted evidence available in the original chat (NOT Git)
+## Other incomplete first-release systems
+- Infected: 8 distinct procedural animated humanoid proxies, but still no
+  exact original meshes, animations, multi-floor navigation or ragdolls.
+- Weapons: 91 mechanical catalog entries; category-model fallbacks exist, but
+  original weapon rigs, animations, sound, muzzle effects, and visual parity
+  are NOT complete.
+- Objectives/fortifications: functional baseline, but exact original per-map
+  objective positions and fort emplacement zones unavailable.
+- UI/audio/VFX: functional menu/HUD shell, but original-style visuals, full
+  audio and animations, sky/weather/post-process not complete.
+- Real gameplay: no full interactive 15-wave human-controlled original
+  Laboratory playthrough, nor any interactive testing of the other nine maps.
+- No up-to-date compiled Windows executable has been delivered in this chat.
+  CI intentionally discards its executable rather than making it downloadable.
 
-- TWR-Laboratory-Source-Pack.zip: 34,268 source-positioned renderable records,
-  1,517 source server-wall records, 836 original light records,
-  15 infected spawns, 8 player spawns, references to original textures/meshes.
-- TWR-All-Maps-Partial-Source-Evidence.zip: static fragments and server-wall
-  evidence for ten stored maps. They are NOT ten complete map scenes.
-- TWR-Infected-Assembly-Evidence.zip: 520 source instances from
-  ReplicatedStorage/Assets/AI (Body, AttachmentBody, and Infected branches).
-  These are source hierarchies, NOT decoded original model binaries.
-- TWR-Map-Visual-Reference-Set.zip: 65 original Laboratory and Manor
-  screenshot references, including contact sheets.
-- Source archives: TestPlace.zip, scripts.zip, images.zip,
-  image-docs.zip, other scripts and information.zip, videos of game.zip.
-- The provided 7 videos mostly show an isolated test arena and example lobby,
-  rather than full original map traversal. Reference screenshots cover
-  areas of the game, but are not automatic camera-aligned render comparisons.
+## Next implementation passes / acceptance gates
+1. Privately install the real owner-held Laboratory Source Pack v2 and execute
+   a graphical Windows build: verify loaded-source marker counts, geometry,
+   movement/scale, floor and ramp collisions, 127/47 pickup pools and
+   navigation under actual gameplay (not synthetic smoke).
+2. Use F12 to capture position/FOV-matched Godot screenshots; compare original
+   Laboratory image references room by room. Repair geometry, materials, missing
+   props, light behavior, reflections, shadow budget and atmospheric effects.
+3. Resolve or legally recreate actual mesh/texture/CSG/sound/animation assets.
+   Use tools/assets/private_asset_inventory.py and original source manifest to
+   track dependencies. Do not claim art fidelity from asset ID strings.
+4. Obtain full authorized original exports of the other nine maps if possible;
+   otherwise reconstruct missing geometry with explicit visual references,
+   tracked deviations and practical gameplay tests. Never treat CMaps fragments
+   as the full original decorated maps.
+5. Source-guide infected assembly and AI navigation across all map floors,
+   original weapon handling and appearance, objectives, pickups, fortifications,
+   UI, sounds, weather and progression calibration.
+6. Play entire Regular 15-wave sessions on each of ten maps, verify FPS/memory,
+   save/restart, objective accessibility, offline startup, and crash recovery.
+7. Privately package the final Windows executable with complete authorized
+   local data via build/Windows/package_private.ps1. Do not publish it on GitHub.
 
-## Per-map fidelity acceptance matrix
+## Useful developer files
+- src/Twr.Godot/Scripts/LaboratorySourceLoader.cs
+- src/Twr.Godot/Scripts/LaboratoryLightStreamer.cs
+- src/Twr.Godot/Scripts/RobloxPrimitiveGeometry.cs
+- src/Twr.Godot/Scripts/InfectedVisualAssembler.cs
+- src/Twr.Godot/Scripts/WeaponViewModelRuntime.cs
+- src/Twr.Godot/Scripts/FidelityCaptureRuntime.cs
+- src/Twr.Godot/Scripts/RobloxUnits.cs
+- tools/maps/augment_laboratory_pickups.py
+- tools/assets/private_asset_inventory.py
+- docs/development/LABORATORY_PICKUP_MARKERS.md
+- docs/development/LOCAL_FIDELITY_CAPTURES.md
+- docs/development/ROBLOX_WORLD_UNITS.md
+- build/Windows/build.ps1 and build/Windows/package_private.ps1
 
-Statuses are **implementation evidence**, not completion percentage.
-
-| Map | Available original scene data | In normal playable build | Correct original meshes/textures | Exact spawns/navigation | Reference-verified visuals |
-| --- | --- | --- | --- | --- | --- |
-| Laboratory | Loaded source scene available in private ZIP (34,268 records) | Optional external source loader; fallback blockout | NO | Spawn positions recovered; real navigation NOT verified | NO |
-| Ranch | Partial stored fragments | Blockout only | NO | NO | NO |
-| Mill | Partial stored fragments | Blockout only | NO | NO | NO |
-| Bypass | Partial stored fragments | Blockout only | NO | NO | NO |
-| Cabin | Partial stored fragments | Blockout only | NO | NO | NO |
-| Cargo | Partial stored fragments | Blockout only | NO | NO | NO |
-| District | Partial stored fragments | Blockout only | NO | NO | NO |
-| Expressway | Partial stored fragments | Blockout only | NO | NO | NO |
-| Prison | Partial stored fragments | Blockout only | NO | NO | NO |
-| Manor | Partial stored fragments (1,602 unresolved unions) | Blockout only | NO | NO | NO |
-
-## Infected, weapons and game presentation
-
-- Infected: eight types have temporary animated humanoid visuals.
-  Correct original meshes, character assembly variations, animation assets,
-  ragdolls and accurate pathfinding remain INCOMPLETE.
-- Weapons: mechanical catalog exists; original first-person/world models,
-  real animations and sound library remain INCOMPLETE.
-- Game loop: Regular 15-wave domain state passes headless smoke; real wave
-  pacing, enemy distributions, 10 map objectives and full match traversal
-  are NOT manually verified.
-- UI: existing menu, armory and HUD functional shell; full visual parity
-  with original UI remains INCOMPLETE.
-- Audio/VFX: full original audio and visual effects are not integrated.
-
-## Critical remaining blockers and implementation order
-
-1. **Obtain authorized mesh/texture/CSG bytes**: the supplied XML place has
-   Roblox asset references but does not contain original MeshPart/Union
-   render binaries. Its embedded SharedStrings table contains small metadata
-   values, not complete CSG render geometry.
-2. Get remaining complete source map place exports if available. Do not
-   fabricate them from partial CMaps folder data. Owner may need to provide
-   prior twr places.zip and missing runtime captures.
-3. Test actual owner-held Laboratory.scene.jsonl.gz with a real graphical
-   Windows installation, observe map, collisions, walk paths, load time,
-   frames and RAM. The stress test proves loader execution, not playability.
-4. Convert and install allowed original models/materials, CSG, meshes,
-   textures; compare Lab from camera-matched original screenshot references.
-5. Complete per-map scene imports for the other nine maps and required
-   original player/infected/objective spawn locations.
-6. Replace temporary infected assembly with source-guided rigs and animations;
-   implement navigation suitable for multi-floor authored maps.
-7. Finish weapon models/animations/sounds, gameplay calibration, equipment,
-   objective logic, UI, lighting, ambience, VFX, and performance tests.
-8. Carry out **real human-controlled 15-wave sessions** on all ten maps,
-   save/restart testing, and offline Windows execution checks.
-9. Produce final Windows ZIP privately outside Git. CI intentionally does
-   not upload a GitHub Actions executable artifact. Do not label the old ZIP
-   as the newest compiled build.
-
-## CI and handoff instructions
-
-- Inspect latest branch before editing. Preserve existing engine architecture.
-- Run python tools/validation/run_all.py where available, plus Windows CI.
-- Scripts: build/Windows/build.ps1 and build/Windows/package_private.ps1.
-- Continuity sources: docs/RECOVERY_STATUS.md,
-  docs/development/CONTINUITY_CHECKPOINT_2026-10-08.md,
-  docs/maps/SOURCE_COVERAGE.md,
-  docs/development/MAP_VISUAL_REFERENCE_COVERAGE.md.
-- Mark every item VERIFIED, TEST PASS, SOURCE-ONLY, APPROXIMATED,
-  UNAVAILABLE, or BLOCKED; never invent completion scores.
-- Commit after each meaningful implementation and repair pass.
+Complete means the playable game and graphics meet acceptance criteria, not
+merely that C# compiles or automated wave state progression passes.
