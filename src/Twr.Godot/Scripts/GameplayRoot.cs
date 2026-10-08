@@ -47,7 +47,9 @@ public partial class GameplayRoot : Node3D
 
         _rng.Randomize();
         _mapDefinition = MapCatalogRuntime.Get(MapName);
-        _mapLayout = MapName == "Laboratory" && LaboratorySourceLoader.TryBuild(this, out var recovered)
+        // Prefer original loaded-map geometry from each of the ten privately
+        // held Roblox place snapshots; retain blockouts as pack-free fallbacks.
+        _mapLayout = LaboratorySourceLoader.TryBuild(this, MapName, out var recovered)
             ? recovered
             : MapBlockoutBuilder.Build(this, _mapDefinition);
 
@@ -58,7 +60,7 @@ public partial class GameplayRoot : Node3D
             Position = _mapLayout.PlayerSpawn
         };
         AddChild(_player);
-        GetNodeOrNull<LaboratoryLightStreamer>("RecoveredLaboratory/LaboratoryLights")
+        GetNodeOrNull<LaboratoryLightStreamer>("Recovered" + MapName + "/LaboratoryLights")
             ?.Track(_player);
 
         _hud = new GameplayHud { Name = "HUD", Runtime = Runtime };

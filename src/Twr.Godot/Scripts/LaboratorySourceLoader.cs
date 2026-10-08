@@ -27,16 +27,26 @@ public static class LaboratorySourceLoader
     }
 
     public static bool TryBuild(Node3D root, out RuntimeMapLayout layout)
+        => TryBuild(root, "Laboratory", out layout);
+
+    /// <summary>
+    /// Load any original in-game map snapshot packaged privately in the
+    /// twr-source-map-v2 format. The older Laboratory-only format remains
+    /// accepted by its legacy smoke test and existing owner-side packs.
+    /// </summary>
+    public static bool TryBuild(Node3D root, string mapName, out RuntimeMapLayout layout)
     {
         layout = null!;
-        var filePath = CandidatePaths().FirstOrDefault(File.Exists);
+        if (!MapCatalogRuntime.All.Any(map => map.Name == mapName))
+            throw new ArgumentException("Unsupported original map: " + mapName, nameof(mapName));
+        var filePath = CandidatePaths(mapName).FirstOrDefault(File.Exists);
         if (filePath is null)
         {
-            GD.Print("TWR_LAB_SOURCE_PACK_MISSING: using blockout");
+            GD.Print("TWR_SOURCE_MAP_MISSING map=" + mapName + ": using blockout");
             return false;
         }
 
-        var stage = new Node3D { Name = "RecoveredLaboratory" };
+        var stage = new Node3D { Name = "Recovered" + mapName };
         var batches = new Dictionary<string, RenderBatch>(StringComparer.Ordinal);
         var meshCache = new Dictionary<string, Mesh?>(StringComparer.Ordinal);
         var textureCache = new Dictionary<string, Texture2D?>(StringComparer.Ordinal);
@@ -55,13 +65,26 @@ public static class LaboratorySourceLoader
             using var reader = new StreamReader(unpack);
             var headerText = reader.ReadLine()
                 ?? throw new InvalidDataException("empty Laboratory scene");
+            var isLegacyLab = false;
+            var expectedCounts = new Dictionary<string, int>();
             using (var doc = JsonDocument.Parse(headerText))
             {
                 var header = doc.RootElement;
-                if (Str(header, "format") != "twr-laboratory-scene-v1" ||
-                    Str(header, "map") != "Laboratory" ||
+                isLegacyLab = mapName == "Laboratory" &&
+                    Str(header, "format") == "twr-laboratory-scene-v1";
+                var isFullSource = Str(header, "format") == "twr-source-map-v2";
+                if ((!isLegacyLab && !isFullSource) ||
+                    Str(header, "map") != mapName ||
                     Math.Abs(Num(header, "scale") - Stud) > 0.00001f)
-                    throw new InvalidDataException("wrong Laboratory scene format");
+                    throw new InvalidDataException("wrong source map scene format: " + mapName);
+                if (isFullSource)
+                {
+                    var srcCounts = header.GetProperty("counts");
+                    foreach (var pair in new[] { "geometry", "collision", "lights",
+                        "infected_spawns", "player_spawns",
+                        "item_markers", "fortification_markers" })
+                        expectedCounts[pair] = srcCounts.GetProperty(pair).GetInt32();
+                }
             }
             string? line;
             while ((line = reader.ReadLine()) is not null)
@@ -105,14 +128,31 @@ public static class LaboratorySourceLoader
                         throw new InvalidDataException("unknown source record: " + kind);
                 }
             }
-            if (count.GetValueOrDefault("geometry") < 30000 ||
-                count.GetValueOrDefault("collision") < 1000 ||
-                count.GetValueOrDefault("light") < 800 ||
-                infected.Count != 15 || players.Count != 8)
-                throw new InvalidDataException("incomplete Laboratory source pack");
-            if (count.GetValueOrDefault("pickup_spawn") > 0 &&
-                (itemMarkers.Count != 127 || fortificationMarkers.Count != 47))
-                throw new InvalidDataException("incomplete Laboratory pickup marker set");
+            if (isLegacyLab)
+            {
+                if (count.GetValueOrDefault("geometry") < 30000 ||
+                    count.GetValueOrDefault("collision") < 1000 ||
+                    count.GetValueOrDefault("light") < 800 ||
+                    infected.Count != 15 || players.Count != 8)
+                    throw new InvalidDataException("incomplete Laboratory source pack");
+                if (count.GetValueOrDefault("pickup_spawn") > 0 &&
+                    (itemMarkers.Count != 127 || fortificationMarkers.Count != 47))
+                    throw new InvalidDataException("incomplete Laboratory pickup marker set");
+            }
+            else
+            {
+                if (expectedCounts["geometry"] < 10 ||
+                    expectedCounts["infected_spawns"] < 1 ||
+                    expectedCounts["player_spawns"] < 1 ||
+                    count.GetValueOrDefault("geometry") != expectedCounts["geometry"] ||
+                    count.GetValueOrDefault("collision") != expectedCounts["collision"] ||
+                    count.GetValueOrDefault("light") != expectedCounts["lights"] ||
+                    infected.Count != expectedCounts["infected_spawns"] ||
+                    players.Count != expectedCounts["player_spawns"] ||
+                    itemMarkers.Count != expectedCounts["item_markers"] ||
+                    fortificationMarkers.Count != expectedCounts["fortification_markers"])
+                    throw new InvalidDataException("incomplete or corrupted original scene pack: " + mapName);
+            }
 
             foreach (var batch in batches.Values)
             {
@@ -186,7 +226,7 @@ public static class LaboratorySourceLoader
                 UseExactInfectedSpawns = true,
                 FortificationPoints = fortificationMarkers
             };
-            GD.Print($"TWR_LAB_SOURCE_LOADED geometry={count["geometry"]} " +
+            GD.Print($"TWR_LAB_SOURCE_LOADED map={mapName} geometry={count["geometry"]} " +
                 $"server_walls={count["collision"]} physical_shapes={collisions.Count} " +
                 $"source_lights={emitters.Count} active_lights={Math.Min(LaboratoryLightStreamer.ActiveLimit, emitters.Count)} " +
                 $"infected_spawns={infected.Count} player_spawns={players.Count} " +
@@ -199,20 +239,21 @@ public static class LaboratorySourceLoader
         }
         catch (Exception error)
         {
-            GD.PushWarning("TWR_LAB_SOURCE_FAILED: " + error.Message);
+            GD.PushWarning("TWR_SOURCE_MAP_FAILED map=" + mapName + ": " + error.Message);
             stage.Free();
             return false;
         }
     }
 
-    private static IEnumerable<string> CandidatePaths()
+    private static IEnumerable<string> CandidatePaths(string mapName)
     {
+        var packName = mapName + ".scene.jsonl.gz";
         var exeDirectory = Path.GetDirectoryName(OS.GetExecutablePath())
             ?? Directory.GetCurrentDirectory();
-        yield return Path.Combine(exeDirectory, "Content", "Maps", PackName);
-        yield return Path.Combine(Directory.GetCurrentDirectory(), "Content", "Maps", PackName);
+        yield return Path.Combine(exeDirectory, "Content", "Maps", packName);
+        yield return Path.Combine(Directory.GetCurrentDirectory(), "Content", "Maps", packName);
         yield return Path.Combine(Directory.GetCurrentDirectory(), "src", "Twr.Godot",
-            "Content", "Maps", PackName);
+            "Content", "Maps", packName);
     }
 
     private static void AddGeometry(
