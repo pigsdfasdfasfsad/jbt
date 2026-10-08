@@ -24,8 +24,8 @@ public static class ExpresswaySceneBuilder
     private static readonly Color RoadWhite = new(0.68f, 0.69f, 0.66f);
     private static readonly Color RoadYellow = new(0.70f, 0.53f, 0.19f);
 
-    private static readonly StandardMaterial3D RoadMat = Paint(Asphalt, 0.97f);
-    private static readonly StandardMaterial3D CementMat = Paint(Concrete, 0.93f);
+    private static readonly StandardMaterial3D RoadMat = TexturedSurface(Asphalt, .97f, 947u, 19f);
+    private static readonly StandardMaterial3D CementMat = TexturedSurface(Concrete, .93f, 231u, 10f);
     private static readonly StandardMaterial3D RailMat = Paint(Guardrail, 0.64f, true);
     private static readonly StandardMaterial3D SandMat = Paint(Sand, 0.96f);
     private static readonly StandardMaterial3D WhiteMat = Paint(RoadWhite, 0.84f);
@@ -906,6 +906,31 @@ public static class ExpresswaySceneBuilder
             },
             MaterialOverride=material
         });
+    }
+
+    // Lightweight generated road/concrete aggregate. This creates a
+    // deterministic local texture at runtime; it is NOT Roblox texture art.
+    // It removes the featureless solid-colored road visible in the prototype.
+    private static StandardMaterial3D TexturedSurface(
+        Color color,float roughness,uint seed,float repeat)
+    {
+        const int size = 256;
+        var image = Image.CreateEmpty(size,size,false,Image.Format.Rgb8);
+        var state = seed;
+        for(var y=0;y<size;y++)
+            for(var x=0;x<size;x++)
+            {
+                state ^= state << 13;
+                state ^= state >> 17;
+                state ^= state << 5;
+                var random = (state & 0xffffu) / 65535f;
+                var grain = .82f + random*.28f;
+                image.SetPixel(x,y,new Color(grain,grain*.995f,grain*.977f));
+            }
+        var material = Paint(color,roughness);
+        material.AlbedoTexture = ImageTexture.CreateFromImage(image);
+        material.Uv1Scale = new Vector3(repeat,repeat,1f);
+        return material;
     }
 
     private static StandardMaterial3D Paint(
