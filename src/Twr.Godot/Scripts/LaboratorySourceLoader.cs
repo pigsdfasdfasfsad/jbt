@@ -66,6 +66,7 @@ public static class LaboratorySourceLoader
             var headerText = reader.ReadLine()
                 ?? throw new InvalidDataException("empty Laboratory scene");
             var isLegacyLab = false;
+            JsonElement? originalLighting = null;
             var expectedCounts = new Dictionary<string, int>();
             using (var doc = JsonDocument.Parse(headerText))
             {
@@ -79,6 +80,8 @@ public static class LaboratorySourceLoader
                     throw new InvalidDataException("wrong source map scene format: " + mapName);
                 if (isFullSource)
                 {
+                    if (header.TryGetProperty("lighting", out var sourceLighting))
+                        originalLighting = sourceLighting.Clone();
                     var srcCounts = header.GetProperty("counts");
                     foreach (var pair in new[] { "geometry", "collision", "lights",
                         "infected_spawns", "player_spawns",
@@ -198,7 +201,7 @@ public static class LaboratorySourceLoader
                 });
             }
             stage.AddChild(worldBody);
-            AddNightEnvironment(stage);
+            AddNightEnvironment(stage, originalLighting);
             // SpotLight3D.LookAt requires its node to be inside the scene tree.
             // Mount the map before initializing source-facing spotlights.
             root.AddChild(stage);
@@ -362,21 +365,55 @@ public static class LaboratorySourceLoader
             Num(r, "angle", 90), (int)Num(r, "face", 5));
     }
 
-    private static void AddNightEnvironment(Node3D root)
+    private static void AddNightEnvironment(Node3D root, JsonElement? lighting)
     {
-        // Ambient atmosphere is an APPROXIMATED TestPlace reconstruction.
-        // The source light positions/parameters are preserved in the private pack.
+        // Original Roblox place Lighting service: ambient/outdoor RGB,
+        // brightness and fog color/end. Godot atmospheric scattering and
+        // skybox materials differ; those properties are still approximated.
+        var ambient = new Color(.12f,.12f,.16f);
+        var outdoors = new Color(.10f,.11f,.14f);
+        var fog = new Color(.22f,.24f,.27f);
+        var energy = .60f;
+        var density = .006f;
+        if (lighting.HasValue && lighting.Value.ValueKind == JsonValueKind.Object)
+        {
+            var settings = lighting.Value;
+            ambient = SourceColor(settings, "Ambient", ambient);
+            outdoors = SourceColor(settings, "OutdoorAmbient", outdoors);
+            fog = SourceColor(settings, "FogColor", fog);
+            var brightness = Num(settings,"Brightness",.60f);
+            energy = Math.Clamp(.30f + brightness * .35f,.28f,1.50f);
+            var fogEnd = Num(settings,"FogEnd",600f);
+            // Convert source studs into metres before approximating density.
+            density = Math.Clamp(.70f / (fogEnd * Stud),.0005f,.035f);
+        }
         root.AddChild(new WorldEnvironment
         {
             Environment = new global::Godot.Environment
             {
                 BackgroundMode = global::Godot.Environment.BGMode.Color,
-                BackgroundColor = new Color(0.039f, 0.043f, 0.071f),
+                BackgroundColor = outdoors,
                 AmbientLightSource = global::Godot.Environment.AmbientSource.Color,
-                AmbientLightColor = new Color(0.12f, 0.12f, 0.16f),
-                AmbientLightEnergy = 0.6f
+                AmbientLightColor = ambient,
+                AmbientLightEnergy = energy,
+                FogEnabled = true,
+                FogDensity = density,
+                FogLightColor = fog
             }
         });
+    }
+
+    private static Color SourceColor(JsonElement values, string key, Color fallback)
+    {
+        if (!values.TryGetProperty(key, out var rgb) ||
+            rgb.ValueKind != JsonValueKind.Array)
+            return fallback;
+        var channels = rgb.EnumerateArray().Select(v => v.GetSingle()).ToArray();
+        return channels.Length == 3
+            ? new Color(Math.Clamp(channels[0],0f,1f),
+                Math.Clamp(channels[1],0f,1f),
+                Math.Clamp(channels[2],0f,1f))
+            : fallback;
     }
 
     private static Transform3D ToTransform(JsonElement r, Vector3 size, bool scaled)
