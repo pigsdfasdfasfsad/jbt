@@ -1,3 +1,22 @@
+# CURRENT SOURCE RECOVERY UPDATE — 2026-10-08
+
+**New complete original-place evidence supersedes the older source-blocker
+sections below.** New owner-supplied `twr places(1).zip` includes the loaded
+Workspace/Map scene for every one of the ten release maps. Original full
+source-positioned scenes have been privately extracted and linked in the
+conversation alongside 100 original weapon assembly hierarchies, source R6
+infected variants, original Lighting metadata and 190 sound IDs.
+
+**Canonical current update:**
+[docs/development/SOURCE_PLACE_RECOVERY_2026-10-08.md](SOURCE_PLACE_RECOVERY_2026-10-08.md)
+
+Old assertions below that the nine maps have *only* incomplete CMaps
+fragments were accurate before the new source ZIP was provided but are now
+historical. Real original mesh/CSG assets and terrain voxel conversion remain
+unresolved; complete Windows graphical playtests are still pending.
+
+---
+
 # TWR Offline — Current Implementation Status
 Updated: 2026-10-08. Canonical checkpoint for continuing the existing Godot/C# game.
 
