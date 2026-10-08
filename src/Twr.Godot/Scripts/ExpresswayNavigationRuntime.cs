@@ -39,7 +39,7 @@ public partial class ExpresswayNavigationRuntime : Node3D
         (-10f,34f,3.8f,1.6f),(10f,34f,3.8f,1.6f)
     ];
 
-    public int NavigablePoints => _graph.GetPointCount();
+    public long NavigablePoints => _graph.GetPointCount();
 
     public override void _Ready()
     {
