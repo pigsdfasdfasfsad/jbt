@@ -26,6 +26,11 @@ public partial class Bootstrap : Node
             RunLaboratorySourceSmoke();
             return;
         }
+        if (args.Contains("--smoke-infected-models", StringComparer.Ordinal))
+        {
+            RunInfectedModelSmoke();
+            return;
+        }
 
         ShowMenu();
         if (args.Contains("--smoke-play", StringComparer.Ordinal))
@@ -45,6 +50,27 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException(
                 "Laboratory source-pack smoke failed to instantiate the scene.");
         GD.Print("TWR_SMOKE_LAB_SOURCE_OK infected_spawns=" + layout.InfectedSpawns.Count);
+        GetTree().Quit(0);
+    }
+
+    // Exercise all eight no-network infected assembly fallback types in the
+    // exported game, rather than only checking model source text.
+    private void RunInfectedModelSmoke()
+    {
+        var stage = new Node3D { Name = "InfectedVisualSmoke" };
+        AddChild(stage);
+        var types = new[] {
+            "Civilian", "Sprinter", "Military", "Hazmat",
+            "Riot", "Burster", "Bloater", "Bolter"
+        };
+        foreach (var type in types)
+        {
+            var visual = new InfectedVisualAssembler { Name = type, InfectedType = type };
+            stage.AddChild(visual);
+            if (visual.GetChildCount() == 0)
+                throw new InvalidOperationException("Missing offline infected visual: " + type);
+        }
+        GD.Print("TWR_SMOKE_INFECTED_VISUALS_OK types=" + types.Length);
         GetTree().Quit(0);
     }
 

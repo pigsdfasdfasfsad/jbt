@@ -23,6 +23,7 @@ public partial class InfectedAgent : CharacterBody3D
     private bool _leapHit;
     private double _steerHold;
     private int _steerSign=1;
+    private InfectedVisualAssembler? _visual;
 
     public override void _Ready()
     {
@@ -35,19 +36,12 @@ public partial class InfectedAgent : CharacterBody3D
             Shape = new CapsuleShape3D { Radius = 0.42f, Height = 1.8f }
         });
 
-        AddChild(new MeshInstance3D
+        _visual = new InfectedVisualAssembler
         {
-            Mesh = new CapsuleMesh
-            {
-                Radius = 0.42f,
-                Height = 1.8f,
-                Material = new StandardMaterial3D
-                {
-                    AlbedoColor = ColorForType(InfectedType),
-                    Roughness = 0.9f
-                }
-            }
-        });
+            Name = "InfectedVisual",
+            InfectedType = InfectedType
+        };
+        AddChild(_visual);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -99,6 +93,7 @@ public partial class InfectedAgent : CharacterBody3D
             {
                 // APPROXIMATED: retail claw cadence is not recovered.
                 _attackCooldown = 1.0;
+                _visual?.Attack();
                 Runtime.DamagePlayer(Damage, InfectedType);
             }
         }
@@ -213,15 +208,4 @@ public partial class InfectedAgent : CharacterBody3D
         QueueFree();
     }
 
-    private static Color ColorForType(string type) => type switch
-    {
-        "Bolter" => new Color(0.55f, 0.17f, 0.14f),
-        "Sprinter" => new Color(0.65f, 0.33f, 0.16f),
-        "Military" => new Color(0.20f, 0.28f, 0.17f),
-        "Hazmat" => new Color(0.72f, 0.68f, 0.15f),
-        "Riot" => new Color(0.12f, 0.15f, 0.18f),
-        "Burster" => new Color(0.38f, 0.48f, 0.19f),
-        "Bloater" => new Color(0.36f, 0.23f, 0.28f),
-        _ => new Color(0.32f, 0.36f, 0.30f)
-    };
 }

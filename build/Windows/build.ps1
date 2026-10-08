@@ -106,6 +106,20 @@ try {
   if (-not ($fullOutput | Where-Object { "$_" -match 'TWR_SMOKE_COMPLETE_OK maps=10 waves=150' })) {
     throw 'Exported 15-wave completion smoke did not report the required completion marker.'
   }
+  # Instantiate all eight offline infected presentation types in exported Godot.
+  $modelStdout = Join-Path $Output 'infected-models.stdout.txt'
+  $modelStderr = Join-Path $Output 'infected-models.stderr.txt'
+  Remove-Item $modelStdout,$modelStderr -Force -ErrorAction SilentlyContinue
+  $models = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','120','--','--smoke-infected-models') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $modelStdout -RedirectStandardError $modelStderr
+  $modelOutput = @()
+  if (Test-Path $modelStdout) { $modelOutput += Get-Content $modelStdout }
+  if (Test-Path $modelStderr) { $modelOutput += Get-Content $modelStderr }
+  $modelOutput | ForEach-Object { Write-Host $_ }
+  if ($models.ExitCode -ne 0) { throw "Infected visual smoke failed with exit code $($models.ExitCode)" }
+  if (-not ($modelOutput | Where-Object { "$_" -match 'TWR_SMOKE_INFECTED_VISUALS_OK types=8' })) {
+    throw 'Infected visual smoke did not report all eight assembly types.'
+  }
+
   # The real source pack is owner-only and must never be uploaded to GitHub.
   # Exercise the exported loader with a clearly marked synthetic CI fixture.
   $fixture = Join-Path $Output 'Content\Maps\Laboratory.scene.jsonl.gz'
