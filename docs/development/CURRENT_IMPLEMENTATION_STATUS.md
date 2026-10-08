@@ -9,11 +9,17 @@ Updated: 2026-10-08. Canonical checkpoint for continuing the existing Godot/C# g
   binaries are published to GitHub Releases or Actions artifacts.
 
 ## Most recent independently verified Windows build
-- Code commit: b57ac9787bb84a2b59c0ed1b7915212aad484040
+- Latest independently verified code commit: 5b9b16d58ee724529c3fe20772f83f344bf8507c.
 - Successful Windows Actions run:
-  https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37827238421
-- 304 Python tests passed and all source/static/domain acceptance validators
-  passed; Godot .NET Windows export succeeded with zero compiler warnings.
+  https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37840538113
+- **315 Python tests passed**, all validators passed, and the Godot
+  C# Windows export succeeded with **zero compiler warnings**.
+- Expressway scene smoke constructed 140 bridge objects, 14 traffic
+  assemblies, 61 screening-zone props and 12 street-lamp assemblies.
+- Expressway navigation smoke verified **204 reachable AStar3D waypoint
+  nodes** and a connected **29-point route** along the bridge. This is
+  path-construction evidence, not evidence that every enemy navigates reliably
+  in actual human-controlled wave gameplay.
 - Exported executable smoke markers:
   TWR_SMOKE_COMPLETE_OK maps=10 waves=150;
   TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1;
@@ -96,7 +102,7 @@ Updated: 2026-10-08. Canonical checkpoint for continuing the existing Godot/C# g
 | Cabin | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
 | Cargo | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
 | District | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
-| Expressway | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
+| Expressway | Partial stored source; 6 original screenshots | Reference-guided elevated bridge/checkpoint, vehicles, procedural material/sky and 204-point interim AI routing | Original source mesh/CSG/texture binaries NOT COMPLETE | Windows headless scene/nav smoke PASS; graphical playtest NOT VERIFIED |
 | Prison | Partial stored fragment | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
 | Manor | Partial stored fragment, 1,602 unresolved unions | Approximate blockout | NOT COMPLETE | NOT VERIFIED |
 
@@ -169,3 +175,61 @@ merely that C# compiles or automated wave state progression passes.
   owner-provided WeaponHUD.png. The weapon silhouette is temporary vector art.
 - Real interactive camera screenshot comparison is still required. Automated
   headless runtime construction cannot certify the appearance or playability.
+
+## Expressway first full visual implementation pass — latest (2026-10-08)
+
+**Original screenshot references used:** images.zip entries
+Expressway.png, ExpresswayPreview.png, ExpresswayPreview2.png,
+ExpresswayIcon.png, Card-expressway.png and Vote-expressway.png.
+
+**Actual code and CI evidence:**
+
+1. 1c9bff43 / 4b3b2a8b: Created 925-line ExpresswaySceneBuilder
+   and replaced the visible Expressway box arena with an elevated freeway
+   structure, multi-lane asphalt, bridge beams/pylons, concrete parapets,
+   skyline, abandoned traffic, two military Humvees, screening tents,
+   barricades, fencing, stop signs, sandbags, traffic cones, crates,
+   checkpoint signage, stationary helicopter and street lamps.
+2. 65bbd6b4 / 1a16c776 / 4cc5bec9: Original-inspired circular
+   ammunition HUD and responsive health/armor/wave panels. The first
+   attempt left two obsolete source-string assertions; the next Windows
+   run passed after verifying real behavior remained intact.
+3. 4d32b719 / 68f529a3 / 92f67ee2 / 5b9b16d5: Dedicated shared AStar3D
+   static-lane route network for infected on Expressway, with blockers for
+   vehicles, Humvees, sandbags and screening walls. Two C# binding
+   mismatches involving AStar3D.GetPointCount were fixed. The final
+   compiled Windows scene smoke passed with 204 nodes and a 29-point path.
+4. 663b288d: Deterministic locally generated surface-grain textures for
+   Expressway asphalt and concrete to avoid the earlier entirely flat gray
+   surfaces. No network or proprietary mesh/texture data is used.
+
+**Gaps that prevent calling this map "complete":**
+
+- Every road dimension and vehicle placement remains reconstructed from
+  reference pictures, not original instance-level source coordinates.
+- Original Expressway vehicle meshes, signs, checkpoint textures, cloud sky,
+  CSG, vegetation, original spawn markers, sound and animations are missing.
+- Real rendering, camera-matched fidelity comparisons, Godot frame time,
+  player collision, AI movement under live waves and checkpoint traversal
+  have not been interactively tested.
+- The shared AStar grid approximates clearance around static obstacles but
+  does not dynamically rebuild when fortifications are deployed.
+- Existing original-looking model preview art is not proof of original assets.
+- No latest privately downloadable Windows executable has been produced.
+  CI exports executables only transiently and does not publish binary artifacts.
+
+**Next concrete implementation passes:**
+
+1. Graphical Windows playtest of Expressway on actual hardware with screenshot
+   captures at several camera bearings using F12; repair noticeable geometry,
+   lighting, vehicle, barricade placement and HUD layout discrepancies.
+2. Traverse the bridge and complete multiple actual waves; catch AI pathing
+   stalls, static collision blocking, line-of-sight problems, draw-call/frame
+   time spikes, and unreachable pickup/objective anchors.
+3. Obtain authorized original Expressway map scene/mesh/texture files if
+   available; replace approximate prop meshes and material references.
+4. Reuse the Expressway visual/AI engineering methods to reconstruct one
+   further map to a demonstrable standard before spreading more placeholders.
+5. Integrate source-based infected rig/animation, weapon/audio and effect
+   packages as additional asset evidence becomes available.
+
