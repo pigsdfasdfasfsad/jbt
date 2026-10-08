@@ -65,12 +65,18 @@ public static class InfectedSourceModelRuntime
             var offset = parentNode == rig
                 ? localPosition : localPosition - pivot!.Position;
             var color = ColorFor(part);
-            var key = color.ToHtml(true);
+            var textureId = part.TryGetProperty("textureId", out var originalTexture)
+                ? originalTexture.GetString() ?? "" : "";
+            var texturePath = $"res://Content/Assets/Textures/{textureId}.png";
+            var key = color.ToHtml(true) + "|" + textureId;
             if (!materialCache.TryGetValue(key, out var material))
             {
                 material = new StandardMaterial3D
                 {
                     AlbedoColor = color,
+                    AlbedoTexture = !string.IsNullOrEmpty(textureId) &&
+                        ResourceLoader.Exists(texturePath)
+                        ? ResourceLoader.Load<Texture2D>(texturePath) : null,
                     Roughness = 0.87f,
                     Transparency = color.A < 0.999f
                         ? BaseMaterial3D.TransparencyEnum.Alpha

@@ -51,12 +51,18 @@ public static class OriginalWeaponSourceRuntime
                 .Select(c => c.GetSingle()).ToArray();
             var alpha = part.GetProperty("opacity").GetSingle();
             var color = new Color(rgb[0]/255f,rgb[1]/255f,rgb[2]/255f,alpha);
-            var materialKey = color.ToHtml(true);
+            var textureId = part.TryGetProperty("textureId", out var sourceTexture)
+                ? sourceTexture.GetString() ?? "" : "";
+            var texturePath = $"res://Content/Assets/Textures/{textureId}.png";
+            var materialKey = color.ToHtml(true) + "|" + textureId;
             if (!materials.TryGetValue(materialKey, out var material))
             {
                 material = new StandardMaterial3D
                 {
                     AlbedoColor = color,
+                    AlbedoTexture = !string.IsNullOrEmpty(textureId) &&
+                        ResourceLoader.Exists(texturePath)
+                        ? ResourceLoader.Load<Texture2D>(texturePath) : null,
                     Roughness = .51f,
                     Metallic = .28f,
                     Transparency = alpha < .995f
