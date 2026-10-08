@@ -37,7 +37,7 @@ public static class LaboratorySourceLoader
     public static bool TryBuild(Node3D root, string mapName, out RuntimeMapLayout layout)
     {
         layout = null!;
-        if (!MapCatalogRuntime.All.Any(map => map.Name == mapName))
+        if (!MapCatalogRuntime.All().Any(map => map.Name == mapName))
             throw new ArgumentException("Unsupported original map: " + mapName, nameof(mapName));
         var filePath = CandidatePaths(mapName).FirstOrDefault(File.Exists);
         if (filePath is null)
