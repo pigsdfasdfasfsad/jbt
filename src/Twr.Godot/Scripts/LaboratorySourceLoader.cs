@@ -38,6 +38,8 @@ public static class LaboratorySourceLoader
 
         var stage = new Node3D { Name = "RecoveredLaboratory" };
         var batches = new Dictionary<string, RenderBatch>(StringComparer.Ordinal);
+        var meshCache = new Dictionary<string, Mesh?>(StringComparer.Ordinal);
+        var textureCache = new Dictionary<string, Texture2D?>(StringComparer.Ordinal);
         var collisions = new List<(Transform3D Transform, Vector3 Size, bool Wedge)>();
         var emitters = new List<LaboratorySourceLight>();
         var infected = new List<Vector3>();
@@ -71,7 +73,7 @@ public static class LaboratorySourceLoader
                 switch (kind)
                 {
                     case "geometry":
-                        AddGeometry(record, batches, collisions);
+                        AddGeometry(record, batches, collisions, meshCache, textureCache);
                         break;
                     case "collision":
                     {
@@ -188,7 +190,11 @@ public static class LaboratorySourceLoader
                 $"server_walls={count["collision"]} physical_shapes={collisions.Count} " +
                 $"source_lights={emitters.Count} active_lights={Math.Min(LaboratoryLightStreamer.ActiveLimit, emitters.Count)} " +
                 $"infected_spawns={infected.Count} player_spawns={players.Count} " +
-                $"item_markers={itemMarkers.Count} fortification_markers={fortificationMarkers.Count}");
+                $"item_markers={itemMarkers.Count} fortification_markers={fortificationMarkers.Count} " +
+                $"mesh_ids_loaded={meshCache.Count(item => item.Value is not null)} " +
+                $"mesh_ids_missing={meshCache.Count(item => item.Value is null)} " +
+                $"texture_ids_loaded={textureCache.Count(item => item.Value is not null)} " +
+                $"texture_ids_missing={textureCache.Count(item => item.Value is null)}");
             return true;
         }
         catch (Exception error)
@@ -211,7 +217,9 @@ public static class LaboratorySourceLoader
 
     private static void AddGeometry(
         JsonElement r, Dictionary<string, RenderBatch> batches,
-        List<(Transform3D Transform, Vector3 Size, bool Wedge)> colliders)
+        List<(Transform3D Transform, Vector3 Size, bool Wedge)> colliders,
+        Dictionary<string, Mesh?> meshCache,
+        Dictionary<string, Texture2D?> textureCache)
     {
         var opacity = Num(r, "opacity", 1);
         var size = Extents(r);
@@ -225,9 +233,20 @@ public static class LaboratorySourceLoader
         var rgb = Vec(r, "rgb");
         var color = new Color(rgb[0] / 255f, rgb[1] / 255f, rgb[2] / 255f, opacity);
         var id = Str(r, "meshId", Str(r, "specialMeshId"));
-        var prepared = LoadPreparedMesh(id);
+        Mesh? prepared = null;
+        if (!string.IsNullOrEmpty(id) && !meshCache.TryGetValue(id, out prepared))
+        {
+            prepared = LoadPreparedMesh(id);
+            meshCache[id] = prepared;
+        }
         var textureId = Str(r, "textureId");
-        var preparedTexture = LoadPreparedTexture(textureId);
+        Texture2D? preparedTexture = null;
+        if (!string.IsNullOrEmpty(textureId) &&
+            !textureCache.TryGetValue(textureId, out preparedTexture))
+        {
+            preparedTexture = LoadPreparedTexture(textureId);
+            textureCache[textureId] = preparedTexture;
+        }
         var shadow = Flag(r, "shadow");
         // Missing mesh binaries all use the same geometry proxy; retaining
         // their unrelated asset IDs in batch keys creates excess draw calls.

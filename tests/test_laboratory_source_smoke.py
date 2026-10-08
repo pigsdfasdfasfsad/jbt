@@ -115,3 +115,15 @@ def test_specialmesh_visual_scale_does_not_inflate_collision_shapes():
     assert 'ToTransform(r, visualSize, true)' in loader
     assert 'colliders.Add((ToTransform(r, size, false), size,' in loader
     assert "'specialMeshScale': [480.0, 40.0, 480.0]" in fixture
+
+def test_asset_resource_lookups_are_deduplicated():
+    loader=(ROOT/'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
+    fixture=(ROOT/'tools/maps/make_lab_smoke_fixture.py').read_text()
+    assert 'var meshCache = new Dictionary<string, Mesh?>' in loader
+    assert 'var textureCache = new Dictionary<string, Texture2D?>' in loader
+    assert 'meshCache.TryGetValue(id, out prepared)' in loader
+    assert 'textureCache.TryGetValue(textureId, out preparedTexture)' in loader
+    assert 'mesh_ids_missing=' in loader
+    assert 'texture_ids_missing=' in loader
+    assert "'meshId': str(3000 + i % 3)" in fixture
+    assert "'textureId': str(2000 + i % 2)" in fixture

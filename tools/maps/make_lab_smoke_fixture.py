@@ -36,6 +36,8 @@ def generate(path: Path) -> None:
                     't': [i % 200, 0, i // 200], 'r': IDENTITY,
                     's': [2.0, 0.5, 2.0], 'shape': '1',
                     **({'specialMeshScale': [480.0, 40.0, 480.0]} if i == 2 else {}),
+                    **({'meshId': str(3000 + i % 3),
+                        'textureId': str(2000 + i % 2)} if i < 1000 else {}),
                     'rgb': [100, 110, 130], 'opacity': (0.0 if i == 0 else 1.0),
                     'mat': '272', 'shadow': False, 'collidable': (i < 16600),
                 })
