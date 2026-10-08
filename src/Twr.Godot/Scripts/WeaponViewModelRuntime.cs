@@ -13,6 +13,7 @@ namespace Twr.Godot;
 public partial class WeaponViewModelRuntime : Node3D
 {
     public bool UsingPreparedScene { get; private set; }
+    public bool UsingOriginalToolAssembly { get; private set; }
     public int VisualPartCount => _rig?.GetChildCount() ?? 0;
 
     private Node3D? _rig;
@@ -43,12 +44,24 @@ public partial class WeaponViewModelRuntime : Node3D
                 instance.Free();
             }
         }
+        // Preserve the original game's weapon model part transforms, sizes,
+        // and colors when the private owner-derived tool pack is installed.
+        if (OriginalWeaponSourceRuntime.TryBuild(_rig!, spec.Name))
+        {
+            UsingOriginalToolAssembly = true;
+            return;
+        }
         BuildApproximateWeapon(spec);
     }
 
     public void SetThrowable(string type)
     {
         ResetRig();
+        if (OriginalWeaponSourceRuntime.TryBuild(_rig!, type))
+        {
+            UsingOriginalToolAssembly = true;
+            return;
+        }
         var housing = Material(new Color(0.27f, 0.29f, 0.23f));
         var metal = Material(new Color(0.42f, 0.45f, 0.47f), true);
         if (type == "Molotov")
@@ -106,6 +119,7 @@ public partial class WeaponViewModelRuntime : Node3D
         _rig = new Node3D { Name = "WeaponBody" };
         AddChild(_rig);
         UsingPreparedScene = false;
+        UsingOriginalToolAssembly = false;
         _reloadRemaining = _reloadDuration = _kick = 0;
     }
 
