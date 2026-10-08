@@ -36,6 +36,11 @@ public partial class Bootstrap : Node
             RunInfectedModelSmoke();
             return;
         }
+        if (args.Contains("--smoke-source-infected", StringComparer.Ordinal))
+        {
+            RunOriginalInfectedSourceSmoke();
+            return;
+        }
         if (args.Contains("--smoke-weapon-models", StringComparer.Ordinal))
         {
             RunWeaponModelSmoke();
@@ -97,6 +102,27 @@ public partial class Bootstrap : Node
         GD.Print("TWR_SMOKE_LAB_SOURCE_OK infected_spawns=" + layout.InfectedSpawns.Count +
             " item_markers=" + layout.PickupPoints.Count +
             " fortification_markers=" + layout.FortificationPoints.Count);
+        GetTree().Quit(0);
+    }
+
+    private void RunOriginalInfectedSourceSmoke()
+    {
+        var stage = new Node3D { Name = "OriginalSourceInfectedSmoke" };
+        AddChild(stage);
+        var sourceTypes = new[] {
+            "Civilian", "Sprinter", "Military", "Hazmat", "Burster", "Bolter"
+        };
+        foreach (var type in sourceTypes)
+        {
+            var visual = new InfectedVisualAssembler { Name = type, InfectedType = type };
+            stage.AddChild(visual);
+            if (!visual.UsingSourceBlueprint ||
+                visual.GetNodeOrNull<Node3D>("SourceR6Body") is null)
+                throw new InvalidOperationException(
+                    "Original source infected assembly failed: " + type);
+            visual.Attack();
+        }
+        GD.Print("TWR_SMOKE_SOURCE_INFECTED_OK types=6");
         GetTree().Quit(0);
     }
 

@@ -137,6 +137,27 @@ try {
     throw 'Infected visual smoke did not report all eight assembly types.'
   }
 
+  # Check offline source-derived R6 zombie model assembly using a generated
+  # six-type fixture. Never publish private original zombie model bytes.
+  $privateZombieFixture = Join-Path $Output 'Content\Enemies\InfectedSourceVariants.json.gz'
+  try {
+    python (Join-Path $Repo 'tools\maps\make_source_infected_smoke_fixture.py') --output $privateZombieFixture
+    $sourceZombieStdout = Join-Path $Output 'source-infected.stdout.txt'
+    $sourceZombieStderr = Join-Path $Output 'source-infected.stderr.txt'
+    Remove-Item $sourceZombieStdout,$sourceZombieStderr -Force -ErrorAction SilentlyContinue
+    $sourceZombie = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','120','--','--smoke-source-infected') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $sourceZombieStdout -RedirectStandardError $sourceZombieStderr
+    $sourceZombieOutput = @()
+    if (Test-Path $sourceZombieStdout) { $sourceZombieOutput += Get-Content $sourceZombieStdout }
+    if (Test-Path $sourceZombieStderr) { $sourceZombieOutput += Get-Content $sourceZombieStderr }
+    $sourceZombieOutput | ForEach-Object { Write-Host $_ }
+    if ($sourceZombie.ExitCode -ne 0) { throw "Source-infected smoke failed: exit $($sourceZombie.ExitCode)" }
+    if (-not ($sourceZombieOutput | Where-Object { "$_" -match 'TWR_SMOKE_SOURCE_INFECTED_OK types=6' })) {
+      throw 'Source-derived original infected body assembly smoke failed.'
+    }
+  } finally {
+    Remove-Item $privateZombieFixture -Force -ErrorAction SilentlyContinue
+  }
+
   # Require the exported Windows executable to construct the entire
   # source-guided Expressway environment without runtime script errors.
   $roadStdout = Join-Path $Output 'expressway-scene.stdout.txt'
