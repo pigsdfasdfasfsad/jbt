@@ -63,7 +63,7 @@ def test_original_collidable_parts_and_invisible_walls_are_preserved():
     assert 'shapeCache.TryGetValue(size, out var shape)' in loader
     assert 'batchMeshKey = prepared is null ? "" : id' in loader
     assert '(0.0 if i == 0 else 1.0)' in fixture
-    assert "'collidable': (i < 25)" in fixture
+    assert "'collidable': (i < 16600)" in fixture
 
 def test_laboratory_prepared_textures_require_local_asset_files():
     loader = (ROOT / 'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()

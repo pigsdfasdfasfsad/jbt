@@ -34,7 +34,7 @@ def generate(path: Path) -> None:
                     't': [i % 200, 0, i // 200], 'r': IDENTITY,
                     's': [2.0, 0.5, 2.0], 'shape': '1',
                     'rgb': [100, 110, 130], 'opacity': (0.0 if i == 0 else 1.0),
-                    'mat': '272', 'shadow': False, 'collidable': (i < 25),
+                    'mat': '272', 'shadow': False, 'collidable': (i < 16600),
                 })
             for i in range(1000):
                 write(stream, {
