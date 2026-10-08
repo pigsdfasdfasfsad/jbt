@@ -123,12 +123,20 @@ public static class LaboratorySourceLoader
                 Name = "LaboratoryCollision",
                 CollisionLayer = 1
             };
+            var shapeCache = new Dictionary<Vector3, BoxShape3D>();
             foreach (var (t, size) in collisions)
+            {
+                if (!shapeCache.TryGetValue(size, out var shape))
+                {
+                    shape = new BoxShape3D { Size = size };
+                    shapeCache[size] = shape;
+                }
                 worldBody.AddChild(new CollisionShape3D
                 {
-                    Shape = new BoxShape3D { Size = size },
+                    Shape = shape,
                     Transform = t
                 });
+            }
             stage.AddChild(worldBody);
             AddNightEnvironment(stage);
             // SpotLight3D.LookAt requires its node to be inside the scene tree.
@@ -186,39 +194,49 @@ public static class LaboratorySourceLoader
         List<(Transform3D Transform, Vector3 Size)> colliders)
     {
         var opacity = Num(r, "opacity", 1);
-        if (opacity < 0.001f) return;
         var size = Extents(r);
         var cls = Str(r, "class");
+        // A source-visible mesh may be fully transparent while retaining its
+        // collision. Physics must not be gated on opacity or drawing.
+        if (Flag(r, "collidable"))
+            colliders.Add((ToTransform(r, size, false), size));
+        if (opacity < 0.001f) return;
         var rgb = Vec(r, "rgb");
         var color = new Color(rgb[0] / 255f, rgb[1] / 255f, rgb[2] / 255f, opacity);
         var id = Str(r, "meshId", Str(r, "specialMeshId"));
+        var prepared = LoadPreparedMesh(id);
         var shadow = Flag(r, "shadow");
-        var key = $"{cls}|{Str(r, "shape")}|{Str(r, "mat")}|{id}|" +
+        // Missing mesh binaries all use the same geometry proxy; retaining
+        // their unrelated asset IDs in batch keys creates excess draw calls.
+        var batchMeshKey = prepared is null ? "" : id;
+        var key = $"{cls}|{Str(r, "shape")}|{Str(r, "mat")}|{batchMeshKey}|" +
                   $"{rgb[0]},{rgb[1]},{rgb[2]}|{opacity:F3}|{shadow}";
         if (!batches.TryGetValue(key, out var batch))
         {
-            var mesh = LoadPreparedMesh(id) ?? ProxyMesh(cls, Str(r, "shape"));
+            var mesh = prepared ?? ProxyMesh(cls, Str(r, "shape"));
             mesh = (Mesh)mesh.Duplicate();
             if (mesh is PrimitiveMesh primitive)
+            {
+                var materialCode = Str(r, "mat");
+                var metallic = materialCode is "1088" or "1056" or "1040";
+                var neon = materialCode == "288";
+                var glass = materialCode == "1568";
                 primitive.Material = new StandardMaterial3D
                 {
                     AlbedoColor = color,
-                    Roughness = 0.88f,
+                    Metallic = metallic ? 0.75f : 0.02f,
+                    Roughness = metallic ? 0.42f : glass ? 0.11f : 0.88f,
+                    EmissionEnabled = neon,
+                    Emission = color,
                     Transparency = opacity < 0.995f
                         ? BaseMaterial3D.TransparencyEnum.Alpha
                         : BaseMaterial3D.TransparencyEnum.Disabled
                 };
+            }
             batch = new RenderBatch { Mesh = mesh, CastShadow = shadow };
             batches.Add(key, batch);
         }
         batch.Instances.Add(ToTransform(r, size, true));
-
-        var name = Str(r, "name");
-        if (Flag(r, "collidable") && cls == "Part" &&
-            (name.Contains("Floor", StringComparison.OrdinalIgnoreCase) ||
-             name.Contains("Stair", StringComparison.OrdinalIgnoreCase) ||
-             name.Contains("Ramp", StringComparison.OrdinalIgnoreCase)))
-            colliders.Add((ToTransform(r, size, false), size));
     }
 
     private static Mesh? LoadPreparedMesh(string id)

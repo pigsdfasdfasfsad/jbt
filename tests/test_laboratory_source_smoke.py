@@ -54,3 +54,13 @@ def test_laboratory_light_budget_follows_player():
     assert 'if (next.DistanceSquaredTo(_referencePosition) < 16f) return;' in lights
     assert 'spot.LookAt(spot.GlobalPosition + direction, up);' in lights
     assert '?.Track(_player);' in gameplay
+
+def test_original_collidable_parts_and_invisible_walls_are_preserved():
+    loader = (ROOT / 'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
+    fixture = (ROOT / 'tools/maps/make_lab_smoke_fixture.py').read_text()
+    assert 'if (Flag(r, "collidable"))' in loader
+    assert loader.index('if (Flag(r, "collidable"))') < loader.index('if (opacity < 0.001f) return;')
+    assert 'shapeCache.TryGetValue(size, out var shape)' in loader
+    assert 'batchMeshKey = prepared is null ? "" : id' in loader
+    assert '(0.0 if i == 0 else 1.0)' in fixture
+    assert "'collidable': (i < 25)" in fixture
