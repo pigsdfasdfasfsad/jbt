@@ -9,7 +9,8 @@ def test_energy_drink_and_gas_mask_match_source_durations_and_wave_rules():
     assert "State.Player.GasMaskActive=false" in session
     assert "State.Player.EnergyDrinkSeconds=0" in session
     player=read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
-    assert "FITTED TestPlace reconstruction" in player\n    assert "1.25f" in player
+    assert "FITTED TestPlace reconstruction" in player
+    assert "1.25f" in player
 
 def test_gas_mask_blocks_spore_gas_but_not_cluster_splash():
     cloud=read("src/Twr.Godot/Scripts/SporeCloudRuntime.cs")
