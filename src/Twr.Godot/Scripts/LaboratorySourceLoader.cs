@@ -205,11 +205,14 @@ public static class LaboratorySourceLoader
         var color = new Color(rgb[0] / 255f, rgb[1] / 255f, rgb[2] / 255f, opacity);
         var id = Str(r, "meshId", Str(r, "specialMeshId"));
         var prepared = LoadPreparedMesh(id);
+        var textureId = Str(r, "textureId");
+        var preparedTexture = LoadPreparedTexture(textureId);
         var shadow = Flag(r, "shadow");
         // Missing mesh binaries all use the same geometry proxy; retaining
         // their unrelated asset IDs in batch keys creates excess draw calls.
         var batchMeshKey = prepared is null ? "" : id;
-        var key = $"{cls}|{Str(r, "shape")}|{Str(r, "mat")}|{batchMeshKey}|" +
+        var batchTextureKey = preparedTexture is null ? "" : textureId;
+        var key = $"{cls}|{Str(r, "shape")}|{Str(r, "mat")}|{batchMeshKey}|{batchTextureKey}|" +
                   $"{rgb[0]},{rgb[1]},{rgb[2]}|{opacity:F3}|{shadow}";
         if (!batches.TryGetValue(key, out var batch))
         {
@@ -224,11 +227,12 @@ public static class LaboratorySourceLoader
                 primitive.Material = new StandardMaterial3D
                 {
                     AlbedoColor = color,
+                    AlbedoTexture = preparedTexture,
                     Metallic = metallic ? 0.75f : 0.02f,
                     Roughness = metallic ? 0.42f : glass ? 0.11f : 0.88f,
                     EmissionEnabled = neon,
                     Emission = color,
-                    Transparency = opacity < 0.995f
+                    Transparency = opacity < 0.995f || preparedTexture is not null
                         ? BaseMaterial3D.TransparencyEnum.Alpha
                         : BaseMaterial3D.TransparencyEnum.Disabled
                 };
@@ -244,6 +248,13 @@ public static class LaboratorySourceLoader
         if (string.IsNullOrEmpty(id) || !id.All(char.IsDigit)) return null;
         var path = $"res://Content/Assets/Meshes/{id}.res";
         return ResourceLoader.Exists(path) ? ResourceLoader.Load<Mesh>(path) : null;
+    }
+
+    private static Texture2D? LoadPreparedTexture(string id)
+    {
+        if (string.IsNullOrEmpty(id) || !id.All(char.IsDigit)) return null;
+        var path = $"res://Content/Assets/Textures/{id}.png";
+        return ResourceLoader.Exists(path) ? ResourceLoader.Load<Texture2D>(path) : null;
     }
 
     private static Mesh ProxyMesh(string cls, string shape)

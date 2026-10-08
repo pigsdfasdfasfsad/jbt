@@ -64,3 +64,11 @@ def test_original_collidable_parts_and_invisible_walls_are_preserved():
     assert 'batchMeshKey = prepared is null ? "" : id' in loader
     assert '(0.0 if i == 0 else 1.0)' in fixture
     assert "'collidable': (i < 25)" in fixture
+
+def test_laboratory_prepared_textures_require_local_asset_files():
+    loader = (ROOT / 'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
+    assert 'res://Content/Assets/Textures/{id}.png' in loader
+    assert 'ResourceLoader.Load<Texture2D>(path)' in loader
+    assert 'AlbedoTexture = preparedTexture' in loader
+    assert 'batchTextureKey = preparedTexture is null ? "" : textureId' in loader
+    assert 'HttpClient' not in loader

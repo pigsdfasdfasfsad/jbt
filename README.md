@@ -67,3 +67,16 @@ the scene now reselects up to 128 nearest emitters when the player moves.
 Other source lights remain in the pack and are eligible for activation.
 Roblox SurfaceLight is approximated with a directed Godot spotlight until
 an exact surface-light shader exists. Per-map skybox textures remain unavailable.
+
+## Prepared offline Laboratory textures
+
+The original Laboratory scene references 59 different per-MeshPart texture
+asset IDs. Mesh textures can be included **before** the Godot export at
+`src/Twr.Godot/Content/Assets/Textures/<numeric asset id>.png` and are
+loaded locally through `res://Content/Assets/Textures/`. If a texture is not
+present, the source-color proxy remains. The same approach supports prepared
+unit-normalized Godot mesh resources in `Content/Assets/Meshes/` before export.
+
+**No original mesh or texture bytes are currently committed to public Git.**
+Source IDs are not texture images, and this loader does not fetch resources
+over the network.
