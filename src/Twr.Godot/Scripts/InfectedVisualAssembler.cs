@@ -13,6 +13,7 @@ public partial class InfectedVisualAssembler : Node3D
 {
     public string InfectedType { get; set; } = "Civilian";
     public bool UsingOriginalScene { get; private set; }
+    public bool UsingSourceBlueprint { get; private set; }
 
     private Node3D? _leftArm;
     private Node3D? _rightArm;
@@ -41,6 +42,15 @@ public partial class InfectedVisualAssembler : Node3D
                 UsingOriginalScene = true;
                 return;
             }
+        }
+        // Actual R6 part positions, accessory references and original
+        // colors from the user's place snapshots take priority over the
+        // former procedural humanoid. Missing cloud meshes remain proxies.
+        if (InfectedSourceModelRuntime.TryBuild(this, safeType,
+            out _leftArm, out _rightArm, out _leftLeg, out _rightLeg))
+        {
+            UsingSourceBlueprint = true;
+            return;
         }
         BuildTemporaryHumanoid(safeType);
     }
