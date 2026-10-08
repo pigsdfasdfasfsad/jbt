@@ -123,6 +123,27 @@ try {
     throw 'Fidelity camera metadata serialization did not pass.'
   }
 
+  # Exercise source-derived original gun and throwable model assemblies
+  # with a synthetic six-model pack only. Private original bytes stay local.
+  $toolFixture = Join-Path $Output 'Content\Weapons\SourceWeaponModels.json.gz'
+  try {
+    python (Join-Path $Repo 'tools\maps\make_source_weapon_smoke_fixture.py') --output $toolFixture
+    $toolStdout = Join-Path $Output 'original-weapons.stdout.txt'
+    $toolStderr = Join-Path $Output 'original-weapons.stderr.txt'
+    Remove-Item $toolStdout,$toolStderr -Force -ErrorAction SilentlyContinue
+    $toolCheck = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','180','--','--smoke-source-weapons') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $toolStdout -RedirectStandardError $toolStderr
+    $toolOutput = @()
+    if (Test-Path $toolStdout) { $toolOutput += Get-Content $toolStdout }
+    if (Test-Path $toolStderr) { $toolOutput += Get-Content $toolStderr }
+    $toolOutput | ForEach-Object { Write-Host $_ }
+    if ($toolCheck.ExitCode -ne 0) { throw "Original source weapon smoke failed: exit $($toolCheck.ExitCode)" }
+    if (-not ($toolOutput | Where-Object { "$_" -match 'TWR_SMOKE_SOURCE_WEAPONS_OK models=6' })) {
+      throw 'Original source weapon model smoke failed.'
+    }
+  } finally {
+    Remove-Item $toolFixture -Force -ErrorAction SilentlyContinue
+  }
+
   # Instantiate all eight offline infected presentation types in exported Godot.
   $modelStdout = Join-Path $Output 'infected-models.stdout.txt'
   $modelStderr = Join-Path $Output 'infected-models.stderr.txt'

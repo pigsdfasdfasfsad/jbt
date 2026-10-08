@@ -46,6 +46,11 @@ public partial class Bootstrap : Node
             RunWeaponModelSmoke();
             return;
         }
+        if (args.Contains("--smoke-source-weapons", StringComparer.Ordinal))
+        {
+            RunOriginalWeaponSourceSmoke();
+            return;
+        }
         if (args.Contains("--smoke-expressway-scene", StringComparer.Ordinal))
         {
             RunExpresswaySceneSmoke();
@@ -197,6 +202,30 @@ public partial class Bootstrap : Node
             $"traffic={traffic.GetChildCount()} screening={screening.GetChildCount()} " +
             $"lights={lights.GetChildCount()} nav_points={navigator.NavigablePoints} " +
             $"route_points={corridorRoute.Length} infected_spawns={layout.InfectedSpawns.Count}");
+        GetTree().Quit(0);
+    }
+
+    private void RunOriginalWeaponSourceSmoke()
+    {
+        var stage = new Node3D { Name = "OriginalWeaponSourceSmoke" };
+        AddChild(stage);
+        var names = new[] {
+            "Glock 17", "Sawn Off Shotgun", "AK-47", "RPG-7", "2x4"
+        };
+        foreach (var name in names)
+        {
+            var visual = new WeaponViewModelRuntime { Name = name };
+            stage.AddChild(visual);
+            visual.SetWeapon(RuntimeWeaponCatalog.Get(name));
+            if (!visual.UsingOriginalToolAssembly || visual.VisualPartCount < 4)
+                throw new InvalidOperationException("Original tool assembly failed: " + name);
+        }
+        var thrown = new WeaponViewModelRuntime { Name = "Molotov" };
+        stage.AddChild(thrown);
+        thrown.SetThrowable("Molotov");
+        if (!thrown.UsingOriginalToolAssembly || thrown.VisualPartCount < 4)
+            throw new InvalidOperationException("Original thrown tool assembly failed.");
+        GD.Print("TWR_SMOKE_SOURCE_WEAPONS_OK models=6");
         GetTree().Quit(0);
     }
 
