@@ -27,7 +27,11 @@ def create(folder):
                     "item_markers":5,"fortification_markers":3}
             write({"kind":"header","format":"twr-source-map-v2","map":name,
                    "scale":0.28,"synthetic":True,"source_member":"CI SYNTHETIC - NOT ROBLOX",
-                   "counts":counts})
+                   "counts":counts,
+                   "lighting":{"Ambient":[0.1,0.12,0.14],
+                               "OutdoorAmbient":[0.22,0.25,0.29],
+                               "FogColor":[0.32,0.36,0.40],
+                               "Brightness":0.75,"FogEnd":420.0}})
             for i in range(60):
                 write({"kind":"geometry","ref":f"testgeo{i}","name":"Synthetic",
                        "class":"WedgePart" if i == 1 else "Part",
