@@ -42,7 +42,7 @@ def test_recovered_spawn_positions_are_not_randomly_offset():
     gameplay = (ROOT / 'src/Twr.Godot/Scripts/GameplayRoot.cs').read_text()
     assert 'public bool UseExactInfectedSpawns { get; init; }' in layout
     assert 'UseExactInfectedSpawns = true' in importer
-    assert 'if (_mapLayout.UseExactInfectedSpawns) return basePoint;' in gameplay
+    assert 'if (_mapLayout.UseExactInfectedSpawns) return basePoint + Vector3.Up * 0.9f;' in gameplay
 
 def test_laboratory_light_budget_follows_player():
     loader = (ROOT / 'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
@@ -60,7 +60,7 @@ def test_original_collidable_parts_and_invisible_walls_are_preserved():
     fixture = (ROOT / 'tools/maps/make_lab_smoke_fixture.py').read_text()
     assert 'if (Flag(r, "collidable"))' in loader
     assert loader.index('if (Flag(r, "collidable"))') < loader.index('if (opacity < 0.001f) return;')
-    assert 'shapeCache.TryGetValue(size, out var shape)' in loader
+    assert 'shapeCache.TryGetValue((size, wedge), out var shape)' in loader
     assert 'batchMeshKey = prepared is null ? "" : id' in loader
     assert '(0.0 if i == 0 else 1.0)' in fixture
     assert "'collidable': (i < 16600)" in fixture
@@ -85,3 +85,9 @@ def test_prepared_mesh_materials_apply_to_all_mesh_kinds_and_wedges():
     assert 'new ConvexPolygonShape3D { Points = vertices }' in geometry
     assert 'mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surface)' in geometry
     assert "'class': 'WedgePart' if i == 1 else 'Part'" in fixture
+
+def test_original_spawn_markers_are_preserved_as_feet_positions():
+    gameplay=(ROOT/'src/Twr.Godot/Scripts/GameplayRoot.cs').read_text()
+    assert 'UseExactInfectedSpawns' in gameplay
+    assert 'basePoint + Vector3.Up * 0.9f' in gameplay
+    assert 'return basePoint + new Vector3(_rng.RandfRange' in gameplay
