@@ -39,7 +39,7 @@ public partial class ExpresswayNavigationRuntime : Node3D
         (-10f,34f,3.8f,1.6f),(10f,34f,3.8f,1.6f)
     ];
 
-    public int NavigablePoints => _graph.PointCount;
+    public int NavigablePoints => _graph.GetPointCount();
 
     public override void _Ready()
     {
@@ -50,7 +50,7 @@ public partial class ExpresswayNavigationRuntime : Node3D
 
     public Vector3[] GetRoute(Vector3 from,Vector3 to)
     {
-        if (_graph.PointCount == 0) return [];
+        if (_graph.GetPointCount() == 0) return [];
         var start=_graph.GetClosestPoint(from);
         var end=_graph.GetClosestPoint(to);
         if (start < 0 || end < 0) return [];
