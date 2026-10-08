@@ -19,69 +19,186 @@ public partial class GameplayHud : CanvasLayer
     private Control _armorRow = null!;
     private Label _armorLabel = null!;
     private readonly ColorRect[] _armorBars = new ColorRect[4];
+    private ColorRect _healthBar = null!;
+    private WeaponDialHud _weaponDial = null!;
     private double _damageFlashSeconds;
 
     public override void _Ready()
     {
-        _top = MakeLabel(24, 20, 760, 42, 24);
-        _health = MakeLabel(24, 650, 360, 38, 22);
-        _ammo = MakeLabel(860, 650, 390, 38, 22);
-        _credits = MakeLabel(24, 610, 500, 34, 18);
-        _banner = MakeLabel(250, 90, 780, 70, 32);
-        _banner.HorizontalAlignment = HorizontalAlignment.Center;
-        _objective = MakeLabel(250, 150, 780, 42, 20);
-        _objective.HorizontalAlignment = HorizontalAlignment.Center;
-        _utility = MakeLabel(250, 195, 780, 36, 17);
-        _utility.HorizontalAlignment = HorizontalAlignment.Center;
-        _armorLabel=MakeLabel(24,570,92,20,14);
-        _armorLabel.Text="ARMOR";
-        _armorRow=new Control
+        // Panels are anchored to the viewport. Original proportions are
+        // approximated from reference stills, rather than fixed 1280x720 text.
+        var topShade = new ColorRect
         {
-            OffsetLeft=118,OffsetTop=575,OffsetRight=422,OffsetBottom=585
+            Name = "WaveHeaderBackdrop",
+            AnchorRight = 1,
+            OffsetBottom = 56,
+            Color = new Color(.025f,.034f,.043f,.61f),
+            MouseFilter = Control.MouseFilterEnum.Ignore
+        };
+        AddChild(topShade);
+
+        var leftShade = new ColorRect
+        {
+            Name = "SurvivalStatusBackdrop",
+            AnchorTop = 1,
+            AnchorBottom = 1,
+            OffsetLeft = 15,
+            OffsetRight = 425,
+            OffsetTop = -146,
+            OffsetBottom = -15,
+            Color = new Color(.025f,.035f,.039f,.70f),
+            MouseFilter = Control.MouseFilterEnum.Ignore
+        };
+        AddChild(leftShade);
+
+        _top = MakeLabel(20, 10, 1240, 40, 18);
+        _top.AnchorLeft = 0;
+        _top.AnchorRight = 1;
+        _top.OffsetLeft = 18;
+        _top.OffsetRight = -18;
+        _top.HorizontalAlignment = HorizontalAlignment.Center;
+        _top.AddThemeColorOverride("font_color",
+            new Color(.90f,.91f,.86f));
+
+        _health = MakeLabel(29, 0, 380, 35, 24);
+        _health.AnchorTop = 1;
+        _health.AnchorBottom = 1;
+        _health.OffsetTop = -83;
+        _health.OffsetBottom = -51;
+        _health.AddThemeColorOverride("font_color",
+            new Color(.89f,.93f,.88f));
+
+        _ammo = MakeLabel(860,650,350,40,22);
+        _ammo.Visible = false;
+        _weaponDial = new WeaponDialHud();
+        AddChild(_weaponDial);
+
+        _credits = MakeLabel(30, 0, 390, 30, 15);
+        _credits.AnchorTop = 1;
+        _credits.AnchorBottom = 1;
+        _credits.OffsetTop = -48;
+        _credits.OffsetBottom = -19;
+        _credits.AddThemeColorOverride("font_color",
+            new Color(.73f,.75f,.70f));
+
+        _banner = MakeLabel(0,72,750,64,30);
+        _banner.AnchorLeft = .5f;
+        _banner.AnchorRight = .5f;
+        _banner.OffsetLeft = -380;
+        _banner.OffsetRight = 380;
+        _banner.HorizontalAlignment = HorizontalAlignment.Center;
+        _banner.AddThemeColorOverride("font_color",
+            new Color(.94f,.90f,.77f));
+
+        _objective = MakeLabel(0,139,740,37,19);
+        _objective.AnchorLeft = .5f;
+        _objective.AnchorRight = .5f;
+        _objective.OffsetLeft = -370;
+        _objective.OffsetRight = 370;
+        _objective.HorizontalAlignment = HorizontalAlignment.Center;
+        _objective.AddThemeColorOverride("font_color",
+            new Color(.86f,.88f,.84f));
+
+        _utility = MakeLabel(0,183,680,29,16);
+        _utility.AnchorLeft = .5f;
+        _utility.AnchorRight = .5f;
+        _utility.OffsetLeft = -340;
+        _utility.OffsetRight = 340;
+        _utility.HorizontalAlignment = HorizontalAlignment.Center;
+        _utility.AddThemeColorOverride("font_color",
+            new Color(.76f,.80f,.78f));
+
+        _armorLabel = MakeLabel(30,0,94,22,14);
+        _armorLabel.AnchorTop = 1;
+        _armorLabel.AnchorBottom = 1;
+        _armorLabel.OffsetTop = -114;
+        _armorLabel.OffsetBottom = -92;
+        _armorLabel.Text = "ARMOR";
+        _armorLabel.AddThemeColorOverride("font_color",
+            new Color(.68f,.75f,.85f));
+        _armorRow = new Control
+        {
+            AnchorTop = 1,
+            AnchorBottom = 1,
+            OffsetLeft = 120,
+            OffsetTop = -108,
+            OffsetRight = 415,
+            OffsetBottom = -98,
+            MouseFilter = Control.MouseFilterEnum.Ignore
         };
         AddChild(_armorRow);
         for(var i=0;i<4;i++)
         {
-            var back=new ColorRect
+            var back = new ColorRect
             {
-                OffsetLeft=i*76,OffsetTop=0,OffsetRight=i*76+72,OffsetBottom=8,
-                Color=new Color(0.094f,0.094f,0.102f,0.72f),
+                OffsetLeft=i*73,OffsetTop=0,OffsetRight=i*73+68,OffsetBottom=10,
+                Color=new Color(.09f,.10f,.12f,.81f),
                 MouseFilter=Control.MouseFilterEnum.Ignore
             };
             _armorRow.AddChild(back);
-            var fill=new ColorRect
+            var fill = new ColorRect
             {
-                OffsetLeft=0,OffsetTop=0,OffsetRight=72,OffsetBottom=8,
+                OffsetLeft=0,OffsetTop=0,OffsetRight=68,OffsetBottom=10,
                 Color=new Color(70f/255f,140f/255f,230f/255f),
                 MouseFilter=Control.MouseFilterEnum.Ignore
             };
             back.AddChild(fill);
-            _armorBars[i]=fill;
+            _armorBars[i] = fill;
         }
+        var healthTrack = new ColorRect
+        {
+            Name = "HealthTrack",
+            AnchorTop = 1,
+            AnchorBottom = 1,
+            OffsetLeft = 30,
+            OffsetRight = 413,
+            OffsetTop = -18,
+            OffsetBottom = -12,
+            Color = new Color(.10f,.13f,.12f,.95f),
+            MouseFilter = Control.MouseFilterEnum.Ignore
+        };
+        AddChild(healthTrack);
+        _healthBar = new ColorRect
+        {
+            Name = "HealthFill",
+            OffsetRight = 383,
+            OffsetBottom = 6,
+            Color = new Color(.35f,.65f,.35f),
+            MouseFilter = Control.MouseFilterEnum.Ignore
+        };
+        healthTrack.AddChild(_healthBar);
 
-        // APPROXIMATED base presentation: original post-processing stack is not
-        // recovered. Perk reduction percentages applied to these effects are exact.
+        // APPROXIMATED original injury overlays; perk effects are inherited.
         _lowHealth = new ColorRect
         {
-            Color = new Color(0.45f,0.0f,0.0f,0.0f),
+            Color = new Color(.45f,0.0f,0.0f,0.0f),
             AnchorRight = 1,
             AnchorBottom = 1,
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
         AddChild(_lowHealth);
-
         _damageFlash = new ColorRect
         {
-            Color = new Color(0.72f,0.03f,0.02f,0.0f),
+            Color = new Color(.72f,.03f,.02f,0.0f),
             AnchorRight = 1,
             AnchorBottom = 1,
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
         AddChild(_damageFlash);
 
-        var crosshair = MakeLabel(620, 342, 40, 40, 26);
+        var crosshair = MakeLabel(0,0,34,34,24);
+        crosshair.AnchorLeft = .5f;
+        crosshair.AnchorRight = .5f;
+        crosshair.AnchorTop = .5f;
+        crosshair.AnchorBottom = .5f;
+        crosshair.OffsetLeft = -17;
+        crosshair.OffsetRight = 17;
+        crosshair.OffsetTop = -17;
+        crosshair.OffsetBottom = 17;
         crosshair.Text = "+";
         crosshair.HorizontalAlignment = HorizontalAlignment.Center;
+        crosshair.AddThemeColorOverride("font_color",
+            new Color(.84f,.87f,.84f,.85f));
     }
 
     private Label MakeLabel(float left, float top, float width, float height, int size)
@@ -100,7 +217,7 @@ public partial class GameplayHud : CanvasLayer
 
     public void UpdateState(PlayerState player, MatchState match, string stage, double seconds, string weaponName, string? throwableName=null)
     {
-        _top.Text = $"REGULAR  |  {match.MapName.ToUpperInvariant()}  |  WAVE {match.Wave}/15  |  {stage}  {FormatTime(seconds)}";
+        _top.Text = $"REGULAR     {match.MapName.ToUpperInvariant()}     WAVE {match.Wave}/15     {stage.ToUpperInvariant()} {FormatTime(seconds)}";
         _health.Text = $"HEALTH {Math.Ceiling(player.Health):0}/{player.MaxHealth:0}" +
             (player.GasMaskActive ? "  MASK" : "") +
             (player.EnergyDrinkSeconds>0 ? $"  DRINK {Math.Ceiling(player.EnergyDrinkSeconds):0}s" : "");
@@ -124,8 +241,31 @@ public partial class GameplayHud : CanvasLayer
             }
         }
 
-        _credits.Text = $"LEVEL {player.Level}  XP {player.Xp:N0}/{ProgressionRules.RequiredForNextLevel(player.Level):N0}  CREDITS ${player.Credits:N0}  [1/2/3] WEAPONS [5/6/7/G] GRENADES [F] HAMMER";
+        _credits.Text = $"LVL {player.Level}    XP {player.Xp:N0}/{ProgressionRules.RequiredForNextLevel(player.Level):N0}    ${player.Credits:N0}";
         UpdateArmor(player);
+        var hpFraction = player.MaxHealth > 0
+            ? Math.Clamp(player.Health / player.MaxHealth, 0f, 1f)
+            : 0f;
+        _healthBar.OffsetRight = 383f * hpFraction;
+        _healthBar.Color = hpFraction > .35f
+            ? new Color(.33f,.65f,.35f) : new Color(.80f,.22f,.18f);
+        if (throwableName is not null)
+            _weaponDial.Display(throwableName,
+                player.Inventory.GetValueOrDefault(throwableName), 0, 1,
+                "THROWABLE", false, true);
+        else
+        {
+            var definition = RuntimeWeaponCatalog.Get(weaponName);
+            _weaponDial.Display(weaponName,
+                player.Ammo.GetValueOrDefault(weaponName),
+                player.ReserveAmmo.GetValueOrDefault(weaponName),
+                definition.Magazine,
+                definition.IsMelee ? "MELEE" :
+                    definition.IsShotgun ? "SHOTGUN" :
+                    definition.IsLauncher ? "LAUNCHER" :
+                    definition.Slot == "Secondary" ? "SIDEARM" : "PRIMARY",
+                definition.IsMelee, false);
+        }
 
         var healthRatio=player.MaxHealth<=0 ? 1f : player.Health/player.MaxHealth;
         var baseLowAlpha=healthRatio<0.35f ? Math.Clamp((0.35f-healthRatio)/0.35f*0.45f,0f,0.45f) : 0f;
@@ -170,7 +310,7 @@ public partial class GameplayHud : CanvasLayer
         for(var i=0;i<4;i++)
         {
             var fraction=Math.Clamp((player.ArmorDurability-i*per)/per,0f,1f);
-            _armorBars[i].OffsetRight=72f*fraction;
+            _armorBars[i].OffsetRight=68f*fraction;
             _armorBars[i].Color=color;
         }
     }

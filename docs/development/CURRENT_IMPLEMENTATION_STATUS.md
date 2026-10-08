@@ -155,3 +155,17 @@ Updated: 2026-10-08. Canonical checkpoint for continuing the existing Godot/C# g
 
 Complete means the playable game and graphics meet acceptance criteria, not
 merely that C# compiles or automated wave state progression passes.
+
+## Visual reconstruction pass: Expressway and HUD (2026-10-08)
+
+- Source-guided Expressway raised bridge and checkpoint implemented through
+  ExpresswaySceneBuilder (commit 4b3b2a8).
+- The exported Windows scene smoke created 140 bridge nodes, 14 traffic nodes,
+  61 checkpoint objects and 12 street lamp assemblies.
+- The procedural scene is an **approximation** using original TWR Expressway
+  screenshots, not an import of the complete original map assets.
+- The HUD now includes anchored survival/wave panels, a segmented armor bar,
+  a health bar, centered sight and a circular weapon/ammo gauge inspired by the
+  owner-provided WeaponHUD.png. The weapon silhouette is temporary vector art.
+- Real interactive camera screenshot comparison is still required. Automated
+  headless runtime construction cannot certify the appearance or playability.
