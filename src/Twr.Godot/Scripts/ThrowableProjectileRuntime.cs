@@ -18,6 +18,7 @@ public partial class ThrowableProjectileRuntime : Node3D
     private const float FragRadius=30f;  // RECOVERED ModuleScript.Frag.
     private const double FragFuse=3.0;   // RECOVERED ModuleScript.Frag.
     private const float LingeringRadius=30f; // RECOVERED throwable module radius.
+    private static float FragRadiusMeters => RobloxUnits.Distance(FragRadius);
 
     public override void _Ready()
     {
@@ -101,15 +102,15 @@ public partial class ThrowableProjectileRuntime : Node3D
         {
             if(node is not InfectedAgent infected || !GodotObject.IsInstanceValid(infected))continue;
             var distance=infected.GlobalPosition.DistanceTo(GlobalPosition);
-            if(distance>FragRadius)continue;
+            if(distance>FragRadiusMeters)continue;
             // APPROXIMATED falloff equation; source confirms falloff but not curve.
-            var factor=Mathf.Lerp(1f,0.35f,Math.Clamp(distance/FragRadius,0f,1f));
+            var factor=Mathf.Lerp(1f,0.35f,Math.Clamp(distance/FragRadiusMeters,0f,1f));
             infected.ApplyDamage(FragDamage*factor,false,"Explosion");
         }
 
         foreach(var node in GetTree().GetNodesInGroup("damage_objective"))
             if(node is DamageObjectiveTarget tanker &&
-               tanker.GlobalPosition.DistanceTo(GlobalPosition)<=FragRadius)
+               tanker.GlobalPosition.DistanceTo(GlobalPosition)<=FragRadiusMeters)
                 tanker.ApplyDamage(FragDamage,"Explosive");
 
         QueueFree();

@@ -11,6 +11,7 @@ public partial class SporeCloudRuntime : Node3D
     public double DurationSeconds { get; set; } = 4.0; // APPROXIMATED duration; source says short duration only.
 
     private double _tickTimer;
+    private float EffectiveRadius => RobloxUnits.Distance(Radius);
 
     public override void _Ready()
     {
@@ -19,8 +20,8 @@ public partial class SporeCloudRuntime : Node3D
             Position = new Vector3(0, 0.15f, 0),
             Mesh = new CylinderMesh
             {
-                TopRadius = Radius,
-                BottomRadius = Radius,
+                TopRadius = EffectiveRadius,
+                BottomRadius = EffectiveRadius,
                 Height = 0.3f,
                 Material = new StandardMaterial3D
                 {
@@ -42,7 +43,7 @@ public partial class SporeCloudRuntime : Node3D
             _tickTimer = 0.5; // VERIFIED spore gas tick interval.
             if (Target is not null && Runtime?.Player?.IsAlive == true &&
                 !Runtime.Player.GasMaskActive &&
-                Target.GlobalPosition.DistanceTo(GlobalPosition) <= Radius)
+                Target.GlobalPosition.DistanceTo(GlobalPosition) <= EffectiveRadius)
             {
                 Runtime.DamagePlayer(TickDamage, "Spore gas", true);
             }

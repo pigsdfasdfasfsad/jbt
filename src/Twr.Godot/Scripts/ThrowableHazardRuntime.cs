@@ -13,7 +13,7 @@ public partial class ThrowableHazardRuntime : Node3D
     // RECOVERED from the TestPlace server reconstruction shared hazard loop.
     private const float MolotovTickDamage=18f;
     private const float NerveGasSlowFactor=0.35f;
-    private float EffectiveRadius => Radius*0.5f;
+    private float EffectiveRadius => Radius*RobloxUnits.MetersPerStud;
 
     public override void _Ready()
     {

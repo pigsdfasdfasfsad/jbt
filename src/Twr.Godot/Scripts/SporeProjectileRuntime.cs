@@ -57,11 +57,12 @@ public partial class SporeProjectileRuntime : Node3D
         if (Target is not null && Runtime?.Player?.IsAlive == true)
         {
             var distance = Target.GlobalPosition.DistanceTo(GlobalPosition);
-            if (distance <= Radius)
+            var effectiveRadius = RobloxUnits.Distance(Radius);
+            if (distance <= effectiveRadius)
             {
                 // APPROXIMATED radial falloff; source confirms damage decreases
                 // farther from direct splash but does not provide the equation.
-                var factor = Mathf.Lerp(1f, 0.5f, Math.Clamp(distance / Radius, 0f, 1f));
+                var factor = Mathf.Lerp(1f, 0.5f, Math.Clamp(distance / effectiveRadius, 0f, 1f));
                 Runtime.DamagePlayer(Damage * factor, "Spore cluster", true);
             }
         }

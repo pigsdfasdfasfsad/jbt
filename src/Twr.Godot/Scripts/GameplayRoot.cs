@@ -627,15 +627,16 @@ public partial class GameplayRoot : Node3D
             Runtime = Runtime,
             Target = _player,
             Damage = 26.4f,
-            Radius = 15f,
+            Radius = 15f, // Source spore radius is in Roblox studs.
             GlobalPosition = infected.GlobalPosition + Vector3.Up * 1.2f
         });
     }
 
     private void SpawnBursterHazard(Vector3 position)
     {
-        const float blastRadius = 20f;
-        if (Runtime?.Player?.IsAlive == true && _player.GlobalPosition.DistanceTo(position) <= blastRadius)
+        const float blastRadius = 20f; // Source Burster radius, Roblox studs.
+        if (Runtime?.Player?.IsAlive == true &&
+            _player.GlobalPosition.DistanceTo(position) <= RobloxUnits.Distance(blastRadius))
             Runtime.DamagePlayer(27.5f, "Burster detonation");
 
         AddChild(new SporeCloudRuntime

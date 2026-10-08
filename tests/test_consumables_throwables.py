@@ -40,7 +40,7 @@ def test_molotov_and_nerve_gas_lingering_rules_are_distinct():
     assert "infected.ApplySlow(NerveGasSlowFactor,2.5)" in h
     assert "MolotovTickDamage=18f" in h
     assert "NerveGasSlowFactor=0.35f" in h
-    assert "EffectiveRadius => Radius*0.5f" in h
+    assert "EffectiveRadius => Radius*RobloxUnits.MetersPerStud" in h
     assert "_tick=1.0" in h
     assert "RECOVERED from the TestPlace server reconstruction" in h
 
