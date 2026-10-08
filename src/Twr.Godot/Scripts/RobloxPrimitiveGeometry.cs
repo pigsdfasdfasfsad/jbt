@@ -45,7 +45,7 @@ public static class RobloxPrimitiveGeometry
             normals[i] = normal; normals[i + 1] = normal; normals[i + 2] = normal;
         }
 
-        var surface = new Godot.Collections.Array();
+        var surface = new global::Godot.Collections.Array();
         surface.Resize((int)Mesh.ArrayType.Max);
         surface[(int)Mesh.ArrayType.Vertex] = vertices;
         surface[(int)Mesh.ArrayType.Normal] = normals;
