@@ -44,3 +44,7 @@ Thumbs.db
 
 # Generated Godot runtime-content mirror
 src/Twr.Godot/Content/
+
+# Owner-only static Roblox source scene packs
+**/Laboratory.scene.jsonl.gz
+**/private-Laboratory/
