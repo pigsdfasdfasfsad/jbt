@@ -30,7 +30,7 @@ def test_exported_exe_has_laboratory_source_smoke_contract():
     assert '--smoke-lab-source' in source
     assert 'TWR_SMOKE_LAB_SOURCE_OK' in source
     assert 'TWR_LAB_SOURCE_LOADED' in loader
-    assert loader.index('root.AddChild(stage);') < loader.index('AddEmitter(stage, emitter);')
+    assert loader.index('root.AddChild(stage);') < loader.index('stage.AddChild(lightStreamer);')
     assert 'make_lab_smoke_fixture.py' in build
     assert 'TWR_SMOKE_LAB_SOURCE_OK infected_spawns=15' in build
     assert 'Remove-Item $fixture -Force' in build
