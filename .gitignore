@@ -28,6 +28,8 @@ release/package/
 release/*.zip
 release/*.exe
 release/*.pck
+*.exe
+*.pck
 
 # Local evidence/source archives
 private-evidence/

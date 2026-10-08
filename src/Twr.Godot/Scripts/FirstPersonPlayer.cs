@@ -326,7 +326,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         {
             Name=type.Replace(" ","")+"Projectile",
             ThrowableType=type,
-            Owner=this,
+            SourcePlayer=this,
             Direction=AimDirection
         };
         GetParent()?.AddChild(projectile);
@@ -484,7 +484,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var projectile = new ExplosiveProjectileRuntime
         {
             Name = spec.Name + "_Projectile",
-            Owner = this,
+            SourcePlayer = this,
             WeaponName = spec.Name,
             Damage = spec.Damage,
             Direction = -_camera.GlobalTransform.Basis.Z

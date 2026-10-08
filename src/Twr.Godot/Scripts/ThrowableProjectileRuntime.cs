@@ -5,7 +5,7 @@ namespace Twr.Godot;
 public partial class ThrowableProjectileRuntime : Node3D
 {
     public string ThrowableType {get;set;}="Frag";
-    public FirstPersonPlayer? Owner {get;set;}
+    public FirstPersonPlayer? SourcePlayer {get;set;}
     public Vector3 Direction {get;set;}=Vector3.Forward;
 
     private Vector3 _velocity;
@@ -52,8 +52,8 @@ public partial class ThrowableProjectileRuntime : Node3D
         var start=GlobalPosition;
         var end=start+_velocity*(float)delta;
         var query=PhysicsRayQueryParameters3D.Create(start,end);
-        if(Owner is not null)
-            query.Exclude=new global::Godot.Collections.Array<Rid>{Owner.GetRid()};
+        if(SourcePlayer is not null)
+            query.Exclude=new global::Godot.Collections.Array<Rid>{SourcePlayer.GetRid()};
         var hit=GetWorld3D().DirectSpaceState.IntersectRay(query);
 
         if(hit.Count>0)

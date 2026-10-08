@@ -36,3 +36,12 @@ The pinned workflow targets:
 `build/output/ThoseWhoRemainOffline.exe`
 
 A successful executable build is only claimed after the Windows workflow actually produces that file.
+
+## Windows executable distribution
+
+The Windows CI workflow validates, exports, and smoke-tests the game in its
+temporary runner workspace. It intentionally does **not** publish executables
+or upload downloadable Windows builds to GitHub Actions or GitHub Releases.
+Previously uploaded Windows build artifacts are removed during the next CI run.
+
+The project owner distributes packaged builds separately, outside GitHub.

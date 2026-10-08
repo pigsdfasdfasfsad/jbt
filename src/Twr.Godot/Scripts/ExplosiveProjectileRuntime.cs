@@ -4,7 +4,7 @@ namespace Twr.Godot;
 
 public partial class ExplosiveProjectileRuntime : Node3D
 {
-    public FirstPersonPlayer? Owner { get; set; }
+    public FirstPersonPlayer? SourcePlayer { get; set; }
     public float Damage { get; set; }
     public Vector3 Direction { get; set; } = Vector3.Forward;
     public string WeaponName { get; set; } = "Launcher";
@@ -41,8 +41,8 @@ public partial class ExplosiveProjectileRuntime : Node3D
         var start = GlobalPosition;
         var end = start + Direction * Speed * (float)delta;
         var query = PhysicsRayQueryParameters3D.Create(start, end);
-        if (Owner is not null)
-            query.Exclude = new global::Godot.Collections.Array<Rid> { Owner.GetRid() };
+        if (SourcePlayer is not null)
+            query.Exclude = new global::Godot.Collections.Array<Rid> { SourcePlayer.GetRid() };
 
         var hit = GetWorld3D().DirectSpaceState.IntersectRay(query);
         if (hit.Count > 0)

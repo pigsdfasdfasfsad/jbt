@@ -23,8 +23,8 @@ public static class RegularWaveRules
     public static double DifficultyScale(int wave)
     {
         var clamped = Math.Clamp(wave, 1, ReleaseRules.MaxWaves);
-        if (ReleaseRules.MaxWaves <= 1) return 1.0;
-        var raw = Math.Pow(FinalWaveDifficultyScale, (clamped - 1.0) / (ReleaseRules.MaxWaves - 1.0));
+        var waveSteps = Math.Max(1, ReleaseRules.MaxWaves - 1);
+        var raw = Math.Pow(FinalWaveDifficultyScale, (clamped - 1.0) / waveSteps);
         return Math.Round(raw, 2, MidpointRounding.AwayFromZero);
     }
 
