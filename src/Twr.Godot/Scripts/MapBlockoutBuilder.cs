@@ -6,7 +6,12 @@ public sealed record RuntimeMapLayout(
     Vector3 PlayerSpawn,
     IReadOnlyList<Vector3> InfectedSpawns,
     IReadOnlyList<Vector3> PickupPoints,
-    IReadOnlyList<Vector3> ObjectivePoints);
+    IReadOnlyList<Vector3> ObjectivePoints)
+{
+    // When source markers are recovered, do not move spawns into arbitrary
+    // offsets that might intersect the original collision geometry.
+    public bool UseExactInfectedSpawns { get; init; }
+}
 
 public static class MapBlockoutBuilder
 {

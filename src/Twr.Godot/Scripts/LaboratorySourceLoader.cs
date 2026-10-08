@@ -159,7 +159,10 @@ public static class LaboratorySourceLoader
                 {
                     playerSpawn + new Vector3(7, 0, -5),
                     playerSpawn + new Vector3(-7, 0, -5)
-                });
+                })
+            {
+                UseExactInfectedSpawns = true
+            };
             GD.Print($"TWR_LAB_SOURCE_LOADED geometry={count["geometry"]} " +
                 $"server_walls={count["collision"]} physical_shapes={collisions.Count} " +
                 $"source_lights={emitters.Count} active_lights={Math.Min(ActiveLightLimit, emitters.Count)} " +

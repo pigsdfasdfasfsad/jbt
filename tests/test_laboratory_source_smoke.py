@@ -35,3 +35,11 @@ def test_exported_exe_has_laboratory_source_smoke_contract():
     assert 'TWR_SMOKE_LAB_SOURCE_OK infected_spawns=15' in build
     assert 'Remove-Item $fixture -Force' in build
     assert 'upload-artifact' not in (ROOT / '.github/workflows/windows-build.yml').read_text()
+
+def test_recovered_spawn_positions_are_not_randomly_offset():
+    layout = (ROOT / 'src/Twr.Godot/Scripts/MapBlockoutBuilder.cs').read_text()
+    importer = (ROOT / 'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
+    gameplay = (ROOT / 'src/Twr.Godot/Scripts/GameplayRoot.cs').read_text()
+    assert 'public bool UseExactInfectedSpawns { get; init; }' in layout
+    assert 'UseExactInfectedSpawns = true' in importer
+    assert 'if (_mapLayout.UseExactInfectedSpawns) return basePoint;' in gameplay
