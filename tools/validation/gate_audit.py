@@ -29,7 +29,7 @@ checks=[
  perks['count']==21,
  hashes['all_match'] and len(hashes['archives'])==6,
  all((ROOT/f'docs/maps/previews/{m.lower()}.png').is_file() for m in ['Ranch','Mill','Bypass','Cabin','Cargo','District','Expressway','Prison','Laboratory','Manor']),
- all(x in workflow for x in ['3.13','8.0.425','4.7.2']),
+ all(x in workflow for x in ['3.13','8.0.425']) and '4.7.2' in (ROOT/'build/Windows/build.ps1').read_text() and 'build.ps1 -BootstrapToolchain' in workflow,
  rem['transport_policy'].startswith('Standalone uses typed in-process') and rem['historical_runtime_normalization']['database_bytes_recovered'] is False,
 ]
 assert len(checks)==len(gates)
