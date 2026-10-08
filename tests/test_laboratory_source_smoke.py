@@ -106,3 +106,12 @@ def test_laboratory_original_pickup_markers_are_loaded_separately():
     assert 'ChooseUniqueMarkers(_mapLayout.PickupPoints, 4)' in gameplay
     assert 'layout.PickupPoints.Count != 127' in bootstrap
     assert 'layout.FortificationPoints.Count != 47' in bootstrap
+
+def test_specialmesh_visual_scale_does_not_inflate_collision_shapes():
+    loader=(ROOT/'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
+    fixture=(ROOT/'tools/maps/make_lab_smoke_fixture.py').read_text()
+    assert 'private static Vector3 VisualExtents(JsonElement r, Vector3 physicalPartSize)' in loader
+    assert 'visualSize = VisualExtents(r, size)' in loader
+    assert 'ToTransform(r, visualSize, true)' in loader
+    assert 'colliders.Add((ToTransform(r, size, false), size,' in loader
+    assert "'specialMeshScale': [480.0, 40.0, 480.0]" in fixture

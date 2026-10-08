@@ -264,7 +264,8 @@ public static class LaboratorySourceLoader
             };
             batches.Add(key, batch);
         }
-        batch.Instances.Add(ToTransform(r, size, true));
+        var visualSize = VisualExtents(r, size);
+        batch.Instances.Add(ToTransform(r, visualSize, true));
     }
 
     private static Mesh? LoadPreparedMesh(string id)
@@ -325,6 +326,24 @@ public static class LaboratorySourceLoader
             rotation = new Basis(
                 rotation.X * size.X, rotation.Y * size.Y, rotation.Z * size.Z);
         return new Transform3D(rotation, Position(r));
+    }
+
+    private static Vector3 VisualExtents(JsonElement r, Vector3 physicalPartSize)
+    {
+        // Roblox SpecialMesh.Scale is a mesh-local size/scale distinct from
+        // the parent Part.Size. In the recovered Laboratory source the large
+        // MountainsFar SpecialMeshes sit inside 0.2-stud carrier Parts yet
+        // specify hundreds of studs of visible mesh dimensions. Physics uses
+        // the parent Part.Size, visual geometry uses SpecialMesh.Scale.
+        if (!r.TryGetProperty("specialMeshScale", out var scale) ||
+            scale.ValueKind != JsonValueKind.Array)
+            return physicalPartSize;
+        var values = Vec(r, "specialMeshScale");
+        if (values.Length != 3) return physicalPartSize;
+        return new Vector3(
+            Math.Max(0.001f, values[0] * Stud),
+            Math.Max(0.001f, values[1] * Stud),
+            Math.Max(0.001f, values[2] * Stud));
     }
 
     private static Vector3 Extents(JsonElement r)
