@@ -58,3 +58,12 @@ the **exported Windows executable** and requires both `TWR_LAB_SOURCE_LOADED`
 and `TWR_SMOKE_LAB_SOURCE_OK` in the process log. The fixture is deleted at
 the end of the smoke step and is never distributed. This validates loader
 execution and pack discovery, **not** fidelity to the original Laboratory.
+
+## Laboratory light streaming
+
+The recovered Laboratory pack includes source light positions, colors, angles,
+and ranges. Instead of fixing the 128 nearest lights at the initial spawn,
+the scene now reselects up to 128 nearest emitters when the player moves.
+Other source lights remain in the pack and are eligible for activation.
+Roblox SurfaceLight is approximated with a directed Godot spotlight until
+an exact surface-light shader exists. Per-map skybox textures remain unavailable.

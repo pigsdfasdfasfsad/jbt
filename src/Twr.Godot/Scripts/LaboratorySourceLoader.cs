@@ -17,7 +17,6 @@ public static class LaboratorySourceLoader
 {
     private const string PackName = "Laboratory.scene.jsonl.gz";
     private const float Stud = 0.28f;
-    private const int ActiveLightLimit = 128;
 
     private sealed class RenderBatch
     {
@@ -25,10 +24,6 @@ public static class LaboratorySourceLoader
         public bool CastShadow;
         public readonly List<Transform3D> Instances = [];
     }
-
-    private sealed record Emitter(
-        string Class, Vector3 Position, Basis Rotation, Color Color,
-        float Brightness, float Range, float Angle, int Face);
 
     public static bool TryBuild(Node3D root, out RuntimeMapLayout layout)
     {
@@ -43,7 +38,7 @@ public static class LaboratorySourceLoader
         var stage = new Node3D { Name = "RecoveredLaboratory" };
         var batches = new Dictionary<string, RenderBatch>(StringComparer.Ordinal);
         var collisions = new List<(Transform3D Transform, Vector3 Size)>();
-        var emitters = new List<Emitter>();
+        var emitters = new List<LaboratorySourceLight>();
         var infected = new List<Vector3>();
         var players = new List<(string Name, Vector3 Position)>();
         var count = new Dictionary<string, int>(StringComparer.Ordinal);
@@ -143,10 +138,9 @@ public static class LaboratorySourceLoader
             var playerSpawn = players
                 .OrderBy(p => p.Name, StringComparer.Ordinal)
                 .First().Position + Vector3.Up * 0.5f;
-            foreach (var emitter in emitters
-                .OrderBy(e => e.Position.DistanceSquaredTo(playerSpawn))
-                .Take(ActiveLightLimit))
-                AddEmitter(stage, emitter);
+            var lightStreamer = new LaboratoryLightStreamer { Name = "LaboratoryLights" };
+            lightStreamer.Configure(emitters, playerSpawn);
+            stage.AddChild(lightStreamer);
             layout = new RuntimeMapLayout(
                 playerSpawn,
                 infected,
@@ -165,7 +159,7 @@ public static class LaboratorySourceLoader
             };
             GD.Print($"TWR_LAB_SOURCE_LOADED geometry={count["geometry"]} " +
                 $"server_walls={count["collision"]} physical_shapes={collisions.Count} " +
-                $"source_lights={emitters.Count} active_lights={Math.Min(ActiveLightLimit, emitters.Count)} " +
+                $"source_lights={emitters.Count} active_lights={Math.Min(LaboratoryLightStreamer.ActiveLimit, emitters.Count)} " +
                 $"infected_spawns={infected.Count} player_spawns={players.Count}");
             return true;
         }
@@ -243,45 +237,13 @@ public static class LaboratorySourceLoader
         return new BoxMesh { Size = Vector3.One };
     }
 
-    private static Emitter ToEmitter(JsonElement r)
+    private static LaboratorySourceLight ToEmitter(JsonElement r)
     {
         var rgb = Vec(r, "rgb");
-        return new Emitter(Str(r, "class"), Position(r), Rotation(r),
+        return new LaboratorySourceLight(Str(r, "class"), Position(r), Rotation(r),
             new Color(rgb[0] / 255f, rgb[1] / 255f, rgb[2] / 255f),
             Num(r, "energy", 1), Num(r, "range", 16) * Stud,
             Num(r, "angle", 90), (int)Num(r, "face", 5));
-    }
-
-    private static void AddEmitter(Node3D stage, Emitter r)
-    {
-        Light3D light = r.Class == "SpotLight"
-            ? new SpotLight3D
-            {
-                SpotRange = r.Range,
-                SpotAngle = Math.Clamp(r.Angle, 1f, 179f)
-            }
-            : new OmniLight3D { OmniRange = r.Range };
-        light.Position = r.Position;
-        light.LightColor = r.Color;
-        light.LightEnergy = r.Brightness;
-        light.ShadowEnabled = false;
-        stage.AddChild(light);
-        if (light is SpotLight3D)
-        {
-            var axis = r.Face switch
-            {
-                0 => Vector3.Right,
-                1 => Vector3.Up,
-                2 => Vector3.Forward,
-                3 => Vector3.Left,
-                4 => Vector3.Down,
-                _ => Vector3.Back
-            };
-            var direction = r.Rotation * axis;
-            var up = Math.Abs(direction.Dot(Vector3.Up)) > 0.98f
-                ? Vector3.Forward : Vector3.Up;
-            light.LookAt(r.Position + direction, up);
-        }
     }
 
     private static void AddNightEnvironment(Node3D root)

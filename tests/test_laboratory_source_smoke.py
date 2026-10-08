@@ -43,3 +43,14 @@ def test_recovered_spawn_positions_are_not_randomly_offset():
     assert 'public bool UseExactInfectedSpawns { get; init; }' in layout
     assert 'UseExactInfectedSpawns = true' in importer
     assert 'if (_mapLayout.UseExactInfectedSpawns) return basePoint;' in gameplay
+
+def test_laboratory_light_budget_follows_player():
+    loader = (ROOT / 'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
+    lights = (ROOT / 'src/Twr.Godot/Scripts/LaboratoryLightStreamer.cs').read_text()
+    gameplay = (ROOT / 'src/Twr.Godot/Scripts/GameplayRoot.cs').read_text()
+    assert 'lightStreamer.Configure(emitters, playerSpawn)' in loader
+    assert 'stage.AddChild(lightStreamer)' in loader
+    assert 'public const int ActiveLimit = 128' in lights
+    assert 'if (next.DistanceSquaredTo(_referencePosition) < 16f) return;' in lights
+    assert 'spot.LookAt(spot.GlobalPosition + direction, up);' in lights
+    assert '?.Track(_player);' in gameplay

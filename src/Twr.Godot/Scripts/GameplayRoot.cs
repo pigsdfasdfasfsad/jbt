@@ -58,6 +58,8 @@ public partial class GameplayRoot : Node3D
             Position = _mapLayout.PlayerSpawn
         };
         AddChild(_player);
+        GetNodeOrNull<LaboratoryLightStreamer>("RecoveredLaboratory/LaboratoryLights")
+            ?.Track(_player);
 
         _hud = new GameplayHud { Name = "HUD", Runtime = Runtime };
         AddChild(_hud);
