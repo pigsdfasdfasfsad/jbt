@@ -137,6 +137,24 @@ try {
     throw 'Infected visual smoke did not report all eight assembly types.'
   }
 
+  # Require the exported Windows executable to construct the entire
+  # source-guided Expressway environment without runtime script errors.
+  $roadStdout = Join-Path $Output 'expressway-scene.stdout.txt'
+  $roadStderr = Join-Path $Output 'expressway-scene.stderr.txt'
+  Remove-Item $roadStdout,$roadStderr -Force -ErrorAction SilentlyContinue
+  $road = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','180','--','--smoke-expressway-scene') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $roadStdout -RedirectStandardError $roadStderr
+  $roadOutput = @()
+  if (Test-Path $roadStdout) { $roadOutput += Get-Content $roadStdout }
+  if (Test-Path $roadStderr) { $roadOutput += Get-Content $roadStderr }
+  $roadOutput | ForEach-Object { Write-Host $_ }
+  if ($road.ExitCode -ne 0) { throw "Expressway scene smoke failed with exit code $($road.ExitCode)" }
+  if ($roadOutput | Where-Object { "$_" -match '(^|\s)ERROR:' }) {
+    throw 'Expressway scene smoke reported ERROR output.'
+  }
+  if (-not ($roadOutput | Where-Object { "$_" -match 'TWR_SMOKE_EXPRESSWAY_SCENE_OK' })) {
+    throw 'Expressway scene smoke did not report required reconstruction marker.'
+  }
+
   # The real source pack is owner-only and must never be uploaded to GitHub.
   # Exercise the exported loader with a clearly marked synthetic CI fixture.
   $fixture = Join-Path $Output 'Content\Maps\Laboratory.scene.jsonl.gz'

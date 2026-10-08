@@ -36,6 +36,11 @@ public partial class Bootstrap : Node
             RunWeaponModelSmoke();
             return;
         }
+        if (args.Contains("--smoke-expressway-scene", StringComparer.Ordinal))
+        {
+            RunExpresswaySceneSmoke();
+            return;
+        }
 
         ShowMenu();
         if (args.Contains("--smoke-play", StringComparer.Ordinal))
@@ -96,6 +101,36 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Riot source melee modifier not applied.");
         GD.Print("TWR_SMOKE_INFECTED_MODIFIERS_OK");
         GD.Print("TWR_SMOKE_INFECTED_VISUALS_OK types=" + types.Length);
+        GetTree().Quit(0);
+    }
+
+    // Exercises the complete reconstructed Expressway scene in the exported
+    // executable. This checks scene-node construction and layout integrity;
+    // it is NOT a graphical side-by-side or full infected-navigation test.
+    private void RunExpresswaySceneSmoke()
+    {
+        var stage = new Node3D { Name = "ExpresswaySceneSmoke" };
+        AddChild(stage);
+        var map = new RuntimeMapDefinition("Expressway", "Indianapolis", "Cloudy",
+            new[] { "Load", "Repair" });
+        var layout = MapBlockoutBuilder.Build(stage, map);
+        var scene = stage.GetNodeOrNull<Node3D>("ExpresswayReconstruction")
+            ?? throw new InvalidOperationException("Expressway reconstruction not instantiated");
+        var bridge = scene.GetNodeOrNull<Node3D>("ElevatedBridge")
+            ?? throw new InvalidOperationException("Missing elevated bridge");
+        var traffic = scene.GetNodeOrNull<Node3D>("AbandonedTraffic")
+            ?? throw new InvalidOperationException("Missing traffic jam");
+        var screening = scene.GetNodeOrNull<Node3D>("MedicalScreeningCheckpoint")
+            ?? throw new InvalidOperationException("Missing medical screening checkpoint");
+        var lights = scene.GetNodeOrNull<Node3D>("HighwayStreetlamps")
+            ?? throw new InvalidOperationException("Missing raised expressway lamps");
+        if (bridge.GetChildCount() < 75 || traffic.GetChildCount() < 12 ||
+            screening.GetChildCount() < 45 || lights.GetChildCount() < 8 ||
+            layout.InfectedSpawns.Count != 4 || layout.PickupPoints.Count < 6)
+            throw new InvalidOperationException("Incomplete Expressway reconstruction scene layers");
+        GD.Print($"TWR_SMOKE_EXPRESSWAY_SCENE_OK bridge={bridge.GetChildCount()} " +
+            $"traffic={traffic.GetChildCount()} screening={screening.GetChildCount()} " +
+            $"lights={lights.GetChildCount()} infected_spawns={layout.InfectedSpawns.Count}");
         GetTree().Quit(0);
     }
 

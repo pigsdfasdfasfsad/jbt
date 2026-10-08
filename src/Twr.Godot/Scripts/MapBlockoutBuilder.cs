@@ -126,16 +126,9 @@ public static class MapBlockoutBuilder
 
     private static RuntimeMapLayout BuildExpressway(Node3D root)
     {
-        BaseArena(root, 58, 132, new Color(0.24f, 0.25f, 0.26f));
-        DecorativeBox(root, "Highway", Vector3.Zero, new Vector3(48, 0.10f, 124), new Color(0.12f, 0.12f, 0.13f));
-        for (var z = -42; z <= 42; z += 14)
-            DecorativeBox(root, "Vehicle" + z, new Vector3((z / 14 % 2 == 0) ? -8 : 8, 0.75f, z), new Vector3(4, 1.5f, 7), new Color(0.28f, 0.28f, 0.30f));
-        StaticBox(root, "ScreeningLeft", new Vector3(-15, 1.6f, 34), new Vector3(4, 3.2f, 24), new Color(0.42f, 0.42f, 0.40f));
-        StaticBox(root, "ScreeningRight", new Vector3(15, 1.6f, 34), new Vector3(4, 3.2f, 24), new Color(0.42f, 0.42f, 0.40f));
-        return Layout(new Vector3(0, 1, 12),
-            Points((-18,-61),(18,-61),(-18,61),(18,61)),
-            Points((-11,25),(9,27),(-10,-8),(10,-18),(0,42),(0,-40)),
-            Points((0,30),(0,-20)));
+        // Reference-guided elevated expressway reconstruction; original raw
+        // Expressway map/asset binaries have not been recovered.
+        return ExpresswaySceneBuilder.Build(root);
     }
 
     private static RuntimeMapLayout BuildPrison(Node3D root)

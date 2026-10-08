@@ -78,3 +78,33 @@ This list is a **reference-asset inventory**, not a claim that every map instanc
 ## Completion evidence expected
 
 A map is not considered reconstructed merely because it renders. Completion requires a source manifest, normalized scene data, top-down diagram, instance/asset inventory, collision/nav validation, spawn/objective validation, comparison captures, automated tests where possible, and a written deviation log.
+
+
+## Implemented source-guided visual reconstruction (2026-10-08)
+
+Expressway now uses `ExpresswaySceneBuilder.Build` rather than the original
+monochrome road-and-box blockout. This is **not** a recovered original full
+Expressway scene; it is a hand-authored geometric approximation grounded in
+the six supplied Expressway map-reference images and this dossier.
+
+The new scene constructs a 138-metre elevated bridge deck and visible
+support pylons, lower freeway and city backdrop, asphalt and lane markings,
+parapets, curved street lamps, abandoned civilian cars/pickups/trucks,
+two military Humvees, an abandoned semi, checkpoint concrete barriers,
+sandbags, road cones, chainlink fencing, stop signs, medical shelters,
+pallets/crates, patrol SUV and a stationary helicopter. A cloudy procedural
+sky and local light emitters replace the old flat grey presentation.
+Colliders are assigned to the main deck, barricades, vehicles, fences
+and other physical obstacles.
+
+The new Expressway scene-loading smoke test executes in the exported Windows
+executable and checks that the major geometry categories instantiate. **This
+does not verify accurate original dimensions, textures, real navigation
+connectivity, performance, or visual similarity.** Static layout/spawn points
+remain approximations until original Expressway place/asset data is available.
+
+Remaining visual work: actual source mesh/texture/CSG files, complete original
+baked vehicle placements, detailed vehicle geometry, authentic atmospheric
+skybox and lighting, more road surface wear, patrol markings, original
+helicopter and medical camp assets, hands-on full-wave gameplay testing,
+and matched-camera comparisons to the private screenshots.
