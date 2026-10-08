@@ -21,7 +21,7 @@ def create(folder):
             filename="", mode="wb", fileobj=output, mtime=0, compresslevel=6
         ) as zipped:
             def write(rec):
-                zipped.write((json.dumps(rec,sort_keys=True,separators=(",",":"))+"\\n").encode())
+                zipped.write((json.dumps(rec,sort_keys=True,separators=(",",":"))+"\n").encode())
             counts={"geometry":60,"collision":3,"lights":2,
                     "infected_spawns":2,"player_spawns":2,
                     "item_markers":5,"fortification_markers":3}
