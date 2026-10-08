@@ -124,13 +124,20 @@ public partial class Bootstrap : Node
             ?? throw new InvalidOperationException("Missing medical screening checkpoint");
         var lights = scene.GetNodeOrNull<Node3D>("HighwayStreetlamps")
             ?? throw new InvalidOperationException("Missing raised expressway lamps");
+        var navigator = scene.GetNodeOrNull<ExpresswayNavigationRuntime>(
+            "HighwayNavigation") ?? throw new InvalidOperationException(
+            "Missing shared Expressway navigation graph");
+        var corridorRoute = navigator.GetRoute(
+            new Vector3(-6f,1f,-56f), new Vector3(6f,1f,55f));
         if (bridge.GetChildCount() < 75 || traffic.GetChildCount() < 12 ||
             screening.GetChildCount() < 45 || lights.GetChildCount() < 8 ||
+            navigator.NavigablePoints < 140 || corridorRoute.Length < 12 ||
             layout.InfectedSpawns.Count != 4 || layout.PickupPoints.Count < 6)
             throw new InvalidOperationException("Incomplete Expressway reconstruction scene layers");
         GD.Print($"TWR_SMOKE_EXPRESSWAY_SCENE_OK bridge={bridge.GetChildCount()} " +
             $"traffic={traffic.GetChildCount()} screening={screening.GetChildCount()} " +
-            $"lights={lights.GetChildCount()} infected_spawns={layout.InfectedSpawns.Count}");
+            $"lights={lights.GetChildCount()} nav_points={navigator.NavigablePoints} " +
+            $"route_points={corridorRoute.Length} infected_spawns={layout.InfectedSpawns.Count}");
         GetTree().Quit(0);
     }
 

@@ -44,6 +44,7 @@ public static class ExpresswaySceneBuilder
         BuildTraffic(map);
         BuildScreeningCheckpoint(map);
         BuildPeripheralDetail(map);
+        map.AddChild(new ExpresswayNavigationRuntime { Name = "HighwayNavigation" });
 
         // Until the real original spawn folders can be recovered, these are
         // navigation-safe layout estimates, not exact original placements.

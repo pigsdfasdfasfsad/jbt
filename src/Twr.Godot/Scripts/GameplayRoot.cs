@@ -565,6 +565,8 @@ public partial class GameplayRoot : Node3D
             Name = definition.Name,
             Target = _player,
             Runtime = Runtime,
+            HighwayNavigator = GetNodeOrNull<ExpresswayNavigationRuntime>(
+                "ExpresswayReconstruction/HighwayNavigation"),
             InfectedType = definition.Name,
             Health = (float)definition.Health * scale,
             Damage = (float)definition.Damage * scale,

@@ -6,6 +6,7 @@ public partial class InfectedAgent : CharacterBody3D
 {
     public FirstPersonPlayer? Target { get; set; }
     public LocalSessionNode? Runtime { get; set; }
+    public ExpresswayNavigationRuntime? HighwayNavigator { get; set; }
     public string InfectedType { get; set; } = "Civilian";
     public float Health { get; set; } = 65;
     public float Damage { get; set; } = 8;
@@ -24,6 +25,9 @@ public partial class InfectedAgent : CharacterBody3D
     private double _steerHold;
     private int _steerSign=1;
     private InfectedVisualAssembler? _visual;
+    private double _navigationRefresh;
+    private Vector3[] _navigationRoute = [];
+    private int _nextNavigationPoint;
 
     public override void _Ready()
     {
@@ -80,6 +84,35 @@ public partial class InfectedAgent : CharacterBody3D
         if (distance > 1.55f)
         {
             var desired = flat.LengthSquared() > 0.001f ? flat.Normalized() : Vector3.Zero;
+            // Shared Expressway road graph handles large static obstructions.
+            // Local collision steering remains active for near-field objects.
+            if (HighwayNavigator is not null &&
+                GodotObject.IsInstanceValid(HighwayNavigator))
+            {
+                _navigationRefresh -= delta;
+                if (_navigationRefresh <= 0)
+                {
+                    _navigationRoute = HighwayNavigator.GetRoute(
+                        GlobalPosition, Target.GlobalPosition);
+                    _nextNavigationPoint = 0;
+                    _navigationRefresh = 0.75 + (GetInstanceId() % 11UL) * 0.04;
+                }
+                while (_nextNavigationPoint < _navigationRoute.Length)
+                {
+                    var waypoint = _navigationRoute[_nextNavigationPoint];
+                    var offset = new Vector3(waypoint.X - GlobalPosition.X,
+                        0, waypoint.Z - GlobalPosition.Z);
+                    if (offset.LengthSquared() > 2.5f) break;
+                    _nextNavigationPoint++;
+                }
+                if (_nextNavigationPoint < _navigationRoute.Length)
+                {
+                    var waypoint = _navigationRoute[_nextNavigationPoint];
+                    var move = new Vector3(waypoint.X - GlobalPosition.X,
+                        0, waypoint.Z - GlobalPosition.Z);
+                    if (move.LengthSquared() > .01f) desired = move.Normalized();
+                }
+            }
             var direction = SteerAroundObstacles(desired);
             velocity.X = direction.X * MoveSpeed * _slowFactor;
             velocity.Z = direction.Z * MoveSpeed * _slowFactor;

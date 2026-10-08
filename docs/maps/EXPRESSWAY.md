@@ -108,3 +108,18 @@ baked vehicle placements, detailed vehicle geometry, authentic atmospheric
 skybox and lighting, more road surface wear, patrol markings, original
 helicopter and medical camp assets, hands-on full-wave gameplay testing,
 and matched-camera comparisons to the private screenshots.
+
+
+## Interim Expressway infected route network
+
+`ExpresswayNavigationRuntime` builds an AStar3D waypoint network spanning
+the reconstructed upper highway. Its static exclusion zones cover abandoned
+vehicles, Humvees, road blocks and sandbag groups. Infected spawn agents share
+the graph and refresh a route toward the player periodically while retaining
+collision-aware near-field steering. This improves large-obstacle routing over
+the earlier purely local ray-based avoidance.
+
+The exported-game smoke test now also requires a connected path from the
+northern road approach to the southern side. The network is provisional:
+moving fortifications and original author-baked zombie navigation are not
+recovered, and successful graph construction is not a full live AI playtest.
