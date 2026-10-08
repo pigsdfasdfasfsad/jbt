@@ -47,7 +47,9 @@ public partial class GameplayRoot : Node3D
 
         _rng.Randomize();
         _mapDefinition = MapCatalogRuntime.Get(MapName);
-        _mapLayout = MapBlockoutBuilder.Build(this, _mapDefinition);
+        _mapLayout = MapName == "Laboratory" && LaboratorySourceLoader.TryBuild(this, out var recovered)
+            ? recovered
+            : MapBlockoutBuilder.Build(this, _mapDefinition);
 
         _player = new FirstPersonPlayer
         {
