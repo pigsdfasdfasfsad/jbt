@@ -26,6 +26,11 @@ public partial class Bootstrap : Node
             RunLaboratorySourceSmoke();
             return;
         }
+        if (args.Contains("--smoke-all-source-maps", StringComparer.Ordinal))
+        {
+            RunAllOriginalSourceMapsSmoke();
+            return;
+        }
         if (args.Contains("--smoke-infected-models", StringComparer.Ordinal))
         {
             RunInfectedModelSmoke();
@@ -46,6 +51,34 @@ public partial class Bootstrap : Node
         if (args.Contains("--smoke-play", StringComparer.Ordinal))
             StartGame("Manor");
         GD.Print("TWR Offline: playable Regular-mode reconstruction runtime initialized.");
+    }
+
+    /// <summary>
+    /// Exercises v2 map import for all ten maps in the exported Windows binary
+    /// against generated CI-only scene packs. It is not a visual playtest.
+    /// </summary>
+    private void RunAllOriginalSourceMapsSmoke()
+    {
+        var holder = new Node3D { Name = "OriginalMapSourceSmoke" };
+        AddChild(holder);
+        var loaded = 0;
+        foreach (var definition in MapCatalogRuntime.All())
+        {
+            if (!LaboratorySourceLoader.TryBuild(holder, definition.Name, out var layout))
+                throw new InvalidOperationException("Original source map import failed: " + definition.Name);
+            var nodeName = "Recovered" + definition.Name;
+            var stage = holder.GetNodeOrNull<Node3D>(nodeName)
+                ?? throw new InvalidOperationException("Original source map stage missing: " + definition.Name);
+            if (layout.InfectedSpawns.Count != 2 || layout.PickupPoints.Count != 5 ||
+                layout.FortificationPoints.Count != 3 || stage.GetChildCount() < 1)
+                throw new InvalidOperationException("Original source map spawn groups invalid: " + definition.Name);
+            loaded++;
+            holder.RemoveChild(stage);
+            stage.Free();
+        }
+        if (loaded != 10) throw new InvalidOperationException("Incomplete 10-map source smoke: " + loaded);
+        GD.Print("TWR_SMOKE_ALL_SOURCE_MAPS_OK maps=10");
+        GetTree().Quit(0);
     }
 
     // Unlike the domain-only completion smoke, this test instantiates the

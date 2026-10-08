@@ -180,6 +180,36 @@ try {
     # Never leave synthetic test map data inside the normal build output.
     Remove-Item $fixture -Force -ErrorAction SilentlyContinue
   }
+
+  # Also exercise the new v2 full-map importer for EVERY map with a tiny,
+  # generated and explicitly synthetic fixture (no original asset bytes).
+  $sourceMapsDir = Join-Path $Output 'Content\Maps'
+  $mapNames = @('Ranch','Mill','Bypass','Cabin','Cargo','District',
+                'Expressway','Prison','Laboratory','Manor')
+  $testMapFiles = @($mapNames | ForEach-Object {
+    Join-Path $sourceMapsDir ($_.ToString() + '.scene.jsonl.gz')
+  })
+  try {
+    python (Join-Path $Repo 'tools\maps\make_source_map_smoke_fixtures.py') --output-dir $sourceMapsDir
+    $sourceStdout = Join-Path $Output 'all-source-maps.stdout.txt'
+    $sourceStderr = Join-Path $Output 'all-source-maps.stderr.txt'
+    Remove-Item $sourceStdout,$sourceStderr -Force -ErrorAction SilentlyContinue
+    $originalMaps = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-all-source-maps') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $sourceStdout -RedirectStandardError $sourceStderr
+    $sourceOutput = @()
+    if (Test-Path $sourceStdout) { $sourceOutput += Get-Content $sourceStdout }
+    if (Test-Path $sourceStderr) { $sourceOutput += Get-Content $sourceStderr }
+    $sourceOutput | ForEach-Object { Write-Host $_ }
+    if ($originalMaps.ExitCode -ne 0) { throw "Ten-map source smoke failed: exit $($originalMaps.ExitCode)" }
+    if ($sourceOutput | Where-Object { "$_" -match '(^|\s)ERROR:' }) {
+      throw 'Ten-map source smoke emitted Godot errors.'
+    }
+    if (-not ($sourceOutput | Where-Object { "$_" -match 'TWR_SMOKE_ALL_SOURCE_MAPS_OK maps=10' })) {
+      throw 'Ten-map source loader did not finish every synthetic scene.'
+    }
+  } finally {
+    # Never include any synthetic map data in private Windows distribution.
+    Remove-Item $testMapFiles -Force -ErrorAction SilentlyContinue
+  }
 } finally { Pop-Location }
 
 Write-Host 'Windows export and playable smoke pass completed.'
