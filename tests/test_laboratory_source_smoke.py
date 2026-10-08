@@ -21,7 +21,8 @@ def test_synthetic_laboratory_fixture_is_deterministic(tmp_path):
         counts = collections.Counter(json.loads(line)['kind'] for line in f)
     assert header['synthetic'] is True
     assert header['source_member'] == 'CI GENERATED (NO ROBLOX ASSETS)'
-    assert counts == {'geometry': 30000, 'collision': 1000, 'light': 801, 'spawn': 23}
+    assert counts == {'geometry': 30000, 'collision': 1000, 'light': 801, 'spawn': 23,
+                      'pickup_spawn': 174}
 
 def test_exported_exe_has_laboratory_source_smoke_contract():
     source = (ROOT / 'src/Twr.Godot/Scripts/Bootstrap.cs').read_text()
@@ -91,3 +92,17 @@ def test_original_spawn_markers_are_preserved_as_feet_positions():
     assert 'UseExactInfectedSpawns' in gameplay
     assert 'basePoint + Vector3.Up * 0.9f' in gameplay
     assert 'return basePoint + new Vector3(_rng.RandfRange' in gameplay
+
+def test_laboratory_original_pickup_markers_are_loaded_separately():
+    loader=(ROOT/'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
+    layout=(ROOT/'src/Twr.Godot/Scripts/MapBlockoutBuilder.cs').read_text()
+    gameplay=(ROOT/'src/Twr.Godot/Scripts/GameplayRoot.cs').read_text()
+    bootstrap=(ROOT/'src/Twr.Godot/Scripts/Bootstrap.cs').read_text()
+    assert 'case "pickup_spawn":' in loader
+    assert 'itemMarkers.Count != 127 || fortificationMarkers.Count != 47' in loader
+    assert 'FortificationPoints = fortificationMarkers' in loader
+    assert 'FortificationPoints { get; init; }' in layout
+    assert 'ChooseUniqueMarkers(_mapLayout.FortificationPoints, 2)' in gameplay
+    assert 'ChooseUniqueMarkers(_mapLayout.PickupPoints, 4)' in gameplay
+    assert 'layout.PickupPoints.Count != 127' in bootstrap
+    assert 'layout.FortificationPoints.Count != 47' in bootstrap

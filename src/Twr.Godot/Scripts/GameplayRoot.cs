@@ -356,22 +356,40 @@ public partial class GameplayRoot : Node3D
 
     private void SpawnNaturalPickups()
     {
-        // APPROXIMATED coordinates: topology rules come from map references,
-        // while exact retail spawn-group transforms are not recovered.
-        // Recovered reconstruction cadence starts each wave/map with a small
-        // opening batch rather than filling every available marker.
-        var itemCount=Math.Min(4,_mapLayout.PickupPoints.Count);
-        for(var i=0;i<itemCount;i++)
-            SpawnNaturalAt(_mapLayout.PickupPoints[i],"Item");
+        // The recovered Laboratory pack supplies distinct original item and
+        // fortification marker pools. Keep only a small opening selection,
+        // without repeating a marker in the same spawn batch.
+        foreach (var position in ChooseUniqueMarkers(_mapLayout.PickupPoints, 4))
+            SpawnNaturalAt(position, "Item");
 
-        // VERIFIED grouping rule: fortification spawn areas are separate and
-        // never naturally produce the 50 Cal. Their exact map anchors are lost.
-        var fortCount=Math.Min(2,_mapLayout.PickupPoints.Count);
-        for(var i=0;i<fortCount;i++)
+        if (_mapLayout.FortificationPoints.Count > 0)
         {
-            var basePoint=_mapLayout.PickupPoints[i];
-            var offset=new Vector3(i%2==0 ? 1.8f : -1.8f,0,(i%3-1)*1.2f);
-            SpawnNaturalAt(basePoint+offset,"Fortification");
+            foreach (var position in ChooseUniqueMarkers(_mapLayout.FortificationPoints, 2))
+                SpawnNaturalAt(position, "Fortification");
+        }
+        else
+        {
+            // Legacy blockout maps have no recovered fortification markers.
+            // Keep their existing approximate positions until proper source
+            // location data is obtained for each individual map.
+            var fortCount=Math.Min(2,_mapLayout.PickupPoints.Count);
+            for(var i=0;i<fortCount;i++)
+            {
+                var basePoint=_mapLayout.PickupPoints[i];
+                var offset=new Vector3(i%2==0 ? 1.8f : -1.8f,0,(i%3-1)*1.2f);
+                SpawnNaturalAt(basePoint+offset,"Fortification");
+            }
+        }
+    }
+
+    private IEnumerable<Vector3> ChooseUniqueMarkers(IReadOnlyList<Vector3> markers, int count)
+    {
+        var indices = Enumerable.Range(0, markers.Count).ToArray();
+        for (var index = 0; index < Math.Min(count, markers.Count); index++)
+        {
+            var next = _rng.RandiRange(index, indices.Length - 1);
+            (indices[index], indices[next]) = (indices[next], indices[index]);
+            yield return markers[indices[index]];
         }
     }
 

@@ -42,6 +42,8 @@ public static class LaboratorySourceLoader
         var emitters = new List<LaboratorySourceLight>();
         var infected = new List<Vector3>();
         var players = new List<(string Name, Vector3 Position)>();
+        var itemMarkers = new List<Vector3>();
+        var fortificationMarkers = new List<Vector3>();
         var count = new Dictionary<string, int>(StringComparer.Ordinal);
 
         try
@@ -88,6 +90,15 @@ public static class LaboratorySourceLoader
                             players.Add((Str(record, "name"), position));
                         break;
                     }
+                    case "pickup_spawn":
+                    {
+                        var group = Str(record, "group");
+                        if (group == "Item") itemMarkers.Add(Position(record));
+                        else if (group == "Fortification")
+                            fortificationMarkers.Add(Position(record));
+                        else throw new InvalidDataException("unknown pickup group: " + group);
+                        break;
+                    }
                     default:
                         throw new InvalidDataException("unknown source record: " + kind);
                 }
@@ -97,6 +108,9 @@ public static class LaboratorySourceLoader
                 count.GetValueOrDefault("light") < 800 ||
                 infected.Count != 15 || players.Count != 8)
                 throw new InvalidDataException("incomplete Laboratory source pack");
+            if (count.GetValueOrDefault("pickup_spawn") > 0 &&
+                (itemMarkers.Count != 127 || fortificationMarkers.Count != 47))
+                throw new InvalidDataException("incomplete Laboratory pickup marker set");
 
             foreach (var batch in batches.Values)
             {
@@ -156,7 +170,7 @@ public static class LaboratorySourceLoader
             layout = new RuntimeMapLayout(
                 playerSpawn,
                 infected,
-                new[]
+                itemMarkers.Count > 0 ? itemMarkers : new[]
                 {
                     playerSpawn + new Vector3(3, 0, 3),
                     playerSpawn + new Vector3(-3, 0, 5)
@@ -167,12 +181,14 @@ public static class LaboratorySourceLoader
                     playerSpawn + new Vector3(-7, 0, -5)
                 })
             {
-                UseExactInfectedSpawns = true
+                UseExactInfectedSpawns = true,
+                FortificationPoints = fortificationMarkers
             };
             GD.Print($"TWR_LAB_SOURCE_LOADED geometry={count["geometry"]} " +
                 $"server_walls={count["collision"]} physical_shapes={collisions.Count} " +
                 $"source_lights={emitters.Count} active_lights={Math.Min(LaboratoryLightStreamer.ActiveLimit, emitters.Count)} " +
-                $"infected_spawns={infected.Count} player_spawns={players.Count}");
+                $"infected_spawns={infected.Count} player_spawns={players.Count} " +
+                $"item_markers={itemMarkers.Count} fortification_markers={fortificationMarkers.Count}");
             return true;
         }
         catch (Exception error)

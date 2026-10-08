@@ -46,10 +46,14 @@ public partial class Bootstrap : Node
         AddChild(testRoot);
         if (!LaboratorySourceLoader.TryBuild(testRoot, out var layout) ||
             layout.InfectedSpawns.Count != 15 ||
+            layout.PickupPoints.Count != 127 ||
+            layout.FortificationPoints.Count != 47 ||
             testRoot.GetNodeOrNull<Node3D>("RecoveredLaboratory") is null)
             throw new InvalidOperationException(
                 "Laboratory source-pack smoke failed to instantiate the scene.");
-        GD.Print("TWR_SMOKE_LAB_SOURCE_OK infected_spawns=" + layout.InfectedSpawns.Count);
+        GD.Print("TWR_SMOKE_LAB_SOURCE_OK infected_spawns=" + layout.InfectedSpawns.Count +
+            " item_markers=" + layout.PickupPoints.Count +
+            " fortification_markers=" + layout.FortificationPoints.Count);
         GetTree().Quit(0);
     }
 

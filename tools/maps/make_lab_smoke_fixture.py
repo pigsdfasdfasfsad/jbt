@@ -19,7 +19,8 @@ def generate(path: Path) -> None:
         'map': 'Laboratory', 'scale': 0.28, 'synthetic': True,
         'source_member': 'CI GENERATED (NO ROBLOX ASSETS)',
         'counts': {'geometry': 30000, 'collision': 1000,
-                   'lights': 801, 'infected_spawns': 15, 'player_spawns': 8},
+                   'lights': 801, 'infected_spawns': 15, 'player_spawns': 8,
+                   'item_markers': 127, 'fortification_markers': 47},
     }
     def write(stream, record):
         stream.write((json.dumps(record, separators=(',', ':'), sort_keys=True) + '\n').encode())
@@ -58,6 +59,13 @@ def generate(path: Path) -> None:
                         'kind': 'spawn', 'side': side,
                         'name': f'{side}{i:02}',
                         't': [i * 8, 4, 10 if side == 'infected' else 0],
+                    })
+            for group, total in [('Item', 127), ('Fortification', 47)]:
+                for i in range(total):
+                    write(stream, {
+                        'kind': 'pickup_spawn', 'group': group,
+                        'ref': f'test{group}{i:03}',
+                        't': [i * 2, 4, 8 if group == 'Item' else 16],
                     })
 
 def main():
