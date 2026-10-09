@@ -49,7 +49,9 @@ public partial class BallisticImpactRuntime : Node3D
         {
             Name = "ShotTrace",
             Position = (origin + impact) * .5f,
-            Basis = Basis.LookingAt(direction.Normalized(),Vector3.Up),
+            Basis = Basis.LookingAt(direction.Normalized(),
+                Math.Abs(direction.Normalized().Y) > .98f
+                    ? Vector3.Forward : Vector3.Up),
             Mesh = new BoxMesh
             {
                 Size = new Vector3(.009f,.009f,distance)
