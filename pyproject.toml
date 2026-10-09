@@ -10,7 +10,7 @@ requires-python = ">=3.13"
 dependencies = []
 
 [project.optional-dependencies]
-test = ["pytest>=9,<10"]
+test = ["pytest>=9,<10", "numpy>=2.0,<3.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
