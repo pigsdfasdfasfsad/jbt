@@ -6,6 +6,7 @@ namespace Twr.Godot;
 public partial class FirstPersonPlayer : CharacterBody3D
 {
     public LocalSessionNode? Runtime { get; set; }
+    public OfflineAudioRuntime? Audio { get; set; }
     public string EquippedWeaponName => _equippedWeapon;
     public string PrimaryWeaponName => _primaryWeapon;
     public string SecondaryWeaponName => _secondaryWeapon;
@@ -335,6 +336,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _reloadTimer = Math.Max(0.05, spec.ReloadSeconds / reloadSpeed);
         _reloadWeapon = spec.Name;
         _viewModel.Reload(_reloadTimer);
+        Audio?.Play("reload");
     }
 
     private void TryUseWeapon()
@@ -346,6 +348,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         {
             _actionCooldown = Math.Max(0.05, spec.ActionSeconds);
             _viewModel.Fire();
+            Audio?.Play("melee");
             FireHitscan(spec, -_camera.GlobalTransform.Basis.Z, spec.Range, spec.Damage, "Melee", true);
             return;
         }
@@ -359,6 +362,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
         if (!Runtime.SpendAmmo(spec.Name, 1)) return;
         _actionCooldown = FireInterval(spec);
         _viewModel.Fire();
+        Audio?.Play(spec.IsLauncher ? "launcher" :
+            spec.IsShotgun ? "shotgun" : "gunshot");
         ApplyRecoil(spec);
 
         if (spec.IsLauncher)

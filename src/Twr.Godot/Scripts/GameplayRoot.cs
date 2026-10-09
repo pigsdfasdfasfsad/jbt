@@ -12,6 +12,7 @@ public partial class GameplayRoot : Node3D
     public Action<string>? RestartRequested { get; set; }
 
     private GameplayHud _hud = null!;
+    private OfflineAudioRuntime _audio = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
     private RuntimeMapLayout _mapLayout = null!;
     private FirstPersonPlayer _player = null!;
@@ -53,9 +54,14 @@ public partial class GameplayRoot : Node3D
             ? recovered
             : MapBlockoutBuilder.Build(this, _mapDefinition);
 
+        _audio = new OfflineAudioRuntime { Name = "OfflineAudio" };
+        AddChild(_audio);
+        _audio.Play("ambient");
+
         _player = new FirstPersonPlayer
         {
             Name = "Player",
+            Audio = _audio,
             Runtime = Runtime,
             Position = _mapLayout.PlayerSpawn
         };
@@ -143,7 +149,10 @@ public partial class GameplayRoot : Node3D
     private void OnPresentationEvent(string eventName)
     {
         if(eventName=="PlayerDamagedEvent")
+        {
             _hud.FlashDamage();
+            _audio.Play("hurt");
+        }
     }
     public override void _UnhandledInput(InputEvent @event)
     {
@@ -238,6 +247,7 @@ public partial class GameplayRoot : Node3D
             _queuedSupplySeconds=3.0;
         }
         SpawnWaveObjectives();
+        _audio.Play("wave");
         var currentWave = Runtime.Match.Wave;
         _hud.SetBanner(currentWave == ReleaseRules.MaxWaves ? "FINAL WAVE" : $"WAVE {currentWave}");
     }
@@ -251,6 +261,7 @@ public partial class GameplayRoot : Node3D
         Runtime.AwardWaveSurvival(survivedWave, _completedObjectivesThisWave, 1);
         Runtime.EndWaveCleanup();
         _hud.SetBanner($"WAVE {survivedWave} SURVIVED");
+        _audio.Play("wave-clear");
 
         // APPROXIMATED boundary behavior: surviving infected are cleared for
         // intermission until exact retail teardown behavior is recovered.
@@ -597,6 +608,7 @@ public partial class GameplayRoot : Node3D
         _infected.Remove(infected);
         if (context.DamageKind == "ObjectiveExplosion") return;
 
+        _audio.Play("infected");
         var reward = InfectedCatalog.Reward(infected.InfectedType);
         Runtime?.AwardKill(infected.InfectedType, reward.Credits, reward.Xp);
 
