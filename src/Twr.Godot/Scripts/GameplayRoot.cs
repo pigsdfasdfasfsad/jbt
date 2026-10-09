@@ -54,6 +54,10 @@ public partial class GameplayRoot : Node3D
             ? recovered
             : MapBlockoutBuilder.Build(this, _mapDefinition);
 
+        // Load independently decoded original SmoothGrid terrain after map
+        // geometry; no Roblox Studio, network or editor imports are needed.
+        RecoveredTerrainRuntime.TryBuild(this, MapName);
+
         _audio = new OfflineAudioRuntime { Name = "OfflineAudio" };
         AddChild(_audio);
         _audio.Play("ambient");
