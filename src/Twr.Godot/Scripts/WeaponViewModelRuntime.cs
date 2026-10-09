@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Godot;
 
 namespace Twr.Godot;
@@ -21,6 +22,9 @@ public partial class WeaponViewModelRuntime : Node3D
     private MeshInstance3D? _flash;
     private bool _melee;
     private float _flashSeconds;
+    private float _mechanicalKick;
+    private readonly List<(MeshInstance3D Part, Vector3 Home)> _slides = [];
+    private readonly List<(MeshInstance3D Part, Vector3 Home)> _magazines = [];
     private float _phase;
     private float _kick;
     private float _reloadRemaining;
@@ -56,9 +60,13 @@ public partial class WeaponViewModelRuntime : Node3D
         if (OriginalWeaponSourceRuntime.TryBuild(_rig!, spec.Name))
         {
             UsingOriginalToolAssembly = true;
+            _flash.Position = OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)
+                ?? _flash.Position;
+            TrackMechanicalParts();
             return;
         }
         BuildApproximateWeapon(spec);
+        TrackMechanicalParts();
     }
 
     public void SetThrowable(string type)
@@ -98,6 +106,7 @@ public partial class WeaponViewModelRuntime : Node3D
         if (!_melee && _flash is not null)
         {
             _flashSeconds = .055f;
+            _mechanicalKick = .11f;
             _flash.Visible = true;
         }
     }
@@ -113,7 +122,17 @@ public partial class WeaponViewModelRuntime : Node3D
         if (_rig is null) return;
         var dt = (float)delta;
         _flashSeconds = Mathf.Max(0,_flashSeconds - dt);
+        _mechanicalKick = Mathf.Max(0,_mechanicalKick - dt);
         if (_flash is not null) _flash.Visible = _flashSeconds > 0;
+        foreach (var (part,home) in _slides)
+            if (GodotObject.IsInstanceValid(part))
+                part.Position = home + new Vector3(0,0,_mechanicalKick * .35f);
+        var magazineDrop = _reloadDuration > 0 && _reloadRemaining > 0
+            ? Mathf.Sin(Mathf.Pi *
+                (1f - _reloadRemaining / _reloadDuration)) * .14f : 0f;
+        foreach (var (part,home) in _magazines)
+            if (GodotObject.IsInstanceValid(part))
+                part.Position = home + Vector3.Down * magazineDrop;
         _phase += dt * 2.5f;
         _kick = Mathf.MoveToward(_kick, 0, dt * 1.2f);
         _reloadRemaining = Mathf.Max(0, _reloadRemaining - dt);
@@ -136,7 +155,10 @@ public partial class WeaponViewModelRuntime : Node3D
         _rig = new Node3D { Name = "WeaponBody" };
         AddChild(_rig);
         _melee = false;
+        _slides.Clear();
+        _magazines.Clear();
         _flashSeconds = 0f;
+        _mechanicalKick = 0f;
         _flash = new MeshInstance3D
         {
             Name = "MuzzleFlash",
@@ -156,6 +178,22 @@ public partial class WeaponViewModelRuntime : Node3D
         UsingPreparedScene = false;
         UsingOriginalToolAssembly = false;
         _reloadRemaining = _reloadDuration = _kick = 0;
+    }
+
+    private void TrackMechanicalParts()
+    {
+        if (_rig is null) return;
+        foreach (var node in _rig.GetChildren().OfType<MeshInstance3D>())
+        {
+            var name = node.Name.ToString();
+            if (name.Contains("Slide",StringComparison.OrdinalIgnoreCase) ||
+                name.Contains("Bolt",StringComparison.OrdinalIgnoreCase))
+                _slides.Add((node,node.Position));
+            if (name.Contains("Magazine",StringComparison.OrdinalIgnoreCase) ||
+                name.Equals("Mag",StringComparison.OrdinalIgnoreCase) ||
+                name.Contains("Clip",StringComparison.OrdinalIgnoreCase))
+                _magazines.Add((node,node.Position));
+        }
     }
 
     private void BuildApproximateWeapon(RuntimeWeaponDefinition spec)
