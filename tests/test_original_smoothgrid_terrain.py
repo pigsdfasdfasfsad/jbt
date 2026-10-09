@@ -49,7 +49,7 @@ def test_real_v1_rle_source_conversion_to_offline_chunks():
 
 def test_terrain_conversion_rejects_corrupted_cell_runs():
     import pytest
-    with pytest.raises(ValueError,match="Unsupported"):
+    with pytest.raises(ValueError,match="version 1"):
         terrain.decode_smoothgrid(b"\x09\x05")
     with pytest.raises(ValueError,match="overflow"):
         terrain.decode_smoothgrid(
