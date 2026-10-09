@@ -1,3 +1,73 @@
+# PASS 4 — Verified source terrain and improved infected/weapon visuals (October 2026)
+
+**Source branch:** twr-offline-dev. **Latest pass 4 successful Windows
+integration build:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37874934325
+(356 Python tests passed, zero C# compiler warnings, native Windows Godot
+export, synthetic terrain/water/collision smoke, six source-weapon assemblies,
+six source-zombie assemblies, ballistic effects, and all ten map source
+loader smoke tests). Later audio-reference categorization commits are tested
+independently.
+
+## Newly implemented
+
+- Original owner-held Terrain.SmoothGrid v1 bytes for all ten named release
+  map snapshots are successfully decoded with a bounded native RLE decoder.
+  4-stud source voxel positions, original 23-slot MaterialColors palettes
+  and water-vs-solid classification are preserved.
+- tools/terrain/convert_smoothgrid.py produces deterministic compressed
+  .terrainmesh.gz greedy-surface files. Merging original voxel faces reduces
+  the content enough for chunked offline rendering/collision.
+- RecoveredTerrainRuntime integrates solid voxel meshes as original-colored
+  chunk objects, creates static ConcavePolygonShape3D collision geometry
+  for solids, and draws non-collidable water separately.
+- The optional source file path is Content/Terrain/<Map>.terrainmesh.gz,
+  physically located beside the private exported Windows EXE. Fallback maps
+  continue to launch if a source terrain file is absent.
+- Source firearm part geometries now align the barrel direction toward the
+  Godot first-person camera and derive muzzle-flash coordinates from the
+  source model's barrel position instead of fixed category guesswork.
+  Magazines and bolts/slides move independently during basic firing/reload
+  animations.
+- Visible short-lived bullet tracers and solid-vs-infected impact flashes
+  are generated offline. They are approximations of the real game.
+- Infected track sustained movement failure and try alternate detour angles;
+  recovered zombie assembly presentation now includes lightweight hit flinch
+  and type-specific movement gait. This is NOT complete cross-floor pathfinding.
+- The 190 owner-held original SoundIds have an optional heuristic
+  classification utility. No restricted audio was downloaded.
+
+## Private source delivery
+
+TWR-Pass4-Original-Terrain-Private-Pack-v5.zip contains all ten original
+place scene packs, converted original terrain surface files, source weapons,
+source infected variants, and private audio reference indexes. The
+Build-Private-Windows.ps1 wrapper can locally compile the matching current
+GitHub source with Godot/.NET and package the Content folder to a Windows
+ZIP outside GitHub.
+
+The source chunk converter uses NumPy at offline conversion time only;
+the exported game does not depend on Python, Roblox, internet or Godot
+editor to read the already converted terrain files.
+
+## Integrity and limitations
+
+- Ten real private terrain files passed binary-face and archive integrity
+  checks. The exported Windows Godot smoke verified a generated SYNTHETIC
+  terrain file: one chunk, solid collision, separate water material.
+  No actual owner-held ten-terrain graphical Windows test has been run.
+- Terrain representation uses rectangular exposed voxel faces (greedy mesh),
+  not Roblox's original surface-nets smoothing and interpolation.
+- MeshPart and UnionOperation render binaries, original sound/animation
+  binaries, skyboxes, UI texture artwork and some character variants remain
+  incomplete.
+- A domain-only 15-wave simulation does not equal ten complete human-
+  controlled playable 15-wave matches.
+- Original objectives, zombie multi-floor navigation, rendering performance,
+  real collision clearances and graphical fidelity still need testing.
+- No newly compiled EXE with this pass has been delivered privately in chat.
+
+---
+
 # LATEST VERIFIED THREE-PASS IMPLEMENTATION UPDATE — OCTOBER 2026
 
 **New owner-requested iteration series on twr-offline-dev.** The historical
