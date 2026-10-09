@@ -99,7 +99,7 @@ public static class OfflineAssetResolver
         var vertices = new List<Vector3>();
         var uvs = new List<Vector2>();
         var tool = new SurfaceTool();
-        tool.Begin(Godot.Mesh.PrimitiveType.Triangles);
+        tool.Begin(global::Godot.Mesh.PrimitiveType.Triangles);
         var triangles = 0;
         foreach (var raw in File.ReadLines(path))
         {
