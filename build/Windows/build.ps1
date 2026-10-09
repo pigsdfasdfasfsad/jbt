@@ -106,6 +106,29 @@ try {
   if (-not ($fullOutput | Where-Object { "$_" -match 'TWR_SMOKE_COMPLETE_OK maps=10 waves=150' })) {
     throw 'Exported 15-wave completion smoke did not report the required completion marker.'
   }
+  # Verify genuine post-export asset resolution from the private file layout.
+  # Both files are disposable test fixtures; no original bytes enter CI.
+  $artRoot = Join-Path $Output 'Content\Assets'
+  $artMeshFile = Join-Path $artRoot 'Meshes\99887766.obj'
+  $artTextureFile = Join-Path $artRoot 'Textures\99887766.png'
+  try {
+    python (Join-Path $Repo 'tools\assets\make_private_art_smoke_fixture.py') --output-dir $artRoot
+    $artStdout = Join-Path $Output 'private-art.stdout.txt'
+    $artStderr = Join-Path $Output 'private-art.stderr.txt'
+    Remove-Item $artStdout,$artStderr -Force -ErrorAction SilentlyContinue
+    $artRun = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','120','--','--smoke-private-art') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $artStdout -RedirectStandardError $artStderr
+    $artOutput = @()
+    if (Test-Path $artStdout) { $artOutput += Get-Content $artStdout }
+    if (Test-Path $artStderr) { $artOutput += Get-Content $artStderr }
+    $artOutput | ForEach-Object { Write-Host $_ }
+    if ($artRun.ExitCode -ne 0) { throw "Post-export private art smoke failed: $($artRun.ExitCode)" }
+    if (-not ($artOutput | Where-Object { "$_" -match 'TWR_SMOKE_PRIVATE_ART_OK mesh=99887766 texture=99887766' })) {
+      throw 'The Windows export did not load external private OBJ/PNG.'
+    }
+  } finally {
+    Remove-Item $artMeshFile,$artTextureFile -Force -ErrorAction SilentlyContinue
+  }
+
   # Instantiate representative categories of offline first-person weapon models.
   $weaponStdout = Join-Path $Output 'weapon-models.stdout.txt'
   $weaponStderr = Join-Path $Output 'weapon-models.stderr.txt'

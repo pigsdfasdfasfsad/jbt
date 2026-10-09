@@ -51,6 +51,11 @@ public partial class Bootstrap : Node
             RunOriginalWeaponSourceSmoke();
             return;
         }
+        if (args.Contains("--smoke-private-art", StringComparer.Ordinal))
+        {
+            RunPrivateArtSmoke();
+            return;
+        }
         if (args.Contains("--smoke-expressway-scene", StringComparer.Ordinal))
         {
             RunExpresswaySceneSmoke();
@@ -202,6 +207,20 @@ public partial class Bootstrap : Node
             $"traffic={traffic.GetChildCount()} screening={screening.GetChildCount()} " +
             $"lights={lights.GetChildCount()} nav_points={navigator.NavigablePoints} " +
             $"route_points={corridorRoute.Length} infected_spawns={layout.InfectedSpawns.Count}");
+        GetTree().Quit(0);
+    }
+
+    private void RunPrivateArtSmoke()
+    {
+        // Files are generated outside res:// beside the actual exported EXE.
+        // The check must exercise the same absolute-path loader as private art.
+        var mesh = OfflineAssetResolver.Mesh("99887766");
+        var texture = OfflineAssetResolver.Texture("99887766");
+        if (mesh is null || mesh.GetSurfaceCount() != 1 ||
+            texture is null || texture.GetWidth() != 2 || texture.GetHeight() != 2)
+            throw new InvalidOperationException(
+                "Post-export private OBJ/PNG was not resolved outside the PCK.");
+        GD.Print("TWR_SMOKE_PRIVATE_ART_OK mesh=99887766 texture=99887766");
         GetTree().Quit(0);
     }
 
