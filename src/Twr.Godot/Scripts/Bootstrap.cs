@@ -130,6 +130,10 @@ public partial class Bootstrap : Node
                 visual.GetNodeOrNull<Node3D>("SourceR6Body") is null)
                 throw new InvalidOperationException(
                     "Original source infected assembly failed: " + type);
+            if (type == "Civilian" && visual.GetNodeOrNull<MeshInstance3D>(
+                "SourceR6Body/ReconstructedR6Head") is null)
+                throw new InvalidOperationException(
+                    "Missing-R6-head reconstruction failed.");
             visual.Attack();
         }
         GD.Print("TWR_SMOKE_SOURCE_INFECTED_OK types=6");

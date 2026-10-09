@@ -21,7 +21,8 @@ def generate(path):
     for type_name in TYPES:
         parts=[{"name":name,"region":region,"class":"Part","t":t,
                 "r":I,"s":size,"rgb":rgb,"shape":"1","opacity":1.0}
-               for name,region,t,size,rgb in PARTS]
+               for name,region,t,size,rgb in PARTS
+               if not (type_name == "Civilian" and name == "Head")]
         types[type_name]=[{"kind":"original_infected_snapshot_variant",
                            "infected_type":type_name,
                            "variant_hash":"synthetic",

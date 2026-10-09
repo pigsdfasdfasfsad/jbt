@@ -70,7 +70,9 @@ public partial class InfectedAgent : CharacterBody3D
         if (InfectedType == "Bolter" && TickBolterLeap(delta, flat, distance))
             return;
 
-        if (InfectedType == "Bloater" && distance > 4f && distance <= 35f && _specialCooldown <= 0)
+        if (InfectedType == "Bloater" && distance > 4f && distance <= 35f &&
+            Math.Abs(deltaToPlayer.Y) <= 4f && _specialCooldown <= 0 &&
+            HasClearAttackPath())
         {
             // APPROXIMATED throw cadence/range; source confirms ranged cluster
             // behavior and that it stops throwing near melee range.
@@ -81,7 +83,7 @@ public partial class InfectedAgent : CharacterBody3D
         var velocity = Velocity;
         if (!IsOnFloor()) velocity.Y -= 22f * (float)delta;
 
-        if (distance > 1.55f)
+        if (distance > 1.55f || Math.Abs(deltaToPlayer.Y) > 1.6f)
         {
             var desired = flat.LengthSquared() > 0.001f ? flat.Normalized() : Vector3.Zero;
             // Shared Expressway road graph handles large static obstructions.
@@ -122,8 +124,10 @@ public partial class InfectedAgent : CharacterBody3D
         {
             velocity.X = 0;
             velocity.Z = 0;
-            if (_attackCooldown <= 0)
+            if (_attackCooldown <= 0 && HasClearAttackPath())
             {
+                // Line of sight prevents hits through original walls and
+                // floors while maintaining the existing attack cadence.
                 // APPROXIMATED: retail claw cadence is not recovered.
                 _attackCooldown = 1.0;
                 _visual?.Attack();
@@ -133,6 +137,20 @@ public partial class InfectedAgent : CharacterBody3D
 
         Velocity = velocity;
         MoveAndSlide();
+    }
+
+    private bool HasClearAttackPath()
+    {
+        if (Target is null) return false;
+        var from = GlobalPosition + Vector3.Up * .10f;
+        var to = Target.GlobalPosition + Vector3.Up * 1.10f;
+        var query = PhysicsRayQueryParameters3D.Create(from, to);
+        query.CollisionMask = 1;
+        query.Exclude = new global::Godot.Collections.Array<Rid>
+        {
+            GetRid(), Target.GetRid()
+        };
+        return GetWorld3D().DirectSpaceState.IntersectRay(query).Count == 0;
     }
 
     private Vector3 SteerAroundObstacles(Vector3 desired)

@@ -16,7 +16,9 @@ def test_infected_blueprint_fixture_contains_source_shaped_r6_parts(tmp_path):
     with gzip.open(file,"rt") as stream: data=json.load(stream)
     assert data["synthetic"] is True
     assert len(data["types"])==6
-    assert all(len(v[0]["parts"])==6 for v in data["types"].values())
+    assert len(data["types"]["Civilian"][0]["parts"])==5
+    assert all(len(v[0]["parts"])==6 for k,v in data["types"].items()
+               if k!="Civilian")
 
 def test_real_source_blueprint_takes_priority_over_procedural_proxy():
     source=(ROOT/"src/Twr.Godot/Scripts/InfectedVisualAssembler.cs").read_text()
@@ -38,3 +40,15 @@ def test_windows_exe_loads_blueprint_and_removes_fixture():
     assert "TWR_SMOKE_SOURCE_INFECTED_OK types=6" in boot
     assert "TWR_SMOKE_SOURCE_INFECTED_OK types=6" in runner
     assert "Remove-Item $privateZombieFixture" in runner
+
+def test_source_infected_head_restoration_and_occlusion():
+    loader=(ROOT/"src/Twr.Godot/Scripts/InfectedSourceModelRuntime.cs").read_text()
+    infected=(ROOT/"src/Twr.Godot/Scripts/InfectedAgent.cs").read_text()
+    boot=(ROOT/"src/Twr.Godot/Scripts/Bootstrap.cs").read_text()
+    assert "ReconstructedR6Head" in loader
+    assert 'partName == "Handle" && string.IsNullOrEmpty(SourceId(part))' in loader
+    assert 'if (!hasSourceHead)' in loader
+    assert 'GetNodeOrNull<MeshInstance3D>(' in boot
+    assert "HasClearAttackPath()" in infected
+    assert "Math.Abs(deltaToPlayer.Y) > 1.6f" in infected
+    assert "GetWorld3D().DirectSpaceState.IntersectRay(query).Count == 0" in infected

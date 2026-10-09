@@ -57,8 +57,15 @@ public static class InfectedSourceModelRuntime
 
         var materialCache = new Dictionary<string, StandardMaterial3D>();
         var meshCache = new Dictionary<string, Mesh?>();
+        var hasSourceHead = false;
         foreach (var part in parts.EnumerateArray())
         {
+            var partName = part.GetProperty("name").GetString() ?? "OriginalPart";
+            if (partName is "Head" or "BloatHead") hasSourceHead = true;
+            // A recovered plain accessory Handle has no mesh of its own.
+            // Showing it as a 2x1x1 solid block hides the face/eyes.
+            if (partName == "Handle" && string.IsNullOrEmpty(SourceId(part)))
+                continue;
             var region = part.GetProperty("region").GetString() ?? "Torso";
             var localPosition = Position(part);
             var parentNode = anchors.TryGetValue(region, out var pivot) ? pivot : rig;
@@ -100,11 +107,31 @@ public static class InfectedSourceModelRuntime
             var position = new Transform3D(basis,offset);
             parentNode.AddChild(new MeshInstance3D
             {
-                Name = part.GetProperty("name").GetString() ?? "OriginalPart",
+                Name = partName,
                 Transform = position.ScaledLocal(dimensions),
                 Mesh = mesh,
                 MaterialOverride = material,
                 CastShadow = GeometryInstance3D.ShadowCastingSetting.On
+            });
+        }
+
+        if (!hasSourceHead)
+        {
+            // The original sampled Roblox infected snapshots omit the R6
+            // Head part (all 44 recovered active variants). Restore an R6
+            // head in its authored position, without fabricating a MeshId.
+            var headMaterial = new StandardMaterial3D
+            {
+                AlbedoColor = new Color(.54f,.49f,.42f),
+                Roughness = .91f
+            };
+            rig.AddChild(new MeshInstance3D
+            {
+                Name = "ReconstructedR6Head",
+                Position = Vector3.Up * RobloxUnits.Distance(1.5f),
+                Scale = Vector3.One * RobloxUnits.Distance(1f),
+                Mesh = new SphereMesh { Radius = .5f, Height = 1f },
+                MaterialOverride = headMaterial
             });
         }
 
