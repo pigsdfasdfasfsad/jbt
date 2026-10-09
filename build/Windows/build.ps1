@@ -200,6 +200,9 @@ try {
   if (-not ($weaponOutput | Where-Object { "$_" -match 'TWR_SMOKE_FIDELITY_METADATA_OK' })) {
     throw 'Fidelity camera metadata serialization did not pass.'
   }
+  if (-not ($weaponOutput | Where-Object { "$_" -match 'TWR_SMOKE_BALLISTIC_FX_OK' })) {
+    throw 'Ballistic tracer and impact rendering did not instantiate.'
+  }
 
   # Exercise source-derived original gun and throwable model assemblies
   # with a synthetic six-model pack only. Private original bytes stay local.

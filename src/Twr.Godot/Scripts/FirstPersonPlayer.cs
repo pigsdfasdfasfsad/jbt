@@ -518,6 +518,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
             var hitPosition = hit["position"].AsVector3();
             var collider = hit["collider"].AsGodotObject();
+            if ((damageKind == "Bullet" || damageKind == "Fire") &&
+                GetParent() is Node3D environment)
+                BallisticImpactRuntime.Spawn(environment,
+                    _camera.GlobalPosition, hitPosition,
+                    collider is InfectedAgent);
 
             if (collider is DamageObjectiveTarget tanker)
             {

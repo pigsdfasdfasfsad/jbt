@@ -333,6 +333,17 @@ public partial class Bootstrap : Node
                 throw new InvalidOperationException("Fidelity camera metadata contract failed.");
         }
         GD.Print("TWR_SMOKE_FIDELITY_METADATA_OK");
+        var impacts = new Node3D { Name = "BallisticSmoke" };
+        stage.AddChild(impacts);
+        BallisticImpactRuntime.Spawn(impacts,
+            new Vector3(0,2,0), new Vector3(0,2,-6), false);
+        var effect = impacts.GetNodeOrNull<BallisticImpactRuntime>(
+            "OfflineBulletImpact");
+        if (effect is null || effect.GetChildCount() != 2 ||
+            effect.GetNodeOrNull<MeshInstance3D>("ShotTrace") is null ||
+            effect.GetNodeOrNull<MeshInstance3D>("WallImpact") is null)
+            throw new InvalidOperationException("Ballistic effect smoke failed.");
+        GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
         GetTree().Quit(0);
     }
