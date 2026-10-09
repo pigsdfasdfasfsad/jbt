@@ -37,7 +37,7 @@ public partial class InfectedAgent : CharacterBody3D
 
         AddChild(new CollisionShape3D
         {
-            Shape = new CapsuleShape3D { Radius = 0.42f, Height = 1.8f }
+            Shape = new CapsuleShape3D { Radius = 0.30f, Height = 1.6f }
         });
 
         _visual = new InfectedVisualAssembler

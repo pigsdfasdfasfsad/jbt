@@ -52,7 +52,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         AddChild(new CollisionShape3D
         {
             Position = new Vector3(0, 0.9f, 0),
-            Shape = new CapsuleShape3D { Radius = 0.4f, Height = 1.8f }
+            Shape = new CapsuleShape3D { Radius = 0.29f, Height = 1.8f }
         });
 
         _camera = new Camera3D

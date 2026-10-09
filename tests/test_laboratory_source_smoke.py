@@ -43,7 +43,7 @@ def test_recovered_spawn_positions_are_not_randomly_offset():
     gameplay = (ROOT / 'src/Twr.Godot/Scripts/GameplayRoot.cs').read_text()
     assert 'public bool UseExactInfectedSpawns { get; init; }' in layout
     assert 'UseExactInfectedSpawns = true' in importer
-    assert 'if (_mapLayout.UseExactInfectedSpawns) return basePoint + Vector3.Up * 0.9f;' in gameplay
+    assert 'if (_mapLayout.UseExactInfectedSpawns) return basePoint + Vector3.Up * 0.8f;' in gameplay
 
 def test_laboratory_light_budget_follows_player():
     loader = (ROOT / 'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs').read_text()
@@ -90,7 +90,7 @@ def test_prepared_mesh_materials_apply_to_all_mesh_kinds_and_wedges():
 def test_original_spawn_markers_are_preserved_as_feet_positions():
     gameplay=(ROOT/'src/Twr.Godot/Scripts/GameplayRoot.cs').read_text()
     assert 'UseExactInfectedSpawns' in gameplay
-    assert 'basePoint + Vector3.Up * 0.9f' in gameplay
+    assert 'basePoint + Vector3.Up * 0.8f' in gameplay
     assert 'return basePoint + new Vector3(_rng.RandfRange' in gameplay
 
 def test_laboratory_original_pickup_markers_are_loaded_separately():

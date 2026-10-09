@@ -586,9 +586,9 @@ public partial class GameplayRoot : Node3D
         if (_mapLayout.InfectedSpawns.Count == 0) return new Vector3(0,1,-30);
         var basePoint = _mapLayout.InfectedSpawns[_rng.RandiRange(0, _mapLayout.InfectedSpawns.Count - 1)];
         // Source markers are foot/contact positions, whereas the infected
-        // collider spans 1.8m about its node origin. Lift its centre 0.9m
+        // collider spans 1.6m about its node origin. Lift its centre 0.8m
         // above the exact source marker; never jitter source X/Z coordinates.
-        if (_mapLayout.UseExactInfectedSpawns) return basePoint + Vector3.Up * 0.9f;
+        if (_mapLayout.UseExactInfectedSpawns) return basePoint + Vector3.Up * 0.8f;
         return basePoint + new Vector3(_rng.RandfRange(-2.5f,2.5f), 0, _rng.RandfRange(-2.5f,2.5f));
     }
 
