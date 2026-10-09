@@ -129,6 +129,28 @@ try {
     Remove-Item $artMeshFile,$artTextureFile -Force -ErrorAction SilentlyContinue
   }
 
+  # Real 16-bit PCM WAV override loading (generated harmless test tone) plus
+  # fallback synthesis; test files are never placed in deliverable content.
+  $privateAudioRoot = Join-Path $Output 'Content\Audio'
+  $privateAudioFixture = Join-Path $privateAudioRoot 'gunshot.wav'
+  try {
+    python (Join-Path $Repo 'tools\assets\make_private_audio_smoke_fixture.py') --output-dir $privateAudioRoot
+    $audioStdout = Join-Path $Output 'offline-audio.stdout.txt'
+    $audioStderr = Join-Path $Output 'offline-audio.stderr.txt'
+    Remove-Item $audioStdout,$audioStderr -Force -ErrorAction SilentlyContinue
+    $audioRun = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','120','--','--smoke-private-audio') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $audioStdout -RedirectStandardError $audioStderr
+    $audioOutput = @()
+    if (Test-Path $audioStdout) { $audioOutput += Get-Content $audioStdout }
+    if (Test-Path $audioStderr) { $audioOutput += Get-Content $audioStderr }
+    $audioOutput | ForEach-Object { Write-Host $_ }
+    if ($audioRun.ExitCode -ne 0) { throw "Offline audio smoke failed: $($audioRun.ExitCode)" }
+    if (-not ($audioOutput | Where-Object { "$_" -match 'TWR_SMOKE_PRIVATE_AUDIO_OK samples=2205' })) {
+      throw 'Real private WAV override and synthesized fallback did not load.'
+    }
+  } finally {
+    Remove-Item $privateAudioFixture -Force -ErrorAction SilentlyContinue
+  }
+
   # Instantiate representative categories of offline first-person weapon models.
   $weaponStdout = Join-Path $Output 'weapon-models.stdout.txt'
   $weaponStderr = Join-Path $Output 'weapon-models.stderr.txt'

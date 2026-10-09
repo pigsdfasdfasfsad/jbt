@@ -56,6 +56,11 @@ public partial class Bootstrap : Node
             RunPrivateArtSmoke();
             return;
         }
+        if (args.Contains("--smoke-private-audio", StringComparer.Ordinal))
+        {
+            RunPrivateAudioSmoke();
+            return;
+        }
         if (args.Contains("--smoke-expressway-scene", StringComparer.Ordinal))
         {
             RunExpresswaySceneSmoke();
@@ -211,6 +216,20 @@ public partial class Bootstrap : Node
             $"traffic={traffic.GetChildCount()} screening={screening.GetChildCount()} " +
             $"lights={lights.GetChildCount()} nav_points={navigator.NavigablePoints} " +
             $"route_points={corridorRoute.Length} infected_spawns={layout.InfectedSpawns.Count}");
+        GetTree().Quit(0);
+    }
+
+    private void RunPrivateAudioSmoke()
+    {
+        var controller = new OfflineAudioRuntime { Name = "PrivateAudioSmoke" };
+        AddChild(controller);
+        var overrideSound = controller.StreamFor("gunshot");
+        var fallback = controller.StreamFor("reload");
+        if (overrideSound.Data.Length != 2205 * 2 || fallback.Data.Length < 500 ||
+            fallback.MixRate != 22050)
+            throw new InvalidOperationException(
+                "Offline audio WAV override or procedural fallback invalid.");
+        GD.Print("TWR_SMOKE_PRIVATE_AUDIO_OK samples=2205");
         GetTree().Quit(0);
     }
 
