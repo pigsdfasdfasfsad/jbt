@@ -162,6 +162,28 @@ try {
     Remove-Item $privateAudioFixture -Force -ErrorAction SilentlyContinue
   }
 
+  # Verify one source-derived solid terrain collider and separate water
+  # surface in the exported EXE. The private fixture contains no Roblox data.
+  $terrainRoot = Join-Path $Output 'Content\Terrain'
+  $terrainFixture = Join-Path $terrainRoot 'Cabin.terrainmesh.gz'
+  try {
+    python (Join-Path $Repo 'tools\terrain\make_terrain_smoke_fixture.py') --output $terrainFixture
+    $terrainStdout = Join-Path $Output 'original-terrain.stdout.txt'
+    $terrainStderr = Join-Path $Output 'original-terrain.stderr.txt'
+    Remove-Item $terrainStdout,$terrainStderr -Force -ErrorAction SilentlyContinue
+    $terrainRun = Start-Process -FilePath $exportExe -ArgumentList @('--headless','--verbose','--quit-after','120','--','--smoke-original-terrain') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $terrainStdout -RedirectStandardError $terrainStderr
+    $terrainOutput = @()
+    if (Test-Path $terrainStdout) { $terrainOutput += Get-Content $terrainStdout }
+    if (Test-Path $terrainStderr) { $terrainOutput += Get-Content $terrainStderr }
+    $terrainOutput | ForEach-Object { Write-Host $_ }
+    if ($terrainRun.ExitCode -ne 0) { throw "Original terrain smoke failed: $($terrainRun.ExitCode)" }
+    if (-not ($terrainOutput | Where-Object { "$_" -match 'TWR_SMOKE_ORIGINAL_TERRAIN_OK map=Cabin chunks=1 faces=7' })) {
+      throw 'Original terrain with collision and separate water did not instantiate.'
+    }
+  } finally {
+    Remove-Item $terrainFixture -Force -ErrorAction SilentlyContinue
+  }
+
   # Instantiate representative categories of offline first-person weapon models.
   $weaponStdout = Join-Path $Output 'weapon-models.stdout.txt'
   $weaponStderr = Join-Path $Output 'weapon-models.stderr.txt'

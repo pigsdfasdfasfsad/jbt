@@ -56,6 +56,11 @@ public partial class Bootstrap : Node
             RunPrivateArtSmoke();
             return;
         }
+        if (args.Contains("--smoke-original-terrain", StringComparer.Ordinal))
+        {
+            RunOriginalTerrainSmoke();
+            return;
+        }
         if (args.Contains("--smoke-private-audio", StringComparer.Ordinal))
         {
             RunPrivateAudioSmoke();
@@ -230,6 +235,28 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException(
                 "Offline audio WAV override or procedural fallback invalid.");
         GD.Print("TWR_SMOKE_PRIVATE_AUDIO_OK samples=2205");
+        GetTree().Quit(0);
+    }
+
+    private void RunOriginalTerrainSmoke()
+    {
+        var stage = new Node3D { Name = "OriginalTerrainSmoke" };
+        AddChild(stage);
+        if (!RecoveredTerrainRuntime.TryBuild(stage, "Cabin"))
+            throw new InvalidOperationException("Offline original terrain fixture not loaded");
+        var terrain = stage.GetNodeOrNull<Node3D>("RecoveredTerrain")
+            ?? throw new InvalidOperationException("Terrain node missing");
+        var chunk = terrain.GetNodeOrNull<Node3D>("VoxelChunk_0_0_0")
+            ?? throw new InvalidOperationException("Terrain chunk missing");
+        var land = chunk.GetNodeOrNull<MeshInstance3D>("SolidTerrain");
+        var water = chunk.GetNodeOrNull<MeshInstance3D>("SourceWater");
+        var groundCollision = chunk.GetNodeOrNull<StaticBody3D>("TerrainCollision");
+        if (land?.Mesh is null || water?.Mesh is null ||
+            land.Mesh.GetSurfaceCount() != 1 || water.Mesh.GetSurfaceCount() != 1 ||
+            groundCollision is null || groundCollision.GetChildCount() != 1)
+            throw new InvalidOperationException(
+                "Solid land mesh, collision, or separate water surface missing");
+        GD.Print("TWR_SMOKE_ORIGINAL_TERRAIN_OK map=Cabin chunks=1 faces=7");
         GetTree().Quit(0);
     }
 
