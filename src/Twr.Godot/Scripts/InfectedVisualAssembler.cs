@@ -21,6 +21,9 @@ public partial class InfectedVisualAssembler : Node3D
     private Node3D? _rightLeg;
     private float _cycle;
     private float _attackDuration;
+    private float _hitDuration;
+
+    public void HitReaction() => _hitDuration = .20f;
 
     public override void _Ready()
     {
@@ -68,11 +71,27 @@ public partial class InfectedVisualAssembler : Node3D
 
     public override void _Process(double delta)
     {
+        _hitDuration = Math.Max(0,_hitDuration-(float)delta);
+        if (!UsingOriginalScene)
+        {
+            // Short non-destructive flinch applies to the complete recovered
+            // original-part group without altering its author colors.
+            Rotation = new Vector3(
+                _hitDuration > 0 ? -.065f * Mathf.Sin(_hitDuration * 25f) : 0,
+                0,
+                _hitDuration > 0 ? .045f * Mathf.Sin(_hitDuration * 33f) : 0);
+        }
         if (UsingOriginalScene) return;
         if (GetParent() is not CharacterBody3D owner) return;
         var speed = new Vector2(owner.Velocity.X, owner.Velocity.Z).Length();
         var walking = speed > 0.4f;
-        _cycle += (float)delta * (walking ? 9.2f : 2.4f);
+        var gait = InfectedType switch
+        {
+            "Sprinter" or "Bolter" => 12.5f,
+            "Bloater" or "Burster" => 6.6f,
+            _ => 9.2f
+        };
+        _cycle += (float)delta * (walking ? gait : 2.4f);
         _attackDuration = Math.Max(0, _attackDuration - (float)delta);
         var swing = walking ? Mathf.Sin(_cycle) * 0.52f : 0f;
         if (_leftLeg is not null) _leftLeg.Rotation = new Vector3(swing, 0, 0);

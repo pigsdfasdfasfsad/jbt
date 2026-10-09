@@ -28,10 +28,16 @@ public partial class InfectedAgent : CharacterBody3D
     private double _navigationRefresh;
     private Vector3[] _navigationRoute = [];
     private int _nextNavigationPoint;
+    private Vector3 _lastProgressPosition;
+    private double _progressSampleTimer;
+    private double _stuckDuration;
+    private double _recoveryDetour;
 
     public override void _Ready()
     {
         AddToGroup("infected");
+        _lastProgressPosition = GlobalPosition;
+        _progressSampleTimer = .75;
         CollisionLayer = 2;
         CollisionMask = 1;
 
@@ -66,6 +72,7 @@ public partial class InfectedAgent : CharacterBody3D
         var deltaToPlayer = Target.GlobalPosition - GlobalPosition;
         var flat = new Vector3(deltaToPlayer.X, 0, deltaToPlayer.Z);
         var distance = flat.Length();
+        TickStuckRecovery(delta, distance);
 
         if (InfectedType == "Bolter" && TickBolterLeap(delta, flat, distance))
             return;
@@ -139,6 +146,31 @@ public partial class InfectedAgent : CharacterBody3D
         MoveAndSlide();
     }
 
+    private void TickStuckRecovery(double dt, float distance)
+    {
+        _progressSampleTimer -= dt;
+        _recoveryDetour = Math.Max(0,_recoveryDetour - dt);
+        if (_progressSampleTimer > 0) return;
+        // A single stalled enemy should eventually try a different side
+        // rather than pushing into a source-part wall forever. These are
+        // bounded local detours; they do not replace a multi-floor navmesh.
+        var travel = GlobalPosition - _lastProgressPosition;
+        var planar = new Vector2(travel.X, travel.Z).Length();
+        if (distance > 2.2f && planar < .22f)
+            _stuckDuration += .75;
+        else
+            _stuckDuration = Math.Max(0,_stuckDuration - 1.5);
+        if (_stuckDuration >= 1.5 && _recoveryDetour <= 0)
+        {
+            _steerSign = -_steerSign;
+            _steerHold = 2.5;
+            _recoveryDetour = 2.5;
+            _stuckDuration = 0;
+        }
+        _lastProgressPosition = GlobalPosition;
+        _progressSampleTimer = .75;
+    }
+
     private bool HasClearAttackPath()
     {
         if (Target is null) return false;
@@ -156,6 +188,16 @@ public partial class InfectedAgent : CharacterBody3D
     private Vector3 SteerAroundObstacles(Vector3 desired)
     {
         if(desired.LengthSquared()<0.001f)return desired;
+
+        if (_recoveryDetour > 0)
+        {
+            foreach (var angle in new[] { 1.28f, 1.88f, 2.35f })
+            {
+                var direction = desired.Rotated(
+                    Vector3.Up,_steerSign * angle).Normalized();
+                if (!ObstacleAhead(direction,1.9f)) return direction;
+            }
+        }
 
         if(_steerHold>0)
         {
@@ -257,6 +299,7 @@ public partial class InfectedAgent : CharacterBody3D
         if (amount <= 0 || Health <= 0) return;
         var applied = amount * InfectedCatalog.DamageMultiplier(InfectedType, damageKind);
         if (headshot) applied *= 2.5f; // VERIFIED head multiplier.
+        _visual?.HitReaction();
         Health = Math.Max(0, Health - applied);
         if (Health > 0) return;
         Died?.Invoke(this, new InfectedDeathContext(headshot, damageKind));
