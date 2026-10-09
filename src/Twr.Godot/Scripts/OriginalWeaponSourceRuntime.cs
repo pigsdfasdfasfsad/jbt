@@ -29,8 +29,15 @@ public static class OriginalWeaponSourceRuntime
             return false;
 
         var materials = new Dictionary<string, Material>(StringComparer.Ordinal);
+        var sourceParts = model.GetProperty("parts").EnumerateArray().ToArray();
+        // Roblox local model axes may point towards +Z after the conversion
+        // into Godot's -Z-forward camera convention. Detect barrel direction
+        // from the actual original source hierarchy rather than guessing.
+        var flipForward = SourceBarrelFacesBackwards(sourceParts);
+        var alignment = flipForward
+            ? new Basis(Vector3.Up, Mathf.Pi) : Basis.Identity;
         var count = 0;
-        foreach (var part in model.GetProperty("parts").EnumerateArray())
+        foreach (var part in sourceParts)
         {
             var name = part.GetProperty("name").GetString() ?? "OriginalPart";
             var meshId = PartId(part);
@@ -51,20 +58,23 @@ public static class OriginalWeaponSourceRuntime
             var color = new Color(rgb[0]/255f,rgb[1]/255f,rgb[2]/255f,alpha);
             var textureId = part.TryGetProperty("textureId", out var sourceTexture)
                 ? sourceTexture.GetString() ?? "" : "";
-            var texturePath = $"res://Content/Assets/Textures/{textureId}.png";
             var materialKey = color.ToHtml(true) + "|" + textureId;
             if (!materials.TryGetValue(materialKey, out var material))
             {
-                material = new StandardMaterial3D
+                var preparedTexture = OfflineAssetResolver.Texture(textureId);
+                var surface = new StandardMaterial3D
                 {
                     AlbedoColor = color,
-                    AlbedoTexture = OfflineAssetResolver.Texture(textureId),
                     Roughness = .51f,
                     Metallic = .28f,
                     Transparency = alpha < .995f
                         ? BaseMaterial3D.TransparencyEnum.Alpha
                         : BaseMaterial3D.TransparencyEnum.Disabled
                 };
+                RobloxMaterialSurface.Apply(surface,
+                    part.TryGetProperty("mat", out var m) ? m.GetString() ?? "" : "",
+                    preparedTexture);
+                material = surface;
                 materials[materialKey] = material;
             }
             parent.AddChild(new MeshInstance3D
@@ -72,14 +82,57 @@ public static class OriginalWeaponSourceRuntime
                 Name = name,
                 Mesh = mesh,
                 MaterialOverride = material,
-                Transform = new Transform3D(SourceRotation(part),
-                    SourcePosition(part)).ScaledLocal(size)
+                Transform = new Transform3D(alignment * SourceRotation(part),
+                    alignment * SourcePosition(part)).ScaledLocal(size)
             });
             count++;
         }
         if (count < 1) return false;
         GD.Print($"TWR_ORIGINAL_TOOL_ASSEMBLED name={weaponName} parts={count}");
         return true;
+    }
+
+    public static Vector3? EstimatedMuzzle(string weaponName)
+    {
+        if (!LoadDocument() ||
+            !_document!.RootElement.GetProperty("models")
+                .TryGetProperty(weaponName, out var model))
+            return null;
+        var parts = model.GetProperty("parts").EnumerateArray().ToArray();
+        var flip = SourceBarrelFacesBackwards(parts);
+        var barrel = parts
+            .Where(p => IsFrontPart(p.GetProperty("name").GetString() ?? ""))
+            .OrderByDescending(p =>
+                Math.Abs(SourcePosition(p).Z - AverageZ(parts)))
+            .FirstOrDefault();
+        if (barrel.ValueKind == JsonValueKind.Undefined) return null;
+        var transform = flip ? new Basis(Vector3.Up, Mathf.Pi) : Basis.Identity;
+        var center = transform * SourcePosition(barrel);
+        // The front of the barrel extends beyond its part CFrame center.
+        // Using original dimensions is more stable than a fixed gun category
+        // muzzle Z offset across pistols, rifles and launchers.
+        return center + new Vector3(0,0,-SourceSize(barrel).Z * .5f);
+    }
+
+    private static float AverageZ(JsonElement[] parts) =>
+        parts.Length == 0 ? 0f : parts.Average(p => SourcePosition(p).Z);
+
+    private static bool IsFrontPart(string name) =>
+        name.Contains("Barrel",StringComparison.OrdinalIgnoreCase) ||
+        name.Contains("Muzzle",StringComparison.OrdinalIgnoreCase) ||
+        name.Contains("Nozzle",StringComparison.OrdinalIgnoreCase) ||
+        name.Equals("Tube",StringComparison.OrdinalIgnoreCase);
+
+    private static bool SourceBarrelFacesBackwards(JsonElement[] parts)
+    {
+        if (parts.Length == 0) return false;
+        var middle = AverageZ(parts);
+        var barrel = parts
+            .Where(p => IsFrontPart(p.GetProperty("name").GetString() ?? ""))
+            .OrderByDescending(p => Math.Abs(SourcePosition(p).Z - middle))
+            .FirstOrDefault();
+        return barrel.ValueKind != JsonValueKind.Undefined &&
+            SourcePosition(barrel).Z > middle;
     }
 
     private static bool LoadDocument()
