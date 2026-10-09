@@ -319,6 +319,7 @@ public static class LaboratorySourceLoader
                     ? BaseMaterial3D.TransparencyEnum.Alpha
                     : BaseMaterial3D.TransparencyEnum.Disabled
             };
+            RobloxMaterialSurface.Apply(material, materialCode, preparedTexture);
             batch = new RenderBatch
             {
                 Mesh = mesh,
@@ -335,14 +336,16 @@ public static class LaboratorySourceLoader
     {
         if (string.IsNullOrEmpty(id) || !id.All(char.IsDigit)) return null;
         var path = $"res://Content/Assets/Meshes/{id}.res";
-        return ResourceLoader.Exists(path) ? ResourceLoader.Load<Mesh>(path) : null;
+        return (ResourceLoader.Exists(path) ? ResourceLoader.Load<Mesh>(path) : null)
+            ?? OfflineAssetResolver.Mesh(id);
     }
 
     private static Texture2D? LoadPreparedTexture(string id)
     {
         if (string.IsNullOrEmpty(id) || !id.All(char.IsDigit)) return null;
         var path = $"res://Content/Assets/Textures/{id}.png";
-        return ResourceLoader.Exists(path) ? ResourceLoader.Load<Texture2D>(path) : null;
+        return (ResourceLoader.Exists(path) ? ResourceLoader.Load<Texture2D>(path) : null)
+            ?? OfflineAssetResolver.Texture(id);
     }
 
     private static Mesh ProxyMesh(string cls, string shape)

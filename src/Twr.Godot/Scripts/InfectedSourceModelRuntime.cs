@@ -74,9 +74,7 @@ public static class InfectedSourceModelRuntime
                 material = new StandardMaterial3D
                 {
                     AlbedoColor = color,
-                    AlbedoTexture = !string.IsNullOrEmpty(textureId) &&
-                        ResourceLoader.Exists(texturePath)
-                        ? ResourceLoader.Load<Texture2D>(texturePath) : null,
+                    AlbedoTexture = OfflineAssetResolver.Texture(textureId),
                     Roughness = 0.87f,
                     Transparency = color.A < 0.999f
                         ? BaseMaterial3D.TransparencyEnum.Alpha
@@ -90,9 +88,7 @@ public static class InfectedSourceModelRuntime
             {
                 if (!meshCache.TryGetValue(id, out mesh))
                 {
-                    var resource = $"res://Content/Assets/Meshes/{id}.res";
-                    mesh = ResourceLoader.Exists(resource)
-                        ? ResourceLoader.Load<Mesh>(resource) : null;
+                    mesh = OfflineAssetResolver.Mesh(id);
                     meshCache[id] = mesh;
                 }
             }

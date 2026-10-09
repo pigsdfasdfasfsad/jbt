@@ -39,9 +39,7 @@ public static class OriginalWeaponSourceRuntime
             {
                 if (!CachedMeshes.TryGetValue(meshId, out mesh))
                 {
-                    var path = $"res://Content/Assets/Meshes/{meshId}.res";
-                    mesh = ResourceLoader.Exists(path)
-                        ? ResourceLoader.Load<Mesh>(path) : null;
+                    mesh = OfflineAssetResolver.Mesh(meshId);
                     CachedMeshes[meshId] = mesh;
                 }
             }
@@ -60,9 +58,7 @@ public static class OriginalWeaponSourceRuntime
                 material = new StandardMaterial3D
                 {
                     AlbedoColor = color,
-                    AlbedoTexture = !string.IsNullOrEmpty(textureId) &&
-                        ResourceLoader.Exists(texturePath)
-                        ? ResourceLoader.Load<Texture2D>(texturePath) : null,
+                    AlbedoTexture = OfflineAssetResolver.Texture(textureId),
                     Roughness = .51f,
                     Metallic = .28f,
                     Transparency = alpha < .995f
