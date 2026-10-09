@@ -123,7 +123,7 @@ public static class RecoveredTerrainRuntime
                     });
                     var shape = new ConcavePolygonShape3D
                     {
-                        Data = new PackedVector3Array(collider.ToArray())
+                        Data = collider.ToArray()
                     };
                     var body = new StaticBody3D
                     {
