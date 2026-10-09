@@ -1,3 +1,81 @@
+# LATEST VERIFIED THREE-PASS IMPLEMENTATION UPDATE — OCTOBER 2026
+
+**New owner-requested iteration series on twr-offline-dev.** The historical
+checkpoint below remains for provenance; this section records what was
+actually implemented and tested in the newest three passes.
+
+**Latest fully verified Windows build:** Actions run
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37871066515
+(344 Python tests passed, 0 compiler warnings, native Godot Windows export
+passed; all ten synthetic original-source map loaders, offline OBJ+PNG and
+PCM16 WAV file loading, original-source zombies/weapons and Expressway
+navigation smoke tests passed). The very last muzzle-flash regression test
+may require a subsequent CI run; review latest branch head before claiming
+it validated.
+
+## Pass 1 — Map rendering and privately installed art
+
+- OfflineAssetResolver loads valid authorized unit-normalized .obj meshes
+  and .png files directly from Content/Assets beside exported Windows EXE,
+  with caps and resource caches; original asset IDs are never downloaded
+  at runtime.
+- Existing Godot res:// mesh resources remain supported at build time.
+- Loader is wired into all ten source maps, recovered infected variants and
+  original weapon part assemblies; verified by a genuine exported Windows
+  smoke using a tiny synthetic external OBJ and a valid external PNG.
+- RobloxMaterialSurface adds non-original deterministic detail to source
+  material colors for wood, concrete, brick, grass and related surfaces.
+  Source mesh binaries are still missing for many geometry records.
+
+## Pass 2 — Zombies, combat and interior clearance
+
+- All 44 available source-derived active infected R6 variants lacked a
+  complete ordinary Head part. Missing heads are now reconstructed at source
+  R6 scale without inventing cloud mesh IDs, and accessory handles without
+  their original mesh are no longer drawn as large solid blocks.
+- Melee attack now requires floor-aware vertical proximity and an unobstructed
+  physics ray, preventing through-floor and through-wall ghost hits; Bloater
+  spore attacks also check for direct world obstruction.
+- Player and infected collision radii were decreased toward Roblox R6
+  world scale. Source infected spawns were recentered to the new capsule
+  height to better support narrow rooms and doorways.
+- A complete multi-floor navigation mesh and original animation tracks have
+  NOT been verified. This is an improvement, not end-to-end combat fidelity.
+
+## Pass 3 — Audible offline presentation, firing effects, release packaging
+
+- OfflineAudioRuntime plays synthesized, original replacement sound cues
+  for gunfire, reload, melee, infected deaths, player damage and wave
+  transitions, or uses owner-provided valid PCM16 mono/stereo .wav files
+  beside the exported EXE in Content/Audio.
+- A brief emissive first-person muzzle flash was added for firearms.
+- build/Windows/package_private.ps1 now accepts -PrivateSourceZip and checks
+  each of the ten original source-map headers, refuses synthetic fixtures,
+  bundles recovered enemy/tool source blueprints and terrain data, optionally
+  copies authorized mesh/texture/sound files, and writes a manifest with hashes
+  and explicit warnings. Private ZIP destination must remain outside GitHub.
+- CI checks the Windows packaging script's PowerShell syntax without
+  uploading or installing user-owned original art in public Actions.
+- Owner-held chat download TWR-Three-Pass-Private-Source-Pack-v4.zip includes
+  the actual ten-map recovery data and a private Windows build wrapper. It is
+  NOT an EXE; the latest code must be built with Godot/.NET on Windows.
+
+## What remains objectively incomplete
+
+1. Original mesh/union/terrain visuals, textures, skyboxes, animation clips
+   and many original audio binaries must still be recovered or recreated.
+2. Original map-scale collision and AI navigation must be interactively tested
+   on all ten authentic source packs, not just synthetic smoke fixtures.
+3. Real objective placements, pickup accessibility, all weapon behaviors,
+   lighting and performance must be visually calibrated in actual gameplay.
+4. Full human-controlled 15-wave sessions, benchmarked performance,
+   automated crash recovery and signed/private Windows executable release
+   are not complete.
+5. The old 72 MB preview ZIP is NOT upgraded by this source code commit.
+   GitHub intentionally hosts no private executable artifact.
+
+---
+
 # CURRENT SOURCE RECOVERY UPDATE — 2026-10-08
 
 **New complete original-place evidence supersedes the older source-blocker
