@@ -5,13 +5,12 @@ checkpoint below remains for provenance; this section records what was
 actually implemented and tested in the newest three passes.
 
 **Latest fully verified Windows build:** Actions run
-https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37871066515
-(344 Python tests passed, 0 compiler warnings, native Godot Windows export
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37871159241
+(346 Python tests passed, 0 compiler warnings, native Godot Windows export
 passed; all ten synthetic original-source map loaders, offline OBJ+PNG and
 PCM16 WAV file loading, original-source zombies/weapons and Expressway
-navigation smoke tests passed). The very last muzzle-flash regression test
-may require a subsequent CI run; review latest branch head before claiming
-it validated.
+navigation smoke tests passed). The new muzzle-flash regression and private
+packaging script PowerShell parser check also passed.
 
 ## Pass 1 — Map rendering and privately installed art
 
