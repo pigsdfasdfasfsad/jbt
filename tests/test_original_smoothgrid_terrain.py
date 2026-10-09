@@ -53,7 +53,7 @@ def test_terrain_conversion_rejects_corrupted_cell_runs():
         terrain.decode_smoothgrid(b"\x09\x05")
     with pytest.raises(ValueError,match="overflow"):
         terrain.decode_smoothgrid(
-            b"\x01\x05"+bytes(12)+bytes([0x80,255])*129)
+            b"\x01\x05"+bytes(12)+bytes([0x80,255])*127+bytes([2,0x80,255]))
 
 def test_windows_export_loads_original_terrain_collision_and_water(tmp_path):
     generated=tmp_path/"Cabin.terrainmesh.gz"
