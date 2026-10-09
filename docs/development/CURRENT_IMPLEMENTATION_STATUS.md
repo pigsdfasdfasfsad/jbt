@@ -1,12 +1,11 @@
 # PASS 4 — Verified source terrain and improved infected/weapon visuals (October 2026)
 
 **Source branch:** twr-offline-dev. **Latest pass 4 successful Windows
-integration build:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37874934325
-(356 Python tests passed, zero C# compiler warnings, native Windows Godot
+integration build:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/37875134264
+(358 Python tests passed, zero C# compiler warnings, native Windows Godot
 export, synthetic terrain/water/collision smoke, six source-weapon assemblies,
 six source-zombie assemblies, ballistic effects, and all ten map source
-loader smoke tests). Later audio-reference categorization commits are tested
-independently.
+loader smoke tests, and the audio classification tests).
 
 ## Newly implemented
 
