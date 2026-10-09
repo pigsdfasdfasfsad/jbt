@@ -11,9 +11,9 @@ def generate(output):
     for name in NAMES:
         parts=[]
         for i in range(4):
-            parts.append({"name":"SyntheticPart"+str(i),"class":"Part",
+            parts.append({"name":("Barrel","Receiver","Magazine","Slide")[i],"class":"Part",
                           "kind":"geometry","ref":"test"+str(i),
-                          "t":[i*.13,0,-i*.22],"r":I,
+                          "t":[i*.13,0,(-2.2 if i==0 else -i*.07)],"r":I,
                           "s":[.3,.3,.8],"rgb":[65+i*12,80,85],
                           "opacity":1.0,"shape":"1","collidable":False,
                           "mat":"272","shadow":False})

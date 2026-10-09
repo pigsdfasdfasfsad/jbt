@@ -288,6 +288,12 @@ public partial class Bootstrap : Node
             visual.SetWeapon(RuntimeWeaponCatalog.Get(name));
             if (!visual.UsingOriginalToolAssembly || visual.VisualPartCount < 4)
                 throw new InvalidOperationException("Original tool assembly failed: " + name);
+            var muzzle = OriginalWeaponSourceRuntime.EstimatedMuzzle(name);
+            if (muzzle is null || muzzle.Value.Z > -.10f)
+                throw new InvalidOperationException(
+                    "Source barrel axis or muzzle alignment invalid: " + name);
+            visual.Fire();
+            visual.Reload(.5);
         }
         var thrown = new WeaponViewModelRuntime { Name = "Molotov" };
         stage.AddChild(thrown);
