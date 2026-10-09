@@ -14,9 +14,13 @@ public partial class WeaponViewModelRuntime : Node3D
 {
     public bool UsingPreparedScene { get; private set; }
     public bool UsingOriginalToolAssembly { get; private set; }
-    public int VisualPartCount => _rig?.GetChildCount() ?? 0;
+    public int VisualPartCount => _rig is null ? 0 :
+        Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
     private Node3D? _rig;
+    private MeshInstance3D? _flash;
+    private bool _melee;
+    private float _flashSeconds;
     private float _phase;
     private float _kick;
     private float _reloadRemaining;
@@ -25,6 +29,9 @@ public partial class WeaponViewModelRuntime : Node3D
     public void SetWeapon(RuntimeWeaponDefinition spec)
     {
         ResetRig();
+        _melee = spec.IsMelee;
+        _flash!.Position = new Vector3(0,.025f,
+            spec.Slot == "Secondary" ? -.46f : -1.02f);
         var fileName = new string(spec.Name.Select(ch =>
             char.IsLetterOrDigit(ch) || ch is '-' or '_' ? ch : '_').ToArray());
         var source = $"res://Content/Assets/Weapons/{fileName}.tscn";
@@ -85,7 +92,15 @@ public partial class WeaponViewModelRuntime : Node3D
         }
     }
 
-    public void Fire() => _kick = 0.16f;
+    public void Fire()
+    {
+        _kick = 0.16f;
+        if (!_melee && _flash is not null)
+        {
+            _flashSeconds = .055f;
+            _flash.Visible = true;
+        }
+    }
 
     public void Reload(double seconds)
     {
@@ -97,6 +112,8 @@ public partial class WeaponViewModelRuntime : Node3D
     {
         if (_rig is null) return;
         var dt = (float)delta;
+        _flashSeconds = Mathf.Max(0,_flashSeconds - dt);
+        if (_flash is not null) _flash.Visible = _flashSeconds > 0;
         _phase += dt * 2.5f;
         _kick = Mathf.MoveToward(_kick, 0, dt * 1.2f);
         _reloadRemaining = Mathf.Max(0, _reloadRemaining - dt);
@@ -118,6 +135,24 @@ public partial class WeaponViewModelRuntime : Node3D
         }
         _rig = new Node3D { Name = "WeaponBody" };
         AddChild(_rig);
+        _melee = false;
+        _flashSeconds = 0f;
+        _flash = new MeshInstance3D
+        {
+            Name = "MuzzleFlash",
+            Visible = false,
+            Position = new Vector3(0,.02f,-.95f),
+            Mesh = new SphereMesh { Radius = .10f, Height = .20f },
+            MaterialOverride = new StandardMaterial3D
+            {
+                ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
+                AlbedoColor = new Color(1f,.76f,.31f),
+                EmissionEnabled = true,
+                Emission = new Color(1f,.64f,.20f),
+                EmissionEnergyMultiplier = 2.0f
+            }
+        };
+        _rig.AddChild(_flash);
         UsingPreparedScene = false;
         UsingOriginalToolAssembly = false;
         _reloadRemaining = _reloadDuration = _kick = 0;
