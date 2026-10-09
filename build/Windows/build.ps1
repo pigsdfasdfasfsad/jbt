@@ -11,6 +11,17 @@ $Tools = Join-Path $Repo '.tools\godot'
 $Output = Join-Path $Repo 'build\output'
 $Project = Join-Path $Repo 'src\Twr.Godot'
 $Solution = Join-Path $Project 'Those Who Remain Offline.sln'
+# Validate the private Windows packaging script's PowerShell syntax on CI
+# even though the CI job never receives or uploads original owner asset bytes.
+$PackageScript = Join-Path $Repo 'build\Windows\package_private.ps1'
+$psTokens = $null
+$psParseErrors = $null
+[System.Management.Automation.Language.Parser]::ParseFile(
+  $PackageScript,[ref]$psTokens,[ref]$psParseErrors) | Out-Null
+if ($psParseErrors.Count -gt 0) {
+  throw ("Private package PowerShell syntax invalid: " +
+    (($psParseErrors | ForEach-Object { $_.Message }) -join '; '))
+}
 
 function Find-Godot {
   $candidates = @(
