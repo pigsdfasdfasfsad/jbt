@@ -75,22 +75,33 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     public Vector3? FindAssistedInfectedSpawn(Vector3 originalSpawn,
         Vector3 playerPosition, uint variation)
     {
-        if (!_bridgePackActive || _componentRoot.Length == 0) return null;
+        var candidates = GetAssistedInfectedSpawnCandidates(
+            originalSpawn, playerPosition, variation);
+        return candidates.Length == 0 ? null : candidates[0];
+    }
+
+    /// <summary>
+    /// Ordered same-component alternatives for physics validation. Graph
+    /// connectivity alone does not prove a safe capsule-ground placement,
+    /// especially while original SmoothGrid terrain is unavailable.
+    /// </summary>
+    public Vector3[] GetAssistedInfectedSpawnCandidates(Vector3 originalSpawn,
+        Vector3 playerPosition, uint variation)
+    {
+        if (!_bridgePackActive || _componentRoot.Length == 0) return [];
         var target = _graph.GetClosestPoint(playerPosition);
         var origin = _graph.GetClosestPoint(originalSpawn);
         if (target < 0 ||
             playerPosition.DistanceTo(_graph.GetPointPosition(target)) > MaximumAnchorDistance)
-            return null;
+            return [];
         var playerComponent = _componentRoot[(int)target];
         if (origin >= 0 &&
             originalSpawn.DistanceTo(_graph.GetPointPosition(origin)) <= MaximumAnchorDistance &&
             _componentRoot[(int)origin] == playerComponent)
-            return null; // Keep source spawns that already can reach the player.
+            return []; // Source-connected original positions are preserved.
         if (!_componentNodes.TryGetValue(playerComponent, out var nodes))
-            return null;
+            return [];
 
-        // Only from the same collision-sampled graph region, and far enough
-        // away not to spawn zombies on top of the player's position.
         var options = nodes.Select(id => new
         {
             Id = id,
@@ -100,10 +111,14 @@ public partial class Pass25SourceNavigationRuntime : Node3D
             Math.Abs(row.Position.Y - playerPosition.Y) <= 1.6f)
         .OrderBy(row => row.Position.DistanceSquaredTo(originalSpawn))
         .ThenBy(row => row.Id)
-        .Take(16).ToArray();
-        if (options.Length == 0) return null;
-        var picked = options[(int)(variation % (uint)options.Length)];
-        return picked.Position + Vector3.Up * 0.8f;
+        .Take(32).ToArray();
+        if (options.Length == 0) return [];
+        var reordered = new Vector3[options.Length];
+        var start = (int)(variation % (uint)options.Length);
+        for (var i = 0; i < reordered.Length; i++)
+            reordered[i] = options[(start + i) % options.Length].Position +
+                Vector3.Up * .8f;
+        return reordered;
     }
 
     public Vector3[] GetRoute(Vector3 from, Vector3 to)
