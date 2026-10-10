@@ -1,5 +1,6 @@
 using Godot;
 using Twr.Domain.Model;
+using Twr.Domain.Services;
 
 namespace Twr.Godot;
 
@@ -16,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass29",StringComparer.Ordinal))
+        {
+            RunPass29Smoke();
+            return;
+        }
         if(args.Contains("--smoke-complete",StringComparer.Ordinal))
         {
             RunFullCompletionSmoke();
@@ -351,6 +357,35 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass29Smoke()
+    {
+        // This executes INSIDE the exported Windows Godot C# game, not Python.
+        var bag = new Dictionary<string,int>(StringComparer.Ordinal);
+        for (var i = 0; i < 16; i++) bag["item" + i] = 1;
+        if (Pass24LootCapacityPolicy.CanGrant(bag, "new-item", 1, 2))
+            throw new InvalidOperationException("Inventory overflow was accepted");
+        if (!Pass24LootCapacityPolicy.CanGrant(bag, "item0", 1, 2))
+            throw new InvalidOperationException("Existing-stack merge was rejected");
+        bag["item15"] = 0;
+        if (!Pass24LootCapacityPolicy.CanGrant(bag, "new-item", 1, 2))
+            throw new InvalidOperationException("Zero-quantity slot was not reusable");
+        if (Pass24LootCapacityPolicy.CanGrant(bag, "item0", int.MaxValue, int.MaxValue))
+            throw new InvalidOperationException("Overflowing item grant was accepted");
+
+        var clock = new Pass24GasTickClock();
+        if (clock.Advance(1.1, 2.0) != 2 || clock.Expired)
+            throw new InvalidOperationException("Spore gas tick cadence invalid");
+        if (clock.Advance(4.0, 2.0) != 2 || !clock.Expired ||
+            clock.Advance(1.0, 2.0) != 0)
+            throw new InvalidOperationException("Spore gas expiry invalid");
+        if (Math.Abs(Pass24SporeImpact.ClusterDamage(26.4f, 0, 4, false) - 26.4f) > .001f ||
+            Pass24SporeImpact.ClusterDamage(26.4f, 0, 4, true) != 0 ||
+            Pass24SporeImpact.GasDamage(5, true, false, true) != 0)
+            throw new InvalidOperationException("Spore impact rules invalid");
+        GD.Print("TWR_SMOKE_PASS29_RUNTIME_OK inventory=16 spore_clock=4 splash=occluded");
         GetTree().Quit(0);
     }
 

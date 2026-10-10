@@ -75,6 +75,9 @@ public partial class GameplayRoot : Node3D
 
         _hud = new GameplayHud { Name = "HUD", Runtime = Runtime };
         AddChild(_hud);
+        // Dictionary-backed inventory is shown read-only; grants are enforced
+        // by the authoritative LocalSessionNode, never by the UI.
+        AddChild(new Pass29InventoryPanel { Name = "InventoryGrid", Runtime = Runtime });
         Runtime.PresentationEvent += OnPresentationEvent;
         _hud.SetBanner($"WAVE {Runtime.Match?.Wave ?? 1} BEGINS IN");
 

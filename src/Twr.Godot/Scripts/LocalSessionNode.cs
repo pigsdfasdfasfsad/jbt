@@ -4,6 +4,7 @@ using Twr.Domain.Contracts.Commands;
 using Twr.Domain.Model;
 using Twr.Domain.Persistence;
 using Twr.Domain.Runtime;
+using Twr.Domain.Services;
 
 namespace Twr.Godot;
 
@@ -62,6 +63,9 @@ public partial class LocalSessionNode : Node
     public bool GrantItem(string item,int amount=1,int maxCount=int.MaxValue)
     {
         if(Session is null)return false;
+        // Pass29: authoritative 16-slot admission; rejected pickups stay in the world.
+        if(!Pass24LootCapacityPolicy.CanGrant(Session.State.Player.Inventory,
+                item,amount,maxCount))return false;
         var before=Session.State.Player.Inventory.GetValueOrDefault(item);
         Submit(new GrantItemCommand(item,amount,maxCount));
         return Session.State.Player.Inventory.GetValueOrDefault(item)>before;
