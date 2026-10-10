@@ -82,11 +82,18 @@ jobs:
       - name: Smoke test Pass 29 contracts in the exported executable
         shell: pwsh
         run: |
-          $output = & .\\build\\output\\ThoseWhoRemainOffline.exe --headless --quit-after 120 -- --smoke-pass29 2>&1
-          $exitCode = $LASTEXITCODE
+          # Godot's exported GUI executable needs explicit stream redirection
+          # on Windows; invoking it with & produces no reliable captured text.
+          $stdout = Join-Path $env:RUNNER_TEMP 'pass29-smoke.stdout.txt'
+          $stderr = Join-Path $env:RUNNER_TEMP 'pass29-smoke.stderr.txt'
+          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','120','--','--smoke-pass29') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          $output = @()
+          if (Test-Path $stdout) { $output += Get-Content $stdout }
+          if (Test-Path $stderr) { $output += Get-Content $stderr }
           $output | ForEach-Object { Write-Host $_ }
-          if ($exitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS29_RUNTIME_OK' })) {
-            throw 'Pass 29 native Windows runtime smoke failed.'
+          if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS29_RUNTIME_OK' })) {
+            throw "Pass 29 native Windows runtime smoke failed. Exit code: $($run.ExitCode)"
           }
 
       - name: Verify no private map scenes entered the CI export
