@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass41",StringComparer.Ordinal))
+        {
+            RunPass41Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass40",StringComparer.Ordinal))
         {
             RunPass40Smoke();
@@ -407,6 +412,72 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private async void RunPass41Smoke()
+    {
+        // Native exported Windows Godot check. This test installs ONLY a
+        // fabricated 19-waypoint graph and fabricated geometry/PNG images.
+        // The actual private 14,726-waypoint scene cannot enter public CI.
+        _runtime.StartMap("Laboratory");
+        var game=new GameplayRoot
+        {
+            Name="Pass41SyntheticBridgeSmoke",
+            Runtime=_runtime,MapName="Laboratory"
+        };
+        AddChild(game);
+        var navigator=game.GetNodeOrNull<Pass25SourceNavigationRuntime>(
+            "Pass25LaboratoryNavigation");
+        var overlay=game.GetNodeOrNull<Pass39LaboratoryFloorplan>(
+            "Pass39LaboratoryFloorplan");
+        var player=game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if(navigator is null || overlay is null || player is null ||
+            navigator.IsPass41SourceNativeGraph || navigator.IsPass40GroundedGraph ||
+            !navigator.IsBridgePackActive ||
+            navigator.PointCount!=19 || navigator.EdgeCount!=18 ||
+            navigator.ConnectedComponentCount!=1 ||
+            !overlay.HasPass41RepairDiagnostic || !overlay.HasNavigationDiagnostic ||
+            game.Pass41NativeBridgeCount!=0 || game.Pass41SourceNativeBridgeVerified)
+            throw new InvalidOperationException(
+                "Pass41 fabricated SHA-bound v3 bridged navigation was not loaded correctly");
+        var from=new Vector3(8*3.5f*.28f,.5f*.28f,0);
+        var to=new Vector3(10*3.5f*.28f,.5f*.28f,0);
+        var path=navigator.GetRoute(from,to);
+        if(path.Length!=2 ||
+            path[0].DistanceTo(from)>.01f || path[^1].DistanceTo(to)>.01f)
+            throw new InvalidOperationException(
+                "Pass41 v3 repaired edge is not directly routable inside the exported Windows game");
+        overlay._Input(new InputEventKey {Keycode=Key.F4,Pressed=true});
+        overlay._Input(new InputEventKey {Keycode=Key.N,Pressed=true});
+        if(!overlay.IsOpen || !overlay.IsShowingNavigation || !game.Pass41BridgeDiagramAvailable)
+            throw new InvalidOperationException("Pass41 F4/N 3-floor bridge viewer failed");
+        overlay._Input(new InputEventKey {Keycode=Key.Right,Pressed=true});
+        if(overlay.ActiveLevel!=1)
+            throw new InvalidOperationException("Pass41 repaired graph image floor switching failed");
+        overlay._Input(new InputEventKey {Keycode=Key.N,Pressed=true});
+        overlay._Input(new InputEventKey {Keycode=Key.F4,Pressed=true});
+        if(overlay.IsOpen || overlay.IsShowingNavigation)
+            throw new InvalidOperationException("Pass41 F4/N did not restore original source bounds");
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if(game.AssistedInfectedSpawnsEnabled)
+            throw new InvalidOperationException("Pass41 incorrectly opted into repaired enemy spawns");
+        var distant=new Vector3(280,1,-280);
+        var safe=Pass40AdaptiveEntry.TryFind(navigator,game.GetWorld3D(),
+            distant,player.GlobalPosition,0);
+        if(!safe.HasValue || safe.Value.MinimumDistance!=14f)
+            throw new InvalidOperationException("Pass41 broke bounded grounded F9 fallback");
+        game._UnhandledInput(new InputEventKey {Keycode=Key.F9,Pressed=true});
+        if(!game.AssistedInfectedSpawnsEnabled)
+            throw new InvalidOperationException("Pass41 F9 opt-in failed");
+        game._UnhandledInput(new InputEventKey {Keycode=Key.F9,Pressed=true});
+        if(game.AssistedInfectedSpawnsEnabled)
+            throw new InvalidOperationException("Pass41 F9 opt-out failed");
+        GD.Print("TWR_SMOKE_PASS41_NAV_OK map=Laboratory synthetic=true " +
+            "v3_nodes=19 v3_edges=18 repaired_shortcut=true " +
+            "components=1 F4_N=PASS F9_toggle=2 native_floor_clearance=PASS " +
+            "original_roblox_navmesh=false");
         GetTree().Quit(0);
     }
 
