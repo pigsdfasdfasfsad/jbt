@@ -78,12 +78,12 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 39 | F2 map audio, F3 source light, F4 source floorplan, F5 source props, F6 source walls\n" +
+            "PASS 40 | F2 audio, F3 lighting, F4 floorplan, F9 entry assist, F5 source props, F6 source walls\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
-            $"Original nav nodes: {Navigation?.PointCount ?? 0}\n" +
+            $"Original nav nodes: {Navigation?.PointCount ?? 0}  P40 graph: {(Game?.Pass40GroundedNavigationVerified == true ? "YES" : "NO")}\n" +
             $"Collision tiles: {CollisionTiles}\n" +
             $"Verified original Lab: {(Game?.Pass39OriginalLabSourceVerified == true ? "YES" : "NO")}  Plans: {Game?.Pass39LabFloorCount ?? 0}\n" +
             $"Original client walls: {Game?.OriginalClientWallCount ?? 0} " +
@@ -105,6 +105,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"F9 spawn assist: {(Game?.AssistedInfectedSpawnsEnabled == true ? "ON" : "OFF")}, " +
             $"redirected: {Game?.AssistedInfectedSpawnCount ?? 0}\n" +
             $"Ground-checked rescues: {Game?.AssistedInfectedRecoveryCount ?? 0}\n" +
+            $"F9 near (14/10m): {Game?.Pass40AdaptiveNearSpawns ?? 0} spawns, {Game?.Pass40AdaptiveNearRecoveries ?? 0} rescues\n" +
             $"Unsafe candidates rejected: {Game?.RejectedAssistedSpawnAttempts ?? 0}\n" +
             $"Managed memory: {GC.GetTotalMemory(false) / 1048576} MiB";
     }
@@ -158,6 +159,9 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 total_source_batches = mesh?.BatchCount ?? 0,
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,
                 assisted_infected_spawns_on = Game?.AssistedInfectedSpawnsEnabled ?? false,
+                pass40_grounded_navigation_verified = Game?.Pass40GroundedNavigationVerified ?? false,
+                pass40_assisted_close_spawns = Game?.Pass40AdaptiveNearSpawns ?? 0,
+                pass40_assisted_close_recoveries = Game?.Pass40AdaptiveNearRecoveries ?? 0,
                 assisted_infected_spawn_count = Game?.AssistedInfectedSpawnCount ?? 0,
                 assisted_physics_checked_recoveries = Game?.AssistedInfectedRecoveryCount ?? 0,
                 unsafe_assisted_spawn_attempts = Game?.RejectedAssistedSpawnAttempts ?? 0,
