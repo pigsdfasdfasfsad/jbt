@@ -12,6 +12,6 @@ def test_private_packaging_refuses_ci_scene_and_repo_destination():
     assert 'TWR_PRIVATE_PACKAGE_OK' in source
     workflow = (ROOT / '.github/workflows/windows-build.yml').read_text()
     assert "github.ref_name == 'twr-pass29-integration'" in workflow
-    assert "TWR-Pass32-Windows-x64-NoPrivateAssets" in workflow
+    assert "TWR-Pass33-Windows-x64-NoPrivateAssets" in workflow
     assert "PrivateSourceZip" not in workflow
     assert 'create-release' not in workflow
