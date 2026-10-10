@@ -246,7 +246,10 @@ public partial class InfectedAgent : CharacterBody3D
             Velocity = _leapVelocity;
             MoveAndSlide();
 
-            if (!_leapHit && distance <= 1.7f)
+            if (!_leapHit && distance <= 1.7f &&
+                Target is not null &&
+                Math.Abs(Target.GlobalPosition.Y - GlobalPosition.Y) <= 1.6f &&
+                HasClearAttackPath())
             {
                 _leapHit = true;
                 Runtime?.DamagePlayer(Math.Max(6f, Damage * 1.5f), "Bolter Leap");
@@ -268,7 +271,10 @@ public partial class InfectedAgent : CharacterBody3D
             return true;
         }
 
-        if (_specialCooldown <= 0 && distance >= 5f && distance <= 18f && flat.LengthSquared() > 0.001f)
+        if (_specialCooldown <= 0 && distance >= 5f && distance <= 18f &&
+            flat.LengthSquared() > 0.001f && Target is not null &&
+            Math.Abs(Target.GlobalPosition.Y - GlobalPosition.Y) <= 2.1f &&
+            HasClearAttackPath())
         {
             // VERIFIED behavior: fixed-direction leap then temporary immobilization.
             // APPROXIMATED launch speed, duration, and cooldown.
