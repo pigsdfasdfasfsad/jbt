@@ -8,7 +8,8 @@ def test_infected_use_obstacle_steering_on_solid_blockout_geometry():
     assert "ObstacleAhead" in s
     assert "PhysicsRayQueryParameters3D.Create" in s
     assert "query.CollisionMask=1" in s
-    assert "infected are on layer 2" in s
+    assert "CollisionLayer = 2;" in s
+    assert "Pass35InfectedWallsRuntime.InfectedWallCollisionLayer" in s
 
 def test_obstacle_steering_preserves_direct_chase_when_clear():
     s=read("src/Twr.Godot/Scripts/InfectedAgent.cs")
