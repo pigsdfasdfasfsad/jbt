@@ -35,7 +35,11 @@ def test_exported_exe_has_laboratory_source_smoke_contract():
     assert 'make_lab_smoke_fixture.py' in build
     assert 'TWR_SMOKE_LAB_SOURCE_OK infected_spawns=15' in build
     assert 'Remove-Item $fixture -Force' in build
-    assert 'upload-artifact' not in (ROOT / '.github/workflows/windows-build.yml').read_text()
+    workflow = (ROOT / '.github/workflows/windows-build.yml').read_text()
+    # Only the synthetic-asset Pass29 integration branch exports CI binaries.
+    assert "github.ref_name == 'twr-pass29-integration'" in workflow
+    assert "TWR-Pass29-Windows-x64-NoPrivateAssets" in workflow
+    assert "PrivateSourceZip" not in workflow
 
 def test_recovered_spawn_positions_are_not_randomly_offset():
     layout = (ROOT / 'src/Twr.Godot/Scripts/MapBlockoutBuilder.cs').read_text()

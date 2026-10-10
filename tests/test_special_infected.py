@@ -7,16 +7,19 @@ def test_burster_uses_source_damage_radius_and_armor_bypass_gas():
     cloud=read("src/Twr.Godot/Scripts/SporeCloudRuntime.cs")
     assert "27.5f" in game and "blastRadius = 20f" in game
     assert "TickDamage = 5f" in game
-    assert "_tickTimer = 0.5" in cloud
-    assert 'DamagePlayer(TickDamage, "Spore gas", true)' in cloud
+    assert "var ticks = _clock.Advance(" in cloud
+    assert "Pass24GasTickClock" in cloud
+    assert 'DamagePlayer(damage, "Spore gas", true)' in cloud
     assert "!context.Headshot" in game
 
 def test_bloater_cluster_uses_source_damage_radius_and_bypasses_armor():
     game=read("src/Twr.Godot/Scripts/GameplayRoot.cs")
     projectile=read("src/Twr.Godot/Scripts/SporeProjectileRuntime.cs")
     assert "Damage = 26.4f" in game and "Radius = 15f" in game
-    assert 'DamagePlayer(Damage * factor, "Spore cluster", true)' in projectile
-    assert "APPROXIMATED radial falloff" in projectile
+    assert 'DamagePlayer(damage, "Spore cluster", true)' in projectile
+    assert "Pass24SporeImpact.ClusterDamage(" in projectile
+    assert "WorldOccludes(aim)" in projectile
+    assert "distance > radius || worldOccluded" in read("src/Twr.Domain/Services/Pass24SporeImpact.cs")
 
 def test_bolter_leap_keeps_direction_and_has_documented_recovery_behavior():
     s=read("src/Twr.Godot/Scripts/InfectedAgent.cs")

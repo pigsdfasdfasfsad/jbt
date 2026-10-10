@@ -14,9 +14,12 @@ def test_energy_drink_and_gas_mask_match_source_durations_and_wave_rules():
 
 def test_gas_mask_blocks_spore_gas_but_not_cluster_splash():
     cloud=read("src/Twr.Godot/Scripts/SporeCloudRuntime.cs")
-    assert "!Runtime.Player.GasMaskActive" in cloud
+    assert "Runtime.Player.GasMaskActive" in cloud
+    assert "Pass24SporeImpact.GasDamage(" in cloud
+    assert "BlockedByWorld(aim)" in cloud
     cluster=read("src/Twr.Godot/Scripts/SporeProjectileRuntime.cs")
-    assert 'DamagePlayer(Damage * factor, "Spore cluster", true)' in cluster
+    assert "Pass24SporeImpact.ClusterDamage(" in cluster
+    assert 'DamagePlayer(damage, "Spore cluster", true)' in cluster
     assert "GasMaskActive" not in cluster
 
 def test_frag_uses_recovered_module_damage_radius_and_fuse():
