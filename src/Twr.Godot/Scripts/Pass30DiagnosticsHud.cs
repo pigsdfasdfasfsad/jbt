@@ -78,7 +78,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 36 | F4 original map plan, F5 source props, F6 source walls\n" +
+            "PASS 37 | F3 original lighting, F4 original map plan, F5 source props, F6 source walls\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
@@ -143,6 +143,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 source_original_objects_preview_enabled = Game?.Pass36NativePropsEnabled ?? false,
                 source_missing_custom_object_meshes = Game?.Pass36MissingOriginalMeshCount ?? 0,
                 original_server_wall_plan_available = Game?.Pass36HasOriginalMapPlan ?? false,
+                source_lighting_effect_count = Game?.Pass37SourceLightingEffectCount ?? 0,
+                source_lighting_preview_enabled = Game?.Pass37SourceLightingEnabled ?? false,
                 visible_source_batches = mesh?.VisibleBatchCount ?? 0,
                 total_source_batches = mesh?.BatchCount ?? 0,
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,
