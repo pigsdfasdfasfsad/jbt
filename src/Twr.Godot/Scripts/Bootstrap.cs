@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass40",StringComparer.Ordinal))
+        {
+            RunPass40Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass39",StringComparer.Ordinal))
         {
             RunPass39Smoke();
@@ -402,6 +407,59 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private async void RunPass40Smoke()
+    {
+        // Actual exported Godot/Windows binary against a synthetic SHA-bound
+        // navigation fixture and large fabricated source floor. The original
+        // Laboratory's missing external meshes/navigation are not used here.
+        _runtime.StartMap("Laboratory");
+        var game=new GameplayRoot
+        {
+            Name="Pass40SyntheticGroundedNavigationSmoke",
+            Runtime=_runtime,MapName="Laboratory"
+        };
+        AddChild(game);
+        var nav=game.GetNodeOrNull<Pass25SourceNavigationRuntime>(
+            "Pass25LaboratoryNavigation");
+        var player=game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if(nav is null || !nav.IsBridgePackActive ||
+            nav.IsPass40GroundedGraph || nav.PointCount!=19 ||
+            nav.EdgeCount!=18 || player is null)
+            throw new InvalidOperationException(
+                "Source-SHA-bound synthetic Pass40 Laboratory navigation not loaded");
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        var distantSource=new Vector3(280f,1f,-280f);
+        var original=nav.GetAssistedInfectedSpawnCandidates(
+            distantSource,player.GlobalPosition,0,24f);
+        var closer=nav.GetAssistedInfectedSpawnCandidates(
+            distantSource,player.GlobalPosition,0,14f);
+        if(original.Length!=0 || closer.Length==0 ||
+            nav.GetAssistedInfectedSpawnCandidates(
+                distantSource,player.GlobalPosition,0,9f).Length!=0)
+            throw new InvalidOperationException(
+                "Adaptive F9 ignored 24m preference or minimum 10m safeguard");
+        var safe=Pass40AdaptiveEntry.TryFind(
+            nav,game.GetWorld3D(),distantSource,player.GlobalPosition,0);
+        if(!safe.HasValue || safe.Value.MinimumDistance!=14f ||
+            safe.Value.Position.DistanceTo(player.GlobalPosition)<14f)
+            throw new InvalidOperationException(
+                "Pass40 did not return a physically supported nonteleport entry");
+        game._UnhandledInput(new InputEventKey {Keycode=Key.F9,Pressed=true});
+        if(!game.AssistedInfectedSpawnsEnabled)
+            throw new InvalidOperationException("F9 source accessibility did not opt in");
+        game._Process(1000.0);
+        game._Process(1.0);
+        if(game.AssistedInfectedSpawnCount<1 || game.Pass40AdaptiveNearSpawns<1)
+            throw new InvalidOperationException(
+                "Regular-wave infected spawn did not use an F9 source-grounded entry");
+        GD.Print("TWR_SMOKE_PASS40_NAV_OK Laboratory synthetic_sha_bound=true "+
+            "nodes=19 edges=18 default_original_spawns=true "+
+            "F9_opt_in=true min24_unavailable=true min14_physics_accepted=true "+
+            "wave_spawn_grounded=true zero_source_geometry_claims=true");
         GetTree().Quit(0);
     }
 
