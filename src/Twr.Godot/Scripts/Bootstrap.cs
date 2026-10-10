@@ -425,6 +425,22 @@ public partial class Bootstrap : Node
         var nav=game.GetNodeOrNull<Pass25SourceNavigationRuntime>(
             "Pass25LaboratoryNavigation");
         var player=game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        var floorplans=game.GetNodeOrNull<Pass39LaboratoryFloorplan>(
+            "Pass39LaboratoryFloorplan");
+        if(floorplans is null || !floorplans.HasNavigationDiagnostic ||
+            floorplans.IsShowingNavigation || floorplans.LevelCount!=3)
+            throw new InvalidOperationException("Pass40 synthetic map nav diagrams unavailable");
+        floorplans._Input(new InputEventKey {Keycode=Key.F4,Pressed=true});
+        floorplans._Input(new InputEventKey {Keycode=Key.N,Pressed=true});
+        if(!floorplans.IsShowingNavigation || !floorplans.IsOpen)
+            throw new InvalidOperationException("Pass40 F4-N navigation overlay did not open");
+        floorplans._Input(new InputEventKey {Keycode=Key.Right,Pressed=true});
+        if(floorplans.ActiveLevel!=1)
+            throw new InvalidOperationException("Pass40 nav plan floor switch lost selection");
+        floorplans._Input(new InputEventKey {Keycode=Key.N,Pressed=true});
+        if(floorplans.IsShowingNavigation)
+            throw new InvalidOperationException("Pass40 N failed to restore source bounds view");
+        floorplans._Input(new InputEventKey {Keycode=Key.F4,Pressed=true});
         if(nav is null || !nav.IsBridgePackActive ||
             nav.IsPass40GroundedGraph || nav.PointCount!=19 ||
             nav.EdgeCount!=18 || player is null)
