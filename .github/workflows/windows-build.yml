@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification]
     paths:
       - 'src/**'
       - 'content/**'
@@ -390,8 +390,32 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass42 synthetic jump fixture cleanup failed' }
           }
 
+      - name: Smoke Pass 43 genuine physical gap crossing, blocked landing rejection and durable wave telemetry
+        if: success() && github.ref_name == 'twr-pass43-physical-jump-verification'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass43_gap_synthetic.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass43 synthetic physical gap fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass43-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass43-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','1100','--','--smoke-pass43') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS43_TRAVERSAL_OK' })) {
+              throw "Pass43 physical gap/landing/blocked obstacle/native roundtrip failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass43_gap_synthetic.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass43 synthetic physics fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -482,6 +506,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass42-Windows-x64-NoPrivateAssets
+          path: build/output/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
+      - name: Upload verified Pass 43 Windows build (no owner-private original assets)
+        if: success() && github.ref_name == 'twr-pass43-physical-jump-verification'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Pass43-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
