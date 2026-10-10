@@ -27,7 +27,7 @@ def test_diagnostics_read_only_and_local():
     assert 'new Pass30DiagnosticsHud' in game
     assert 'Key.F10' in code and 'Key.F11' in code
     assert 'OS.GetUserDataDir()' in code
-    assert 'TWR_Pass30_Diagnostics.json' in code
+    assert any(name in code for name in ('TWR_Pass30_Diagnostics.json', 'TWR_Pass33_Diagnostics.json'))
     assert 'VisibleBatchCount' in code
 
 
