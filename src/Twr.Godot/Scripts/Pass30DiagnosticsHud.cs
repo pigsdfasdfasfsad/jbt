@@ -78,13 +78,15 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 41 | F2 audio, F3 light, F4 map, F9 entry assist, F5 source props, F6 source walls\n" +
+            "PASS 42 | F2 audio, F3 light, F4 jump maps, F9 spawn assist, F5 source props, F6 source walls\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
             $"Original nav nodes: {Navigation?.PointCount ?? 0}  P40 graph: {(Game?.Pass40GroundedNavigationVerified == true ? "YES" : "NO")}\n" +
             $"Pass41 bridges: {Game?.Pass41NativeBridgeCount ?? 0}  components: {Game?.Pass41RemainingNavigationComponents ?? 0}\n" +
+            $"Pass42 jump links: {Game?.Pass42JumpLinkCount ?? 0} ({(Game?.Pass42JumpGraphVerified == true ? "VERIFIED" : "UNVERIFIED")})\n" +
+            $"Zombies jumped: {Game?.Pass42JumpAttempts ?? 0} tries, {Game?.Pass42JumpLandings ?? 0} landed\n" +
             $"F4/N repaired diagrams: {(Game?.Pass41BridgeDiagramAvailable == true ? "READY" : "NOT VERIFIED")}\n" +
             $"Collision tiles: {CollisionTiles}\n" +
             $"Verified original Lab: {(Game?.Pass39OriginalLabSourceVerified == true ? "YES" : "NO")}  Plans: {Game?.Pass39LabFloorCount ?? 0}\n" +
@@ -164,6 +166,11 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 total_source_batches = mesh?.BatchCount ?? 0,
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,
                 assisted_infected_spawns_on = Game?.AssistedInfectedSpawnsEnabled ?? false,
+                pass42_jump_graph_verified = Game?.Pass42JumpGraphVerified ?? false,
+                pass42_jump_edge_count = Game?.Pass42JumpLinkCount ?? 0,
+                pass42_jump_overlay_available = Game?.Pass42JumpDiagramAvailable ?? false,
+                pass42_infected_jump_attempts = Game?.Pass42JumpAttempts ?? 0,
+                pass42_infected_jump_landings = Game?.Pass42JumpLandings ?? 0,
                 pass41_native_bridge_verified = Game?.Pass41SourceNativeBridgeVerified ?? false,
                 pass41_native_bridge_count = Game?.Pass41NativeBridgeCount ?? 0,
                 pass41_remaining_navigation_components = Game?.Pass41RemainingNavigationComponents ?? 0,
