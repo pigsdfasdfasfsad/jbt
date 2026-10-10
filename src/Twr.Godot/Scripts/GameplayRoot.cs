@@ -26,6 +26,23 @@ public partial class GameplayRoot : Node3D
     private FirstPersonPlayer _player = null!;
     private FortificationController _fortifications = null!;
     private readonly List<InfectedAgent> _infected = [];
+    private int _pass43RetiredJumpAttempts;
+    private int _pass43RetiredJumpLandings;
+    private int _pass43RetiredJumpFailures;
+    public Pass43FrameWindow Pass43FrameTimes { get; } = new();
+    // Counts survive zombie deaths, wave teardown, and the Results screen.
+    public int Pass43TotalJumpAttempts =>
+        _pass43RetiredJumpAttempts + _infected.Where(GodotObject.IsInstanceValid)
+            .Sum(actor => actor.SourceJumpAttempts);
+    public int Pass43VerifiedJumpLandings =>
+        _pass43RetiredJumpLandings + _infected.Where(GodotObject.IsInstanceValid)
+            .Sum(actor => actor.SourceJumpLandings);
+    public int Pass43FailedJumpAttempts =>
+        _pass43RetiredJumpFailures + _infected.Where(GodotObject.IsInstanceValid)
+            .Sum(actor => actor.SourceJumpFailures);
+    public int Pass43CurrentlyJumping =>
+        _infected.Count(actor => GodotObject.IsInstanceValid(actor) &&
+            actor.SourceJumpInProgress);
     private readonly List<ObjectiveRuntime> _objectives = [];
     private readonly List<PickupActor> _pickups = [];
     private readonly List<SupplyDropRuntime> _supplyDrops = [];
@@ -184,6 +201,7 @@ public partial class GameplayRoot : Node3D
 
     public override void _Process(double delta)
     {
+        Pass43FrameTimes.Record(delta, ActiveInfectedCount);
         if (Runtime?.Player is null || Runtime.Match is null) return;
 
         if(!_finished)
@@ -856,7 +874,8 @@ public partial class GameplayRoot : Node3D
 
     private void OnInfectedDied(InfectedAgent infected, InfectedDeathContext context)
     {
-        _infected.Remove(infected);
+        if (_infected.Remove(infected))
+            RetirePass43Traversal(infected);
         if (context.DamageKind == "ObjectiveExplosion") return;
 
         _audio.Play("infected");
@@ -932,10 +951,22 @@ public partial class GameplayRoot : Node3D
         _hud.SetBanner($"{title}  -  [R] RESTART  |  [ENTER] MENU");
     }
 
+    private void RetirePass43Traversal(InfectedAgent actor)
+    {
+        if (!GodotObject.IsInstanceValid(actor)) return;
+        _pass43RetiredJumpAttempts += actor.SourceJumpAttempts;
+        _pass43RetiredJumpLandings += actor.SourceJumpLandings;
+        _pass43RetiredJumpFailures += actor.SourceJumpFailures;
+    }
+
     private void ClearInfected()
     {
         foreach (var infected in _infected.ToArray())
-            if (GodotObject.IsInstanceValid(infected)) infected.QueueFree();
+        {
+            if (!GodotObject.IsInstanceValid(infected)) continue;
+            RetirePass43Traversal(infected);
+            infected.QueueFree();
+        }
         _infected.Clear();
     }
 
