@@ -302,14 +302,14 @@ public partial class Pass25SourceNavigationRuntime : Node3D
             throw new InvalidDataException("unsupported navigation version");
         // Synthetic smoke packs are never distributed as source originals.
         if (nav42 && !IsPass42JumpGraph &&
-            !OS.GetCmdlineUserArgs().Contains("--smoke-pass42",StringComparer.Ordinal))
+            !OS.GetCmdlineUserArgs().Any(arg => arg is "--smoke-pass42" or "--smoke-pass43"))
             throw new InvalidDataException("Pass42 source jump navigation SHA mismatch");
         // For real original scenes a repaired graph is usable only when
         // it exactly matches the owner-derived 17-bridge source evidence.
         // Synthetic Windows QA fixtures are explicitly exempt, never
         // distributed as original navigation to an end user.
         if (nav41 && !IsPass41SourceNativeGraph &&
-            !OS.GetCmdlineUserArgs().Contains("--smoke-pass41",StringComparer.Ordinal))
+            !OS.GetCmdlineUserArgs().Any(arg => arg is "--smoke-pass41" or "--smoke-pass42" or "--smoke-pass43"))
             throw new InvalidDataException("Pass41 native source bridge SHA mismatch");
         var pointCount = reader.ReadInt32();
         var edgeCount = reader.ReadInt32();
