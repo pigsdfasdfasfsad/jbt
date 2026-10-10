@@ -20,7 +20,11 @@ def test_only_physically_supported_candidates_can_spawn():
     game = read("src/Twr.Godot/Scripts/GameplayRoot.cs")
     navigator = read("src/Twr.Godot/Scripts/Pass25SourceNavigationRuntime.cs")
     assert "GetAssistedInfectedSpawnCandidates" in navigator
-    assert "Pass32SpawnSafety.FindSupportedPlacement" in game
+    # Pass40 centralizes candidate validation in a shared policy, still used
+    # by GameplayRoot for every opt-in entry and recovery.
+    policy = read("src/Twr.Godot/Scripts/Pass40AdaptiveEntry.cs")
+    assert "Pass32SpawnSafety.FindSupportedPlacement" in policy
+    assert "Pass40AdaptiveEntry.TryFind" in game
     assert "space.IntersectRay(ray)" in safety
     assert "space.IntersectShape(shapeQuery, 1)" in safety
     assert "floorNormal.Y < MinWalkableNormalY" in safety
