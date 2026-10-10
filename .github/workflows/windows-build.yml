@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory]
     paths:
       - 'src/**'
       - 'content/**'
@@ -294,8 +294,32 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass38 synthetic fixture cleanup failed' }
           }
 
+      - name: Smoke Pass 39 source Laboratory and 3-level F4 plans in exported Windows game
+        if: success() && github.ref_name == 'twr-pass39-original-laboratory'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass39_synthetic.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass39 synthetic Lab source creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass39-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass39-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass39') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS39_LAB_OK' })) {
+              throw "Pass39 Laboratory multi-floor native smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass39_synthetic.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass39 synthetic fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -314,6 +338,10 @@ jobs:
           if ($soundscapes.Count -gt 0) { throw 'Owner-private source soundscape metadata remained in public CI output' }
           $tempWavs = Join-Path (Resolve-Path 'build/output').Path 'Content/Audio/MapSounds'
           if (Test-Path $tempWavs) { throw 'Synthetic/original map-local WAV files remained in public CI output' }
+          $originalLabMaps = @(Get-ChildItem -Path build/output -Filter '*.sourceplan39-*.png' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($originalLabMaps.Count -gt 0) { throw 'Owner-private Laboratory floorplans remained in public output' }
+          $originalCollision = @(Get-ChildItem -Path build/output -Filter '*.col26.gz' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($originalCollision.Count -gt 0) { throw 'Owner-private original collision cache remained in public output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
         if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
@@ -330,6 +358,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass38-Windows-x64-NoPrivateAssets
+          path: build/output/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
+      - name: Upload verified Pass 39 Windows build (no original private map assets)
+        if: success() && github.ref_name == 'twr-pass39-original-laboratory'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Pass39-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
