@@ -27,7 +27,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             Name = "DiagnosticsBackground",
             AnchorLeft = 1f, AnchorRight = 1f,
             OffsetLeft = -365f, OffsetRight = -15f,
-            OffsetTop = 12f, OffsetBottom = 300f,
+            OffsetTop = 12f, OffsetBottom = 330f,
             Color = new Color(.025f, .035f, .048f, .88f),
             MouseFilter = Control.MouseFilterEnum.Ignore,
             Visible = false
@@ -36,7 +36,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _label = new Label
         {
             OffsetLeft = 12f, OffsetTop = 10f,
-            OffsetRight = 335f, OffsetBottom = 280f,
+            OffsetRight = 335f, OffsetBottom = 308f,
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
         _label.AddThemeFontSizeOverride("font_size", 14);
@@ -78,12 +78,14 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 33 | F9 accessibility - F10 HUD - F11 report\n" +
+            "PASS 34 | F8 walls - F9 assist - F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
             $"Original nav nodes: {Navigation?.PointCount ?? 0}\n" +
             $"Collision tiles: {CollisionTiles}\n" +
+            $"Original client walls: {Game?.OriginalClientWallCount ?? 0} " +
+            $"(F8: {(Game?.OriginalClientWallsEnabled == true ? "ON" : "OFF")})\n" +
             $"Visible native batches: {mesh?.VisibleBatchCount ?? 0}/{mesh?.BatchCount ?? 0}\n" +
             $"Source primitive instances: {mesh?.SourceInstanceCount ?? 0}\n" +
             $"Nav queries: {Navigation?.RouteRequests ?? 0} / A*: {Navigation?.ActualPathSearches ?? 0}\n" +
@@ -104,7 +106,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             var mesh = Primitives;
             var payload = new
             {
-                format = "twr-pass33-gameplay-diagnostics-v1",
+                format = "twr-pass34-gameplay-diagnostics-v1",
                 utc = DateTimeOffset.UtcNow.ToString("O"),
                 map = MapName,
                 wave = Game?.Runtime?.Match?.Wave ?? 0,
@@ -121,6 +123,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 source_navigation_disconnected_rejects = Navigation?.DisconnectedRouteRejects ?? 0,
                 source_navigation_distant_anchor_rejects = Navigation?.DistantAnchorRejects ?? 0,
                 source_collision_tiles = CollisionTiles,
+                original_source_client_walls = Game?.OriginalClientWallCount ?? 0,
+                original_source_client_walls_opt_in = Game?.OriginalClientWallsEnabled ?? false,
                 visible_source_batches = mesh?.VisibleBatchCount ?? 0,
                 total_source_batches = mesh?.BatchCount ?? 0,
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,

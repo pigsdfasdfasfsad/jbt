@@ -47,7 +47,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public override void _Ready()
     {
         CollisionLayer = 1;
-        CollisionMask = 1 | 2;
+        // Layer 4 is the original invisible Client Walls experiment (F8).
+        // Infected still scan only regular source collision on layer 1.
+        CollisionMask = 1 | 2 | Pass34ClientWallsRuntime.ClientWallCollisionLayer;
         _rng.Randomize();
 
         AddChild(new CollisionShape3D

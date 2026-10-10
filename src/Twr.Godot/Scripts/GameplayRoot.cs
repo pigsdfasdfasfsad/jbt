@@ -13,6 +13,7 @@ public partial class GameplayRoot : Node3D
 
     private GameplayHud _hud = null!;
     private Pass25SourceNavigationRuntime? _sourceNavigator;
+    private Pass34ClientWallsRuntime? _originalClientWalls;
     private OfflineAudioRuntime _audio = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
     private RuntimeMapLayout _mapLayout = null!;
@@ -43,6 +44,8 @@ public partial class GameplayRoot : Node3D
     public int ActiveInfectedCount => _infected.Count(agent => GodotObject.IsInstanceValid(agent));
     public int ActivePickupCount => _pickups.Count(actor => GodotObject.IsInstanceValid(actor));
     public string WaveStage => StageName();
+    public int OriginalClientWallCount => _originalClientWalls?.WallCount ?? 0;
+    public bool OriginalClientWallsEnabled => _originalClientWalls?.Enabled ?? false;
     public bool AssistedInfectedSpawnsEnabled { get; private set; }
     public int AssistedInfectedSpawnCount { get; private set; }
     public int AssistedInfectedRecoveryCount { get; private set; }
@@ -68,6 +71,10 @@ public partial class GameplayRoot : Node3D
         // Load independently decoded original SmoothGrid terrain after map
         // geometry; no Roblox Studio, network or editor imports are needed.
         RecoveredTerrainRuntime.TryBuild(this, MapName);
+        // Source's invisible Client Walls were placed in Roblox collision
+        // group 8. Its collision matrix was not exported; do not assert
+        // player-only behavior until F8 explicitly enables testing.
+        _originalClientWalls = Pass34ClientWallsRuntime.TryBuild(this,MapName);
         _sourceNavigator = Pass25SourceNavigationRuntime.TryBuild(this, MapName);
 
         _audio = new OfflineAudioRuntime { Name = "OfflineAudio" };
@@ -188,6 +195,21 @@ public partial class GameplayRoot : Node3D
     public override void _UnhandledInput(InputEvent @event)
     {
         if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;
+
+        if (!_finished && key.Keycode == Key.F8)
+        {
+            if (_originalClientWalls is null)
+                _hud.SetUtility("Source client walls unavailable on this map");
+            else
+            {
+                _originalClientWalls.SetEnabled(!_originalClientWalls.Enabled);
+                _hud.SetUtility(_originalClientWalls.Enabled
+                    ? "SOURCE CLIENT WALLS ON (experimental player-only collision)"
+                    : "SOURCE CLIENT WALLS OFF (legacy collision only)");
+            }
+            GetViewport().SetInputAsHandled();
+            return;
+        }
 
         if (!_finished && key.Keycode == Key.F9)
         {
