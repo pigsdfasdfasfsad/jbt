@@ -29,6 +29,13 @@ public partial class InfectedAgent : CharacterBody3D
     private double _navigationRefresh;
     private Vector3[] _navigationRoute = [];
     private int _nextNavigationPoint;
+    private bool[] _jumpIntoNavigationPoint = [];
+    private double _sourceJumpRemaining;
+    private double _sourceJumpElapsed;
+    private double _sourceJumpCooldown;
+    private Vector3 _sourceJumpPlanarVelocity;
+    public int SourceJumpAttempts { get; private set; }
+    public int SourceJumpLandings { get; private set; }
     private Vector3 _lastProgressPosition;
     private double _progressSampleTimer;
     private double _stuckDuration;
@@ -65,6 +72,7 @@ public partial class InfectedAgent : CharacterBody3D
         _recoveryDetour = 0;
         _navigationRefresh = 0;
         _navigationRoute = [];
+        _jumpIntoNavigationPoint = [];
         _nextNavigationPoint = 0;
         _progressSampleTimer = .75;
         _lastProgressPosition = newPosition;
@@ -100,6 +108,7 @@ public partial class InfectedAgent : CharacterBody3D
         _specialCooldown = Math.Max(0, _specialCooldown - delta);
         _slowTime = Math.Max(0, _slowTime - delta);
         _steerHold = Math.Max(0, _steerHold - delta);
+        _sourceJumpCooldown = Math.Max(0,_sourceJumpCooldown - delta);
         if (_slowTime <= 0) _slowFactor = 1f;
 
         if (Target is null || Runtime?.Player is null || !Runtime.Player.IsAlive)
@@ -108,6 +117,11 @@ public partial class InfectedAgent : CharacterBody3D
             MoveAndSlide();
             return;
         }
+
+        // Source-gated jump action, absent from older reconstructed graphs.
+        // The original Lua Pathfind allows jumping, but jump links here are
+        // approximations validated against recovered native-Part collision.
+        if (TickSourceJump(delta)) return;
 
         var deltaToPlayer = Target.GlobalPosition - GlobalPosition;
         var flat = new Vector3(deltaToPlayer.X, 0, deltaToPlayer.Z);
@@ -148,11 +162,45 @@ public partial class InfectedAgent : CharacterBody3D
                         ? HighwayNavigator!.GetRoute(GlobalPosition, Target.GlobalPosition)
                         : SourceNavigator!.GetRoute(GlobalPosition, Target.GlobalPosition);
                     _nextNavigationPoint = 0;
+                    _jumpIntoNavigationPoint = new bool[_navigationRoute.Length];
+                    if (!highwayReady && sourceReady &&
+                        SourceNavigator!.Pass42JumpEdgeCount > 0)
+                    {
+                        for (var point=1;point<_navigationRoute.Length;point++)
+                            _jumpIntoNavigationPoint[point] =
+                                SourceNavigator.IsJumpLinkBetween(
+                                    _navigationRoute[point-1],_navigationRoute[point]);
+                    }
                     _navigationRefresh = 0.75 + (GetInstanceId() % 11UL) * 0.04;
                 }
                 while (_nextNavigationPoint < _navigationRoute.Length)
                 {
                     var waypoint = _navigationRoute[_nextNavigationPoint];
+                    if (_nextNavigationPoint > 0 &&
+                        _jumpIntoNavigationPoint[_nextNavigationPoint])
+                    {
+                        var takeoff = _navigationRoute[_nextNavigationPoint-1];
+                        var landingHorizontal = new Vector2(
+                            waypoint.X - GlobalPosition.X,
+                            waypoint.Z - GlobalPosition.Z).Length();
+                        // The jump landing must not be skipped merely because
+                        // both sides are within the old 1.58m waypoint radius.
+                        if (IsOnFloor() && landingHorizontal < .45f &&
+                            Math.Abs(waypoint.Y + .8f - GlobalPosition.Y) < .85f)
+                        {
+                            _nextNavigationPoint++;
+                            continue;
+                        }
+                        var takeoffDistance = new Vector2(
+                            takeoff.X - GlobalPosition.X,
+                            takeoff.Z - GlobalPosition.Z).Length();
+                        if (IsOnFloor() && takeoffDistance < 1.05f &&
+                            Math.Abs(takeoff.Y + .8f - GlobalPosition.Y) < 1.15f &&
+                            _sourceJumpCooldown <= 0 &&
+                            TryStartSourceJump(waypoint))
+                            return;
+                        break;
+                    }
                     var offset = new Vector3(waypoint.X - GlobalPosition.X,
                         0, waypoint.Z - GlobalPosition.Z);
                     // Pathfinding heights are at feet level; the infected
@@ -165,7 +213,9 @@ public partial class InfectedAgent : CharacterBody3D
                 }
                 if (_nextNavigationPoint < _navigationRoute.Length)
                 {
-                    var waypoint = _navigationRoute[_nextNavigationPoint];
+                    var index = _nextNavigationPoint;
+                    var waypoint = index > 0 && _jumpIntoNavigationPoint[index]
+                        ? _navigationRoute[index - 1] : _navigationRoute[index];
                     var move = new Vector3(waypoint.X - GlobalPosition.X,
                         0, waypoint.Z - GlobalPosition.Z);
                     if (move.LengthSquared() > .01f) desired = move.Normalized();
@@ -193,6 +243,56 @@ public partial class InfectedAgent : CharacterBody3D
 
         Velocity = velocity;
         MoveAndSlide();
+    }
+
+    private bool TryStartSourceJump(Vector3 landingWaypoint)
+    {
+        var toLanding = landingWaypoint + Vector3.Up * .8f - GlobalPosition;
+        var flat = new Vector3(toLanding.X,0,toLanding.Z);
+        var distance = flat.Length();
+        if (distance < .45f || distance > 8f * RobloxUnits.MetersPerStud + .35f ||
+            !IsOnFloor()) return false;
+        var speed = Mathf.Max(3f,MoveSpeed * _slowFactor);
+        var flightTime = Mathf.Clamp(distance/speed,.38f,.78f);
+        var vertical = Mathf.Clamp(
+            (toLanding.Y + 11f*flightTime*flightTime)/flightTime,5f,9f);
+        _sourceJumpPlanarVelocity = flat/flightTime;
+        Velocity = new Vector3(_sourceJumpPlanarVelocity.X,vertical,
+            _sourceJumpPlanarVelocity.Z);
+        _sourceJumpRemaining = flightTime + .22f;
+        _sourceJumpElapsed = 0;
+        _sourceJumpCooldown = 2.0;
+        SourceJumpAttempts++;
+        // Godot MoveAndSlide remains responsible for all actual 3D physics.
+        // Neither the route edge nor this action bypasses solid collisions.
+        MoveAndSlide();
+        return true;
+    }
+
+    private bool TickSourceJump(double delta)
+    {
+        if (_sourceJumpRemaining <= 0) return false;
+        _sourceJumpRemaining=Math.Max(0,_sourceJumpRemaining-delta);
+        _sourceJumpElapsed+=delta;
+        var velocity=Velocity;
+        velocity.X=_sourceJumpPlanarVelocity.X;
+        velocity.Z=_sourceJumpPlanarVelocity.Z;
+        velocity.Y-=22f*(float)delta;
+        Velocity=velocity;
+        MoveAndSlide();
+        if (IsOnFloor() && _sourceJumpElapsed >= .15)
+        {
+            SourceJumpLandings++;
+            _sourceJumpRemaining=0;
+        }
+        if (_sourceJumpRemaining <= 0)
+        {
+            _navigationRefresh=0;
+            _navigationRoute=[];
+            _jumpIntoNavigationPoint=[];
+            _nextNavigationPoint=0;
+        }
+        return true;
     }
 
     private void TickStuckRecovery(double dt, float distance)
