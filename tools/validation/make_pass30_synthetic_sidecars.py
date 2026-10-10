@@ -97,11 +97,13 @@ def nav31(digest):
 
 
 def col26(digest):
-    # Two triangles for a tiny static flat synthetic platform.
+    # Synthetic walkable floor under original player + all distant nav31
+    # F9 candidates, with upward-facing triangle normals for a ground ray.
+    # No original asset bytes and no fabricated level content in final export.
     b = bytearray(b'TWRCOL26' + struct.pack('<IIII', 1, 1, 1, 0) + digest)
     b.extend(struct.pack('<iiI', 0, 0, 2))
-    vertices = [(-4., 0., -4.), (4., 0., -4.), (4., 0., 4.),
-                (-4., 0., -4.), (4., 0., 4.), (-4., 0., 4.)]
+    vertices = [(-4., 1.4, -4.), (36., 1.4, 4.), (36., 1.4, -4.),
+                (-4., 1.4, -4.), (-4., 1.4, 4.), (36., 1.4, 4.)]
     for p in vertices: b.extend(struct.pack('<fff', *p))
     return compressed(b)
 
