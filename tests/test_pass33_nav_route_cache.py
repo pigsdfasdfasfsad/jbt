@@ -53,4 +53,4 @@ def test_exported_game_exercises_caching_and_original_unreachable_spawns():
     assert "nav.CachedRouteCount > 512" in app
     assert "--smoke-pass33" in workflow
     assert "make_pass30_synthetic_sidecars.py --output $outputDir --clean" in workflow
-    assert "TWR-Pass33-Windows-x64-NoPrivateAssets" in workflow
+    assert "TWR-Pass34-Windows-x64-NoPrivateAssets" in workflow
