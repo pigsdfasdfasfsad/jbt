@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass38",StringComparer.Ordinal))
+        {
+            RunPass38Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass36",StringComparer.Ordinal))
         {
             RunPass36Smoke();
@@ -392,6 +397,45 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass38Smoke()
+    {
+        // This executes in the exported native Windows Godot game. CI installs
+        // two fabricated Manor sound rows and self-generated PCM16 WAV clips;
+        // no original Roblox SoundIds, MP3s or owner source data are included.
+        _runtime.StartMap("Manor");
+        var game=new GameplayRoot
+        {
+            Name="Pass38SoundscapeSmoke",Runtime=_runtime,MapName="Manor"
+        };
+        AddChild(game);
+        var sound=game.GetNodeOrNull<Pass38SourceSoundscapeRuntime>(
+            "Pass38SourceSoundscape");
+        if(sound is null || sound.SourceEmitterCount!=2 ||
+            sound.SourceEnvironmentCount!=1 || sound.SourcePositionedCount!=1 ||
+            sound.InstalledWavEmitterCount!=2 || sound.HasExactMapGeometry ||
+            sound.Enabled || sound.ActiveVoiceCount!=0)
+            throw new InvalidOperationException(
+                "Pass38 synthetic source soundscape missing, miscounted, or enabled by default");
+        var local=sound.GetNodeOrNull<AudioStreamPlayer3D>("SourceLocalSound1");
+        if(local is null || local.Position.DistanceTo(
+            new Vector3(8f*.28f,2f*.28f,-1f*.28f))>.001f)
+            throw new InvalidOperationException("Recovered source 3D sound position was not converted from studs");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F2,Pressed=true });
+        if(!sound.Enabled || sound.ActiveVoiceCount!=1 ||
+            sound.GetNodeOrNull<AudioStreamPlayer>("SourceEnvironmentSound0")?.Playing!=true ||
+            local.Playing)
+            throw new InvalidOperationException(
+                "F2 source sound preview did not honor authored ambience and unaligned fallback map");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F2,Pressed=true });
+        if(sound.Enabled || sound.ActiveVoiceCount!=0)
+            throw new InvalidOperationException(
+                "F2 failed to stop all source sound voices without mutating gameplay audio");
+        GD.Print("TWR_SMOKE_PASS38_SOUND_OK map=Manor source_emitters=2 " +
+            "installed_wav=2 3d_source_pos_correct=true approximate_blockout_local=OFF " +
+            "global_ambience=ON toggles=2 default=OFF original_audio=false");
         GetTree().Quit(0);
     }
 
