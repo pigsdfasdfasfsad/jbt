@@ -23,6 +23,7 @@ public partial class WeaponDialHud : Control
     private string _display = "";
     private int _lastMag = -1;
     private int _lastReserve = -1;
+    private Texture2D? _pass27Icon;
 
     private static readonly Color Cream = new(0.89f, 0.88f, 0.80f);
     private static readonly Color Green = new(0.35f, 0.67f, 0.35f);
@@ -57,7 +58,9 @@ public partial class WeaponDialHud : Control
     {
         var nextRatio = melee ? 1f :
             Math.Clamp(loaded / (float)Math.Max(1, magazineCapacity), 0f, 1f);
-        var changed = Math.Abs(_ratio - nextRatio) > 0.0001f ||
+        var newIcon = Pass27SourceArtCatalog.WeaponIcon(name);
+        var changed = _pass27Icon != newIcon ||
+            Math.Abs(_ratio - nextRatio) > 0.0001f ||
             _melee != melee || _throwable != throwable || _display != category ||
             _lastMag != loaded || _lastReserve != reserve ||
             Math.Abs(_healthFraction-healthFraction) > .0001f ||
@@ -69,6 +72,7 @@ public partial class WeaponDialHud : Control
         _display = category;
         _lastMag = loaded;
         _lastReserve = reserve;
+        _pass27Icon = newIcon;
         _healthFraction = Math.Clamp(healthFraction,0f,1f);
         _armorFraction = Math.Clamp(armorFraction,0f,1f);
         _xpFraction = Math.Clamp(xpFraction,0f,1f);
@@ -114,27 +118,41 @@ public partial class WeaponDialHud : Control
         DrawLine(new Vector2(35,204),new Vector2(225,204),
             new Color(.48f,.51f,.48f,.42f),1.0f,true);
 
-        // A built-in stylized weapon silhouette gives a recognizable
-        // reference-scale weapon readout until real weapon icons are imported.
-        var silhouette = new Color(.87f, .88f, .81f, .91f);
-        if (_throwable)
+        // Source-derived HUD icon, but original live ammo/XP/armor values.
+        if (_pass27Icon is not null)
         {
-            DrawRect(new Rect2(177,104,22,33),silhouette);
-            DrawRect(new Rect2(183,97,9,8),silhouette);
-            DrawLine(new Vector2(185,96),new Vector2(197,96),silhouette,3f);
-        }
-        else if (_melee)
-        {
-            DrawLine(new Vector2(177,102),new Vector2(213,158),silhouette,8f,true);
-            DrawRect(new Rect2(173,98,24,10),silhouette);
+            var area = new Vector2(81f, 88f);
+            var width = Math.Max(1, _pass27Icon.GetWidth());
+            var height = Math.Max(1, _pass27Icon.GetHeight());
+            var scale = Math.Min(area.X / width, area.Y / height);
+            var size = new Vector2(width * scale, height * scale);
+            var corner = new Vector2(162f, 94f) + (area - size) / 2f;
+            DrawTextureRect(_pass27Icon, new Rect2(corner, size), false);
         }
         else
         {
-            DrawRect(new Rect2(171,107,65,10),silhouette);
-            DrawRect(new Rect2(181,117,28,8),silhouette);
-            DrawLine(new Vector2(207,122),new Vector2(221,146),silhouette,9f,true);
-            DrawRect(new Rect2(230,107,11,4),silhouette);
-            DrawRect(new Rect2(174,100,19,5),silhouette);
+            // A built-in stylized weapon silhouette gives a recognizable
+            // reference-scale weapon readout until real weapon icons are imported.
+            var silhouette = new Color(.87f, .88f, .81f, .91f);
+            if (_throwable)
+            {
+                DrawRect(new Rect2(177,104,22,33),silhouette);
+                DrawRect(new Rect2(183,97,9,8),silhouette);
+                DrawLine(new Vector2(185,96),new Vector2(197,96),silhouette,3f);
+            }
+            else if (_melee)
+            {
+                DrawLine(new Vector2(177,102),new Vector2(213,158),silhouette,8f,true);
+                DrawRect(new Rect2(173,98,24,10),silhouette);
+            }
+            else
+            {
+                DrawRect(new Rect2(171,107,65,10),silhouette);
+                DrawRect(new Rect2(181,117,28,8),silhouette);
+                DrawLine(new Vector2(207,122),new Vector2(221,146),silhouette,9f,true);
+                DrawRect(new Rect2(230,107,11,4),silhouette);
+                DrawRect(new Rect2(174,100,19,5),silhouette);
+            }
         }
     }
 

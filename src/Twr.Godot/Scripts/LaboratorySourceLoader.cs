@@ -60,6 +60,8 @@ public static class LaboratorySourceLoader
 
         try
         {
+            // Source SHA-bound primitive stream; never invent custom mesh geometry.
+            var packedNativeParts = Pass28PrimitiveStreamer.TryBuild(stage, mapName, filePath);
             using var input = File.OpenRead(filePath);
             using var unpack = new GZipStream(input, CompressionMode.Decompress);
             using var reader = new StreamReader(unpack);
@@ -99,7 +101,7 @@ public static class LaboratorySourceLoader
                 switch (kind)
                 {
                     case "geometry":
-                        AddGeometry(record, batches, collisions, meshCache, textureCache);
+                        AddGeometry(record, batches, collisions, meshCache, textureCache, packedNativeParts);
                         break;
                     case "collision":
                     {
@@ -178,30 +180,34 @@ public static class LaboratorySourceLoader
                 });
             }
 
-            // One static body; original per-instance wall shapes remain in their
-            // exact source transforms. Floor collision is additionally restored.
-            var worldBody = new StaticBody3D
+            // Pass 26 source-bound tiled collider cache, optional and fail-closed.
+            if (!Pass26CollisionRuntime.TryBuild(stage, mapName, filePath))
             {
-                Name = "LaboratoryCollision",
-                CollisionLayer = 1
-            };
-            var shapeCache = new Dictionary<(Vector3, bool), Shape3D>();
-            foreach (var (t, size, wedge) in collisions)
-            {
-                if (!shapeCache.TryGetValue((size, wedge), out var shape))
+                // One static body; original per-instance wall shapes remain in their
+                // exact source transforms. Floor collision is additionally restored.
+                var worldBody = new StaticBody3D
                 {
-                    shape = wedge
-                        ? RobloxPrimitiveGeometry.WedgeCollision(size)
-                        : new BoxShape3D { Size = size };
-                    shapeCache[(size, wedge)] = shape;
+                    Name = "LaboratoryCollision",
+                    CollisionLayer = 1
+                };
+                var shapeCache = new Dictionary<(Vector3, bool), Shape3D>();
+                foreach (var (t, size, wedge) in collisions)
+                {
+                    if (!shapeCache.TryGetValue((size, wedge), out var shape))
+                    {
+                        shape = wedge
+                            ? RobloxPrimitiveGeometry.WedgeCollision(size)
+                            : new BoxShape3D { Size = size };
+                        shapeCache[(size, wedge)] = shape;
+                    }
+                    worldBody.AddChild(new CollisionShape3D
+                    {
+                        Shape = shape,
+                        Transform = t
+                    });
                 }
-                worldBody.AddChild(new CollisionShape3D
-                {
-                    Shape = shape,
-                    Transform = t
-                });
+                stage.AddChild(worldBody);
             }
-            stage.AddChild(worldBody);
             AddNightEnvironment(stage, originalLighting);
             // SpotLight3D.LookAt requires its node to be inside the scene tree.
             // Mount the map before initializing source-facing spotlights.
@@ -264,7 +270,7 @@ public static class LaboratorySourceLoader
         JsonElement r, Dictionary<string, RenderBatch> batches,
         List<(Transform3D Transform, Vector3 Size, bool Wedge)> colliders,
         Dictionary<string, Mesh?> meshCache,
-        Dictionary<string, Texture2D?> textureCache)
+        Dictionary<string, Texture2D?> textureCache, bool packedNativeParts)
     {
         var opacity = Num(r, "opacity", 1);
         var size = Extents(r);
@@ -274,6 +280,11 @@ public static class LaboratorySourceLoader
         if (Flag(r, "collidable"))
             colliders.Add((ToTransform(r, size, false), size,
                 cls == "WedgePart"));
+        // Keep exact collision from the source record above even when a native
+        // mesh is already rendered by the optional streamed primitive layer.
+        if (packedNativeParts && (cls == "Part" || cls == "WedgePart") &&
+            Str(r, "shape", "1") == "1" && Str(r, "specialMeshType") != "5")
+            return;
         if (opacity < 0.001f) return;
         var rgb = Vec(r, "rgb");
         var color = new Color(rgb[0] / 255f, rgb[1] / 255f, rgb[2] / 255f, opacity);

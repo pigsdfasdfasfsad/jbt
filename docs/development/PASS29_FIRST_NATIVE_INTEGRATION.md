@@ -22,3 +22,15 @@ The privately held Pass24-28 Laboratory scene/navigation/collision/geometry
 packs and map/weapon artwork are NOT in this GitHub branch and are NOT
 included in the CI artifact. All original-mesh fidelity and 10-map gameplay
 validation remain incomplete.
+
+## Follow-on optional source integrations (Passes 25-28)
+
+Integrated C# source classes for the source-derived Laboratory navigation graph,
+source-bound batched collider cache, native Part/WedgePart geometry streaming, and
+map-card / weapon-icon presentation. All optional loaders fail closed to the
+existing blockout/steering/per-Part/HUD presentation if private sidecars are missing.
+
+The downloaded private content archive is installed locally **beside** the EXE.
+It must not be added to public source or CI. The older Pass 29 CI artifact
+from commit 86a8e669 is saved as the first verified executable checkpoint.
+The follow-on source hooks are pending native CI verification on their own commit.

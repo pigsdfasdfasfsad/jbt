@@ -471,6 +471,7 @@ public partial class Bootstrap : Node
                 OffsetBottom = top + 54,
                 Text = map.Name + "  |  " + map.Skybox
             };
+            Pass27MapCardDecoration.Apply(button, map.Name);
             var selected = map.Name;
             button.Pressed += () => StartGame(selected);
             _menu.AddChild(button);

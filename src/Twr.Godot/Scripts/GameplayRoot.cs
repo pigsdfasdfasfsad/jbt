@@ -12,6 +12,7 @@ public partial class GameplayRoot : Node3D
     public Action<string>? RestartRequested { get; set; }
 
     private GameplayHud _hud = null!;
+    private Pass25SourceNavigationRuntime? _sourceNavigator;
     private OfflineAudioRuntime _audio = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
     private RuntimeMapLayout _mapLayout = null!;
@@ -57,6 +58,7 @@ public partial class GameplayRoot : Node3D
         // Load independently decoded original SmoothGrid terrain after map
         // geometry; no Roblox Studio, network or editor imports are needed.
         RecoveredTerrainRuntime.TryBuild(this, MapName);
+        _sourceNavigator = Pass25SourceNavigationRuntime.TryBuild(this, MapName);
 
         _audio = new OfflineAudioRuntime { Name = "OfflineAudio" };
         AddChild(_audio);
@@ -72,6 +74,8 @@ public partial class GameplayRoot : Node3D
         AddChild(_player);
         GetNodeOrNull<LaboratoryLightStreamer>("Recovered" + MapName + "/LaboratoryLights")
             ?.Track(_player);
+        GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
+            "/Pass28PrimitiveStream")?.Track(_player);
 
         _hud = new GameplayHud { Name = "HUD", Runtime = Runtime };
         AddChild(_hud);
@@ -585,6 +589,7 @@ public partial class GameplayRoot : Node3D
             Name = definition.Name,
             Target = _player,
             Runtime = Runtime,
+            SourceNavigator = _sourceNavigator,
             HighwayNavigator = GetNodeOrNull<ExpresswayNavigationRuntime>(
                 "ExpresswayReconstruction/HighwayNavigation"),
             InfectedType = definition.Name,

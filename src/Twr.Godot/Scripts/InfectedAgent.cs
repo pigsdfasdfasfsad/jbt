@@ -7,6 +7,7 @@ public partial class InfectedAgent : CharacterBody3D
     public FirstPersonPlayer? Target { get; set; }
     public LocalSessionNode? Runtime { get; set; }
     public ExpresswayNavigationRuntime? HighwayNavigator { get; set; }
+    public Pass25SourceNavigationRuntime? SourceNavigator { get; set; }
     public string InfectedType { get; set; } = "Civilian";
     public float Health { get; set; } = 65;
     public float Damage { get; set; } = 8;
@@ -95,14 +96,18 @@ public partial class InfectedAgent : CharacterBody3D
             var desired = flat.LengthSquared() > 0.001f ? flat.Normalized() : Vector3.Zero;
             // Shared Expressway road graph handles large static obstructions.
             // Local collision steering remains active for near-field objects.
-            if (HighwayNavigator is not null &&
-                GodotObject.IsInstanceValid(HighwayNavigator))
+            var highwayReady = HighwayNavigator is not null &&
+                GodotObject.IsInstanceValid(HighwayNavigator);
+            var sourceReady = SourceNavigator is not null &&
+                GodotObject.IsInstanceValid(SourceNavigator);
+            if (highwayReady || sourceReady)
             {
                 _navigationRefresh -= delta;
                 if (_navigationRefresh <= 0)
                 {
-                    _navigationRoute = HighwayNavigator.GetRoute(
-                        GlobalPosition, Target.GlobalPosition);
+                    _navigationRoute = highwayReady
+                        ? HighwayNavigator!.GetRoute(GlobalPosition, Target.GlobalPosition)
+                        : SourceNavigator!.GetRoute(GlobalPosition, Target.GlobalPosition);
                     _nextNavigationPoint = 0;
                     _navigationRefresh = 0.75 + (GetInstanceId() % 11UL) * 0.04;
                 }
