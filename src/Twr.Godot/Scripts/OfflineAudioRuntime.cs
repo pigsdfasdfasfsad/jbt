@@ -91,6 +91,24 @@ public partial class OfflineAudioRuntime : Node
 
     // Supports standard mono/stereo 16-bit PCM WAV; other proprietary audio
     // codecs require authorized offline conversion before private packaging.
+    // Source-positioned soundscapes reuse the same bounded offline PCM parser.
+    // A blank Roblox SoundId never becomes an HTTP request or arbitrary URI.
+    public static AudioStreamWav? TryLoadPrivatePcm16Wav(string path)
+    {
+        if (!File.Exists(path)) return null;
+        try
+        {
+            var length = new FileInfo(path).Length;
+            if (length is < 44 or > 12*1024*1024) return null;
+            return ReadPcmWav(path);
+        }
+        catch (Exception error)
+        {
+            GD.PushWarning("TWR_SOURCE_WAV_INVALID: " + error.Message);
+            return null;
+        }
+    }
+
     private static AudioStreamWav? ReadPcmWav(string path)
     {
         var bytes = File.ReadAllBytes(path);
