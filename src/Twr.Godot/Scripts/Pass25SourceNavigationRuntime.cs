@@ -29,6 +29,40 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     private int[] _componentRoot = Array.Empty<int>();
     private readonly Dictionary<int, List<int>> _componentNodes = new();
     public bool IsBridgePackActive => _bridgePackActive;
+
+    // Most infected replan toward the SAME player anchor every 0.75-1.15s.
+    // A* on 19,355 waypoints per infected costs CPU and creates garbage.
+    // Cache immutable graph paths by start/end waypoint with bounded LRU.
+    // Never cache arbitrary coordinates; anchors and collision must still
+    // be checked for EVERY request.
+    private const int MaximumCachedRoutes = 512;
+    private sealed record CachedRoute((long From,long To) Key, Vector3[] Path);
+    private readonly Dictionary<(long From,long To), LinkedListNode<CachedRoute>> _cachedRoutes = new();
+    private readonly LinkedList<CachedRoute> _recentRoutes = new();
+    public long RouteRequests { get; private set; }
+    public long RouteCacheHits { get; private set; }
+    public long ActualPathSearches { get; private set; }
+    public long DisconnectedRouteRejects { get; private set; }
+    public long DistantAnchorRejects { get; private set; }
+    public int CachedRouteCount => _cachedRoutes.Count;
+
+    private void RememberRoute((long From,long To) key, Vector3[] path)
+    {
+        if (_cachedRoutes.TryGetValue(key, out var old))
+        {
+            _recentRoutes.Remove(old);
+            _cachedRoutes.Remove(key);
+        }
+        var entry = _recentRoutes.AddFirst(new CachedRoute(key,path));
+        _cachedRoutes.Add(key,entry);
+        while (_cachedRoutes.Count > MaximumCachedRoutes)
+        {
+            var tail = _recentRoutes.Last;
+            if (tail is null) break;
+            _recentRoutes.RemoveLast();
+            _cachedRoutes.Remove(tail.Value.Key);
+        }
+    }
     public int PointCount => (int)_graph.GetPointCount();
     public int EdgeCount => _edgeCount;
 
@@ -123,20 +157,46 @@ public partial class Pass25SourceNavigationRuntime : Node3D
 
     public Vector3[] GetRoute(Vector3 from, Vector3 to)
     {
+        RouteRequests++;
         if (_graph.GetPointCount() == 0) return [];
         var start = _graph.GetClosestPoint(from);
         var end = _graph.GetClosestPoint(to);
         if (start < 0 || end < 0 || start == end) return [];
-        // Do not route actors from unsupported, distant or wrong-elevation
-        // positions. An empty route preserves existing collision steering.
+
+        // Critical: A* must NOT explore an entire disconnected wing.
+        // Also avoid accepting world points on another floor via a nearby
+        // XZ waypoint; the three-dimensional anchor distance is retained.
         if (from.DistanceTo(_graph.GetPointPosition(start)) > MaximumAnchorDistance ||
             to.DistanceTo(_graph.GetPointPosition(end)) > MaximumAnchorDistance)
+        {
+            DistantAnchorRejects++;
             return [];
-        var route = _graph.GetPointPath(start, end);
-        if (route.Length == 0) return []; // Disconnected floors / components.
-        // The agent replans periodically. Cap the returned waypoint window
-        // rather than creating unbounded per-enemy path arrays.
-        return route.Length <= 256 ? route : route[..256];
+        }
+        if (_componentRoot[(int)start] != _componentRoot[(int)end])
+        {
+            DisconnectedRouteRejects++;
+            return [];
+        }
+
+        var key = (From:start,To:end);
+        if (_cachedRoutes.TryGetValue(key,out var cached))
+        {
+            RouteCacheHits++;
+            _recentRoutes.Remove(cached);
+            _recentRoutes.AddFirst(cached);
+            // Preserve read-only ownership: callers cannot mutate cached
+            // waypoints and silently corrupt other zombie routes.
+            return cached.Value.Path.ToArray();
+        }
+
+        ActualPathSearches++;
+        var route = _graph.GetPointPath(start,end);
+        // The source graph remains static for the lifetime of the match.
+        // Cache negative routes too, but never a disconnected-component
+        // result (already rejected before running A*).
+        var bounded = route.Length <= 256 ? route : route[..256];
+        RememberRoute(key,bounded);
+        return bounded.ToArray();
     }
 
     private static int FindRoot(int[] parents, int i)
