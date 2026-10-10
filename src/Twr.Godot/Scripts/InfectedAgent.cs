@@ -77,7 +77,8 @@ public partial class InfectedAgent : CharacterBody3D
         _lastProgressPosition = GlobalPosition;
         _progressSampleTimer = .75;
         CollisionLayer = 2;
-        CollisionMask = 1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer;
+        CollisionMask = 1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer |
+            Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
 
         AddChild(new CollisionShape3D
         {
@@ -229,7 +230,7 @@ public partial class InfectedAgent : CharacterBody3D
         var from = GlobalPosition + Vector3.Up * .10f;
         var to = Target.GlobalPosition + Vector3.Up * 1.10f;
         var query = PhysicsRayQueryParameters3D.Create(from, to);
-        query.CollisionMask = 1;
+        query.CollisionMask = 1 | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
         query.Exclude = new global::Godot.Collections.Array<Rid>
         {
             GetRid(), Target.GetRid()
@@ -284,7 +285,8 @@ public partial class InfectedAgent : CharacterBody3D
         var query=PhysicsRayQueryParameters3D.Create(from,from+direction.Normalized()*distance);
         // Preserve world obstacle steering; use F7 source-wall layer only
         // for infected motion, never for player or damage line of sight.
-        query.CollisionMask=1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer;
+        query.CollisionMask=1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer |
+            Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
         var exclude=new global::Godot.Collections.Array<Rid>{GetRid()};
         if(Target is not null)exclude.Add(Target.GetRid());
         query.Exclude=exclude;

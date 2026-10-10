@@ -47,7 +47,7 @@ public partial class SporeProjectileRuntime : Node3D
         var start = GlobalPosition;
         var next = start + _velocity * (float)Math.Min(delta, .1);
         var ray = PhysicsRayQueryParameters3D.Create(start, next);
-        ray.CollisionMask = 1; // Source infected are on layer 2.
+        ray.CollisionMask = 1 | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer; // Source infected are on layer 2.
         var hit = GetWorld3D().DirectSpaceState.IntersectRay(ray);
         if (hit.Count != 0)
         {
@@ -65,7 +65,7 @@ public partial class SporeProjectileRuntime : Node3D
     private bool WorldOccludes(Vector3 toward)
     {
         var ray = PhysicsRayQueryParameters3D.Create(GlobalPosition, toward);
-        ray.CollisionMask = 1;
+        ray.CollisionMask = 1 | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
         if (Target is not null && GodotObject.IsInstanceValid(Target))
             ray.Exclude = new global::Godot.Collections.Array<Rid> { Target.GetRid() };
         return GetWorld3D().DirectSpaceState.IntersectRay(ray).Count != 0;

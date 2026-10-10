@@ -15,6 +15,8 @@ public partial class GameplayRoot : Node3D
     private Pass25SourceNavigationRuntime? _sourceNavigator;
     private Pass34ClientWallsRuntime? _originalClientWalls;
     private Pass35InfectedWallsRuntime? _originalInfectedWalls;
+    private Pass36SourceFragmentsRuntime? _sourceFragments;
+    private Pass36MapPlanOverlay? _sourceMapPlan;
     private OfflineAudioRuntime _audio = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
     private RuntimeMapLayout _mapLayout = null!;
@@ -50,6 +52,12 @@ public partial class GameplayRoot : Node3D
     public int OriginalInfectedWallCount => _originalInfectedWalls?.WallCount ?? 0;
     public int OriginalInfectedMeshProxyCount => _originalInfectedWalls?.ApproximateMeshProxyCount ?? 0;
     public bool OriginalInfectedWallsEnabled => _originalInfectedWalls?.Enabled ?? false;
+    public int Pass36SourceServerWallCount => _sourceFragments?.WallCount ?? 0;
+    public int Pass36RenderableOriginalPropCount => _sourceFragments?.NativeObjectCount ?? 0;
+    public int Pass36MissingOriginalMeshCount => _sourceFragments?.MissingOriginalCustomObjectCount ?? 0;
+    public bool Pass36SourceWallsEnabled => _sourceFragments?.ServerCollisionEnabled ?? false;
+    public bool Pass36NativePropsEnabled => _sourceFragments?.NativeObjectPreviewEnabled ?? false;
+    public bool Pass36HasOriginalMapPlan => _sourceMapPlan?.HasPlan ?? false;
     public bool AssistedInfectedSpawnsEnabled { get; private set; }
     public int AssistedInfectedSpawnCount { get; private set; }
     public int AssistedInfectedRecoveryCount { get; private set; }
@@ -82,6 +90,11 @@ public partial class GameplayRoot : Node3D
         // Source Infected Walls are fragments; original collision group
         // interactions have not been recovered. F7 only, OFF by default.
         _originalInfectedWalls = Pass35InfectedWallsRuntime.TryBuild(this, MapName);
+        // The remaining nine maps have CMaps source collision and LOD object
+        // positions, but NOT their complete visual/terrain models. Never
+        // replace their approximated blockouts without evidence.
+        _sourceFragments = Pass36SourceFragmentsRuntime.TryBuild(this, MapName);
+        _sourceMapPlan = Pass36MapPlanOverlay.TryBuild(this, MapName);
         _sourceNavigator = Pass25SourceNavigationRuntime.TryBuild(this, MapName);
 
         _audio = new OfflineAudioRuntime { Name = "OfflineAudio" };
@@ -202,6 +215,35 @@ public partial class GameplayRoot : Node3D
     public override void _UnhandledInput(InputEvent @event)
     {
         if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;
+
+        if (!_finished && key.Keycode == Key.F6)
+        {
+            if (_sourceFragments is null)
+                _hud.SetUtility("Original Server Wall source fragment unavailable");
+            else
+            {
+                _sourceFragments.SetServerCollision(!_sourceFragments.ServerCollisionEnabled);
+                _hud.SetUtility(_sourceFragments.ServerCollisionEnabled
+                    ? "F6 SOURCE WALLS ON (original positions; blockout may not align)"
+                    : "F6 SOURCE WALLS OFF (approximated blockout preserved)");
+            }
+            GetViewport().SetInputAsHandled();
+            return;
+        }
+        if (!_finished && key.Keycode == Key.F5)
+        {
+            if (_sourceFragments is null)
+                _hud.SetUtility("Original small prop source unavailable");
+            else
+            {
+                _sourceFragments.SetNativeObjectPreview(!_sourceFragments.NativeObjectPreviewEnabled);
+                _hud.SetUtility(_sourceFragments.NativeObjectPreviewEnabled
+                    ? "F5 NATIVE ORIGINAL PROPS ON (custom meshes still missing)"
+                    : "F5 ORIGINAL PROP PREVIEW OFF");
+            }
+            GetViewport().SetInputAsHandled();
+            return;
+        }
 
         if (!_finished && key.Keycode == Key.F7)
         {

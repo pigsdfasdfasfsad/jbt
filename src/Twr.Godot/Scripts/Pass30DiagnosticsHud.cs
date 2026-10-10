@@ -27,7 +27,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             Name = "DiagnosticsBackground",
             AnchorLeft = 1f, AnchorRight = 1f,
             OffsetLeft = -365f, OffsetRight = -15f,
-            OffsetTop = 12f, OffsetBottom = 366f,
+            OffsetTop = 12f, OffsetBottom = 418f,
             Color = new Color(.025f, .035f, .048f, .88f),
             MouseFilter = Control.MouseFilterEnum.Ignore,
             Visible = false
@@ -36,7 +36,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _label = new Label
         {
             OffsetLeft = 12f, OffsetTop = 10f,
-            OffsetRight = 335f, OffsetBottom = 343f,
+            OffsetRight = 335f, OffsetBottom = 395f,
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
         _label.AddThemeFontSizeOverride("font_size", 14);
@@ -78,7 +78,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 35 | F7 infected walls - F8 player walls - F9 assist\n" +
+            "PASS 36 | F4 original map plan, F5 source props, F6 source walls\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
@@ -90,6 +90,11 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Original infected walls: {Game?.OriginalInfectedWallCount ?? 0} " +
             $"(F7: {(Game?.OriginalInfectedWallsEnabled == true ? "ON" : "OFF")})\n" +
             $"Missing MeshPart shapes approximated: {Game?.OriginalInfectedMeshProxyCount ?? 0}\n" +
+            $"F6 source server walls: {Game?.Pass36SourceServerWallCount ?? 0} " +
+            $"({(Game?.Pass36SourceWallsEnabled == true ? "ON" : "OFF")})\n" +
+            $"F5 original native props: {Game?.Pass36RenderableOriginalPropCount ?? 0} " +
+            $"({(Game?.Pass36NativePropsEnabled == true ? "ON" : "OFF")})\n" +
+            $"Original custom props missing: {Game?.Pass36MissingOriginalMeshCount ?? 0}\n" +
             $"Visible native batches: {mesh?.VisibleBatchCount ?? 0}/{mesh?.BatchCount ?? 0}\n" +
             $"Source primitive instances: {mesh?.SourceInstanceCount ?? 0}\n" +
             $"Nav queries: {Navigation?.RouteRequests ?? 0} / A*: {Navigation?.ActualPathSearches ?? 0}\n" +
@@ -110,7 +115,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             var mesh = Primitives;
             var payload = new
             {
-                format = "twr-pass35-gameplay-diagnostics-v1",
+                format = "twr-pass36-gameplay-diagnostics-v1",
                 utc = DateTimeOffset.UtcNow.ToString("O"),
                 map = MapName,
                 wave = Game?.Runtime?.Match?.Wave ?? 0,
@@ -132,6 +137,12 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 original_source_infected_walls = Game?.OriginalInfectedWallCount ?? 0,
                 source_infected_walls_opt_in = Game?.OriginalInfectedWallsEnabled ?? false,
                 source_infected_wall_approximate_meshes = Game?.OriginalInfectedMeshProxyCount ?? 0,
+                source_server_wall_count = Game?.Pass36SourceServerWallCount ?? 0,
+                source_server_walls_enabled = Game?.Pass36SourceWallsEnabled ?? false,
+                source_native_original_objects = Game?.Pass36RenderableOriginalPropCount ?? 0,
+                source_original_objects_preview_enabled = Game?.Pass36NativePropsEnabled ?? false,
+                source_missing_custom_object_meshes = Game?.Pass36MissingOriginalMeshCount ?? 0,
+                original_server_wall_plan_available = Game?.Pass36HasOriginalMapPlan ?? false,
                 visible_source_batches = mesh?.VisibleBatchCount ?? 0,
                 total_source_batches = mesh?.BatchCount ?? 0,
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,

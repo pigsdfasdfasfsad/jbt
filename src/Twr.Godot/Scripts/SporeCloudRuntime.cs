@@ -39,7 +39,7 @@ public partial class SporeCloudRuntime : Node3D
     {
         var query = PhysicsRayQueryParameters3D.Create(
             GlobalPosition + Vector3.Up * .4f, toward);
-        query.CollisionMask = 1;
+        query.CollisionMask = 1 | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
         if (Target is not null && GodotObject.IsInstanceValid(Target))
             query.Exclude = new global::Godot.Collections.Array<Rid> { Target.GetRid() };
         return GetWorld3D().DirectSpaceState.IntersectRay(query).Count != 0;

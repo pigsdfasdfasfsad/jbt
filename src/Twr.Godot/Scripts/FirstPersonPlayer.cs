@@ -49,7 +49,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
         CollisionLayer = 1;
         // Layer 4 is the original invisible Client Walls experiment (F8).
         // Infected still scan only regular source collision on layer 1.
-        CollisionMask = 1 | 2 | Pass34ClientWallsRuntime.ClientWallCollisionLayer;
+        CollisionMask = 1 | 2 | Pass34ClientWallsRuntime.ClientWallCollisionLayer |
+            Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
         _rng.Randomize();
 
         AddChild(new CollisionShape3D
@@ -515,6 +516,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
         {
             var query = PhysicsRayQueryParameters3D.Create(origin, origin + dir * remaining);
             query.Exclude = exclude;
+            // Source server walls (F6) should also intercept bullets instead
+            // of allowing shots through an activated original physical wall.
+            query.CollisionMask = 1 | 2 | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
             var hit = GetWorld3D().DirectSpaceState.IntersectRay(query);
             if (hit.Count <= 0) return;
 
