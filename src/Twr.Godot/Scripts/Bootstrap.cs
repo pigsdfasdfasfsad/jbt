@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass34",StringComparer.Ordinal))
+        {
+            RunPass34Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass33",StringComparer.Ordinal))
         {
             RunPass33Smoke();
@@ -377,6 +382,52 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private async void RunPass34Smoke()
+    {
+        _runtime.StartMap("Laboratory");
+        var game = new GameplayRoot
+        {
+            Name = "Pass34ClientWallSmoke",
+            Runtime = _runtime,
+            MapName = "Laboratory"
+        };
+        AddChild(game);
+        var walls = game.GetNodeOrNull<Pass34ClientWallsRuntime>("Pass34ClientWalls");
+        var player = game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if (walls is null || walls.WallCount != 1 || walls.Enabled ||
+            player is null ||
+            (player.CollisionMask & Pass34ClientWallsRuntime.ClientWallCollisionLayer) == 0)
+            throw new InvalidOperationException("Pass34 exact-SHA synthetic Client Walls did not load OFF by default");
+
+        // Verify this source layer is physically absent until F8, then
+        // visible to player physics only, not world/zombie layer 1.
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        var from = new Vector3(0f,1.4f,-7.5f);
+        var to = new Vector3(0f,1.4f,-3.5f);
+        bool Hits(uint layer)
+        {
+            var ray = PhysicsRayQueryParameters3D.Create(from,to);
+            ray.CollisionMask = layer;
+            return game.GetWorld3D().DirectSpaceState.IntersectRay(ray).Count > 0;
+        }
+        if (Hits(Pass34ClientWallsRuntime.ClientWallCollisionLayer))
+            throw new InvalidOperationException("Source client walls active before user opt-in");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F8, Pressed=true });
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if (!walls.Enabled || !Hits(Pass34ClientWallsRuntime.ClientWallCollisionLayer))
+            throw new InvalidOperationException("F8 did not enable physical original Client Walls");
+        if (Hits(1))
+            throw new InvalidOperationException("Client-only wall incorrectly blocks world/infected collision mask");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F8, Pressed=true });
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if (walls.Enabled || Hits(Pass34ClientWallsRuntime.ClientWallCollisionLayer))
+            throw new InvalidOperationException("F8 disabled wall but physics collision remained");
+        GD.Print("TWR_SMOKE_PASS34_WALLS_OK source=sha256 " +
+            "walls=1 default=OFF toggles=2 player_only_layer=4 infected_layer=1");
         GetTree().Quit(0);
     }
 
