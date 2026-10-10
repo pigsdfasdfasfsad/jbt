@@ -39,11 +39,16 @@ public partial class GameplayRoot : Node3D
     private readonly record struct NaturalRespawn(Vector3 Position,string Group,double Remaining);
     private bool _finished;
     private PauseOverlayRuntime? _pauseOverlay;
+    public ulong MapLoadMilliseconds { get; private set; }
+    public int ActiveInfectedCount => _infected.Count(agent => GodotObject.IsInstanceValid(agent));
+    public int ActivePickupCount => _pickups.Count(actor => GodotObject.IsInstanceValid(actor));
+    public string WaveStage => StageName();
 
     private enum Stage { Countdown, Wave, WaveEnd, Intermission, Results }
 
     public override void _Ready()
     {
+        var startup = Time.GetTicksMsec();
         if (Runtime?.Session is null)
             throw new InvalidOperationException("GameplayRoot requires an initialized LocalSessionNode.");
 
@@ -95,6 +100,12 @@ public partial class GameplayRoot : Node3D
         AddChild(_fortifications);
 
         SpawnNaturalPickups();
+        AddChild(new Pass30DiagnosticsHud { Name = "Pass30Diagnostics", Game = this, MapName = MapName });
+        MapLoadMilliseconds = Time.GetTicksMsec() - startup;
+        GD.Print($"TWR_PASS30_STARTUP map={MapName} milliseconds={MapLoadMilliseconds} " +
+            $"source_nav={_sourceNavigator is not null} " +
+            $"streamed={GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName + "/Pass28PrimitiveStream") is not null} " +
+            $"batched_collision={GetNodeOrNull<Node3D>("Recovered" + MapName + "/Pass26Collision") is not null}");
     }
 
     public override void _Process(double delta)

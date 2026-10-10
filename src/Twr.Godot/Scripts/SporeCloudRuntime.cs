@@ -45,7 +45,7 @@ public partial class SporeCloudRuntime : Node3D
         return GetWorld3D().DirectSpaceState.IntersectRay(query).Count != 0;
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         var ticks = _clock.Advance(delta, Math.Max(.01, DurationSeconds));
         for (var tick = 0; tick < ticks; tick++)

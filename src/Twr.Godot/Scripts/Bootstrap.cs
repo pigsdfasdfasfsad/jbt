@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass30",StringComparer.Ordinal))
+        {
+            RunPass30Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass29",StringComparer.Ordinal))
         {
             RunPass29Smoke();
@@ -357,6 +362,45 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass30Smoke()
+    {
+        // C# code runs in the exported Windows game, not in a Python mock.
+        if (!Pass28PrimitiveStreamer.CanSeeBounds(
+                new Vector2(0,0), new Vector2(140,-4), new Vector2(210,4), 145f))
+            throw new InvalidOperationException("Large source geometry wrongly culled");
+        if (Pass28PrimitiveStreamer.CanSeeBounds(
+                new Vector2(0,0), new Vector2(180,-4), new Vector2(210,4), 145f))
+            throw new InvalidOperationException("Out-of-range geometry wrongly visible");
+        _runtime.StartMap("Laboratory");
+        var gameplay = new GameplayRoot {
+            Name = "Pass30GameplaySmoke", Runtime = _runtime, MapName = "Laboratory"
+        };
+        AddChild(gameplay);
+        if (gameplay.GetNodeOrNull<Pass30DiagnosticsHud>("Pass30Diagnostics") is null ||
+            gameplay.ActivePickupCount == 0 ||
+            gameplay.MapLoadMilliseconds > 300000UL)
+            throw new InvalidOperationException("Laboratory gameplay or QA overlay did not start");
+        var stage = gameplay.GetNodeOrNull<Node3D>("RecoveredLaboratory");
+        if (stage is not null)
+        {
+            var navigator = gameplay.GetNodeOrNull<Pass25SourceNavigationRuntime>(
+                "Pass25LaboratoryNavigation");
+            var collision = stage.GetNodeOrNull<Node3D>("Pass26Collision");
+            var streaming = stage.GetNodeOrNull<Pass28PrimitiveStreamer>("Pass28PrimitiveStream");
+            if (navigator is null || navigator.PointCount < 2 ||
+                collision is null || collision.GetChildCount() < 1 ||
+                streaming is null || streaming.BatchCount < 1 ||
+                streaming.VisibleBatchCount < 1)
+                throw new InvalidOperationException(
+                    "Original source navigation/collision/geometry were not activated");
+            GD.Print($"TWR_SMOKE_PASS30_SOURCE_OK nodes={navigator.PointCount} " +
+                $"collision_tiles={collision.GetChildCount()} " +
+                $"visible_batches={streaming.VisibleBatchCount}");
+        }
+        GD.Print("TWR_SMOKE_PASS30_GAMEPLAY_OK map=Laboratory inventory=16 bounds=aabb");
         GetTree().Quit(0);
     }
 

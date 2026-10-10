@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation]
     paths:
       - 'src/**'
       - 'content/**'
@@ -96,15 +96,31 @@ jobs:
             throw "Pass 29 native Windows runtime smoke failed. Exit code: $($run.ExitCode)"
           }
 
+      - name: Smoke Pass 30 AABB culling and gameplay in Windows executable
+        if: success() && github.ref_name == 'twr-pass30-gameplay-validation'
+        shell: pwsh
+        run: |
+          $stdout = Join-Path $env:RUNNER_TEMP 'pass30-smoke.stdout.txt'
+          $stderr = Join-Path $env:RUNNER_TEMP 'pass30-smoke.stderr.txt'
+          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass30') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          $output = @()
+          if (Test-Path $stdout) { $output += Get-Content $stdout }
+          if (Test-Path $stderr) { $output += Get-Content $stderr }
+          $output | ForEach-Object { Write-Host $_ }
+          if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS30_GAMEPLAY_OK' })) {
+            throw "Pass 30 gameplay native smoke failed. Exit: $($run.ExitCode)"
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && github.ref_name == 'twr-pass29-integration'
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
           if ($privateScenes.Count -gt 0) { throw 'Private source-map scene was unexpectedly included in CI output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
-        if: success() && github.ref_name == 'twr-pass29-integration'
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation')
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass29-Windows-x64-NoPrivateAssets

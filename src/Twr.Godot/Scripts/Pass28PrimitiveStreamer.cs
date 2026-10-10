@@ -28,7 +28,7 @@ public partial class Pass28PrimitiveStreamer : Node3D
     private const float Stud = RobloxUnits.MetersPerStud;
     private const float DrawRadius = 145f;
     private const float HideRadius = 166f; // Hysteresis against tile popping.
-    private readonly List<(MultiMeshInstance3D Instance, Vector2 Center)> _drawGroups = [];
+    private readonly List<(MultiMeshInstance3D Instance, Vector2 Minimum, Vector2 Maximum)> _drawGroups = [];
     private readonly Dictionary<(byte Kind, ushort Material, byte Alpha,
         byte R, byte G, byte B, bool Shadow), (Mesh Mesh, StandardMaterial3D Material)> _resources = [];
     private Node3D? _trackedPlayer;
@@ -37,6 +37,24 @@ public partial class Pass28PrimitiveStreamer : Node3D
 
     public int SourceInstanceCount { get; private set; }
     public int BatchCount => _drawGroups.Count;
+    public int VisibleBatchCount => _drawGroups.Count(group => group.Instance.Visible);
+
+    /// <summary>
+    /// World XZ distance to the real transformed mesh bounds, not tile center.
+    /// Long walls and rotated native Roblox Part/WedgePart geometry should
+    /// remain rendered whenever any part enters the draw radius.
+    /// </summary>
+    public static bool CanSeeBounds(Vector2 viewer, Vector2 minimum,
+        Vector2 maximum, float radius)
+    {
+        if (!float.IsFinite(radius) || radius <= 0f ||
+            !float.IsFinite(viewer.X) || !float.IsFinite(viewer.Y) ||
+            minimum.X > maximum.X || minimum.Y > maximum.Y)
+            return false;
+        var dx = Math.Max(0f, Math.Max(minimum.X - viewer.X, viewer.X - maximum.X));
+        var dz = Math.Max(0f, Math.Max(minimum.Y - viewer.Y, viewer.Y - maximum.Y));
+        return (double)dx * dx + (double)dz * dz <= (double)radius * radius;
+    }
 
     public static bool TryBuild(Node3D parent, string mapName, string scenePath)
     {
@@ -93,11 +111,13 @@ public partial class Pass28PrimitiveStreamer : Node3D
         if (!force && _lastPlayerPosition.DistanceSquaredTo(center) < 25f)
             return;
         _lastPlayerPosition = center;
-        foreach (var (renderNode, tileCenter) in _drawGroups)
+        foreach (var (renderNode, minimum, maximum) in _drawGroups)
         {
-            var squared = tileCenter.DistanceSquaredTo(center);
+            // Bounds are per-batch, including every rotated original Part.
+            // Tile-centre culling wrongly hid 155 batches / 4,126 parts at
+            // Laboratory spawn 1 despite geometry inside 145m (Pass30 audit).
             var radius = renderNode.Visible ? HideRadius : DrawRadius;
-            renderNode.Visible = squared <= radius * radius;
+            renderNode.Visible = CanSeeBounds(center, minimum, maximum, radius);
         }
     }
 
@@ -132,9 +152,6 @@ public partial class Pass28PrimitiveStreamer : Node3D
                 batchesSeen + batches > MaxBatches)
                 throw new InvalidDataException("Bad primitive tile/batch budget");
 
-            // Tile center is world-local and source Z axis is reflected.
-            var center = new Vector2((x + .5f) * TileStuds * Stud,
-                -(z + .5f) * TileStuds * Stud);
             for (var batchIndex = 0u; batchIndex < batches; batchIndex++)
             {
                 var kind = input.ReadByte();
@@ -230,7 +247,9 @@ public partial class Pass28PrimitiveStreamer : Node3D
                     Visible = true
                 };
                 AddChild(draw);
-                _drawGroups.Add((draw, center));
+                _drawGroups.Add((draw,
+                    new Vector2(boundsMin.X, boundsMin.Z),
+                    new Vector2(boundsMax.X, boundsMax.Z)));
                 instancesSeen += size;
                 batchesSeen++;
             }
