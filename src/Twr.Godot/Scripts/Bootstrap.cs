@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass39",StringComparer.Ordinal))
+        {
+            RunPass39Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass38",StringComparer.Ordinal))
         {
             RunPass38Smoke();
@@ -397,6 +402,48 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass39Smoke()
+    {
+        // The actual exported Godot Windows executable imports a SYNTHETIC,
+        // fabricated Laboratory source scene and three tiny generated PNGs.
+        // No real source map or owner-private art is present in public CI.
+        _runtime.StartMap("Laboratory");
+        var game=new GameplayRoot
+        {
+            Name="Pass39OriginalLaboratorySmoke",
+            Runtime=_runtime, MapName="Laboratory"
+        };
+        AddChild(game);
+        var scene=game.GetNodeOrNull<Node3D>("RecoveredLaboratory");
+        var overlay=game.GetNodeOrNull<Pass39LaboratoryFloorplan>(
+            "Pass39LaboratoryFloorplan");
+        if(scene is null || overlay is null || overlay.LevelCount!=3 ||
+            overlay.VerifiedOriginalScene || overlay.IsOpen || overlay.ActiveLevel!=0 ||
+            game.Pass39LabFloorCount!=3 ||
+            game.Pass39OriginalLabSourceVerified ||
+            game.GetNodeOrNull<Node3D>("Pass36SourceFragments") is not null)
+            throw new InvalidOperationException(
+                "Pass39 synthetic Laboratory floorplan missing, not isolated or enabled by default");
+        overlay._Input(new InputEventKey {Keycode=Key.F4,Pressed=true});
+        if(!overlay.IsOpen)
+            throw new InvalidOperationException("F4 did not open Laboratory source floorplan");
+        overlay._Input(new InputEventKey {Keycode=Key.Right,Pressed=true});
+        if(overlay.ActiveLevel!=1)
+            throw new InvalidOperationException("Right arrow did not choose Laboratory main floor");
+        overlay._Input(new InputEventKey {Keycode=Key.Left,Pressed=true});
+        if(overlay.ActiveLevel!=0)
+            throw new InvalidOperationException("Left arrow did not return Laboratory lower floor");
+        overlay._Input(new InputEventKey {Keycode=Key.Left,Pressed=true});
+        if(overlay.ActiveLevel!=2)
+            throw new InvalidOperationException("Laboratory source floor index wrap failed");
+        overlay._Input(new InputEventKey {Keycode=Key.F4,Pressed=true});
+        if(overlay.IsOpen)
+            throw new InvalidOperationException("F4 failed to close the Laboratory source plan");
+        GD.Print("TWR_SMOKE_PASS39_LAB_OK original_source=false synthetic_geometry=20 " +
+            "floorplans=3 toggle=2 floor_change=3 original_custom_meshes_unavailable=true");
         GetTree().Quit(0);
     }
 
