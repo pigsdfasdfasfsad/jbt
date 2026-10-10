@@ -29,6 +29,13 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     private int[] _componentRoot = Array.Empty<int>();
     private readonly Dictionary<int, List<int>> _componentNodes = new();
     public bool IsBridgePackActive => _bridgePackActive;
+    // The new approximation is deterministically sampled from 18,130
+    // exact-positioned owner collider bounds, not Roblox's real navmesh.
+    private const string Pass40SceneSha =
+        "35ba9ce77ef220448cdc087679afcc5ef727fa41f54f61dba25e886bc8c8ef74";
+    private const string Pass40NavigationSha =
+        "b021b905a0a87619997a0e2da08a4c7b2db18ecd2a5250f93dfd84d08cb26bdc";
+    public bool IsPass40GroundedGraph { get; private set; }
 
     // Most infected replan toward the SAME player anchor every 0.75-1.15s.
     // A* on 19,355 waypoints per infected costs CPU and creates garbage.
@@ -120,9 +127,16 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     /// especially while original SmoothGrid terrain is unavailable.
     /// </summary>
     public Vector3[] GetAssistedInfectedSpawnCandidates(Vector3 originalSpawn,
-        Vector3 playerPosition, uint variation)
+        Vector3 playerPosition, uint variation,
+        float minimumPlayerDistance = Pass32SpawnSafety.MinimumPlayerDistance)
     {
-        if (!_bridgePackActive || _componentRoot.Length == 0) return [];
+        // Only explicitly enabled F9 uses this; even a closer candidate must
+        // still be physics validated by Pass32SpawnSafety before spawning.
+        if (!_bridgePackActive || _componentRoot.Length == 0 ||
+            !float.IsFinite(minimumPlayerDistance) ||
+            minimumPlayerDistance < Pass40AdaptiveEntry.MinimumFallbackDistance ||
+            minimumPlayerDistance > Pass32SpawnSafety.MinimumPlayerDistance)
+            return [];
         var target = _graph.GetClosestPoint(playerPosition);
         var origin = _graph.GetClosestPoint(originalSpawn);
         if (target < 0 ||
@@ -141,7 +155,8 @@ public partial class Pass25SourceNavigationRuntime : Node3D
             Id = id,
             Position = _graph.GetPointPosition(id)
         })
-        .Where(row => row.Position.DistanceSquaredTo(playerPosition) >= 24f * 24f &&
+        .Where(row => row.Position.DistanceSquaredTo(playerPosition) >=
+            minimumPlayerDistance * minimumPlayerDistance &&
             Math.Abs(row.Position.Y - playerPosition.Y) <= 1.6f)
         .OrderBy(row => row.Position.DistanceSquaredTo(originalSpawn))
         .ThenBy(row => row.Id)
@@ -228,6 +243,11 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         using (var source = File.OpenRead(sceneFile))
             sceneDigest = SHA256.HashData(source);
 
+        var packedHash = Convert.ToHexString(SHA256.HashData(
+            File.ReadAllBytes(navFile))).ToLowerInvariant();
+        IsPass40GroundedGraph =
+            Convert.ToHexString(sceneDigest).ToLowerInvariant() == Pass40SceneSha &&
+            packedHash == Pass40NavigationSha;
         using var archive = File.OpenRead(navFile);
         using var gzip = new GZipStream(archive, CompressionMode.Decompress);
         using var reader = new BinaryReader(gzip);
