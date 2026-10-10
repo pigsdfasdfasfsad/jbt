@@ -109,8 +109,8 @@ def clientwalls34(digest):
               'default_enabled': False}
     wall = {'class': 'Part', 't': [0., 5., 20.],
             'r': list(R), 's': [2., 6., 2.]}
-    contents = '\\n'.join(json.dumps(x, sort_keys=True, separators=(',',':'))
-                          for x in [header, wall]) + '\\n'
+    contents = '\n'.join(json.dumps(x, sort_keys=True, separators=(',',':'))
+                          for x in [header, wall]) + '\n'
     return compressed(contents.encode('utf8'))
 
 
