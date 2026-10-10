@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass43",StringComparer.Ordinal))
+        {
+            RunPass43Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass42",StringComparer.Ordinal))
         {
             RunPass42Smoke();
@@ -417,6 +422,182 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private async void RunPass43Smoke()
+    {
+        // Native exported Windows game, not static type introspection.
+        // Fixture has TWO disjoint PHYSICAL platforms with a real empty pit.
+        // Data is fabricated. Original Laboratory meshes are never in CI.
+        _runtime.StartMap("Laboratory");
+        var game = new GameplayRoot
+        {
+            Name="Pass43RealPhysicsGapSmoke",
+            Runtime=_runtime,MapName="Laboratory"
+        };
+        AddChild(game);
+        var nav = game.GetNodeOrNull<Pass25SourceNavigationRuntime>(
+            "Pass25LaboratoryNavigation");
+        var player=game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if(nav is null || player is null || !nav.IsBridgePackActive ||
+            nav.PointCount!=19 || nav.Pass42JumpEdgeCount!=1 ||
+            game.Pass43TotalJumpAttempts!=0 ||
+            game.Pass43VerifiedJumpLandings!=0 ||
+            game.Pass43FailedJumpAttempts!=0)
+            throw new InvalidOperationException(
+                "Pass43 synthetic source-bound jump route or zero-state counters missing");
+
+        var sample = new Pass43FrameWindow();
+        sample.Record(.016,1);
+        sample.Record(.024,4);
+        sample.Record(300.0,99); // Synthetic accelerated frames excluded.
+        sample.Record(double.NaN,99);
+        var window=sample.Snapshot();
+        if(window.SampledFrames!=2 || window.MedianMs<15 ||
+            window.P95Ms<23.9 || window.P95Ms>24.1 ||
+            window.PeakLivingInfected!=4 || window.P99Ms<window.MedianMs)
+            throw new InvalidOperationException("Pass43 rolling frame telemetry contract failed");
+        if(Pass43JumpLandingPolicy.IsSuccessful(true,.3,
+            new Vector3(7.84f,.94f,0),new Vector3(9.8f,.94f,0)) ||
+            Pass43JumpLandingPolicy.IsSuccessful(false,.4,
+                new Vector3(9.8f,.94f,0),new Vector3(9.8f,.94f,0)) ||
+            !Pass43JumpLandingPolicy.IsSuccessful(true,.45,
+                new Vector3(9.8f,.94f,0),new Vector3(9.8f,.94f,0)))
+            throw new InvalidOperationException("Pass43 landing policy accepted takeoff/air contact");
+
+        player.GlobalPosition=new Vector3(50f*.28f,.5f*.28f+.85f,0);
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+
+        bool HasFloorAt(float sourceStuds)
+        {
+            var x=sourceStuds*.28f;
+            var query=PhysicsRayQueryParameters3D.Create(
+                new Vector3(x,3.5f,0),new Vector3(x,-3f,0));
+            query.CollisionMask=1;
+            return game.GetWorld3D().DirectSpaceState.IntersectRay(query).Count>0;
+        }
+        if(!HasFloorAt(28) || !HasFloorAt(35) || HasFloorAt(31.5f))
+            throw new InvalidOperationException(
+                "Pass43 physical geometry is not two separated, solid platforms with empty space");
+
+        game._Process(RegularWaveRules.CountdownSeconds+.1);
+        game._Process(.1);
+        if(game.WaveStage!="WAVE" || game.ActiveInfectedCount<1)
+            throw new InvalidOperationException("Pass43 wave 1 infected spawn not active");
+        InfectedAgent? active=null;
+        foreach(Node child in game.GetChildren())
+            if(child is InfectedAgent infected) { active=infected; break; }
+        if(active is null)throw new InvalidOperationException("Pass43 no owner-tracked infected agent");
+        active.InfectedType="Civilian";
+        active.MoveSpeed=15f*RobloxUnits.MetersPerStud;
+        active.SourceNavigator=nav;
+        var from=new Vector3(28f*.28f,.5f*.28f+.8f,0);
+        active.GlobalPosition=from;
+        var previous=active.GlobalPosition;
+        var peakStep=0f;
+        var observedSuccess=false;
+        for(var i=0;i<240;i++)
+        {
+            await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+            if(!GodotObject.IsInstanceValid(active))
+                throw new InvalidOperationException("Pass43 source infected vanished during gap crossing");
+            peakStep=Math.Max(peakStep,active.GlobalPosition.DistanceTo(previous));
+            previous=active.GlobalPosition;
+            if(active.SourceJumpLandings>0)
+            {
+                observedSuccess=true;
+                break;
+            }
+        }
+        if(!observedSuccess || active.SourceJumpAttempts!=1 ||
+            active.SourceJumpLandings!=1 || active.SourceJumpFailures!=0 ||
+            active.SourceJumpInProgress || !active.IsOnFloor() ||
+            active.GlobalPosition.X<33.6f*.28f || peakStep>.65f)
+            throw new InvalidOperationException(
+                "Pass43 infected did not PHYSICALLY cross real unsupported floor gap " +
+                $"attempts={active.SourceJumpAttempts} landings={active.SourceJumpLandings} " +
+                $"failures={active.SourceJumpFailures} onFloor={active.IsOnFloor()} " +
+                $"x={active.GlobalPosition.X} largestFrameTravel={peakStep}");
+        game._Process(RegularWaveRules.WaveDurationSeconds+.1);
+        if(game.WaveStage!="WAVE END" ||
+            game.Pass43TotalJumpAttempts!=1 ||
+            game.Pass43VerifiedJumpLandings!=1 ||
+            game.Pass43FailedJumpAttempts!=0 ||
+            game.ActiveInfectedCount!=0)
+            throw new InvalidOperationException(
+                "Pass43 wave cleanup incorrectly dropped physically completed jump counters");
+
+        // Hard wall in the open pit: a source edge cannot pass through new
+        // physical obstruction. Contact with the takeoff floor is a FAILURE.
+        var barrier=new StaticBody3D
+        {
+            Name="Pass43SyntheticJumpBlockingWall",
+            Position=new Vector3(31.5f*.28f,2.7f,0),
+            CollisionLayer=1, CollisionMask=1
+        };
+        barrier.AddChild(new CollisionShape3D
+        {
+            Shape=new BoxShape3D { Size=new Vector3(.40f,5.4f,6f) }
+        });
+        game.AddChild(barrier);
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        game._Process(RegularWaveRules.WaveEndSeconds+.1);
+        game._Process(RegularWaveRules.IntermissionSeconds+.1);
+        game._Process(RegularWaveRules.CountdownSeconds+.1);
+        game._Process(.1);
+        if(game.WaveStage!="WAVE" || _runtime.Match?.Wave!=2)
+            throw new InvalidOperationException("Pass43 second wave stage setup failed");
+        InfectedAgent? blocked=null;
+        foreach(Node child in game.GetChildren())
+            if(child is InfectedAgent infected) { blocked=infected; break; }
+        if(blocked is null)throw new InvalidOperationException("Pass43 no second wave infected");
+        blocked.InfectedType="Civilian";
+        blocked.MoveSpeed=15f*RobloxUnits.MetersPerStud;
+        blocked.SourceNavigator=nav;
+        blocked.GlobalPosition=from;
+        for(var i=0;i<170 && blocked.SourceJumpFailures==0;i++)
+            await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if(blocked.SourceJumpAttempts<1 || blocked.SourceJumpFailures<1 ||
+            blocked.SourceJumpLandings!=0)
+            throw new InvalidOperationException(
+                "Pass43 blocked jump was not reported as FAILED rather than LANDED " +
+                $"attempts={blocked.SourceJumpAttempts} failures={blocked.SourceJumpFailures} " +
+                $"landings={blocked.SourceJumpLandings}");
+        game._Process(RegularWaveRules.WaveDurationSeconds+.1);
+        if(game.Pass43TotalJumpAttempts<2 ||
+            game.Pass43VerifiedJumpLandings!=1 ||
+            game.Pass43FailedJumpAttempts<1)
+            throw new InvalidOperationException(
+                "Pass43 retired match counters did not preserve both actual outcomes");
+
+        // Continue through all 15 actual Godot state transitions; time
+        // advances are artificially accelerated, NOT a playthrough.
+        for(var expected=3;expected<=ReleaseRules.MaxWaves;expected++)
+        {
+            game._Process(RegularWaveRules.WaveEndSeconds+.1);
+            if(game.WaveStage!="INTERMISSION" || _runtime.Match?.Wave!=expected)
+                throw new InvalidOperationException("Pass43 wave progression broken at "+expected);
+            game._Process(RegularWaveRules.IntermissionSeconds+.1);
+            game._Process(RegularWaveRules.CountdownSeconds+.1);
+            game._Process(.1);
+            if(game.WaveStage!="WAVE" || game.ActiveInfectedCount<1)
+                throw new InvalidOperationException("Pass43 wave actor not spawned at "+expected);
+            game._Process(RegularWaveRules.WaveDurationSeconds+.1);
+            if(game.WaveStage!="WAVE END")
+                throw new InvalidOperationException("Pass43 wave did not end "+expected);
+        }
+        game._Process(RegularWaveRules.WaveEndSeconds+.1);
+        if(game.WaveStage!="RESULTS" ||
+            _runtime.Match?.Phase!=MatchPhase.Results ||
+            game.Pass43VerifiedJumpLandings!=1 || game.Pass43FailedJumpAttempts<1)
+            throw new InvalidOperationException("Pass43 final results and durable jump statistics invalid");
+        GD.Print("TWR_SMOKE_PASS43_TRAVERSAL_OK synthetic_only=true " +
+            "physical_gap_studs=4.2 crossed_to_destination=true no_teleport=true " +
+            "blocked_wall_jump_not_landing=true jump_success=1 jump_failure>=1 " +
+            "match_counters_persist=true frame_p95_bounded=true 15_waves_accelerated=true " +
+            "real_original_scene_playtested=false");
         GetTree().Quit(0);
     }
 
