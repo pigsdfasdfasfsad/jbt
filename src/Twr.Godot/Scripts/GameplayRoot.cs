@@ -81,6 +81,14 @@ public partial class GameplayRoot : Node3D
     public int Pass40AdaptiveNearRecoveries { get; private set; }
     public bool Pass40GroundedNavigationVerified =>
         _sourceNavigator?.IsPass40GroundedGraph ?? false;
+    public bool Pass41SourceNativeBridgeVerified =>
+        _sourceNavigator?.IsPass41SourceNativeGraph ?? false;
+    public int Pass41NativeBridgeCount =>
+        _sourceNavigator?.Pass41NativeBridgeCount ?? 0;
+    public int Pass41RemainingNavigationComponents =>
+        _sourceNavigator?.ConnectedComponentCount ?? 0;
+    public bool Pass41BridgeDiagramAvailable =>
+        _labFloorplan?.HasPass41RepairDiagnostic ?? false;
     private double _pass32RecoveryScan = 1.5;
 
     private enum Stage { Countdown, Wave, WaveEnd, Intermission, Results }
