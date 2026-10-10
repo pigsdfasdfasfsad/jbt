@@ -2,7 +2,21 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest source-development branch: Pass 41 (October 10, 2026)
+## Latest source-development branch: Pass 42 (October 10, 2026)
+
+[Pass 42 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass42-jump-navigation) ·
+[Pass 42 source and limitations](docs/development/PASS42_LABORATORY_JUMP_NAVIGATION.md) ·
+[Windows CI and native test](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38093325817)
+
+- Recover original **Pathfind** settings: `AgentCanJump=true`, `AgentCanClimb=false`, `WaypointSpacing=4` studs. The previous all-walking graph could not represent these actions
+- Create a **SHA-bound TWRNAV42** graph with **9 source-supported jump actions**. Preserve all **14,726** prior waypoints, all **43,937** walk connections, and add only 9 typed jumps
+- Decrease Laboratory's graph disconnects from **117 to 108**; the player-start area's potentially route-connected waypoints expand from **291 to 1,681**. These edges are approximate and still governed by actual Godot collisions
+- Infected in Laboratory can follow bounded ballistic jump actions. Existing source-based **F9 entry assistance remains OFF by default**, and earlier nav41/nav31 packs remain available as fallbacks
+- The owner-private three-floor **F4 -> N** map displays cyan jump links, gold native bridge repairs, connected green regions, and disconnected purple regions. F10/F11 reports loaded jump actions and observed actor jumps
+- Windows Actions compiles and exports the **actual Windows executable**, runs all Python checks, and tests a **fabricated** source-bound jump route plus accelerated real Godot actor/round transitions through **15 waves**; it excludes every original and synthetic private navigation file from the public artifact
+- **Not complete:** an accelerated 15-wave runtime smoke is not a full player-controlled match. Original terrain voxels, custom mesh triangles, nine fully reconstructed maps, retail animations/recordings and full graphical/physics traversal QA are missing
+
+## Previous source-development branch: Pass 41 (October 10, 2026)
 
 [Pass 41 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass41-source-native-bridges) ·
 [Lab bridge repair details](docs/development/PASS41_SOURCE_NATIVE_BRIDGE_REPAIR.md)
