@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-original-source-lobby]
     paths:
       - 'src/**'
       - 'content/**'
@@ -410,3 +410,45 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           compression-level: 6
+
+      - name: Smoke Pass 41 original Lobby cameras in exported Windows Godot game
+        if: success() && github.ref_name == 'twr-pass41-original-source-lobby'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass36_lobby_fixture.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass41 fabricated source-lobby fixture failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass41-lobby.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass41-lobby.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass36') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS36_LOBBY_OK' })) {
+              throw "Pass41 actual exported-game source Lobby test failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass36_lobby_fixture.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass41 synthetic Lobby cleanup failed' }
+          }
+
+      - name: Verify Pass 41 exported artifact excludes original private Lobby geometry
+        if: success() && github.ref_name == 'twr-pass41-original-source-lobby'
+        shell: pwsh
+        run: |
+          $privateLobby = @(Get-ChildItem -Path build/output -Filter '*.lobby36.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($privateLobby.Count -gt 0) { throw 'Original source Lobby geometry entered public CI artifact' }
+
+      - name: Upload verified Pass 41 Windows build (without private owner source)
+        if: success() && github.ref_name == 'twr-pass41-original-source-lobby'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Pass41-Windows-x64-NoPrivateAssets
+          path: build/output/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
