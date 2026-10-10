@@ -66,6 +66,46 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         return null;
     }
 
+    /// <summary>
+    /// Opt-in accessibility only. If an original infected spawn is outside
+    /// the player's connected floor region, return a distant supported graph
+    /// waypoint instead. This approximates original exterior horde entries.
+    /// The main game leaves this mode OFF unless the player presses F9.
+    /// </summary>
+    public Vector3? FindAssistedInfectedSpawn(Vector3 originalSpawn,
+        Vector3 playerPosition, uint variation)
+    {
+        if (!_bridgePackActive || _componentRoot.Length == 0) return null;
+        var target = _graph.GetClosestPoint(playerPosition);
+        var origin = _graph.GetClosestPoint(originalSpawn);
+        if (target < 0 ||
+            playerPosition.DistanceTo(_graph.GetPointPosition(target)) > MaximumAnchorDistance)
+            return null;
+        var playerComponent = _componentRoot[(int)target];
+        if (origin >= 0 &&
+            originalSpawn.DistanceTo(_graph.GetPointPosition(origin)) <= MaximumAnchorDistance &&
+            _componentRoot[(int)origin] == playerComponent)
+            return null; // Keep source spawns that already can reach the player.
+        if (!_componentNodes.TryGetValue(playerComponent, out var nodes))
+            return null;
+
+        // Only from the same collision-sampled graph region, and far enough
+        // away not to spawn zombies on top of the player's position.
+        var options = nodes.Select(id => new
+        {
+            Id = id,
+            Position = _graph.GetPointPosition(id)
+        })
+        .Where(row => row.Position.DistanceSquaredTo(playerPosition) >= 24f * 24f &&
+            Math.Abs(row.Position.Y - playerPosition.Y) <= 1.6f)
+        .OrderBy(row => row.Position.DistanceSquaredTo(originalSpawn))
+        .ThenBy(row => row.Id)
+        .Take(16).ToArray();
+        if (options.Length == 0) return null;
+        var picked = options[(int)(variation % (uint)options.Length)];
+        return picked.Position + Vector3.Up * 0.8f;
+    }
+
     public Vector3[] GetRoute(Vector3 from, Vector3 to)
     {
         if (_graph.GetPointCount() == 0) return [];
