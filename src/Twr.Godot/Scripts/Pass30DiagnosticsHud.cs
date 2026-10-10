@@ -78,12 +78,14 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 40 | F2 audio, F3 lighting, F4 floorplan, F9 entry assist, F5 source props, F6 source walls\n" +
+            "PASS 41 | F2 audio, F3 light, F4 map, F9 entry assist, F5 source props, F6 source walls\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
             $"Original nav nodes: {Navigation?.PointCount ?? 0}  P40 graph: {(Game?.Pass40GroundedNavigationVerified == true ? "YES" : "NO")}\n" +
+            $"Pass41 bridges: {Game?.Pass41NativeBridgeCount ?? 0}  components: {Game?.Pass41RemainingNavigationComponents ?? 0}\n" +
+            $"F4/N repaired diagrams: {(Game?.Pass41BridgeDiagramAvailable == true ? "READY" : "NOT VERIFIED")}\n" +
             $"Collision tiles: {CollisionTiles}\n" +
             $"Verified original Lab: {(Game?.Pass39OriginalLabSourceVerified == true ? "YES" : "NO")}  Plans: {Game?.Pass39LabFloorCount ?? 0}\n" +
             $"F4-N nav graph: {(Game?.Pass40NavigationPlanAvailable == true ? "READY" : "N/A")} / {(Game?.Pass40NavigationPlanOpen == true ? "ON" : "OFF")}\n" +
@@ -162,6 +164,10 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 total_source_batches = mesh?.BatchCount ?? 0,
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,
                 assisted_infected_spawns_on = Game?.AssistedInfectedSpawnsEnabled ?? false,
+                pass41_native_bridge_verified = Game?.Pass41SourceNativeBridgeVerified ?? false,
+                pass41_native_bridge_count = Game?.Pass41NativeBridgeCount ?? 0,
+                pass41_remaining_navigation_components = Game?.Pass41RemainingNavigationComponents ?? 0,
+                pass41_repaired_map_diagrams_available = Game?.Pass41BridgeDiagramAvailable ?? false,
                 pass40_grounded_navigation_verified = Game?.Pass40GroundedNavigationVerified ?? false,
                 pass40_assisted_close_spawns = Game?.Pass40AdaptiveNearSpawns ?? 0,
                 pass40_assisted_close_recoveries = Game?.Pass40AdaptiveNearRecoveries ?? 0,
