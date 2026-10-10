@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation]
     paths:
       - 'src/**'
       - 'content/**'
@@ -148,18 +148,44 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass 31 synthetic fixture cleanup failed' }
           }
 
+      - name: Smoke Pass 32 grounded spawn safety and real infected movement in exported Windows game
+        if: success() && github.ref_name == 'twr-pass32-grounded-navigation'
+        shell: pwsh
+        run: |
+          # Only fabricated synthetic source/geometry/art, never original
+          # owner-held scene files in public GitHub Actions or release blobs.
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass 32 synthetic fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass32-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass32-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass32') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS32_GROUNDED_OK' })) {
+              throw "Pass 32 native physical spawn/movement smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass 32 synthetic fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
           if ($privateScenes.Count -gt 0) { throw 'Private source-map scene was unexpectedly included in CI output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation')
         uses: actions/upload-artifact@v4
         with:
-          name: TWR-Pass31-Windows-x64-NoPrivateAssets
+          name: TWR-Pass32-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
