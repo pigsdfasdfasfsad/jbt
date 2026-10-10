@@ -2,7 +2,22 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest source-development branch: Pass 42 (October 10, 2026)
+## Latest verified source branch: Pass 43 (October 10, 2026)
+
+[Pass 43 development branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass43-physical-jump-verification) ·
+[Successful Windows native acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38094133273) ·
+[Pass 43 engineering and playtest notes](docs/development/PASS43_PHYSICAL_TRAVERSAL_ACCEPTANCE.md)
+
+- Fix the former **false-positive infected jump landing** check. Source-linked jumps now only count as successful when Godot's physical infected body makes grounded contact **near the actual destination waypoint**, not by hitting any floor
+- Count separate launches, confirmed landings, failed jumps and active jumps; **preserve totals across enemy deaths and wave cleanup** for meaningful match QA
+- Add bounded **2,048-frame rolling p50/p95/p99 frametime** collection, peak infected count and F10 display; F11 now writes timestamped JSON archives as well as the backwards-compatible latest snapshot
+- Introduce a native Windows **two-platform physics-gap acceptance test**: synthetic solid floors are separated by a real 4.2-stud pit; a real Godot infected is required to **physically cross and land** without teleporting
+- Add an actual **blocking wall** on the same test jump. Ground contact or timeout on the takeoff side must register **failure**, not a landing
+- Native CI also exercises real Godot actor cleanup and **15 accelerated waves**. **439 Python regression tests** and exported Windows traversal tests passed. This is not a full original-map human-controlled match
+- Preserve the owner-private Pass 39 Laboratory geometry, Pass 40/41/42 navigation packs, original-positioned wall/prop fragments, and ten-map lighting and sound metadata in the owner-only Windows ZIP. Public Actions artifacts remain private-source-free
+- Still incomplete: all nine remaining full original map scenes, missing custom MeshPart/CSG triangle bytes, original terrain, source animations/audio and human-performed 15-wave traversal and frame-time benchmarking
+
+## Previous source-development branch: Pass 42 (October 10, 2026)
 
 [Pass 42 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass42-jump-navigation) ·
 [Pass 42 source and limitations](docs/development/PASS42_LABORATORY_JUMP_NAVIGATION.md) ·
