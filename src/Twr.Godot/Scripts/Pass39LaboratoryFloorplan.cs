@@ -29,6 +29,15 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
     ];
 
     private readonly List<Texture2D> _plans = [];
+    private readonly List<Texture2D> _navigationPlans = [];
+    private const string Pass40NavSha =
+        "b021b905a0a87619997a0e2da08a4c7b2db18ecd2a5250f93dfd84d08cb26bdc";
+    private static readonly string[] Pass40PlanShas =
+    [
+        "ad256d57589d505a39050458ae67df516c5760ba6a913560d1fa01d151784f81",
+        "e996c2ddb86f90e0a90b71435c7ff81c3af702c799195149fe1e6d39b10e3d50",
+        "a7dd824fa7daa355fa68ed3e5d5e5546049384e043f1be69b7fc2f0d60fc4078"
+    ];
     private Control _panel = null!;
     private TextureRect _image = null!;
     private Label _caption = null!;
@@ -36,6 +45,8 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
     public bool IsOpen => _panel is not null && _panel.Visible;
     public bool VerifiedOriginalScene { get; private set; }
     public int LevelCount => _plans.Count;
+    public bool HasNavigationDiagnostic => _navigationPlans.Count == 3;
+    public bool IsShowingNavigation { get; private set; }
 
     public static Pass39LaboratoryFloorplan? TryBuild(Node3D owner, string map)
     {
@@ -55,7 +66,8 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
         {
             var original = Find("Maps","Laboratory.scene.jsonl.gz")
                 ?? throw new InvalidDataException("No installed loaded Laboratory source map");
-            var simulated = OS.GetCmdlineUserArgs().Contains("--smoke-pass39",StringComparer.Ordinal);
+            var simulated = OS.GetCmdlineUserArgs().Any(arg =>
+                arg is "--smoke-pass39" or "--smoke-pass40");
             using var stream = File.OpenRead(original);
             var sha = Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
             if (!simulated && sha != SceneSha)
@@ -81,9 +93,37 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
                     throw new InvalidDataException("Invalid source Laboratory PNG dimensions");
                 overlay._plans.Add(ImageTexture.CreateFromImage(bitmap));
             }
+            // Only accept a complete, SHA-bound diagnostic set matching the
+            // exact installed Laboratory navigation pack. Missing or stale
+            // PNGs never remove the original geometry floorplan viewer.
+            var navFile=Find("Navigation","Laboratory.nav31.gz");
+            if (navFile is not null &&
+                (simulated || Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(navFile)))
+                    .ToLowerInvariant()==Pass40NavSha))
+            {
+                var images=new List<Texture2D>();
+                for(var i=0;i<3;i++)
+                {
+                    var navPng=Find("MapPlans",$"Laboratory.navgraph40-{i}.png");
+                    if(navPng is null)break;
+                    var png=File.ReadAllBytes(navPng);
+                    if(png.Length<128 || png.Length>5_000_000 ||
+                        (!simulated && Convert.ToHexString(SHA256.HashData(png))
+                            .ToLowerInvariant()!=Pass40PlanShas[i]))
+                        break;
+                    var decoded=Image.LoadFromFile(navPng);
+                    if(decoded is null || decoded.IsEmpty() ||
+                        decoded.GetWidth() is <16 or >2048 ||
+                        decoded.GetHeight() is <16 or >2048)
+                        break;
+                    images.Add(ImageTexture.CreateFromImage(decoded));
+                }
+                if(images.Count==3)overlay._navigationPlans.AddRange(images);
+            }
             owner.AddChild(overlay);
             GD.Print("TWR_PASS39_LAB_PLANS_READY floor_levels=3 " +
-                $"verified_original_scene={!simulated} default=OFF missing_source_meshes=true");
+                $"verified_original_scene={!simulated} default=OFF missing_source_meshes=true " +
+                $"pass40_nav_diagrams={overlay.HasNavigationDiagnostic}");
             return overlay;
         }
         catch(Exception error)
@@ -129,7 +169,7 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
         _panel.AddChild(_image);
         _panel.AddChild(new Label
         {
-            Text="F4 CLOSE    LEFT / RIGHT CHANGE FLOOR    SOURCE BOUNDS, NOT ORIGINAL CUSTOM MESHES",
+            Text="F4 CLOSE     LEFT / RIGHT: FLOOR     N: NAV GRAPH     SOURCE MESH DATA INCOMPLETE",
             OffsetLeft=26,OffsetRight=925,OffsetTop=852,OffsetBottom=878,
             MouseFilter=Control.MouseFilterEnum.Ignore
         });
@@ -145,8 +185,19 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
     {
         if (_plans.Count==0)return;
         ActiveLevel=(level%_plans.Count+_plans.Count)%_plans.Count;
-        if (_image is not null)_image.Texture=_plans[ActiveLevel];
-        if (_caption is not null)_caption.Text=LevelLabels[ActiveLevel];
+        if (_image is not null)
+            _image.Texture=IsShowingNavigation && HasNavigationDiagnostic
+                ? _navigationPlans[ActiveLevel] : _plans[ActiveLevel];
+        if (_caption is not null)
+            _caption.Text=(IsShowingNavigation ? "APPROXIMATE WALKABILITY  |  " :
+                "SOURCE BOUNDS  |  ")+LevelLabels[ActiveLevel];
+    }
+
+    public void ToggleNavigation()
+    {
+        if (!HasNavigationDiagnostic)return;
+        IsShowingNavigation=!IsShowingNavigation;
+        SetLevel(ActiveLevel);
     }
 
     public override void _Input(InputEvent @event)
@@ -155,6 +206,11 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
         if(key.Keycode==Key.F4)
         {
             SetOpen(!IsOpen);
+            GetViewport().SetInputAsHandled();
+        }
+        else if(IsOpen && key.Keycode==Key.N)
+        {
+            ToggleNavigation();
             GetViewport().SetInputAsHandled();
         }
         else if(IsOpen && key.Keycode is Key.Right or Key.Left)
