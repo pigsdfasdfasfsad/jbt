@@ -19,9 +19,9 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
-        if(args.Contains("--smoke-pass36",StringComparer.Ordinal))
+        if(args.Contains("--smoke-pass41-lobby",StringComparer.Ordinal))
         {
-            RunPass36Smoke();
+            RunPass41LobbySmoke();
             return;
         }
         if(args.Contains("--smoke-pass40",StringComparer.Ordinal))
@@ -418,7 +418,7 @@ public partial class Bootstrap : Node
         GetTree().Quit(0);
     }
 
-    private void RunPass36Smoke()
+    private void RunPass41LobbySmoke()
     {
         // Runs inside the exported Windows Godot C# game against a generated
         // synthetic scene; no owner source is ever uploaded to public CI.

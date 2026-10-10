@@ -422,7 +422,7 @@ jobs:
             $stdout = Join-Path $env:RUNNER_TEMP 'pass41-lobby.stdout.txt'
             $stderr = Join-Path $env:RUNNER_TEMP 'pass41-lobby.stderr.txt'
             $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
-            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass36') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass41-lobby') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
             $output = @()
             if (Test-Path $stdout) { $output += Get-Content $stdout }
             if (Test-Path $stderr) { $output += Get-Content $stderr }

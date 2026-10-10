@@ -160,7 +160,7 @@ public partial class Pass36SourceLobbyRuntime : Node3D
             throw new InvalidDataException("Lobby source pack violates byte bound");
         var packed=File.ReadAllBytes(file);
         var checksum=Convert.ToHexString(SHA256.HashData(packed)).ToLowerInvariant();
-        var smokeOnly=OS.GetCmdlineUserArgs().Contains("--smoke-pass36",StringComparer.Ordinal);
+        var smokeOnly=OS.GetCmdlineUserArgs().Contains("--smoke-pass41-lobby",StringComparer.Ordinal);
         if (checksum != OriginalPackSha && !smokeOnly)
             throw new InvalidDataException("Lobby source pack differs from verified original SHA");
         using var compressed=new MemoryStream(packed);

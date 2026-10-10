@@ -119,4 +119,4 @@ def test_public_artifact_excludes_owner_lobby_pack():
     assert 'make_pass36_lobby_fixture.py --output $outputDir --create' in workflow
     assert 'make_pass36_lobby_fixture.py --output $outputDir --clean' in workflow
     assert "Filter '*.lobby36.jsonl.gz'" in workflow
-    assert '--smoke-pass36' in workflow
+    assert '--smoke-pass41-lobby' in workflow
