@@ -40,9 +40,15 @@ def create(root:Path):
     for v in nodes:data+=struct.pack('<fff',*v)
     for edge in edges:data+=struct.pack('<ii',*edge)
     nav.write_bytes(gzip.compress(data,mtime=0,compresslevel=6))
+    for level in range(3):
+        plans=root/"Content"/"MapPlans"
+        (plans/f"Laboratory.navgraph40-{level}.png").write_bytes(
+            (plans/f"Laboratory.sourceplan39-{level}.png").read_bytes())
     print("TWR_PASS40_SYNTHETIC_CREATED graph_nodes=19 edges=18 source_sha_bound=true")
 
 def clean(root:Path):
+    for level in range(3):
+        (root/"Content"/"MapPlans"/f"Laboratory.navgraph40-{level}.png").unlink(missing_ok=True)
     nav=root/"Content"/"Navigation"/"Laboratory.nav31.gz"
     nav.unlink(missing_ok=True)
     folder=nav.parent
