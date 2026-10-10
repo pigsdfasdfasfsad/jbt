@@ -2,7 +2,19 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 40 (October 10, 2026)
+## Latest source-development branch: Pass 41 (October 10, 2026)
+
+[Pass 41 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass41-source-native-bridges) ·
+[Lab bridge repair details](docs/development/PASS41_SOURCE_NATIVE_BRIDGE_REPAIR.md)
+
+- **Laboratory** now has a SHA-pinned TWRNAV41 v3 graph preserving the original reconstructed 14,726 source-sampled nodes and 43,920 previous graph edges; only **17 new short native-Part-floor-validated bridges** were added, with nine collision/floor checks per bridge, for **43,937 total edges**
+- Existing **133 disconnected** map graph regions become **117**; the 291-node original player-start region still has no verified path to the Lab interior. This is **not** original Roblox navigation mesh parity
+- **F4 / N** displays three new owner-private source connectivity diagrams; 17 new bridges appear in gold. F4 switches the map view, Left/Right selects floors. F10/F11 records the number of loaded bridges and remaining disconnected regions
+- Existing optional **F9** accessible infected-spawn fallback remains OFF by default, retains collision checks and minimum 24/14/10m candidate distances. It does not claim to reproduce the original horde spawn behavior
+- New public-surface validation: deterministic conversion tests, unsupported floor/wall/proxy rejection, SHA checks, and actual exported Windows synthetic-fixture navigation/F4/F9 smoke. Original owner source packs remain **private** and out of GitHub Actions artifacts
+- **Still incomplete:** Nine fully reconstructed map scenes, Laboratory terrain/custom mesh binaries and player-to-interior routes, full source-faithful enemy navigation and animations, original audio, visual pixel-match and a player-controlled 15-wave Windows performance pass
+
+## Previous verified branch: Pass 40 (October 10, 2026)
 
 [Pass 40 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass40-grounded-lab-navigation) ·
 [Windows compile and native tests](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38085199252) (423 Python tests passed, exported Windows game verified with synthetic original-scene fixtures)
