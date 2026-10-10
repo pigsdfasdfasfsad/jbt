@@ -19,10 +19,16 @@ public static class Pass32SpawnSafety
     private const int MaximumCandidates = 32;
 
     public static Vector3? FindSupportedPlacement(World3D world,
-        IEnumerable<Vector3> candidateCenters, Vector3 playerPosition)
+        IEnumerable<Vector3> candidateCenters, Vector3 playerPosition,
+        float minimumPlayerDistance = MinimumPlayerDistance)
     {
         ArgumentNullException.ThrowIfNull(world);
         ArgumentNullException.ThrowIfNull(candidateCenters);
+        // No gameplay caller can silently allow a near-zero-range enemy spawn.
+        if (!float.IsFinite(minimumPlayerDistance) ||
+            minimumPlayerDistance < Pass40AdaptiveEntry.MinimumFallbackDistance ||
+            minimumPlayerDistance > MinimumPlayerDistance)
+            return null;
         var space = world.DirectSpaceState;
         using var capsule = new CapsuleShape3D { Radius = .30f, Height = 1.60f };
         var examined = 0;
@@ -31,7 +37,7 @@ public static class Pass32SpawnSafety
             if (++examined > MaximumCandidates) break;
             if (!IsFinite(candidate) ||
                 candidate.DistanceSquaredTo(playerPosition) <
-                    MinimumPlayerDistance * MinimumPlayerDistance)
+                    minimumPlayerDistance * minimumPlayerDistance)
                 continue;
 
             // Nav waypoints are feet points; candidates are initial capsule
