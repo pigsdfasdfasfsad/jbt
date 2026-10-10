@@ -116,14 +116,16 @@ def grid_samples(surfaces):
     # Quantize only horizontal X/Z. Preserve separate floor bands in each
     # cell; do not collapse a second floor over the same x/z coordinates.
     samples=defaultdict(list)
+    added=0
     for surface in surfaces:
         minx,minz,maxx,maxz=surface.polygon.bounds
+        safe_footprint=surface.polygon.buffer(-.55)
         for i in range(math.ceil(minx/GRID),math.floor(maxx/GRID)+1):
             x=i*GRID
             for j in range(math.ceil(minz/GRID),math.floor(maxz/GRID)+1):
                 z=j*GRID
                 point=Point(x,z)
-                if not surface.polygon.buffer(-.55).covers(point):continue
+                if not safe_footprint.covers(point):continue
                 heights=samples[(i,j)]
                 # Overlapping thin floor coverings: keep the upper walkable
                 # surface instead of spawning two nearly coincident floors.
@@ -133,7 +135,8 @@ def grid_samples(surfaces):
                             heights[k]=(surface.height,surface.source_index,surface.approximate)
                     continue
                 heights.append((surface.height,surface.source_index,surface.approximate))
-                if sum(map(len,samples.values()))>LIMIT_NODES*3:
+                added+=1
+                if added>LIMIT_NODES*3:
                     raise ValueError('Source navigation grid sample budget exceeded')
     return samples
 
@@ -219,12 +222,14 @@ def generate(scene:Path,output:Path,allow_synthetic=False,grid_size=GRID):
     stats['largest_component']=max(components.values())
     # Never assume a source player/infected marker can stand on recovered
     # geometry; report 3D distance and reachability rather than inventing links.
-    from scipy.spatial import cKDTree
-    kd=cKDTree([(x*STUD,y*STUD,-z*STUD) for x,y,z,*_ in nodes])
+    world_nodes=np.asarray([(x*STUD,y*STUD,-z*STUD) for x,y,z,*_ in nodes],dtype=np.float64)
     spawn_records=[]
     for r in rows:
         if r.get('kind')!='spawn':continue
-        pos=r['t'];dist,node_id=kd.query((pos[0]*STUD,pos[1]*STUD,-pos[2]*STUD))
+        pos=r['t']
+        delta=world_nodes-np.asarray((pos[0]*STUD,pos[1]*STUD,-pos[2]*STUD))
+        distances=np.linalg.norm(delta,axis=1)
+        node_id=int(np.argmin(distances));dist=float(distances[node_id])
         spawn_records.append({'side':r['side'],'name':r.get('name',''),
                 'distance_to_nearest_waypoint_m':round(float(dist),3),
                 'connected_component_size':components[root(int(node_id))] if dist<=5 else 0,
