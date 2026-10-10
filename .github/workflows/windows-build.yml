@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments]
     paths:
       - 'src/**'
       - 'content/**'
@@ -246,8 +246,32 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass35 synthetic fixture cleanup failed' }
           }
 
+      - name: Smoke Pass 36 F4 map plan F5 recovered objects F6 Server Walls in Windows game
+        if: success() && github.ref_name == 'twr-pass36-source-map-fragments'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass 36 synthetic source fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass36-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass36-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass36') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS36_SOURCE_MAP_OK' })) {
+              throw "Pass 36 native nine-map source-fragment smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass 36 synthetic source fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -256,12 +280,18 @@ jobs:
           if ($privateWalls.Count -gt 0) { throw 'Private Client Walls pack remained in CI artifact' }
           $infectedWalls = @(Get-ChildItem -Path build/output -Filter '*.infectedwalls35.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
           if ($infectedWalls.Count -gt 0) { throw 'Owner-private infected-wall source pack remained in public CI artifact' }
+          $serverWalls = @(Get-ChildItem -Path build/output -Filter '*.serverwalls36.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($serverWalls.Count -gt 0) { throw 'Owner-private Server Wall pack remained in public CI output' }
+          $sourceObjects = @(Get-ChildItem -Path build/output -Filter '*.objects36.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($sourceObjects.Count -gt 0) { throw 'Owner-private source Map Object pack remained in public CI output' }
+          $plans = @(Get-ChildItem -Path build/output -Filter '*.sourcefragment36.png' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($plans.Count -gt 0) { throw 'Owner-private map plan remained in public CI output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
         uses: actions/upload-artifact@v4
         with:
-          name: TWR-Pass35-Windows-x64-NoPrivateAssets
+          name: TWR-Pass36-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
