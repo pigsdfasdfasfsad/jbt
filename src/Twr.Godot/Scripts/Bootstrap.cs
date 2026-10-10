@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass36",StringComparer.Ordinal))
+        {
+            RunPass36Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass35",StringComparer.Ordinal))
         {
             RunPass35Smoke();
@@ -387,6 +392,72 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private async void RunPass36Smoke()
+    {
+        // Native exported Godot C# verification with fabricated CMaps source.
+        // No owner TestPlace bytes, meshes, source textures or private map packs.
+        _runtime.StartMap("Manor");
+        var game=new GameplayRoot
+        {
+            Name="Pass36OriginalSourceMapSmoke",Runtime=_runtime,MapName="Manor"
+        };
+        AddChild(game);
+        var source=game.GetNodeOrNull<Pass36SourceFragmentsRuntime>("Pass36SourceFragments");
+        var map=game.GetNodeOrNull<Pass36MapPlanOverlay>("Pass36SourceMapPlan");
+        var player=game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if(source is null || source.WallCount!=1 ||
+            source.NativeObjectCount!=1 || source.MissingOriginalCustomObjectCount!=1 ||
+            source.ServerCollisionEnabled || source.NativeObjectPreviewEnabled ||
+            map is null || !map.HasPlan || map.IsOpen || player is null)
+            throw new InvalidOperationException("Pass36 synthetic source fragments or map plan unavailable");
+        if((player.CollisionMask & Pass36SourceFragmentsRuntime.SourceServerCollisionLayer)==0)
+            throw new InvalidOperationException("Player cannot collide with opt-in original Server Walls");
+        var infected=new InfectedAgent
+        {
+            Name="Pass36InfectedCollisionProbe",
+            Target=player,Runtime=_runtime,
+            Position=new Vector3(280,280,-285)
+        };
+        game.AddChild(infected);
+        if((infected.CollisionMask & Pass36SourceFragmentsRuntime.SourceServerCollisionLayer)==0)
+            throw new InvalidOperationException("Infected do not collide with source Server Wall layer");
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        var from=new Vector3(280,280,-282);
+        var to=new Vector3(280,280,-278);
+        bool Hit(uint mask)
+        {
+            var query=PhysicsRayQueryParameters3D.Create(from,to);
+            query.CollisionMask=mask;
+            return game.GetWorld3D().DirectSpaceState.IntersectRay(query).Count>0;
+        }
+        if(Hit(Pass36SourceFragmentsRuntime.SourceServerCollisionLayer))
+            throw new InvalidOperationException("Original server collision enabled by default");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F6, Pressed=true });
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if(!source.ServerCollisionEnabled || !Hit(Pass36SourceFragmentsRuntime.SourceServerCollisionLayer) ||
+            Hit(1))
+            throw new InvalidOperationException("F6 did not isolate source Server Wall physics from world layer");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F6, Pressed=true });
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if(source.ServerCollisionEnabled || Hit(Pass36SourceFragmentsRuntime.SourceServerCollisionLayer))
+            throw new InvalidOperationException("F6 could not disable original source wall collision");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F5, Pressed=true });
+        if(!source.NativeObjectPreviewEnabled || source.NativeObjectCount!=1)
+            throw new InvalidOperationException("F5 original native Part rendering did not enable");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F5, Pressed=true });
+        if(source.NativeObjectPreviewEnabled)
+            throw new InvalidOperationException("F5 original source props did not hide");
+        map._Input(new InputEventKey { Keycode=Key.F4, Pressed=true });
+        if(!map.IsOpen)throw new InvalidOperationException("F4 original footprint plan did not open");
+        map._Input(new InputEventKey { Keycode=Key.F4, Pressed=true });
+        if(map.IsOpen)throw new InvalidOperationException("F4 source footprint plan did not close");
+        GD.Print("TWR_SMOKE_PASS36_SOURCE_MAP_OK " +
+            "server_wall=1 native_prop=1 missing_custom_mesh=1 " +
+            "physics_toggle=2 object_toggle=2 plan_toggle=2 default=OFF");
         GetTree().Quit(0);
     }
 
