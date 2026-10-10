@@ -126,16 +126,26 @@ jobs:
         if: success() && github.ref_name == 'twr-pass31-navigation-repair'
         shell: pwsh
         run: |
-          $stdout = Join-Path $env:RUNNER_TEMP 'pass31-smoke.stdout.txt'
-          $stderr = Join-Path $env:RUNNER_TEMP 'pass31-smoke.stderr.txt'
-          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
-          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass31') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-          $output = @()
-          if (Test-Path $stdout) { $output += Get-Content $stdout }
-          if (Test-Path $stderr) { $output += Get-Content $stderr }
-          $output | ForEach-Object { Write-Host $_ }
-          if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS31_NAV_OK' })) {
-            throw "Pass 31 native navigation smoke failed. Exit: $($run.ExitCode)"
+          # Pass 30 cleaned its fixtures in finally; create a FRESH isolated
+          # synthetic scene/nav graph and remove it before uploading artifacts.
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass 31 synthetic navigation fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass31-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass31-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass31') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS31_NAV_OK' })) {
+              throw "Pass 31 native navigation smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass 31 synthetic fixture cleanup failed' }
           }
 
       - name: Verify no private map scenes entered the CI export
