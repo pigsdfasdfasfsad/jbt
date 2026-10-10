@@ -20,16 +20,16 @@ public partial class Pass37SourceLightingRuntime : Node
     private const int MaxFileBytes = 16384;
     private static readonly Dictionary<string, (string Sha, int Count)> Source = new(StringComparer.Ordinal)
     {
-        ["Ranch"]=("ee285a5043d544a3a9e410aba9d9c580347289f9f6adeb27a23c862f902637d2",6),
-        ["Mill"]=("dcb81d20f68480ce0cb8820d07d4880625b83d5a7b1a6581ec67186ad6280335",6),
-        ["Bypass"]=("311a2b11162e098b642bcd0167cdb1b67c15c8c8bd8e85556cbba030d440c93e",5),
-        ["Cabin"]=("848b3614c6e32c28de84894792f38e0da5b61228c06835bc8ae05ea17a492b56",5),
-        ["Cargo"]=("bfb13b04f7e167bbed060b639e3af282b5dde86fb247c771aa9e04edd0f14ad4",4),
-        ["District"]=("164f3a1c1d866722f791d9540ad8b43699fef60d5dd7ae5a40e00b591c229c22",3),
-        ["Expressway"]=("b4474fd4b85b3576139acfa784b4e28e88c17c7954db003e9200d6904d903a80",4),
-        ["Prison"]=("112f5a470d6b3236c6de19d7f63c13f8e0b0d45b4658a1682a57096665d812d4",5),
-        ["Laboratory"]=("8a8aa31d56adbf09bfd7b48228a681bd82e8d5f44589087c6591aa0e60efe01c",3),
-        ["Manor"]=("d488d3cd9d6113d5006bcceef046002846b1c1c452597678a1bd96682353bfec",4)
+        ["Ranch"]=("5e91a07c097c93379bbd81dec26f8218b406ebffb9b09176ccadfb0e5e8d7525",6),
+        ["Mill"]=("1a01fdf184c994878a9da106c2eb3cfc84cb65048f6b23fa520a9b909d5655ea",6),
+        ["Bypass"]=("1affd1f7c4c872b93c8973b1422bab1354883f1900a1e952f9bae03a733b7359",5),
+        ["Cabin"]=("742905e4f4ede505fc0067adb4aef83daa719869dad9aeca1a2fdd67bb3586e5",5),
+        ["Cargo"]=("5dd1650ad197b087a2b0bbfc83b9235f12b9a237163a0d412b59c0c9891a3daa",4),
+        ["District"]=("b35056b915edcb05e9241450671ca3d6a73597a719f1bede7b81cff7213232cb",3),
+        ["Expressway"]=("43ea98a64a447b90ae53e1823d8af14618e886bd5a774fe5b398d85ce7da67fc",4),
+        ["Prison"]=("e517e72a79657d35546c5392ce06def007ecda148ff7f6077b40770f2301bbac",5),
+        ["Laboratory"]=("3281186cfa169a203653b14b1b3b8ab9c0d09dde39ea0b1227cd7c538831ede6",3),
+        ["Manor"]=("d122ccc1b29a1ef446de34f537154c289c9995e1f7d5ef1ffc83c2b1376467c8",4)
     };
 
     private WorldEnvironment _world = null!;
@@ -164,7 +164,7 @@ public partial class Pass37SourceLightingRuntime : Node
             // against ambient lighting; no fake original LUT or skybox.
             var tintBlend = new Color(.6f+.4f*tint.R,
                                       .6f+.4f*tint.G,.6f+.4f*tint.B);
-            preview.AmbientLightColor *= tintBlend;
+            preview.AmbientLightColor = preview.AmbientLightColor * tintBlend;
 
             var node = new Pass37SourceLightingRuntime
             {
