@@ -36,6 +36,13 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     private const string Pass40NavigationSha =
         "b021b905a0a87619997a0e2da08a4c7b2db18ecd2a5250f93dfd84d08cb26bdc";
     public bool IsPass40GroundedGraph { get; private set; }
+    // Pass41 adds ONLY 17 native-Part floor-supported short bridges to the
+    // original 14,726 sampled nodes. No authoring claim to Roblox's navmesh.
+    private const string Pass41NavigationSha =
+        "12ac9bae602cbdea3ae6a6789289d1068f1c8efd5d603de34d6186698c375dd0";
+    public bool IsPass41SourceNativeGraph { get; private set; }
+    public int Pass41NativeBridgeCount => IsPass41SourceNativeGraph ? 17 : 0;
+    public int ConnectedComponentCount => _componentNodes.Count;
 
     // Most infected replan toward the SAME player anchor every 0.75-1.15s.
     // A* on 19,355 waypoints per infected costs CPU and creates garbage.
@@ -76,7 +83,8 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     public static Pass25SourceNavigationRuntime? TryBuild(Node3D owner, string mapName)
     {
         if (mapName != "Laboratory") return null;
-        var navFiles = CandidatePaths("Navigation", "Laboratory.nav31.gz")
+        var navFiles = CandidatePaths("Navigation", "Laboratory.nav41.gz")
+            .Concat(CandidatePaths("Navigation", "Laboratory.nav31.gz"))
             .Concat(CandidatePaths("Navigation", "Laboratory.nav25.gz"))
             .Where(File.Exists).Distinct(StringComparer.Ordinal).ToArray();
         var sceneFile = CandidatePaths("Maps", "Laboratory.scene.jsonl.gz")
@@ -94,7 +102,9 @@ public partial class Pass25SourceNavigationRuntime : Node3D
                 navigator.ReadGraph(navFile, sceneFile);
                 owner.AddChild(navigator);
                 GD.Print($"TWR_PASS31_NAV_READY map=Laboratory nodes={navigator.PointCount} " +
-                    $"edges={navigator.EdgeCount} bridge_pack={navigator.IsBridgePackActive}");
+                    $"edges={navigator.EdgeCount} bridge_pack={navigator.IsBridgePackActive} " +
+                    $"source_native_repair={navigator.IsPass41SourceNativeGraph} " +
+                    $"components={navigator.ConnectedComponentCount}");
                 return navigator;
             }
             catch (Exception error)
@@ -245,18 +255,27 @@ public partial class Pass25SourceNavigationRuntime : Node3D
 
         var packedHash = Convert.ToHexString(SHA256.HashData(
             File.ReadAllBytes(navFile))).ToLowerInvariant();
-        IsPass40GroundedGraph =
-            Convert.ToHexString(sceneDigest).ToLowerInvariant() == Pass40SceneSha &&
-            packedHash == Pass40NavigationSha;
+        var ownerSource = Convert.ToHexString(sceneDigest).ToLowerInvariant() == Pass40SceneSha;
+        IsPass41SourceNativeGraph = ownerSource && packedHash == Pass41NavigationSha;
+        IsPass40GroundedGraph = ownerSource &&
+            (packedHash == Pass40NavigationSha || IsPass41SourceNativeGraph);
         using var archive = File.OpenRead(navFile);
         using var gzip = new GZipStream(archive, CompressionMode.Decompress);
         using var reader = new BinaryReader(gzip);
         var marker = reader.ReadBytes(8);
+        var nav41 = marker.SequenceEqual(Encoding.ASCII.GetBytes("TWRNAV41"));
         var nav31 = marker.SequenceEqual(Encoding.ASCII.GetBytes("TWRNAV31"));
-        if (!nav31 && !marker.SequenceEqual(Magic))
+        if (!nav41 && !nav31 && !marker.SequenceEqual(Magic))
             throw new InvalidDataException("wrong navigation format");
-        if (reader.ReadUInt32() != (nav31 ? 2u : 1u))
+        if (reader.ReadUInt32() != (nav41 ? 3u : nav31 ? 2u : 1u))
             throw new InvalidDataException("unsupported navigation version");
+        // For real original scenes a repaired graph is usable only when
+        // it exactly matches the owner-derived 17-bridge source evidence.
+        // Synthetic Windows QA fixtures are explicitly exempt, never
+        // distributed as original navigation to an end user.
+        if (nav41 && !IsPass41SourceNativeGraph &&
+            !OS.GetCmdlineUserArgs().Contains("--smoke-pass41",StringComparer.Ordinal))
+            throw new InvalidDataException("Pass41 native source bridge SHA mismatch");
         var pointCount = reader.ReadInt32();
         var edgeCount = reader.ReadInt32();
         if (pointCount is < 1 or > MaximumNodes ||
@@ -287,7 +306,8 @@ public partial class Pass25SourceNavigationRuntime : Node3D
             if (!knownEdges.Add(((ulong)(uint)first << 32) | (uint)last))
                 throw new InvalidDataException("duplicate navigation edge");
             var delta = _graph.GetPointPosition(a) - _graph.GetPointPosition(b);
-            if (delta.Length() > (nav31 ? 2.46f : 1.5f) || Math.Abs(delta.Y) > .64f)
+            if (delta.Length() > (nav31 || nav41 ? 2.46f : 1.5f) ||
+                Math.Abs(delta.Y) > .64f)
                 throw new InvalidDataException("navigation edge jumps unsupported distance");
             _graph.ConnectPoints(a, b, true);
             var rootA = FindRoot(parents, a);
@@ -297,7 +317,7 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         if (reader.BaseStream.ReadByte() != -1)
             throw new InvalidDataException("extra data after navigation graph");
         _edgeCount = edgeCount;
-        _bridgePackActive = nav31;
+        _bridgePackActive = nav31 || nav41;
         _componentRoot = new int[pointCount];
         for (var i = 0; i < pointCount; i++)
         {
