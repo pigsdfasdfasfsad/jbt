@@ -130,6 +130,41 @@ def infectedwalls35():
     return compressed(records.encode('utf8'))
 
 
+
+def source_fragments36():
+    # Entirely SYNTHETIC Manor CMaps Server Walls and Objects; original mesh
+    # binaries and owner RBXLX contents must never appear in public CI.
+    owner='0'*64
+    walls=[
+       {'format':'twr-serverwalls36-v1','map':'Manor',
+        'owner_rbxlx_sha256':owner,'wall_count':1,'native_primitives':1,
+        'source_path':'ReplicatedStorage/CMaps/Manor/Walls/Server Walls',
+        'approximated_collision_meshes':0,
+        'default_collision_enabled':False,'wall_layer':16},
+       {'class':'Part','t':[1000.,1000.,1000.],
+        'r':list(R),'s':[2.,6.,2.],
+        'approximated_mesh':False,'can_collide':True}]
+    objects=[
+       {'format':'twr-source-objects36-v1','map':'Manor',
+        'owner_rbxlx_sha256':owner,'object_count':2,'native_primitives':1,
+        'source_path':'ReplicatedStorage/CMaps/Manor/Map/Objects',
+        'missing_mesh_or_csg':1,'visual_geometry_incomplete':True},
+       {'class':'Part','t':[1000.,1000.,1005.],
+        'r':list(R),'s':[1.,1.,1.],'rgb':[200,180,140],
+        'name':'CI_NativeSourceLamp','material':'512',
+        'transparency':0.,'geometry_status':'native_primitive',
+        'can_collide':False},
+       {'class':'UnionOperation','t':[1000.,1000.,1010.],
+        'r':list(R),'s':[1.,2.,3.],'rgb':[130,130,130],
+        'name':'CI_MissingUnion','material':'512','transparency':0.,
+        'geometry_status':'external_mesh_or_csg_unavailable',
+        'can_collide':False}]
+    def rows(x):
+        return compressed(('\n'.join(json.dumps(row,sort_keys=True,separators=(',',':'))
+                             for row in x)+'\n').encode('utf8'))
+    return rows(walls),rows(objects)
+
+
 def col26(digest):
     # Synthetic walkable floor under original player + all distant nav31
     # F9 candidates, with upward-facing triangle normals for a ground ray.
@@ -165,6 +200,9 @@ def staged_files(outdir):
              base/'Collision'/'Laboratory.col26.gz':col26(digest),
              base/'Walls'/'Laboratory.clientwalls34.jsonl.gz':clientwalls34(digest),
              base/'Walls'/'Manor.infectedwalls35.jsonl.gz':infectedwalls35(),
+             base/'ServerWalls'/'Manor.serverwalls36.jsonl.gz':source_fragments36()[0],
+             base/'MapObjects'/'Manor.objects36.jsonl.gz':source_fragments36()[1],
+             base/'MapPlans'/'Manor.sourcefragment36.png':png,
              base/'Geometry'/'Laboratory.native28.gz':native28(digest),
              base/'Art'/'visuals.json': (json.dumps(images,sort_keys=True)+'\n').encode('utf8'),
              base/'Art'/'WeaponIcons'/'G17-UI.png': png}
