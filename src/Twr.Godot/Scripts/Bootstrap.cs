@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass31",StringComparer.Ordinal))
+        {
+            RunPass31Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass30",StringComparer.Ordinal))
         {
             RunPass30Smoke();
@@ -362,6 +367,35 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass31Smoke()
+    {
+        _runtime.StartMap("Laboratory");
+        var game = new GameplayRoot
+        {
+            Name = "Pass31NavigationSmoke",
+            Runtime = _runtime,
+            MapName = "Laboratory"
+        };
+        AddChild(game);
+        var nav = game.GetNodeOrNull<Pass25SourceNavigationRuntime>(
+            "Pass25LaboratoryNavigation");
+        if (nav is null || !nav.IsBridgePackActive ||
+            nav.PointCount < 52 || nav.EdgeCount < 50)
+            throw new InvalidOperationException("Synthetic nav31 source graph not loaded");
+        var player = new Vector3(0, 1.4f, 0);
+        // Exact source-side node is disconnected in the synthetic fixture.
+        var unreachable = new Vector3(84, 1.4f, -11.2f);
+        var assisted = nav.FindAssistedInfectedSpawn(unreachable, player, 3);
+        if (!assisted.HasValue || assisted.Value.DistanceTo(player) < 24f ||
+            nav.GetRoute(assisted.Value, player).Length == 0)
+            throw new InvalidOperationException("Assisted distant infected entry is not navigable");
+        if (game.AssistedInfectedSpawnsEnabled)
+            throw new InvalidOperationException("Source-preserving assisted spawn mode must default OFF");
+        GD.Print("TWR_SMOKE_PASS31_NAV_OK nodes=" + nav.PointCount +
+            " bridges=source_bound opt_in=true original_spawns_preserved=true");
         GetTree().Quit(0);
     }
 
