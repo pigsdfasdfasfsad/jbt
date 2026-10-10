@@ -120,7 +120,7 @@ def test_native_windows_executable_checks_wall_physics_and_fixtures():
     assert 'TWR_SMOKE_PASS34_WALLS_OK' in code
     assert 'game.GetWorld3D().DirectSpaceState.IntersectRay(ray)' in code
     assert 'if (Hits(1))' in code
-    assert 'TWR-Pass35-Windows-x64-NoPrivateAssets' in workflow
+    assert 'TWR-Pass36-Windows-x64-NoPrivateAssets' in workflow
     assert "base/'Walls'/'Laboratory.clientwalls34.jsonl.gz'" in fixture
     assert "'wall_count': 1" in fixture
     assert "*.clientwalls34.jsonl.gz" in workflow

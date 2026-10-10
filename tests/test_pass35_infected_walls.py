@@ -112,5 +112,5 @@ def test_native_game_and_public_ci_exclude_private_owner_walls():
     assert "'source_rbxlx_sha256':'0'*64" in fixture
     assert '--smoke-pass35' in workflow
     assert '*.infectedwalls35.jsonl.gz' in workflow
-    assert 'TWR-Pass35-Windows-x64-NoPrivateAssets' in workflow
+    assert 'TWR-Pass36-Windows-x64-NoPrivateAssets' in workflow
     assert 'make_pass30_synthetic_sidecars.py --output $outputDir --clean' in workflow
