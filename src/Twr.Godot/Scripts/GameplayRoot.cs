@@ -19,6 +19,7 @@ public partial class GameplayRoot : Node3D
     private Pass36MapPlanOverlay? _sourceMapPlan;
     private Pass37SourceLightingRuntime? _sourceLighting;
     private Pass38SourceSoundscapeRuntime? _sourceSoundscape;
+    private Pass39LaboratoryFloorplan? _labFloorplan;
     private OfflineAudioRuntime _audio = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
     private RuntimeMapLayout _mapLayout = null!;
@@ -67,6 +68,9 @@ public partial class GameplayRoot : Node3D
     public int Pass38OfflineWavEmitterCount => _sourceSoundscape?.InstalledWavEmitterCount ?? 0;
     public int Pass38ActiveSourceVoices => _sourceSoundscape?.ActiveVoiceCount ?? 0;
     public bool Pass38SourceSoundEnabled => _sourceSoundscape?.Enabled ?? false;
+    public bool Pass39OriginalLabSourceVerified => _labFloorplan?.VerifiedOriginalScene ?? false;
+    public int Pass39LabFloorCount => _labFloorplan?.LevelCount ?? 0;
+    public int Pass39LabCurrentFloor => _labFloorplan?.ActiveLevel ?? -1;
     public bool AssistedInfectedSpawnsEnabled { get; private set; }
     public int AssistedInfectedSpawnCount { get; private set; }
     public int AssistedInfectedRecoveryCount { get; private set; }
@@ -104,6 +108,10 @@ public partial class GameplayRoot : Node3D
         // replace their approximated blockouts without evidence.
         _sourceFragments = Pass36SourceFragmentsRuntime.TryBuild(this, MapName);
         _sourceMapPlan = Pass36MapPlanOverlay.TryBuild(this, MapName);
+        // Laboratory has a distinct exact-loaded-source three-height map plan.
+        // Unlike the nine-map server-wall fragments, it is SHA-bound to the
+        // owner-recovered full Workspace/Map scene, not approximate blockouts.
+        _labFloorplan = Pass39LaboratoryFloorplan.TryBuild(this, MapName);
         _sourceLighting = Pass37SourceLightingRuntime.TryBuild(this, MapName);
         _sourceNavigator = Pass25SourceNavigationRuntime.TryBuild(this, MapName);
 
