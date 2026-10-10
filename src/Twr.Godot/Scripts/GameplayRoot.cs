@@ -45,6 +45,9 @@ public partial class GameplayRoot : Node3D
     public string WaveStage => StageName();
     public bool AssistedInfectedSpawnsEnabled { get; private set; }
     public int AssistedInfectedSpawnCount { get; private set; }
+    public int AssistedInfectedRecoveryCount { get; private set; }
+    public int RejectedAssistedSpawnAttempts { get; private set; }
+    private double _pass32RecoveryScan = 1.5;
 
     private enum Stage { Countdown, Wave, WaveEnd, Intermission, Results }
 
@@ -114,7 +117,11 @@ public partial class GameplayRoot : Node3D
     {
         if (Runtime?.Player is null || Runtime.Match is null) return;
 
-        if(!_finished) TickNaturalRespawns(delta);
+        if(!_finished)
+        {
+            TickNaturalRespawns(delta);
+            TickAssistedInfectedRecovery(delta);
+        }
 
         if (!_finished && !Runtime.Player.IsAlive)
         {
@@ -613,14 +620,20 @@ public partial class GameplayRoot : Node3D
         var speedScale = (float)RegularWaveRules.InfectedWalkSpeedScale(wave);
 
         var spawn = RandomSpawnPoint();
-        if (AssistedInfectedSpawnsEnabled && _sourceNavigator is not null)
+        if (AssistedInfectedSpawnsEnabled && _sourceNavigator?.IsBridgePackActive == true)
         {
-            var assisted = _sourceNavigator.FindAssistedInfectedSpawn(
+            var candidates = _sourceNavigator.GetAssistedInfectedSpawnCandidates(
                 spawn, _player.GlobalPosition, _rng.Randi());
-            if (assisted.HasValue)
+            if (candidates.Length > 0)
             {
-                spawn = assisted.Value;
-                AssistedInfectedSpawnCount++;
+                var safe = Pass32SpawnSafety.FindSupportedPlacement(
+                    GetWorld3D(), candidates, _player.GlobalPosition);
+                if (safe.HasValue)
+                {
+                    spawn = safe.Value;
+                    AssistedInfectedSpawnCount++;
+                }
+                else RejectedAssistedSpawnAttempts++;
             }
         }
 
@@ -642,6 +655,38 @@ public partial class GameplayRoot : Node3D
         infected.SpecialAttackRequested = OnInfectedSpecialAttack;
         _infected.Add(infected);
         AddChild(infected);
+    }
+
+    private void TickAssistedInfectedRecovery(double delta)
+    {
+        // Default source-exact behavior never relocates an infected actor.
+        if (!AssistedInfectedSpawnsEnabled || _sourceNavigator?.IsBridgePackActive != true)
+            return;
+        _pass32RecoveryScan -= delta;
+        if (_pass32RecoveryScan > 0) return;
+        _pass32RecoveryScan = 1.5;
+        if (!GodotObject.IsInstanceValid(_player) || !_player.IsInsideTree()) return;
+        var target = _player.GlobalPosition;
+        var movedThisScan = 0;
+        foreach (var infected in _infected)
+        {
+            if (!GodotObject.IsInstanceValid(infected) ||
+                !infected.NeedsAssistedRecovery(target)) continue;
+            var choices = _sourceNavigator.GetAssistedInfectedSpawnCandidates(
+                infected.GlobalPosition, target, _rng.Randi());
+            if (choices.Length == 0) continue;
+            var safe = Pass32SpawnSafety.FindSupportedPlacement(GetWorld3D(),choices,target);
+            if (!safe.HasValue)
+            {
+                RejectedAssistedSpawnAttempts++;
+                continue;
+            }
+            if (!infected.ApplyAssistedRecovery(safe.Value,target)) continue;
+            AssistedInfectedRecoveryCount++;
+            GD.Print($"TWR_PASS32_ASSISTED_RECOVERY map={MapName} " +
+                $"count={AssistedInfectedRecoveryCount}");
+            if (++movedThisScan >= 2) break;
+        }
     }
 
     private Vector3 RandomSpawnPoint()
