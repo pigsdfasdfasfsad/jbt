@@ -114,8 +114,8 @@ def test_lobby_3d_runtime_integrated_and_fail_closed():
 
 def test_public_artifact_excludes_owner_lobby_pack():
     workflow=source('.github/workflows/windows-build.yml')
-    assert "'twr-pass36-original-lobby'" in workflow
-    assert 'TWR-Pass36-Windows-x64-NoPrivateAssets' in workflow
+    assert "'twr-pass41-original-source-lobby'" in workflow
+    assert 'TWR-Pass41-Windows-x64-NoPrivateAssets' in workflow
     assert 'make_pass36_lobby_fixture.py --output $outputDir --create' in workflow
     assert 'make_pass36_lobby_fixture.py --output $outputDir --clean' in workflow
     assert "Filter '*.lobby36.jsonl.gz'" in workflow
