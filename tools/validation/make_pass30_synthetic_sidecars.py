@@ -114,6 +114,22 @@ def clientwalls34(digest):
     return compressed(contents.encode('utf8'))
 
 
+
+def infectedwalls35():
+    # TEST-ONLY single original-like CMaps/Manor/Infected Walls instance
+    # thousands of studs from the fallback blockout: no Roblox source bytes.
+    header={'format':'twr-infected-walls35-v1','map':'Manor',
+            'source_rbxlx_sha256':'0'*64,'wall_count':1,
+            'source_class':'ReplicatedStorage.CMaps.Manor.Walls.Infected Walls',
+            'native_primitives':1,'approximated_meshparts':0,
+            'default_enabled':False,'collision_layer':8}
+    wall={'class':'Part','t':[1000.,1000.,1000.],'r':list(R),
+          's':[2.,6.,2.],'approximated_mesh':False}
+    records='\n'.join(json.dumps(x,sort_keys=True,separators=(',',':'))
+                       for x in (header,wall))+'\n'
+    return compressed(records.encode('utf8'))
+
+
 def col26(digest):
     # Synthetic walkable floor under original player + all distant nav31
     # F9 candidates, with upward-facing triangle normals for a ground ray.
@@ -148,6 +164,7 @@ def staged_files(outdir):
              base/'Navigation'/'Laboratory.nav31.gz':nav31(digest),
              base/'Collision'/'Laboratory.col26.gz':col26(digest),
              base/'Walls'/'Laboratory.clientwalls34.jsonl.gz':clientwalls34(digest),
+             base/'Walls'/'Manor.infectedwalls35.jsonl.gz':infectedwalls35(),
              base/'Geometry'/'Laboratory.native28.gz':native28(digest),
              base/'Art'/'visuals.json': (json.dumps(images,sort_keys=True)+'\n').encode('utf8'),
              base/'Art'/'WeaponIcons'/'G17-UI.png': png}
