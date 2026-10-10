@@ -27,7 +27,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             Name = "DiagnosticsBackground",
             AnchorLeft = 1f, AnchorRight = 1f,
             OffsetLeft = -365f, OffsetRight = -15f,
-            OffsetTop = 12f, OffsetBottom = 418f,
+            OffsetTop = 12f, OffsetBottom = 448f,
             Color = new Color(.025f, .035f, .048f, .88f),
             MouseFilter = Control.MouseFilterEnum.Ignore,
             Visible = false
@@ -36,7 +36,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _label = new Label
         {
             OffsetLeft = 12f, OffsetTop = 10f,
-            OffsetRight = 335f, OffsetBottom = 395f,
+            OffsetRight = 335f, OffsetBottom = 430f,
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
         _label.AddThemeFontSizeOverride("font_size", 14);
@@ -78,13 +78,14 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 38 | F2 offline map audio, F3 source lighting, F4 map plan, F5 source props, F6 source walls\n" +
+            "PASS 39 | F2 map audio, F3 source light, F4 source floorplan, F5 source props, F6 source walls\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
             $"Original nav nodes: {Navigation?.PointCount ?? 0}\n" +
             $"Collision tiles: {CollisionTiles}\n" +
+            $"Verified original Lab: {(Game?.Pass39OriginalLabSourceVerified == true ? "YES" : "NO")}  Plans: {Game?.Pass39LabFloorCount ?? 0}\n" +
             $"Original client walls: {Game?.OriginalClientWallCount ?? 0} " +
             $"(F8: {(Game?.OriginalClientWallsEnabled == true ? "ON" : "OFF")})\n" +
             $"Original infected walls: {Game?.OriginalInfectedWallCount ?? 0} " +
@@ -132,6 +133,9 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 source_navigation_disconnected_rejects = Navigation?.DisconnectedRouteRejects ?? 0,
                 source_navigation_distant_anchor_rejects = Navigation?.DistantAnchorRejects ?? 0,
                 source_collision_tiles = CollisionTiles,
+                pass39_verified_original_laboratory = Game?.Pass39OriginalLabSourceVerified ?? false,
+                pass39_laboratory_floorplan_layers = Game?.Pass39LabFloorCount ?? 0,
+                pass39_laboratory_floorplan_active_level = Game?.Pass39LabCurrentFloor ?? -1,
                 original_source_client_walls = Game?.OriginalClientWallCount ?? 0,
                 original_source_client_walls_opt_in = Game?.OriginalClientWallsEnabled ?? false,
                 original_source_infected_walls = Game?.OriginalInfectedWallCount ?? 0,
