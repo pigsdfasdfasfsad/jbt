@@ -105,8 +105,8 @@ def test_f8_client_only_original_collision_is_integrated_not_forced():
     assert 'Pass34ClientWallsRuntime.TryBuild(this,MapName)' in game
     assert 'key.Keycode == Key.F8' in game
     assert '_originalClientWalls.SetEnabled(!_originalClientWalls.Enabled);' in game
-    assert 'CollisionMask = 1 | 2 | Pass34ClientWallsRuntime.ClientWallCollisionLayer;' in player
-    assert 'CollisionMask = 1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer;' in infected
+    assert 'CollisionMask = 1 | 2 | Pass34ClientWallsRuntime.ClientWallCollisionLayer |' in player
+    assert 'CollisionMask = 1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer |' in infected
     assert 'Pass34ClientWallsRuntime.ClientWallCollisionLayer' not in infected
     assert 'OriginalClientWallCount' in diag
     assert 'original_source_client_walls_opt_in' in diag
@@ -120,7 +120,7 @@ def test_native_windows_executable_checks_wall_physics_and_fixtures():
     assert 'TWR_SMOKE_PASS34_WALLS_OK' in code
     assert 'game.GetWorld3D().DirectSpaceState.IntersectRay(ray)' in code
     assert 'if (Hits(1))' in code
-    assert 'TWR-Pass35-Windows-x64-NoPrivateAssets' in workflow
+    assert 'TWR-Pass36-Windows-x64-NoPrivateAssets' in workflow
     assert "base/'Walls'/'Laboratory.clientwalls34.jsonl.gz'" in fixture
     assert "'wall_count': 1" in fixture
     assert "*.clientwalls34.jsonl.gz" in workflow

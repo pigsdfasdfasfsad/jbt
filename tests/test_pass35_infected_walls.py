@@ -92,9 +92,9 @@ def test_f7_collision_layer_only_for_infected():
     assert 'Pass35InfectedWallsRuntime.TryBuild(this, MapName)' in root
     assert 'key.Keycode == Key.F7' in root
     assert '_originalInfectedWalls.SetEnabled(!_originalInfectedWalls.Enabled)' in root
-    assert 'CollisionMask = 1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer;' in agent
-    assert 'query.CollisionMask=1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer;' in agent
-    assert 'CollisionMask = 1 | 2 | Pass34ClientWallsRuntime.ClientWallCollisionLayer;' in player
+    assert 'CollisionMask = 1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer |' in agent
+    assert 'query.CollisionMask=1 | Pass35InfectedWallsRuntime.InfectedWallCollisionLayer |' in agent
+    assert 'CollisionMask = 1 | 2 | Pass34ClientWallsRuntime.ClientWallCollisionLayer |' in player
     assert 'Pass35InfectedWallsRuntime.InfectedWallCollisionLayer' not in player
     assert 'CollisionMask = 1 | 2 | Pass34ClientWallsRuntime' in player
     assert 'OriginalInfectedMeshProxyCount' in root
@@ -112,5 +112,5 @@ def test_native_game_and_public_ci_exclude_private_owner_walls():
     assert "'source_rbxlx_sha256':'0'*64" in fixture
     assert '--smoke-pass35' in workflow
     assert '*.infectedwalls35.jsonl.gz' in workflow
-    assert 'TWR-Pass35-Windows-x64-NoPrivateAssets' in workflow
+    assert 'TWR-Pass36-Windows-x64-NoPrivateAssets' in workflow
     assert 'make_pass30_synthetic_sidecars.py --output $outputDir --clean' in workflow
