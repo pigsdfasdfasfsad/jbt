@@ -38,6 +38,15 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
         "e996c2ddb86f90e0a90b71435c7ff81c3af702c799195149fe1e6d39b10e3d50",
         "a7dd824fa7daa355fa68ed3e5d5e5546049384e043f1be69b7fc2f0d60fc4078"
     ];
+    private const string Pass41NavSha =
+        "12ac9bae602cbdea3ae6a6789289d1068f1c8efd5d603de34d6186698c375dd0";
+    private static readonly string[] Pass41PlanShas =
+    [
+        "22c8dd0029d9dced051371e1af06041d87729f83fe249ffd0b0e61358715027d",
+        "bf90e00db93bc9fa208d10d4c1094edf0f0282d65a0cc0be0213b0ebf671c3e1",
+        "65a3f37130b898a82d3de602344ccef31e219efd006179f9fce735ac8f57158b"
+    ];
+    public bool HasPass41RepairDiagnostic { get; private set; }
     private Control _panel = null!;
     private TextureRect _image = null!;
     private Label _caption = null!;
@@ -67,7 +76,7 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
             var original = Find("Maps","Laboratory.scene.jsonl.gz")
                 ?? throw new InvalidDataException("No installed loaded Laboratory source map");
             var simulated = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-pass39" or "--smoke-pass40");
+                arg is "--smoke-pass39" or "--smoke-pass40" or "--smoke-pass41");
             using var stream = File.OpenRead(original);
             var sha = Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
             if (!simulated && sha != SceneSha)
@@ -96,20 +105,30 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
             // Only accept a complete, SHA-bound diagnostic set matching the
             // exact installed Laboratory navigation pack. Missing or stale
             // PNGs never remove the original geometry floorplan viewer.
-            var navFile=Find("Navigation","Laboratory.nav31.gz");
-            if (navFile is not null &&
-                (simulated || Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(navFile)))
-                    .ToLowerInvariant()==Pass40NavSha))
+            var navVersions = new[]
             {
-                var images=new List<Texture2D>();
+                (Source:"Laboratory.nav41.gz",Prefix:"Laboratory.navgraph41-",
+                    Digest:Pass41NavSha,Images:Pass41PlanShas,Is41:true),
+                (Source:"Laboratory.nav31.gz",Prefix:"Laboratory.navgraph40-",
+                    Digest:Pass40NavSha,Images:Pass40PlanShas,Is41:false)
+            };
+            foreach(var navVersion in navVersions)
+            {
+                var navFile = Find("Navigation",navVersion.Source);
+                if(navFile is null)continue;
+                if(!simulated &&
+                    Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(navFile)))
+                        .ToLowerInvariant()!=navVersion.Digest)
+                    continue;
+                var images = new List<Texture2D>();
                 for(var i=0;i<3;i++)
                 {
-                    var navPng=Find("MapPlans",$"Laboratory.navgraph40-{i}.png");
+                    var navPng = Find("MapPlans",$"{navVersion.Prefix}{i}.png");
                     if(navPng is null)break;
                     var png=File.ReadAllBytes(navPng);
                     if(png.Length<128 || png.Length>5_000_000 ||
                         (!simulated && Convert.ToHexString(SHA256.HashData(png))
-                            .ToLowerInvariant()!=Pass40PlanShas[i]))
+                            .ToLowerInvariant()!=navVersion.Images[i]))
                         break;
                     var decoded=Image.LoadFromFile(navPng);
                     if(decoded is null || decoded.IsEmpty() ||
@@ -118,12 +137,16 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
                         break;
                     images.Add(ImageTexture.CreateFromImage(decoded));
                 }
-                if(images.Count==3)overlay._navigationPlans.AddRange(images);
+                if(images.Count!=3)continue;
+                overlay._navigationPlans.AddRange(images);
+                overlay.HasPass41RepairDiagnostic=navVersion.Is41;
+                break;
             }
             owner.AddChild(overlay);
             GD.Print("TWR_PASS39_LAB_PLANS_READY floor_levels=3 " +
                 $"verified_original_scene={!simulated} default=OFF missing_source_meshes=true " +
-                $"pass40_nav_diagrams={overlay.HasNavigationDiagnostic}");
+                $"nav_diagrams={overlay.HasNavigationDiagnostic} " +
+                $"pass41_native_bridges_visualized={overlay.HasPass41RepairDiagnostic}");
             return overlay;
         }
         catch(Exception error)
@@ -189,8 +212,10 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
             _image.Texture=IsShowingNavigation && HasNavigationDiagnostic
                 ? _navigationPlans[ActiveLevel] : _plans[ActiveLevel];
         if (_caption is not null)
-            _caption.Text=(IsShowingNavigation ? "APPROXIMATE WALKABILITY  |  " :
-                "SOURCE BOUNDS  |  ")+LevelLabels[ActiveLevel];
+            _caption.Text=(IsShowingNavigation
+                ? (HasPass41RepairDiagnostic ? "PASS41 NATIVE BRIDGES | " :
+                    "PASS40 APPROXIMATE GRAPH | ")
+                : "SOURCE BOUNDS | ")+LevelLabels[ActiveLevel];
     }
 
     public void ToggleNavigation()
