@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls]
     paths:
       - 'src/**'
       - 'content/**'
@@ -198,18 +198,44 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass 33 synthetic fixture cleanup failed' }
           }
 
+      - name: Native Pass 34 source Client Walls and F8 layer isolation test
+        if: success() && github.ref_name == 'twr-pass34-original-client-walls'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass34 synthetic source fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass34-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass34-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass34') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS34_WALLS_OK' })) {
+              throw "Pass34 native source client-wall toggle failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass34 synthetic fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
           if ($privateScenes.Count -gt 0) { throw 'Private source-map scene was unexpectedly included in CI output' }
+          $privateWalls = @(Get-ChildItem -Path build/output -Filter '*.clientwalls34.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($privateWalls.Count -gt 0) { throw 'Private Client Walls pack remained in CI artifact' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls')
         uses: actions/upload-artifact@v4
         with:
-          name: TWR-Pass33-Windows-x64-NoPrivateAssets
+          name: TWR-Pass34-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
