@@ -43,6 +43,8 @@ public partial class GameplayRoot : Node3D
     public int ActiveInfectedCount => _infected.Count(agent => GodotObject.IsInstanceValid(agent));
     public int ActivePickupCount => _pickups.Count(actor => GodotObject.IsInstanceValid(actor));
     public string WaveStage => StageName();
+    public bool AssistedInfectedSpawnsEnabled { get; private set; }
+    public int AssistedInfectedSpawnCount { get; private set; }
 
     private enum Stage { Countdown, Wave, WaveEnd, Intermission, Results }
 
@@ -179,6 +181,21 @@ public partial class GameplayRoot : Node3D
     public override void _UnhandledInput(InputEvent @event)
     {
         if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;
+
+        if (!_finished && key.Keycode == Key.F9)
+        {
+            if (_sourceNavigator?.IsBridgePackActive != true)
+                _hud.SetUtility("Assisted spawns need the Laboratory nav31 pack");
+            else
+            {
+                AssistedInfectedSpawnsEnabled = !AssistedInfectedSpawnsEnabled;
+                _hud.SetUtility(AssistedInfectedSpawnsEnabled
+                    ? "ASSISTED SPAWNS ON (approximate playable entries)"
+                    : "ASSISTED SPAWNS OFF (exact original source markers)");
+            }
+            GetViewport().SetInputAsHandled();
+            return;
+        }
 
         if (!_finished && key.Keycode == Key.F12)
         {
@@ -595,6 +612,18 @@ public partial class GameplayRoot : Node3D
         var scale = (float)RegularWaveRules.DifficultyScale(wave);
         var speedScale = (float)RegularWaveRules.InfectedWalkSpeedScale(wave);
 
+        var spawn = RandomSpawnPoint();
+        if (AssistedInfectedSpawnsEnabled && _sourceNavigator is not null)
+        {
+            var assisted = _sourceNavigator.FindAssistedInfectedSpawn(
+                spawn, _player.GlobalPosition, _rng.Randi());
+            if (assisted.HasValue)
+            {
+                spawn = assisted.Value;
+                AssistedInfectedSpawnCount++;
+            }
+        }
+
         var infected = new InfectedAgent
         {
             Name = definition.Name,
@@ -607,7 +636,7 @@ public partial class GameplayRoot : Node3D
             Health = (float)definition.Health * scale,
             Damage = (float)definition.Damage * scale,
             MoveSpeed = (float)definition.WalkSpeed * speedScale * RobloxUnits.MetersPerStud,
-            Position = RandomSpawnPoint()
+            Position = spawn
         };
         infected.Died = OnInfectedDied;
         infected.SpecialAttackRequested = OnInfectedSpecialAttack;
