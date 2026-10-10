@@ -33,6 +33,43 @@ public partial class InfectedAgent : CharacterBody3D
     private double _progressSampleTimer;
     private double _stuckDuration;
     private double _recoveryDetour;
+    private double _pass32StationarySeconds;
+    private double _pass32AgeSeconds;
+    private double _pass32LastRecovery = -1000;
+    private int _pass32Rescues;
+    public int AssistedRecoveryCount => _pass32Rescues;
+
+    public bool NeedsAssistedRecovery(Vector3 playerPosition)
+    {
+        if (Health <= 0 || Target is null || Runtime?.Player?.IsAlive != true)
+            return false;
+        var delta = playerPosition - GlobalPosition;
+        var distance = new Vector2(delta.X, delta.Z).Length();
+        return Pass32RescuePolicy.CanRescue(distance,
+            GlobalPosition.Y - playerPosition.Y,
+            _pass32StationarySeconds, _pass32Rescues,
+            _pass32AgeSeconds - _pass32LastRecovery);
+    }
+
+    public bool ApplyAssistedRecovery(Vector3 newPosition, Vector3 playerPosition)
+    {
+        if (!NeedsAssistedRecovery(playerPosition) ||
+            !float.IsFinite(newPosition.X) || !float.IsFinite(newPosition.Y) ||
+            !float.IsFinite(newPosition.Z)) return false;
+        GlobalPosition = newPosition;
+        Velocity = Vector3.Zero;
+        _pass32Rescues++;
+        _pass32LastRecovery = _pass32AgeSeconds;
+        _pass32StationarySeconds = 0;
+        _stuckDuration = 0;
+        _recoveryDetour = 0;
+        _navigationRefresh = 0;
+        _navigationRoute = [];
+        _nextNavigationPoint = 0;
+        _progressSampleTimer = .75;
+        _lastProgressPosition = newPosition;
+        return true;
+    }
 
     public override void _Ready()
     {
@@ -57,6 +94,7 @@ public partial class InfectedAgent : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        _pass32AgeSeconds += Math.Max(0,delta);
         _attackCooldown = Math.Max(0, _attackCooldown - delta);
         _specialCooldown = Math.Max(0, _specialCooldown - delta);
         _slowTime = Math.Max(0, _slowTime - delta);
@@ -166,6 +204,10 @@ public partial class InfectedAgent : CharacterBody3D
         // bounded local detours; they do not replace a multi-floor navmesh.
         var travel = GlobalPosition - _lastProgressPosition;
         var planar = new Vector2(travel.X, travel.Z).Length();
+        if (distance >= 7f && planar < .22f)
+            _pass32StationarySeconds += .75;
+        else
+            _pass32StationarySeconds = Math.Max(0, _pass32StationarySeconds - 1.5);
         if (distance > 2.2f && planar < .22f)
             _stuckDuration += .75;
         else
