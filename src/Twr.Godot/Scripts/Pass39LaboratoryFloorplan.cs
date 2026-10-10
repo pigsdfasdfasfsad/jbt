@@ -85,7 +85,7 @@ public partial class Pass39LaboratoryFloorplan : CanvasLayer
             var original = Find("Maps","Laboratory.scene.jsonl.gz")
                 ?? throw new InvalidDataException("No installed loaded Laboratory source map");
             var simulated = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-pass39" or "--smoke-pass40" or "--smoke-pass41" or "--smoke-pass42");
+                arg is "--smoke-pass39" or "--smoke-pass40" or "--smoke-pass41" or "--smoke-pass42" or "--smoke-pass43");
             using var stream = File.OpenRead(original);
             var sha = Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
             if (!simulated && sha != SceneSha)
