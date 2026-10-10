@@ -368,6 +368,8 @@ jobs:
           if ($originalCollision.Count -gt 0) { throw 'Owner-private original collision cache remained in public output' }
           $nav31 = @(Get-ChildItem -Path build/output -Filter '*.nav31.gz' -File -Recurse -ErrorAction SilentlyContinue)
           if ($nav31.Count -gt 0) { throw 'Owner-private or synthetic source navigation graph remained in public output' }
+          $navImages = @(Get-ChildItem -Path build/output -Filter '*.navgraph40-*.png' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($navImages.Count -gt 0) { throw 'Source navigation diagnostic PNGs remained in public output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
         if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
