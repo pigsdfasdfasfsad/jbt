@@ -38,7 +38,7 @@ def test_exported_exe_has_laboratory_source_smoke_contract():
     workflow = (ROOT / '.github/workflows/windows-build.yml').read_text()
     # Only the synthetic-asset Pass29 integration branch exports CI binaries.
     assert "github.ref_name == 'twr-pass29-integration'" in workflow
-    assert "TWR-Pass30-Windows-x64-NoPrivateAssets" in workflow
+    assert "TWR-Pass31-Windows-x64-NoPrivateAssets" in workflow
     assert "PrivateSourceZip" not in workflow
 
 def test_recovered_spawn_positions_are_not_randomly_offset():
