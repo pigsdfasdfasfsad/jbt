@@ -104,7 +104,8 @@ public static class LaboratorySourceLoader
                     case "collision":
                     {
                         var size = Extents(record);
-                        collisions.Add((ToTransform(record, size, false), size, false));
+                        collisions.Add((ToTransform(record, size, false), size,
+                            Str(record, "class") == "WedgePart"));
                         break;
                     }
                     case "light":
@@ -422,10 +423,23 @@ public static class LaboratorySourceLoader
     private static Transform3D ToTransform(JsonElement r, Vector3 size, bool scaled)
     {
         var rotation = Rotation(r);
+        var origin = Position(r);
+        // SpecialMesh.Offset is expressed in the parent Part's local Roblox
+        // axes. Reflect Z into Godot space, then rotate by the original
+        // (unscaled) part basis. Physical collision stays at the source Part
+        // origin; only its rendered SpecialMesh is displaced.
+        if (scaled && r.TryGetProperty("specialMeshOffset", out var offset) &&
+            offset.ValueKind == JsonValueKind.Array)
+        {
+            var values = Vec(r, "specialMeshOffset");
+            if (values.Length == 3)
+                origin += rotation * new Vector3(values[0], values[1],
+                    -values[2]) * Stud;
+        }
         if (scaled)
             rotation = new Basis(
                 rotation.X * size.X, rotation.Y * size.Y, rotation.Z * size.Z);
-        return new Transform3D(rotation, Position(r));
+        return new Transform3D(rotation, origin);
     }
 
     private static Vector3 VisualExtents(JsonElement r, Vector3 physicalPartSize)
