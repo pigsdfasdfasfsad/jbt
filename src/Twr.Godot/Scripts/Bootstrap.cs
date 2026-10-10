@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass42",StringComparer.Ordinal))
+        {
+            RunPass42Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass41",StringComparer.Ordinal))
         {
             RunPass41Smoke();
@@ -412,6 +417,102 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private async void RunPass42Smoke()
+    {
+        // The Windows export loads a fabricated 19-node Laboratory map with
+        // exactly one typed jump segment, never the private original scene.
+        // 15 rounds are accelerated stage transitions, NOT a human playtest.
+        _runtime.StartMap("Laboratory");
+        var game=new GameplayRoot
+        {
+            Name="Pass42SyntheticJumpAndWaveSmoke",
+            Runtime=_runtime, MapName="Laboratory"
+        };
+        AddChild(game);
+        var nav=game.GetNodeOrNull<Pass25SourceNavigationRuntime>(
+            "Pass25LaboratoryNavigation");
+        var overlay=game.GetNodeOrNull<Pass39LaboratoryFloorplan>(
+            "Pass39LaboratoryFloorplan");
+        var player=game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if(nav is null || overlay is null || player is null ||
+            !nav.IsBridgePackActive || nav.IsPass42JumpGraph ||
+            nav.PointCount!=19 || nav.EdgeCount!=18 ||
+            nav.Pass42JumpEdgeCount!=1 || !overlay.HasPass42JumpDiagnostic ||
+            game.Pass42JumpLinkCount!=1 || game.AssistedInfectedSpawnsEnabled)
+            throw new InvalidOperationException(
+                "Synthetic typed source jump pack, F4 layers, or original spawn default invalid");
+        var from=new Vector3(8*3.5f*.28f,.5f*.28f,0);
+        var to=new Vector3(10*3.5f*.28f,.5f*.28f,0);
+        if (!nav.IsJumpLinkBetween(from,to) || !nav.IsJumpLinkBetween(to,from) ||
+            nav.IsJumpLinkBetween(from,new Vector3(7*3.5f*.28f,.5f*.28f,0)))
+            throw new InvalidOperationException("Source jump action flags were not preserved");
+        var path=nav.GetRoute(from,to);
+        if(path.Length!=2 || path[0].DistanceTo(from)>.01f ||
+            path[^1].DistanceTo(to)>.01f)
+            throw new InvalidOperationException("Source jump is absent from actual AStar route");
+        overlay._Input(new InputEventKey {Keycode=Key.F4,Pressed=true});
+        overlay._Input(new InputEventKey {Keycode=Key.N,Pressed=true});
+        if(!overlay.IsOpen || !overlay.IsShowingNavigation ||
+            !overlay.HasPass42JumpDiagnostic)
+            throw new InvalidOperationException("Pass42 original-coordinate jump maps not shown");
+        overlay._Input(new InputEventKey {Keycode=Key.F4,Pressed=true});
+        player.GlobalPosition=to+Vector3.Up*.8f;
+        var zombie=new InfectedAgent
+        {
+            Name="Pass42SyntheticJumpInfected",
+            Target=player,Runtime=_runtime,
+            SourceNavigator=nav,InfectedType="Civilian",
+            Position=from+Vector3.Up*.8f
+        };
+        game.AddChild(zombie);
+        for(var frame=0;frame<60 && zombie.SourceJumpAttempts==0;frame++)
+            await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if(zombie.SourceJumpAttempts==0)
+            throw new InvalidOperationException(
+                "Infected did not launch along the synthetic Godot source jump edge");
+        zombie.QueueFree();
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+
+        for(var expectedWave=1;expectedWave<=ReleaseRules.MaxWaves;expectedWave++)
+        {
+            if(_runtime.Match?.Wave!=expectedWave || game.WaveStage!="COUNTDOWN")
+                throw new InvalidOperationException(
+                    "Pass42 accelerated wave countdown failed at "+expectedWave);
+            game._Process(RegularWaveRules.CountdownSeconds+.1);
+            if(game.WaveStage!="WAVE")
+                throw new InvalidOperationException("Pass42 wave did not start "+expectedWave);
+            game._Process(.1);
+            if(game.ActiveInfectedCount<1)
+                throw new InvalidOperationException(
+                    "Pass42 real Godot infected actor not spawned in wave "+expectedWave);
+            game._Process(RegularWaveRules.WaveDurationSeconds+.1);
+            if(game.WaveStage!="WAVE END" || game.ActiveInfectedCount!=0)
+                throw new InvalidOperationException(
+                    "Pass42 infected cleanup failed after wave "+expectedWave);
+            game._Process(RegularWaveRules.WaveEndSeconds+.1);
+            if(expectedWave==ReleaseRules.MaxWaves)
+            {
+                if(game.WaveStage!="RESULTS" ||
+                    _runtime.Match?.Phase!=MatchPhase.Results)
+                    throw new InvalidOperationException(
+                        "Pass42 fifteenth-wave completion did not reach Results");
+            }
+            else
+            {
+                if(game.WaveStage!="INTERMISSION" ||
+                    _runtime.Match?.Wave!=expectedWave+1)
+                    throw new InvalidOperationException(
+                        "Pass42 intermission advance failed after wave "+expectedWave);
+                game._Process(RegularWaveRules.IntermissionSeconds+.1);
+            }
+        }
+        GD.Print("TWR_SMOKE_PASS42_JUMP_OK source=synthetic jump_edges=1 " +
+            "AStar_jump_flags=true infected_jump_physics=true " +
+            "F4_N_jumps=true waves_15_accelerated=true " +
+            "full_player_playtest=false original_navmesh=false");
         GetTree().Quit(0);
     }
 
