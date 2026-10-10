@@ -17,6 +17,7 @@ public partial class GameplayRoot : Node3D
     private Pass35InfectedWallsRuntime? _originalInfectedWalls;
     private Pass36SourceFragmentsRuntime? _sourceFragments;
     private Pass36MapPlanOverlay? _sourceMapPlan;
+    private Pass37SourceLightingRuntime? _sourceLighting;
     private OfflineAudioRuntime _audio = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
     private RuntimeMapLayout _mapLayout = null!;
@@ -58,6 +59,8 @@ public partial class GameplayRoot : Node3D
     public bool Pass36SourceWallsEnabled => _sourceFragments?.ServerCollisionEnabled ?? false;
     public bool Pass36NativePropsEnabled => _sourceFragments?.NativeObjectPreviewEnabled ?? false;
     public bool Pass36HasOriginalMapPlan => _sourceMapPlan?.HasPlan ?? false;
+    public int Pass37SourceLightingEffectCount => _sourceLighting?.SourceEffectCount ?? 0;
+    public bool Pass37SourceLightingEnabled => _sourceLighting?.Enabled ?? false;
     public bool AssistedInfectedSpawnsEnabled { get; private set; }
     public int AssistedInfectedSpawnCount { get; private set; }
     public int AssistedInfectedRecoveryCount { get; private set; }
@@ -95,6 +98,7 @@ public partial class GameplayRoot : Node3D
         // replace their approximated blockouts without evidence.
         _sourceFragments = Pass36SourceFragmentsRuntime.TryBuild(this, MapName);
         _sourceMapPlan = Pass36MapPlanOverlay.TryBuild(this, MapName);
+        _sourceLighting = Pass37SourceLightingRuntime.TryBuild(this, MapName);
         _sourceNavigator = Pass25SourceNavigationRuntime.TryBuild(this, MapName);
 
         _audio = new OfflineAudioRuntime { Name = "OfflineAudio" };
@@ -216,6 +220,20 @@ public partial class GameplayRoot : Node3D
     {
         if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;
 
+        if (!_finished && key.Keycode == Key.F3)
+        {
+            if (_sourceLighting is null)
+                _hud.SetUtility("Original source lighting pack unavailable");
+            else
+            {
+                _sourceLighting.SetEnabled(!_sourceLighting.Enabled);
+                _hud.SetUtility(_sourceLighting.Enabled
+                    ? "F3 SOURCE LIGHTING PREVIEW ON (approximation; sky images missing)"
+                    : "F3 ORIGINAL LIGHTING PREVIEW OFF (baseline restored)");
+            }
+            GetViewport().SetInputAsHandled();
+            return;
+        }
         if (!_finished && key.Keycode == Key.F6)
         {
             if (_sourceFragments is null)
