@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass33",StringComparer.Ordinal))
+        {
+            RunPass33Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass32",StringComparer.Ordinal))
         {
             RunPass32Smoke();
@@ -372,6 +377,77 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass33Smoke()
+    {
+        // The exported Windows game loads the synthetic SHA-checked
+        // Laboratory nav31 sidecar. Repeating the same source waypoints
+        // must use the bounded cache rather than recomputing A* per zombie.
+        _runtime.StartMap("Laboratory");
+        var game = new GameplayRoot
+        {
+            Name = "Pass33PathfindingSmoke",
+            Runtime = _runtime,
+            MapName = "Laboratory"
+        };
+        AddChild(game);
+        var nav = game.GetNodeOrNull<Pass25SourceNavigationRuntime>(
+            "Pass25LaboratoryNavigation");
+        if (nav is null || !nav.IsBridgePackActive || nav.PointCount < 52)
+            throw new InvalidOperationException("Pass33 requires synthetic source navigation");
+
+        var from = new Vector3(0,1.4f,0);
+        var target = new Vector3(14,1.4f,0);
+        var first = nav.GetRoute(from,target);
+        if (first.Length < 2 || nav.ActualPathSearches != 1)
+            throw new InvalidOperationException("Cold source path was not computed");
+
+        // Callers are not permitted to corrupt a cached path shared by
+        // multiple infected actors.
+        var original = first[0];
+        first[0] = new Vector3(1234,1234,1234);
+        var cloned = nav.GetRoute(from,target);
+        if (cloned.Length < 2 || cloned[0] != original)
+            throw new InvalidOperationException("Cached route mutated by a caller");
+        for (var i = 0; i < 255; i++)
+        {
+            var route = nav.GetRoute(from,target);
+            if (route.Length < 2)
+                throw new InvalidOperationException("Repeated cached source route became empty");
+        }
+        if (nav.ActualPathSearches != 1 || nav.RouteCacheHits != 256)
+            throw new InvalidOperationException("A* was recomputed instead of using source-path cache");
+
+        // Original exterior source region is disconnected. Short circuit
+        // using union-find component IDs BEFORE A* explores the whole wing.
+        var searchesBefore = nav.ActualPathSearches;
+        for (var i = 0; i < 64; i++)
+            if (nav.GetRoute(new Vector3(84,1.4f,-11.2f),from).Length != 0)
+                throw new InvalidOperationException("Disconnected exterior route fabricated");
+        if (nav.ActualPathSearches != searchesBefore ||
+            nav.DisconnectedRouteRejects < 64)
+            throw new InvalidOperationException("Disconnected source graph was searched");
+
+        // Exceed the bounded LRU budget with different genuine graph paths.
+        // More than 512 cached paths must never accumulate.
+        for (var start = 0; start < 51; start++)
+        {
+            for (var end = 0; end < 51; end++)
+            {
+                if (start == end) continue;
+                nav.GetRoute(new Vector3(start*.56f,1.4f,0),
+                    new Vector3(end*.56f,1.4f,0));
+            }
+        }
+        if (nav.CachedRouteCount > 512 ||
+            nav.ActualPathSearches < 513)
+            throw new InvalidOperationException("Source path cache is unbounded or inactive");
+        GD.Print($"TWR_SMOKE_PASS33_PATHCACHE_OK " +
+            $"queries={nav.RouteRequests} searches={nav.ActualPathSearches} " +
+            $"hits={nav.RouteCacheHits} disconnected={nav.DisconnectedRouteRejects} " +
+            $"cached={nav.CachedRouteCount} original_ingress_paths=0");
         GetTree().Quit(0);
     }
 
