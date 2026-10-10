@@ -116,7 +116,12 @@ public partial class InfectedAgent : CharacterBody3D
                     var waypoint = _navigationRoute[_nextNavigationPoint];
                     var offset = new Vector3(waypoint.X - GlobalPosition.X,
                         0, waypoint.Z - GlobalPosition.Z);
-                    if (offset.LengthSquared() > 2.5f) break;
+                    // Pathfinding heights are at feet level; the infected
+                    // body origin is around +0.8m. Never skip waypoint floors
+                    // that are metres above or below the current enemy.
+                    if (offset.LengthSquared() > 2.5f ||
+                        Math.Abs(waypoint.Y + .8f - GlobalPosition.Y) > 1.15f)
+                        break;
                     _nextNavigationPoint++;
                 }
                 if (_nextNavigationPoint < _navigationRoute.Length)

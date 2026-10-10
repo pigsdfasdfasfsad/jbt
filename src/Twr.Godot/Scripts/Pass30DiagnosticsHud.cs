@@ -86,6 +86,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Collision tiles: {CollisionTiles}\n" +
             $"Visible native batches: {mesh?.VisibleBatchCount ?? 0}/{mesh?.BatchCount ?? 0}\n" +
             $"Source primitive instances: {mesh?.SourceInstanceCount ?? 0}\n" +
+            $"F9 spawn assist: {(Game?.AssistedInfectedSpawnsEnabled == true ? "ON" : "OFF")}, " +
+            $"redirected: {Game?.AssistedInfectedSpawnCount ?? 0}\n" +
             $"Managed memory: {GC.GetTotalMemory(false) / 1048576} MiB";
     }
 
@@ -110,6 +112,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 visible_source_batches = mesh?.VisibleBatchCount ?? 0,
                 total_source_batches = mesh?.BatchCount ?? 0,
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,
+                assisted_infected_spawns_on = Game?.AssistedInfectedSpawnsEnabled ?? false,
+                assisted_infected_spawn_count = Game?.AssistedInfectedSpawnCount ?? 0,
                 managed_memory_bytes = GC.GetTotalMemory(false)
             };
             var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass30_Diagnostics.json");
