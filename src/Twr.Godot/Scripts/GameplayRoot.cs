@@ -75,6 +75,10 @@ public partial class GameplayRoot : Node3D
     public int AssistedInfectedSpawnCount { get; private set; }
     public int AssistedInfectedRecoveryCount { get; private set; }
     public int RejectedAssistedSpawnAttempts { get; private set; }
+    public int Pass40AdaptiveNearSpawns { get; private set; }
+    public int Pass40AdaptiveNearRecoveries { get; private set; }
+    public bool Pass40GroundedNavigationVerified =>
+        _sourceNavigator?.IsPass40GroundedGraph ?? false;
     private double _pass32RecoveryScan = 1.5;
 
     private enum Stage { Countdown, Wave, WaveEnd, Intermission, Results }
@@ -332,7 +336,7 @@ public partial class GameplayRoot : Node3D
             {
                 AssistedInfectedSpawnsEnabled = !AssistedInfectedSpawnsEnabled;
                 _hud.SetUtility(AssistedInfectedSpawnsEnabled
-                    ? "ASSISTED SPAWNS ON (approximate playable entries)"
+                    ? "ASSISTED SPAWNS ON (F9: source approximations, min 24/14/10m)"
                     : "ASSISTED SPAWNS OFF (exact original source markers)");
             }
             GetViewport().SetInputAsHandled();
@@ -757,19 +761,17 @@ public partial class GameplayRoot : Node3D
         var spawn = RandomSpawnPoint();
         if (AssistedInfectedSpawnsEnabled && _sourceNavigator?.IsBridgePackActive == true)
         {
-            var candidates = _sourceNavigator.GetAssistedInfectedSpawnCandidates(
-                spawn, _player.GlobalPosition, _rng.Randi());
-            if (candidates.Length > 0)
+            var placement = Pass40AdaptiveEntry.TryFind(
+                _sourceNavigator, GetWorld3D(), spawn, _player.GlobalPosition, _rng.Randi());
+            if (placement.HasValue)
             {
-                var safe = Pass32SpawnSafety.FindSupportedPlacement(
-                    GetWorld3D(), candidates, _player.GlobalPosition);
-                if (safe.HasValue)
-                {
-                    spawn = safe.Value;
-                    AssistedInfectedSpawnCount++;
-                }
-                else RejectedAssistedSpawnAttempts++;
+                spawn = placement.Value.Position;
+                AssistedInfectedSpawnCount++;
+                if (placement.Value.MinimumDistance <
+                    Pass32SpawnSafety.MinimumPlayerDistance)
+                    Pass40AdaptiveNearSpawns++;
             }
+            else RejectedAssistedSpawnAttempts++;
         }
 
         var infected = new InfectedAgent
@@ -807,17 +809,17 @@ public partial class GameplayRoot : Node3D
         {
             if (!GodotObject.IsInstanceValid(infected) ||
                 !infected.NeedsAssistedRecovery(target)) continue;
-            var choices = _sourceNavigator.GetAssistedInfectedSpawnCandidates(
-                infected.GlobalPosition, target, _rng.Randi());
-            if (choices.Length == 0) continue;
-            var safe = Pass32SpawnSafety.FindSupportedPlacement(GetWorld3D(),choices,target);
-            if (!safe.HasValue)
+            var result = Pass40AdaptiveEntry.TryFind(
+                _sourceNavigator,GetWorld3D(),infected.GlobalPosition,target,_rng.Randi());
+            if (!result.HasValue)
             {
                 RejectedAssistedSpawnAttempts++;
                 continue;
             }
-            if (!infected.ApplyAssistedRecovery(safe.Value,target)) continue;
+            if (!infected.ApplyAssistedRecovery(result.Value.Position,target)) continue;
             AssistedInfectedRecoveryCount++;
+            if (result.Value.MinimumDistance < Pass32SpawnSafety.MinimumPlayerDistance)
+                Pass40AdaptiveNearRecoveries++;
             GD.Print($"TWR_PASS32_ASSISTED_RECOVERY map={MapName} " +
                 $"count={AssistedInfectedRecoveryCount}");
             if (++movedThisScan >= 2) break;
