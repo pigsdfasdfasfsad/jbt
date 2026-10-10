@@ -19,7 +19,9 @@ def test_expressway_enemies_use_route_then_nearfield_steering():
     game=(SRC/'GameplayRoot.cs').read_text()
     boot=(SRC/'Bootstrap.cs').read_text()
     assert 'Name = "HighwayNavigation"' in scene
-    assert 'HighwayNavigator.GetRoute(' in infected
+    assert 'HighwayNavigator!.GetRoute(' in infected
+    assert 'SourceNavigator!.GetRoute(' in infected
+    assert 'if (highwayReady || sourceReady)' in infected
     assert 'SteerAroundObstacles(desired)' in infected
     assert 'ExpresswayReconstruction/HighwayNavigation' in game
     assert 'navigator.NavigablePoints < 140' in boot
