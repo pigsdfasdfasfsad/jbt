@@ -83,6 +83,19 @@ def nav25(digest):
     return compressed(b)
 
 
+
+def nav31(digest):
+    # Synthetic F9 assisted-entry test: fifty-one mutually accessible
+    # waypoints extend 28 metres from the player, plus one disconnected
+    # exterior spawn waypoint to require opt-in recovery. NO owner asset data.
+    points = [(i * 2., 5., 0.) for i in range(51)] + [(300., 5., 40.)]
+    edges = [(i, i+1) for i in range(50)]
+    raw = bytearray(b'TWRNAV31' + struct.pack('<Iii', 2, len(points), len(edges)) + digest)
+    for p in points: raw.extend(struct.pack('<fff', *p))
+    for a,b in edges: raw.extend(struct.pack('<ii',a,b))
+    return compressed(raw)
+
+
 def col26(digest):
     # Two triangles for a tiny static flat synthetic platform.
     b = bytearray(b'TWRCOL26' + struct.pack('<IIII', 1, 1, 1, 0) + digest)
@@ -112,6 +125,7 @@ def staged_files(outdir):
     base = Path(outdir)/'Content'
     files = {base/'Maps'/'Laboratory.scene.jsonl.gz':scene,
              base/'Navigation'/'Laboratory.nav25.gz':nav25(digest),
+             base/'Navigation'/'Laboratory.nav31.gz':nav31(digest),
              base/'Collision'/'Laboratory.col26.gz':col26(digest),
              base/'Geometry'/'Laboratory.native28.gz':native28(digest),
              base/'Art'/'visuals.json': (json.dumps(images,sort_keys=True)+'\n').encode('utf8'),
