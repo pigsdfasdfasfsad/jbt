@@ -34,8 +34,13 @@ public partial class InfectedAgent : CharacterBody3D
     private double _sourceJumpElapsed;
     private double _sourceJumpCooldown;
     private Vector3 _sourceJumpPlanarVelocity;
+    private Vector3 _sourceJumpExpectedLanding;
     public int SourceJumpAttempts { get; private set; }
+    // A landing must pass Pass43JumpLandingPolicy, not merely touch a floor.
     public int SourceJumpLandings { get; private set; }
+    public int SourceJumpFailures { get; private set; }
+    public bool SourceJumpInProgress => _sourceJumpRemaining > 0;
+    public float SourceJumpLastLandingErrorMetres { get; private set; }
     private Vector3 _lastProgressPosition;
     private double _progressSampleTimer;
     private double _stuckDuration;
@@ -74,6 +79,11 @@ public partial class InfectedAgent : CharacterBody3D
         _navigationRoute = [];
         _jumpIntoNavigationPoint = [];
         _nextNavigationPoint = 0;
+        // Explicit accessibility relocation cancels any outstanding jump;
+        // never let old ballistic velocity leak into the new supported spot.
+        _sourceJumpRemaining = 0;
+        _sourceJumpElapsed = 0;
+        _sourceJumpPlanarVelocity = Vector3.Zero;
         _progressSampleTimer = .75;
         _lastProgressPosition = newPosition;
         return true;
@@ -257,6 +267,7 @@ public partial class InfectedAgent : CharacterBody3D
         var vertical = Mathf.Clamp(
             (toLanding.Y + 11f*flightTime*flightTime)/flightTime,5f,9f);
         _sourceJumpPlanarVelocity = flat/flightTime;
+        _sourceJumpExpectedLanding = landingWaypoint + Vector3.Up * .8f;
         Velocity = new Vector3(_sourceJumpPlanarVelocity.X,vertical,
             _sourceJumpPlanarVelocity.Z);
         _sourceJumpRemaining = flightTime + .22f;
@@ -280,9 +291,26 @@ public partial class InfectedAgent : CharacterBody3D
         velocity.Y-=22f*(float)delta;
         Velocity=velocity;
         MoveAndSlide();
-        if (IsOnFloor() && _sourceJumpElapsed >= .15)
+        var accepted = Pass43JumpLandingPolicy.IsSuccessful(
+            IsOnFloor(), _sourceJumpElapsed, GlobalPosition,
+            _sourceJumpExpectedLanding);
+        if (accepted)
         {
+            SourceJumpLastLandingErrorMetres =
+                GlobalPosition.DistanceTo(_sourceJumpExpectedLanding);
             SourceJumpLandings++;
+            _sourceJumpRemaining=0;
+        }
+        else if (_sourceJumpRemaining <= 0 ||
+            (IsOnFloor() &&
+             _sourceJumpElapsed >= Pass43JumpLandingPolicy.MinimumFlightSeconds))
+        {
+            // A floor contact on the TAKEOFF side is not a successful jump.
+            // It must be recorded as an unsuccessful attempt so that source
+            // collisions and unsupported custom geometry remain measurable.
+            SourceJumpLastLandingErrorMetres =
+                GlobalPosition.DistanceTo(_sourceJumpExpectedLanding);
+            SourceJumpFailures++;
             _sourceJumpRemaining=0;
         }
         if (_sourceJumpRemaining <= 0)
