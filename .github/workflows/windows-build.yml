@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes]
     paths:
       - 'src/**'
       - 'content/**'
@@ -270,8 +270,32 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass 36 synthetic source fixture cleanup failed' }
           }
 
+      - name: Smoke Pass 38 source-positioned F2 offline WAV playback in exported Windows game
+        if: success() && github.ref_name == 'twr-pass38-source-soundscapes'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass38_synthetic.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass38 synthetic source sound fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass38-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass38-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass38') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS38_SOUND_OK' })) {
+              throw "Pass38 native soundscape playback smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass38_synthetic.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass38 synthetic fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -286,12 +310,26 @@ jobs:
           if ($sourceObjects.Count -gt 0) { throw 'Owner-private source Map Object pack remained in public CI output' }
           $plans = @(Get-ChildItem -Path build/output -Filter '*.sourcefragment36.png' -File -Recurse -ErrorAction SilentlyContinue)
           if ($plans.Count -gt 0) { throw 'Owner-private map plan remained in public CI output' }
+          $soundscapes = @(Get-ChildItem -Path build/output -Filter '*.soundscape38.json' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($soundscapes.Count -gt 0) { throw 'Owner-private source soundscape metadata remained in public CI output' }
+          $tempWavs = Join-Path (Resolve-Path 'build/output').Path 'Content/Audio/MapSounds'
+          if (Test-Path $tempWavs) { throw 'Synthetic/original map-local WAV files remained in public CI output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
         if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass36-Windows-x64-NoPrivateAssets
+          path: build/output/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
+      - name: Upload verified Pass 38 Windows build (no private source or audio assets)
+        if: success() && github.ref_name == 'twr-pass38-source-soundscapes'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Pass38-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
