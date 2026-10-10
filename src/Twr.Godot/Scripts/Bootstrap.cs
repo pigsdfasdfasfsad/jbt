@@ -396,6 +396,11 @@ public partial class Bootstrap : Node
                 streaming.VisibleBatchCount < 1)
                 throw new InvalidOperationException(
                     "Original source navigation/collision/geometry were not activated");
+            // Minimal generated PNGs prove map cards and weapon icons load
+            // in the exported Godot C# executable (no private art in CI).
+            if (Pass27SourceArtCatalog.MapCard("Laboratory") is null ||
+                Pass27SourceArtCatalog.WeaponIcon("Glock 17") is null)
+                throw new InvalidOperationException("Synthetic private UI art failed to load");
             GD.Print($"TWR_SMOKE_PASS30_SOURCE_OK nodes={navigator.PointCount} " +
                 $"collision_tiles={collision.GetChildCount()} " +
                 $"visible_batches={streaming.VisibleBatchCount}");

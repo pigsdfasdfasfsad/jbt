@@ -96,20 +96,30 @@ jobs:
             throw "Pass 29 native Windows runtime smoke failed. Exit code: $($run.ExitCode)"
           }
 
-      - name: Smoke Pass 30 AABB culling and gameplay in Windows executable
+      - name: Smoke Pass 30 fully integrated synthetic Laboratory in exported Windows game
         if: success() && github.ref_name == 'twr-pass30-gameplay-validation'
         shell: pwsh
         run: |
-          $stdout = Join-Path $env:RUNNER_TEMP 'pass30-smoke.stdout.txt'
-          $stderr = Join-Path $env:RUNNER_TEMP 'pass30-smoke.stderr.txt'
-          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
-          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass30') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-          $output = @()
-          if (Test-Path $stdout) { $output += Get-Content $stdout }
-          if (Test-Path $stderr) { $output += Get-Content $stderr }
-          $output | ForEach-Object { Write-Host $_ }
-          if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS30_GAMEPLAY_OK' })) {
-            throw "Pass 30 gameplay native smoke failed. Exit: $($run.ExitCode)"
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to generate synthetic native smoke fixtures' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass30-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass30-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass30') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or
+                -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS30_GAMEPLAY_OK' }) -or
+                -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS30_SOURCE_OK' })) {
+              throw "Pass 30 full native integration smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass30_synthetic_sidecars.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Failed to remove synthetic smoke fixtures' }
           }
 
       - name: Verify no private map scenes entered the CI export
@@ -123,7 +133,7 @@ jobs:
         if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation')
         uses: actions/upload-artifact@v4
         with:
-          name: TWR-Pass29-Windows-x64-NoPrivateAssets
+          name: TWR-Pass30-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
