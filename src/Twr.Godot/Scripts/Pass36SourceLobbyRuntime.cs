@@ -29,6 +29,8 @@ public partial class Pass36SourceLobbyRuntime : Node3D
     private readonly Dictionary<string, Camera3D> _cameras = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Batch> _batches = new(StringComparer.Ordinal);
     private Camera3D? _currentCamera;
+    private WorldEnvironment? _worldEnvironment;
+    private global::Godot.Environment? _sourceEnvironment;
 
     private sealed class Batch
     {
@@ -97,6 +99,11 @@ public partial class Pass36SourceLobbyRuntime : Node3D
     {
         Active=enabled;
         Visible=enabled;
+        // WorldEnvironment is not a VisualInstance3D: merely hiding this
+        // parent DOES NOT deactivate its environment. Release ownership
+        // before the first-person gameplay map sets its own source sky/fog.
+        if (_worldEnvironment is not null)
+            _worldEnvironment.Environment=enabled ? _sourceEnvironment : null;
         foreach (var camera in _cameras.Values) camera.Current=false;
         if (enabled) SwitchView(CurrentCameraName);
     }
@@ -215,17 +222,16 @@ public partial class Pass36SourceLobbyRuntime : Node3D
                     batch.Maximum-batch.Minimum+Vector3.One*2f)
             });
         }
-        AddChild(new WorldEnvironment
+        _sourceEnvironment=new global::Godot.Environment
         {
-            Environment=new global::Godot.Environment
-            {
-                BackgroundMode=global::Godot.Environment.BGMode.Color,
-                BackgroundColor=new Color(.045f,.045f,.048f),
-                AmbientLightSource=global::Godot.Environment.AmbientSource.Color,
-                AmbientLightColor=new Color(.70f,.67f,.61f),
-                AmbientLightEnergy=.65f
-            }
-        });
+            BackgroundMode=global::Godot.Environment.BGMode.Color,
+            BackgroundColor=new Color(.045f,.045f,.048f),
+            AmbientLightSource=global::Godot.Environment.AmbientSource.Color,
+            AmbientLightColor=new Color(.70f,.67f,.61f),
+            AmbientLightEnergy=.65f
+        };
+        _worldEnvironment=new WorldEnvironment { Environment=_sourceEnvironment };
+        AddChild(_worldEnvironment);
     }
 
     private static string? ReadLineBounded(StreamReader reader,int max)
