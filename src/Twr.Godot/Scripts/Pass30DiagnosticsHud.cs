@@ -86,6 +86,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Original nav nodes: {Navigation?.PointCount ?? 0}  P40 graph: {(Game?.Pass40GroundedNavigationVerified == true ? "YES" : "NO")}\n" +
             $"Collision tiles: {CollisionTiles}\n" +
             $"Verified original Lab: {(Game?.Pass39OriginalLabSourceVerified == true ? "YES" : "NO")}  Plans: {Game?.Pass39LabFloorCount ?? 0}\n" +
+            $"F4-N nav graph: {(Game?.Pass40NavigationPlanAvailable == true ? "READY" : "N/A")} / {(Game?.Pass40NavigationPlanOpen == true ? "ON" : "OFF")}\n" +
             $"Original client walls: {Game?.OriginalClientWallCount ?? 0} " +
             $"(F8: {(Game?.OriginalClientWallsEnabled == true ? "ON" : "OFF")})\n" +
             $"Original infected walls: {Game?.OriginalInfectedWallCount ?? 0} " +
@@ -137,6 +138,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 pass39_verified_original_laboratory = Game?.Pass39OriginalLabSourceVerified ?? false,
                 pass39_laboratory_floorplan_layers = Game?.Pass39LabFloorCount ?? 0,
                 pass39_laboratory_floorplan_active_level = Game?.Pass39LabCurrentFloor ?? -1,
+                pass40_navigation_floorplan_available = Game?.Pass40NavigationPlanAvailable ?? false,
+                pass40_navigation_floorplan_selected = Game?.Pass40NavigationPlanOpen ?? false,
                 original_source_client_walls = Game?.OriginalClientWallCount ?? 0,
                 original_source_client_walls_opt_in = Game?.OriginalClientWallsEnabled ?? false,
                 original_source_infected_walls = Game?.OriginalInfectedWallCount ?? 0,
