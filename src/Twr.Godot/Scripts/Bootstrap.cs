@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass35",StringComparer.Ordinal))
+        {
+            RunPass35Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass34",StringComparer.Ordinal))
         {
             RunPass34Smoke();
@@ -382,6 +387,64 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private async void RunPass35Smoke()
+    {
+        // Executed in the actual exported Godot .NET Windows game; CI injects
+        // one fabricated Manor source Infected Wall. No owner Roblox assets.
+        _runtime.StartMap("Manor");
+        var game = new GameplayRoot
+        {
+            Name = "Pass35InfectedWallSmoke",
+            Runtime = _runtime, MapName = "Manor"
+        };
+        AddChild(game);
+        var original = game.GetNodeOrNull<Pass35InfectedWallsRuntime>(
+            "Pass35InfectedWalls");
+        var player = game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if (original is null || original.WallCount != 1 ||
+            original.Enabled || original.ApproximateMeshProxyCount != 0 ||
+            player is null)
+            throw new InvalidOperationException("Pass35 synthetic original infected wall missing or enabled by default");
+        if ((player.CollisionMask & Pass35InfectedWallsRuntime.InfectedWallCollisionLayer) != 0)
+            throw new InvalidOperationException("Infected-only source barrier incorrectly blocks the player");
+
+        var enemy = new InfectedAgent
+        {
+            Name = "Pass35InfectedCollisionProbe", Target=player,
+            Runtime=_runtime, Position=new Vector3(280,280,-285)
+        };
+        game.AddChild(enemy);
+        if ((enemy.CollisionMask & Pass35InfectedWallsRuntime.InfectedWallCollisionLayer)==0)
+            throw new InvalidOperationException("Infected actor does not test original Infected Walls layer");
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        // Generated source wall: studs [1000,1000,1000], Godot z reflected.
+        var from=new Vector3(280f,280f,-282f);
+        var to=new Vector3(280f,280f,-278f);
+        bool Hits(uint collisionLayer)
+        {
+            var ray=PhysicsRayQueryParameters3D.Create(from,to);
+            ray.CollisionMask=collisionLayer;
+            return game.GetWorld3D().DirectSpaceState.IntersectRay(ray).Count>0;
+        }
+        if (Hits(Pass35InfectedWallsRuntime.InfectedWallCollisionLayer))
+            throw new InvalidOperationException("Original infected-only wall not default OFF");
+
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F7,Pressed=true });
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if (!original.Enabled || !Hits(Pass35InfectedWallsRuntime.InfectedWallCollisionLayer))
+            throw new InvalidOperationException("F7 infected-only wall collision failed");
+        if (Hits(1))
+            throw new InvalidOperationException("Source infected-only wall leaked into normal world/player layer");
+        game._UnhandledInput(new InputEventKey { Keycode=Key.F7,Pressed=true });
+        await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
+        if (original.Enabled || Hits(Pass35InfectedWallsRuntime.InfectedWallCollisionLayer))
+            throw new InvalidOperationException("F7 failed to disable infected-only source wall");
+        GD.Print("TWR_SMOKE_PASS35_INFECTED_WALLS_OK map=Manor " +
+            "wall=1 default_off=true toggles=2 infected_only_layer=8 player_excluded=true");
         GetTree().Quit(0);
     }
 
