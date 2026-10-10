@@ -71,6 +71,8 @@ public partial class GameplayRoot : Node3D
     public bool Pass39OriginalLabSourceVerified => _labFloorplan?.VerifiedOriginalScene ?? false;
     public int Pass39LabFloorCount => _labFloorplan?.LevelCount ?? 0;
     public int Pass39LabCurrentFloor => _labFloorplan?.ActiveLevel ?? -1;
+    public bool Pass40NavigationPlanAvailable => _labFloorplan?.HasNavigationDiagnostic ?? false;
+    public bool Pass40NavigationPlanOpen => _labFloorplan?.IsShowingNavigation ?? false;
     public bool AssistedInfectedSpawnsEnabled { get; private set; }
     public int AssistedInfectedSpawnCount { get; private set; }
     public int AssistedInfectedRecoveryCount { get; private set; }
