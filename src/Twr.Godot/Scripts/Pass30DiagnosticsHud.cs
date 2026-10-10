@@ -27,7 +27,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             Name = "DiagnosticsBackground",
             AnchorLeft = 1f, AnchorRight = 1f,
             OffsetLeft = -365f, OffsetRight = -15f,
-            OffsetTop = 12f, OffsetBottom = 448f,
+            OffsetTop = 12f, OffsetBottom = 515f,
             Color = new Color(.025f, .035f, .048f, .88f),
             MouseFilter = Control.MouseFilterEnum.Ignore,
             Visible = false
@@ -36,7 +36,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _label = new Label
         {
             OffsetLeft = 12f, OffsetTop = 10f,
-            OffsetRight = 335f, OffsetBottom = 430f,
+            OffsetRight = 335f, OffsetBottom = 500f,
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
         _label.AddThemeFontSizeOverride("font_size", 14);
@@ -77,8 +77,9 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         if (_refresh > 0) return;
         _refresh = .65;
         var mesh = Primitives;
+        var frames = Game?.Pass43FrameTimes.Snapshot();
         _label.Text =
-            "PASS 42 | F2 audio, F3 light, F4 jump maps, F9 spawn assist, F5 source props, F6 source walls\n" +
+            "PASS 43 | F2 audio, F3 light, F4 jump maps, F9 spawn assist, F5 source props, F6 source walls\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
@@ -86,7 +87,13 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Original nav nodes: {Navigation?.PointCount ?? 0}  P40 graph: {(Game?.Pass40GroundedNavigationVerified == true ? "YES" : "NO")}\n" +
             $"Pass41 bridges: {Game?.Pass41NativeBridgeCount ?? 0}  components: {Game?.Pass41RemainingNavigationComponents ?? 0}\n" +
             $"Pass42 jump links: {Game?.Pass42JumpLinkCount ?? 0} ({(Game?.Pass42JumpGraphVerified == true ? "VERIFIED" : "UNVERIFIED")})\n" +
-            $"Zombies jumped: {Game?.Pass42JumpAttempts ?? 0} tries, {Game?.Pass42JumpLandings ?? 0} landed\n" +
+            $"Jump outcome (match): {Game?.Pass43TotalJumpAttempts ?? 0} launched / " +
+            $"{Game?.Pass43VerifiedJumpLandings ?? 0} landed / " +
+            $"{Game?.Pass43FailedJumpAttempts ?? 0} failed\n" +
+            $"Jump actions in flight: {Game?.Pass43CurrentlyJumping ?? 0}\n" +
+            $"Real frame ms (p50/p95/p99): {frames?.MedianMs ?? 0:F1} / " +
+            $"{frames?.P95Ms ?? 0:F1} / {frames?.P99Ms ?? 0:F1} " +
+            $"({frames?.SampledFrames ?? 0} samples)\n" +
             $"F4/N repaired diagrams: {(Game?.Pass41BridgeDiagramAvailable == true ? "READY" : "NOT VERIFIED")}\n" +
             $"Collision tiles: {CollisionTiles}\n" +
             $"Verified original Lab: {(Game?.Pass39OriginalLabSourceVerified == true ? "YES" : "NO")}  Plans: {Game?.Pass39LabFloorCount ?? 0}\n" +
@@ -120,6 +127,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         try
         {
             var mesh = Primitives;
+            var frames = Game?.Pass43FrameTimes.Snapshot();
             var payload = new
             {
                 format = "twr-pass36-gameplay-diagnostics-v1",
@@ -171,6 +179,18 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 pass42_jump_overlay_available = Game?.Pass42JumpDiagramAvailable ?? false,
                 pass42_infected_jump_attempts = Game?.Pass42JumpAttempts ?? 0,
                 pass42_infected_jump_landings = Game?.Pass42JumpLandings ?? 0,
+                pass43_jump_launches_match = Game?.Pass43TotalJumpAttempts ?? 0,
+                pass43_jump_confirmed_landings_match = Game?.Pass43VerifiedJumpLandings ?? 0,
+                pass43_jump_failed_attempts_match = Game?.Pass43FailedJumpAttempts ?? 0,
+                pass43_jump_in_flight = Game?.Pass43CurrentlyJumping ?? 0,
+                pass43_frame_samples = frames?.SampledFrames ?? 0,
+                pass43_frame_median_ms = frames?.MedianMs ?? 0,
+                pass43_frame_p95_ms = frames?.P95Ms ?? 0,
+                pass43_frame_p99_ms = frames?.P99Ms ?? 0,
+                pass43_frame_worst_ms = frames?.WorstMs ?? 0,
+                pass43_peak_living_infected = frames?.PeakLivingInfected ?? 0,
+                pass43_observed_real_seconds = frames?.ObservedRealSeconds ?? 0,
+                pass43_uncontrolled_playtest = true,
                 pass41_native_bridge_verified = Game?.Pass41SourceNativeBridgeVerified ?? false,
                 pass41_native_bridge_count = Game?.Pass41NativeBridgeCount ?? 0,
                 pass41_remaining_navigation_components = Game?.Pass41RemainingNavigationComponents ?? 0,
@@ -184,9 +204,14 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 managed_memory_bytes = GC.GetTotalMemory(false)
             };
             var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass33_Diagnostics.json");
-            File.WriteAllText(path, JsonSerializer.Serialize(payload,
-                new JsonSerializerOptions { WriteIndented = true }));
-            GD.Print("TWR_PASS30_DIAGNOSTICS_SAVED " + path);
+            var json=JsonSerializer.Serialize(payload,
+                new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(path,json); // Legacy latest snapshot path.
+            var archival=Path.Combine(OS.GetUserDataDir(),
+                "TWR_Pass43_Diagnostics-" +
+                DateTime.UtcNow.ToString("yyyyMMdd-HHmmssfff") + ".json");
+            File.WriteAllText(archival,json); // Distinct captures across waves.
+            GD.Print("TWR_PASS43_DIAGNOSTICS_SAVED " + archival);
         }
         catch (Exception error)
         {
