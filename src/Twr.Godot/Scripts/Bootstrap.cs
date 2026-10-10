@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass32",StringComparer.Ordinal))
+        {
+            RunPass32Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass31",StringComparer.Ordinal))
         {
             RunPass31Smoke();
@@ -367,6 +372,84 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private async void RunPass32Smoke()
+    {
+        // This runs in the real Windows-exported Godot C# executable with
+        // disposable synthetic scene/collision/nav assets from CI.
+        if (!Pass32RescuePolicy.CanRescue(24f, 0f, 8.0, 0, 100.0) ||
+            Pass32RescuePolicy.CanRescue(24f, 0f, 8.0, 2, 100.0) ||
+            Pass32RescuePolicy.CanRescue(24f, 0f, 8.0, 1, 1.0) ||
+            Pass32RescuePolicy.CanRescue(6f, 0f, 8.0, 0, 100.0) ||
+            !Pass32RescuePolicy.CanRescue(24f,-10f,0.0,0,100.0))
+            throw new InvalidOperationException("Pass32 rescue eligibility limits failed");
+
+        _runtime.StartMap("Laboratory");
+        var gameplay = new GameplayRoot
+        {
+            Name = "Pass32GroundedSmoke",
+            Runtime = _runtime,
+            MapName = "Laboratory"
+        };
+        AddChild(gameplay);
+        var navigation = gameplay.GetNodeOrNull<Pass25SourceNavigationRuntime>(
+            "Pass25LaboratoryNavigation");
+        if (navigation is null || !navigation.IsBridgePackActive)
+            throw new InvalidOperationException("Pass32 nav31 pack failed to load");
+
+        // Ensure all collision shapes are active before querying space.
+        await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+        await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+
+        var target = new Vector3(0,1.4f,0);
+        var disconnected = new Vector3(84,1.4f,-11.2f);
+        var candidates = navigation.GetAssistedInfectedSpawnCandidates(
+            disconnected,target,3);
+        if (candidates.Length == 0)
+            throw new InvalidOperationException("No disconnected spawn alternatives");
+        var safe = Pass32SpawnSafety.FindSupportedPlacement(
+            gameplay.GetWorld3D(),candidates,target);
+        if (!safe.HasValue || safe.Value.DistanceTo(target) < 24f ||
+            navigation.GetRoute(safe.Value,target).Length == 0 ||
+            Math.Abs(safe.Value.Y - 2.30f) > .2f)
+            throw new InvalidOperationException("Distant source-grounded F9 placement invalid");
+        var unsupported = Pass32SpawnSafety.FindSupportedPlacement(
+            gameplay.GetWorld3D(), new[] { new Vector3(70f,2.2f,40f) },target);
+        if (unsupported.HasValue)
+            throw new InvalidOperationException("Void/unsupported zombie entry accepted");
+        if (gameplay.AssistedInfectedSpawnsEnabled)
+            throw new InvalidOperationException("F9 assisted relocation default was enabled");
+        gameplay._UnhandledInput(new InputEventKey
+        {
+            Keycode = Key.F9, Pressed = true
+        });
+        if (!gameplay.AssistedInfectedSpawnsEnabled)
+            throw new InvalidOperationException("F9 opt-in did not enable source rescue");
+
+        // Actual CharacterBody3D path traversal, not a Python-only graph test.
+        var enemy = new InfectedAgent
+        {
+            Name = "Pass32MovementProbe",
+            Target = gameplay.GetNode<FirstPersonPlayer>("Player"),
+            Runtime = _runtime,
+            SourceNavigator = navigation,
+            InfectedType = "Civilian",
+            Position = safe.Value
+        };
+        gameplay.AddChild(enemy);
+        var start = enemy.GlobalPosition;
+        for (var tick = 0; tick < 35; tick++)
+            await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+        var end = enemy.GlobalPosition;
+        var moved = new Vector2(end.X-start.X,end.Z-start.Z).Length();
+        if (moved < .20f || !float.IsFinite(moved))
+            throw new InvalidOperationException("Lab infected actor did not traverse source nav");
+        GD.Print($"TWR_SMOKE_PASS32_GROUNDED_OK floor=true " +
+            $"rejected_void=true movement={moved:F2}m " +
+            $"rescue_limit={Pass32RescuePolicy.MaximumRescuesPerEnemy} " +
+            $"source_spawns_default=unchanged");
         GetTree().Quit(0);
     }
 
