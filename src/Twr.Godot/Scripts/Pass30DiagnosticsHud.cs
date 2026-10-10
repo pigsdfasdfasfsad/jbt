@@ -27,7 +27,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             Name = "DiagnosticsBackground",
             AnchorLeft = 1f, AnchorRight = 1f,
             OffsetLeft = -365f, OffsetRight = -15f,
-            OffsetTop = 12f, OffsetBottom = 220f,
+            OffsetTop = 12f, OffsetBottom = 252f,
             Color = new Color(.025f, .035f, .048f, .88f),
             MouseFilter = Control.MouseFilterEnum.Ignore,
             Visible = false
@@ -36,7 +36,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _label = new Label
         {
             OffsetLeft = 12f, OffsetTop = 10f,
-            OffsetRight = 335f, OffsetBottom = 200f,
+            OffsetRight = 335f, OffsetBottom = 232f,
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
         _label.AddThemeFontSizeOverride("font_size", 14);
@@ -78,7 +78,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 30 | F10 toggle - F11 save JSON\n" +
+            "PASS 32 | F9 accessibility - F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
@@ -88,6 +88,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Source primitive instances: {mesh?.SourceInstanceCount ?? 0}\n" +
             $"F9 spawn assist: {(Game?.AssistedInfectedSpawnsEnabled == true ? "ON" : "OFF")}, " +
             $"redirected: {Game?.AssistedInfectedSpawnCount ?? 0}\n" +
+            $"Ground-checked rescues: {Game?.AssistedInfectedRecoveryCount ?? 0}\n" +
+            $"Unsafe candidates rejected: {Game?.RejectedAssistedSpawnAttempts ?? 0}\n" +
             $"Managed memory: {GC.GetTotalMemory(false) / 1048576} MiB";
     }
 
@@ -98,7 +100,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             var mesh = Primitives;
             var payload = new
             {
-                format = "twr-pass30-gameplay-diagnostics-v1",
+                format = "twr-pass32-gameplay-diagnostics-v1",
                 utc = DateTimeOffset.UtcNow.ToString("O"),
                 map = MapName,
                 wave = Game?.Runtime?.Match?.Wave ?? 0,
@@ -114,6 +116,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,
                 assisted_infected_spawns_on = Game?.AssistedInfectedSpawnsEnabled ?? false,
                 assisted_infected_spawn_count = Game?.AssistedInfectedSpawnCount ?? 0,
+                assisted_physics_checked_recoveries = Game?.AssistedInfectedRecoveryCount ?? 0,
+                unsafe_assisted_spawn_attempts = Game?.RejectedAssistedSpawnAttempts ?? 0,
                 managed_memory_bytes = GC.GetTotalMemory(false)
             };
             var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass30_Diagnostics.json");
