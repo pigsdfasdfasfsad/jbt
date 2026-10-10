@@ -62,3 +62,25 @@ Previously installed Pass 37/38 audio and lighting private packs remain supporte
 GitHub Actions uses a **fabricated** 20-part Laboratory scene, three generated sample PNGs, and --smoke-pass39 inside the compiled **exported Windows executable**, checking F4 open/close and floor selection. No owner-private source is included in CI. The real private 34,268-item scene and 18,130-collider cache are validated structurally and SHA-checked offline, but **a real Windows graphical traversal/performance test with those private assets is still required**. In particular, this does not establish 15-wave playability, acceptable FPS, original custom mesh accuracy or ten-map full source fidelity.
 
 The other nine release maps require the separate owner-held `twr places` full loaded-map snapshots for complete geometry. Their existing fallbacks and Pass 36 optional source wall/prop fragments are preserved.
+
+
+## Nine additional original CMaps source fragment sidecars included privately
+
+The owner-side Pass 39 package also reconstructs the **existing Pass 36**
+source wall, map-object and top-down-plan packs for the other nine maps,
+using exactly the original source export schema. All **18 source JSONL.GZ
+SHA-256 digests** and **nine PNG SHA-256 digests** were reproduced byte-for-byte
+against the known compiled runtime constants.
+
+- 6,920 positioned original invisible server-wall records, collision OFF by default
+- 3,556 CMaps source object records, 305 available native Part/Wedge previews
+- 3,251 original MeshPart/UnionOperation vertices still missing
+- Nine original Server Wall footprint PNGs for F4
+- F5 original native prop previews and F6 optional source-wall collision
+
+These are **not** nine full recovered Workspace/Map scenes: the nine full
+map geometries still depend on the missing original place snapshots, and
+experimental source collisions on fallback blockouts may be unsafe. The
+original Pass 36 loader is unchanged and retains all opt-in safeguards.
+The real original source sidecars and map-plan PNGs are distributed privately
+and never uploaded into public Git history or Windows CI artifacts.
