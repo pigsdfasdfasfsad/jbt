@@ -25,37 +25,45 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     private const float MaximumAnchorDistance = 5.0f;
     private readonly AStar3D _graph = new();
     private int _edgeCount;
+    private bool _bridgePackActive;
+    private int[] _componentRoot = Array.Empty<int>();
+    private readonly Dictionary<int, List<int>> _componentNodes = new();
+    public bool IsBridgePackActive => _bridgePackActive;
     public int PointCount => (int)_graph.GetPointCount();
     public int EdgeCount => _edgeCount;
 
     public static Pass25SourceNavigationRuntime? TryBuild(Node3D owner, string mapName)
     {
         if (mapName != "Laboratory") return null;
-        var navFile = CandidatePaths("Navigation", "Laboratory.nav25.gz")
-            .FirstOrDefault(File.Exists);
+        var navFiles = CandidatePaths("Navigation", "Laboratory.nav31.gz")
+            .Concat(CandidatePaths("Navigation", "Laboratory.nav25.gz"))
+            .Where(File.Exists).Distinct(StringComparer.Ordinal).ToArray();
         var sceneFile = CandidatePaths("Maps", "Laboratory.scene.jsonl.gz")
             .FirstOrDefault(File.Exists);
-        if (navFile is null || sceneFile is null)
+        if (navFiles.Length == 0 || sceneFile is null)
         {
             GD.Print("TWR_PASS25_NAV_MISSING map=Laboratory fallback=local_steering");
             return null;
         }
-        var navigator = new Pass25SourceNavigationRuntime { Name = "Pass25LaboratoryNavigation" };
-        try
+        foreach (var navFile in navFiles)
         {
-            navigator.ReadGraph(navFile, sceneFile);
-            owner.AddChild(navigator);
-            GD.Print($"TWR_PASS25_NAV_READY map=Laboratory " +
-                $"nodes={navigator.PointCount} edges={navigator.EdgeCount}");
-            return navigator;
+            var navigator = new Pass25SourceNavigationRuntime { Name = "Pass25LaboratoryNavigation" };
+            try
+            {
+                navigator.ReadGraph(navFile, sceneFile);
+                owner.AddChild(navigator);
+                GD.Print($"TWR_PASS31_NAV_READY map=Laboratory nodes={navigator.PointCount} " +
+                    $"edges={navigator.EdgeCount} bridge_pack={navigator.IsBridgePackActive}");
+                return navigator;
+            }
+            catch (Exception error)
+            {
+                GD.PushWarning("TWR_PASS25_NAV_REJECTED map=Laboratory: " +
+                    error.Message + "; fallback=local_steering");
+                navigator.Free();
+            }
         }
-        catch (Exception error)
-        {
-            GD.PushWarning("TWR_PASS25_NAV_REJECTED map=Laboratory: " +
-                error.Message + "; fallback=local_steering");
-            navigator.Free();
-            return null;
-        }
+        return null;
     }
 
     public Vector3[] GetRoute(Vector3 from, Vector3 to)
@@ -74,6 +82,16 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         // The agent replans periodically. Cap the returned waypoint window
         // rather than creating unbounded per-enemy path arrays.
         return route.Length <= 256 ? route : route[..256];
+    }
+
+    private static int FindRoot(int[] parents, int i)
+    {
+        while (parents[i] != i)
+        {
+            parents[i] = parents[parents[i]];
+            i = parents[i];
+        }
+        return i;
     }
 
     private static IEnumerable<string> CandidatePaths(string contentType, string filename)
@@ -98,9 +116,11 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         using var archive = File.OpenRead(navFile);
         using var gzip = new GZipStream(archive, CompressionMode.Decompress);
         using var reader = new BinaryReader(gzip);
-        if (!reader.ReadBytes(8).SequenceEqual(Magic))
+        var marker = reader.ReadBytes(8);
+        var nav31 = marker.SequenceEqual(Encoding.ASCII.GetBytes("TWRNAV31"));
+        if (!nav31 && !marker.SequenceEqual(Magic))
             throw new InvalidDataException("wrong navigation format");
-        if (reader.ReadUInt32() != 1)
+        if (reader.ReadUInt32() != (nav31 ? 2u : 1u))
             throw new InvalidDataException("unsupported navigation version");
         var pointCount = reader.ReadInt32();
         var edgeCount = reader.ReadInt32();
@@ -120,6 +140,7 @@ public partial class Pass25SourceNavigationRuntime : Node3D
             _graph.AddPoint(index, new Vector3(x, y, -z) * Stud);
         }
         var knownEdges = new HashSet<ulong>();
+        var parents = Enumerable.Range(0, pointCount).ToArray();
         for (var index = 0; index < edgeCount; index++)
         {
             var a = reader.ReadInt32();
@@ -131,12 +152,28 @@ public partial class Pass25SourceNavigationRuntime : Node3D
             if (!knownEdges.Add(((ulong)(uint)first << 32) | (uint)last))
                 throw new InvalidDataException("duplicate navigation edge");
             var delta = _graph.GetPointPosition(a) - _graph.GetPointPosition(b);
-            if (delta.Length() > 1.5f || Math.Abs(delta.Y) > .64f)
+            if (delta.Length() > (nav31 ? 2.46f : 1.5f) || Math.Abs(delta.Y) > .64f)
                 throw new InvalidDataException("navigation edge jumps unsupported distance");
             _graph.ConnectPoints(a, b, true);
+            var rootA = FindRoot(parents, a);
+            var rootB = FindRoot(parents, b);
+            if (rootA != rootB) parents[rootB] = rootA;
         }
         if (reader.BaseStream.ReadByte() != -1)
             throw new InvalidDataException("extra data after navigation graph");
         _edgeCount = edgeCount;
+        _bridgePackActive = nav31;
+        _componentRoot = new int[pointCount];
+        for (var i = 0; i < pointCount; i++)
+        {
+            var root = FindRoot(parents, i);
+            _componentRoot[i] = root;
+            if (!_componentNodes.TryGetValue(root, out var nodes))
+            {
+                nodes = new List<int>();
+                _componentNodes[root] = nodes;
+            }
+            nodes.Add(i);
+        }
     }
 }
