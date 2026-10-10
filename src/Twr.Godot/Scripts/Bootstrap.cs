@@ -11,12 +11,19 @@ public partial class Bootstrap : Node
     private CanvasLayer? _armory;
     private PerkMenuRuntime? _perkMenu;
     private GameplayRoot? _game;
+    private Pass36SourceLobbyRuntime? _sourceLobby;
+    private bool _armoryShowingLoadoutCamera;
 
     public override void _Ready()
     {
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass36",StringComparer.Ordinal))
+        {
+            RunPass36Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass35",StringComparer.Ordinal))
         {
             RunPass35Smoke();
@@ -108,6 +115,7 @@ public partial class Bootstrap : Node
             return;
         }
 
+        _sourceLobby = Pass36SourceLobbyRuntime.TryBuild(this);
         ShowMenu();
         if (args.Contains("--smoke-play", StringComparer.Ordinal))
             StartGame("Manor");
@@ -387,6 +395,31 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass36Smoke()
+    {
+        // Runs inside the exported Windows Godot C# game against a generated
+        // synthetic scene; no owner source is ever uploaded to public CI.
+        var lobby = Pass36SourceLobbyRuntime.TryBuild(this);
+        if (lobby is null || !lobby.IsSyntheticSmoke ||
+            lobby.RecoveredObjectCount != 16 || lobby.RecoveredCameraCount != 8 ||
+            lobby.VisualProxyCount != 4 || lobby.RenderBatchCount < 3 ||
+            !lobby.Active || lobby.CurrentCameraName != "Start")
+            throw new InvalidOperationException("Pass36 synthetic source Lobby not built");
+        if (!lobby.SwitchView("Shop") || lobby.CurrentCameraName != "Shop" ||
+            !lobby.SwitchView("Loadout") || lobby.CurrentCameraName != "Loadout" ||
+            !lobby.SwitchView("Perks") || lobby.CurrentCameraName != "Perks")
+            throw new InvalidOperationException("Original source UI CamPoints not mapped");
+        lobby.SetActive(false);
+        if (lobby.Active || lobby.Visible)
+            throw new InvalidOperationException("Lobby background remained active in gameplay");
+        lobby.SetActive(true);
+        if (!lobby.Active || !lobby.Visible || lobby.CurrentCameraName != "Perks")
+            throw new InvalidOperationException("Source Lobby failed to restore after match");
+        GD.Print("TWR_SMOKE_PASS36_LOBBY_OK geometry=16 cameras=8 proxies=4 " +
+            "shop_loadout_perks=true game_fallback=true");
         GetTree().Quit(0);
     }
 
@@ -774,17 +807,23 @@ public partial class Bootstrap : Node
     }
     private void ShowMenu()
     {
+        _sourceLobby?.SetActive(true);
+        _sourceLobby?.SwitchView("Start");
         Input.MouseMode = Input.MouseModeEnum.Visible;
         _menu = new CanvasLayer { Name = "MainMenu" };
         AddChild(_menu);
 
-        AddBackground(_menu);
+        AddBackground(_menu, _sourceLobby is not null, .70f);
         _menu.AddChild(MakeLabel(58, 38, 1160, 62, 40, "THOSE WHO REMAIN - OFFLINE"));
         _menu.AddChild(MakeLabel(60, 98, 850, 38, 18, "REGULAR  |  15 WAVES  |  LOCAL SINGLE PLAYER"));
         _menu.AddChild(MakeLabel(60, 142, 1160, 66, 16,
             "Select a recovered release map. Geometry is an evidence-guided reconstruction blockout\n" +
             "until original map transforms are recoverable. Gameplay rules remain source-labeled."));
         _menu.AddChild(MakeLabel(60, 210, 850, 36, 15, ProfileStatusText()));
+        if (_sourceLobby is not null)
+            _menu.AddChild(MakeLabel(690, 204, 500, 35, 13,
+                $"SOURCE LOBBY 3D | {_sourceLobby.RecoveredObjectCount} transforms | " +
+                $"{_sourceLobby.VisualProxyCount} missing mesh substitutes"));
         _menu.AddChild(MakeLabel(60, 650, 1160, 42, 15,
             "WASD move | Shift sprint | Space jump | Mouse aim/fire | R reload | 1/2/3 weapons | F hammer"));
 
@@ -836,6 +875,7 @@ public partial class Bootstrap : Node
 
     private void ShowPerks()
     {
+        _sourceLobby?.SwitchView("Perks");
         _menu?.QueueFree();
         _menu=null;
         _perkMenu?.QueueFree();
@@ -855,6 +895,7 @@ public partial class Bootstrap : Node
 
     private void ShowArmory()
     {
+        _sourceLobby?.SwitchView(_armoryShowingLoadoutCamera ? "Loadout" : "Shop");
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();
@@ -862,7 +903,7 @@ public partial class Bootstrap : Node
         Input.MouseMode = Input.MouseModeEnum.Visible;
         _armory = new CanvasLayer { Name = "Armory" };
         AddChild(_armory);
-        AddBackground(_armory);
+        AddBackground(_armory, _sourceLobby is not null, .84f);
 
         _armory.AddChild(MakeLabel(58, 34, 1160, 58, 36, "ARMORY / LOADOUT"));
         _armory.AddChild(MakeLabel(60, 92, 1000, 42, 16, ProfileStatusText()));
@@ -884,6 +925,22 @@ public partial class Bootstrap : Node
             ShowMenu();
         };
         _armory.AddChild(back);
+        if (_sourceLobby is not null)
+        {
+            var cameraButton = new Button
+            {
+                OffsetLeft = 815, OffsetTop = 110,
+                OffsetRight = 1200, OffsetBottom = 148,
+                Text = _armoryShowingLoadoutCamera ? "SOURCE VIEW: LOADOUT" : "SOURCE VIEW: SHOP"
+            };
+            cameraButton.Pressed += () =>
+            {
+                _armoryShowingLoadoutCamera = !_armoryShowingLoadoutCamera;
+                _sourceLobby?.SwitchView(_armoryShowingLoadoutCamera ? "Loadout" : "Shop");
+                cameraButton.Text = _armoryShowingLoadoutCamera ? "SOURCE VIEW: LOADOUT" : "SOURCE VIEW: SHOP";
+            };
+            _armory.AddChild(cameraButton);
+        }
 
         var scroll = new ScrollContainer
         {
@@ -977,11 +1034,12 @@ public partial class Bootstrap : Node
             "  |  PRIMARY " + primary + "  |  SECONDARY " + secondary + "  |  MELEE " + melee;
     }
 
-    private static void AddBackground(CanvasLayer layer)
+    private static void AddBackground(CanvasLayer layer, bool sourceLobby, float opacity)
     {
         layer.AddChild(new ColorRect
         {
-            Color = new Color(0.025f, 0.027f, 0.03f),
+            Color = new Color(0.025f, 0.027f, 0.03f,
+                sourceLobby ? opacity : 1f),
             AnchorRight = 1,
             AnchorBottom = 1
         });
@@ -1003,6 +1061,7 @@ public partial class Bootstrap : Node
 
     private void StartGame(string map)
     {
+        _sourceLobby?.SetActive(false); // game camera/environment is authoritative
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();
