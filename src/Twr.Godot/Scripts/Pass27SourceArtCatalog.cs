@@ -121,7 +121,10 @@ public static class Pass27SourceArtCatalog
             var png = File.ReadAllBytes(path);
             if (!SHA256.HashData(png).AsSpan().SequenceEqual(Convert.FromHexString(asset.Sha256)))
                 throw new InvalidDataException("Offline art SHA-256 differs from manifest");
-            var image = Image.LoadPngFromBuffer(png);
+            // Godot C# Image.LoadPngFromBuffer is an instance method returning
+            // Godot.Error, not a static factory. LoadFromFile is the already
+            // verified offline image path used by OfflineAssetResolver.
+            var image = Image.LoadFromFile(path);
             if (image is null || image.IsEmpty() || image.GetWidth() > 2048 || image.GetHeight() > 2048)
                 throw new InvalidDataException("Offline artwork is not a valid PNG");
             result = ImageTexture.CreateFromImage(image);
