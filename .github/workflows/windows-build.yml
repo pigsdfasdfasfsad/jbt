@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges]
     paths:
       - 'src/**'
       - 'content/**'
@@ -342,8 +342,32 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass40 synthetic fixtures not cleaned' }
           }
 
+      - name: Smoke Pass 41 v3 native bridge route, F4 repaired graph and F9 opt-in on Windows
+        if: success() && github.ref_name == 'twr-pass41-source-native-bridges'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass41_synthetic.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass41 synthetic source bridge creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass41-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass41-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240','--','--smoke-pass41') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS41_NAV_OK' })) {
+              throw "Pass41 native repaired navigation path smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass41_synthetic.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass41 synthetic fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -370,6 +394,10 @@ jobs:
           if ($nav31.Count -gt 0) { throw 'Owner-private or synthetic source navigation graph remained in public output' }
           $navImages = @(Get-ChildItem -Path build/output -Filter '*.navgraph40-*.png' -File -Recurse -ErrorAction SilentlyContinue)
           if ($navImages.Count -gt 0) { throw 'Source navigation diagnostic PNGs remained in public output' }
+          $newBridges = @(Get-ChildItem -Path build/output -Filter '*.nav41.gz' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($newBridges.Count -gt 0) { throw 'Private Pass41 source repaired navigation leaked into public output' }
+          $repairImages = @(Get-ChildItem -Path build/output -Filter '*.navgraph41-*.png' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($repairImages.Count -gt 0) { throw 'Private Pass41 repaired Laboratory map plans leaked into public output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
         if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
@@ -406,6 +434,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass40-Windows-x64-NoPrivateAssets
+          path: build/output/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
+      - name: Upload verified Pass 41 Windows build (no owner-private source packs)
+        if: success() && github.ref_name == 'twr-pass41-source-native-bridges'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Pass41-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
