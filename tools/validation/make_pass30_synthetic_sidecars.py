@@ -96,6 +96,24 @@ def nav31(digest):
     return compressed(raw)
 
 
+
+def clientwalls34(digest):
+    # Fabricated one-piece invisible wall at (0,5,20) Roblox studs.
+    # In Godot metres its centre is (0,1.4,-5.6), with player-only
+    # collision toggle OFF until F8 is pressed. No owner-held geometry.
+    header = {'format': 'twr-client-walls34-v1',
+              'map': 'Laboratory',
+              'scene_sha256': digest.hex(),
+              'source_rbxlx_sha256': '0'*64,
+              'wall_count': 1, 'collision_group_id': 8,
+              'default_enabled': False}
+    wall = {'class': 'Part', 't': [0., 5., 20.],
+            'r': list(R), 's': [2., 6., 2.]}
+    contents = '\\n'.join(json.dumps(x, sort_keys=True, separators=(',',':'))
+                          for x in [header, wall]) + '\\n'
+    return compressed(contents.encode('utf8'))
+
+
 def col26(digest):
     # Synthetic walkable floor under original player + all distant nav31
     # F9 candidates, with upward-facing triangle normals for a ground ray.
@@ -129,6 +147,7 @@ def staged_files(outdir):
              base/'Navigation'/'Laboratory.nav25.gz':nav25(digest),
              base/'Navigation'/'Laboratory.nav31.gz':nav31(digest),
              base/'Collision'/'Laboratory.col26.gz':col26(digest),
+             base/'Walls'/'Laboratory.clientwalls34.jsonl.gz':clientwalls34(digest),
              base/'Geometry'/'Laboratory.native28.gz':native28(digest),
              base/'Art'/'visuals.json': (json.dumps(images,sort_keys=True)+'\n').encode('utf8'),
              base/'Art'/'WeaponIcons'/'G17-UI.png': png}
