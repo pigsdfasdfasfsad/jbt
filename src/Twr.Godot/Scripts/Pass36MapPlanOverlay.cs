@@ -45,7 +45,7 @@ public partial class Pass36MapPlanOverlay : CanvasLayer
         try
         {
             var bytes=File.ReadAllBytes(path);
-            if(bytes.Length<80 || bytes.Length>3_000_000)
+            if(bytes.Length<64 || bytes.Length>3_000_000)
                 throw new InvalidDataException("Offline original map outline size invalid");
             var sha=Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
             if(!OS.GetCmdlineUserArgs().Contains("--smoke-pass36",StringComparer.Ordinal) || mapName!="Manor")
