@@ -18,6 +18,7 @@ public partial class GameplayRoot : Node3D
     private Pass36SourceFragmentsRuntime? _sourceFragments;
     private Pass36MapPlanOverlay? _sourceMapPlan;
     private Pass37SourceLightingRuntime? _sourceLighting;
+    private Pass38SourceSoundscapeRuntime? _sourceSoundscape;
     private OfflineAudioRuntime _audio = null!;
     private RuntimeMapDefinition _mapDefinition = null!;
     private RuntimeMapLayout _mapLayout = null!;
@@ -61,6 +62,11 @@ public partial class GameplayRoot : Node3D
     public bool Pass36HasOriginalMapPlan => _sourceMapPlan?.HasPlan ?? false;
     public int Pass37SourceLightingEffectCount => _sourceLighting?.SourceEffectCount ?? 0;
     public bool Pass37SourceLightingEnabled => _sourceLighting?.Enabled ?? false;
+    public int Pass38SourceSoundEmitterCount => _sourceSoundscape?.SourceEmitterCount ?? 0;
+    public int Pass38SourcePositionedEmitterCount => _sourceSoundscape?.SourcePositionedCount ?? 0;
+    public int Pass38OfflineWavEmitterCount => _sourceSoundscape?.InstalledWavEmitterCount ?? 0;
+    public int Pass38ActiveSourceVoices => _sourceSoundscape?.ActiveVoiceCount ?? 0;
+    public bool Pass38SourceSoundEnabled => _sourceSoundscape?.Enabled ?? false;
     public bool AssistedInfectedSpawnsEnabled { get; private set; }
     public int AssistedInfectedSpawnCount { get; private set; }
     public int AssistedInfectedRecoveryCount { get; private set; }
@@ -113,6 +119,9 @@ public partial class GameplayRoot : Node3D
             Position = _mapLayout.PlayerSpawn
         };
         AddChild(_player);
+        _sourceSoundscape = Pass38SourceSoundscapeRuntime.TryBuild(this, MapName,
+            GetNodeOrNull<Node3D>("Recovered" + MapName) is not null);
+        _sourceSoundscape?.Track(_player);
         GetNodeOrNull<LaboratoryLightStreamer>("Recovered" + MapName + "/LaboratoryLights")
             ?.Track(_player);
         GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
@@ -220,6 +229,20 @@ public partial class GameplayRoot : Node3D
     {
         if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;
 
+        if (!_finished && key.Keycode == Key.F2)
+        {
+            if (_sourceSoundscape is null)
+                _hud.SetUtility("Offline source soundscape pack unavailable");
+            else
+            {
+                _sourceSoundscape.SetEnabled(!_sourceSoundscape.Enabled);
+                _hud.SetUtility(_sourceSoundscape.Enabled
+                    ? "F2 MAP SOUND PREVIEW ON (separate WAV substitutions; not original audio)"
+                    : "F2 MAP SOUND PREVIEW OFF (existing game sounds unchanged)");
+            }
+            GetViewport().SetInputAsHandled();
+            return;
+        }
         if (!_finished && key.Keycode == Key.F3)
         {
             if (_sourceLighting is null)
