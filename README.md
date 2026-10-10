@@ -40,11 +40,19 @@ A successful executable build is only claimed after the Windows workflow actuall
 ## Windows executable distribution
 
 The Windows CI workflow validates, exports, and smoke-tests the game in its
-temporary runner workspace. It intentionally does **not** publish executables
-or upload downloadable Windows builds to GitHub Actions or GitHub Releases.
-Previously uploaded Windows build artifacts are removed during the next CI run.
+temporary runner workspace. A successful Pass 38 branch build uploads a
+**public-safe, no-private-assets** Windows ZIP as a temporary GitHub Actions
+artifact; this is not a complete original-content game release. The owner-only
+source soundscapes, terrain, models, and sound recordings remain out of Git and
+are distributed in a separate owner-held content pack. Executables are not
+published as GitHub Releases.
 
-The project owner distributes packaged builds separately, outside GitHub.
+Pass 38 adds 206 source-indexed map sound emitters across the ten release maps
+(197 positioned, 9 environmental). Their original SoundId fields are blank in
+the available TestPlace source, so the optional F2 audio preview requires
+locally installed substitute/authorized PCM16 WAVs. F2 is OFF by default,
+and source 3D positions require the real recovered map rather than approximate
+blockouts. See docs/development/PASS38_SOURCE_MAP_SOUNDSCAPES.md.
 
 ## Laboratory source-pack runtime verification
 
