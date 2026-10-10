@@ -40,6 +40,11 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     // original 14,726 sampled nodes. No authoring claim to Roblox's navmesh.
     private const string Pass41NavigationSha =
         "12ac9bae602cbdea3ae6a6789289d1068f1c8efd5d603de34d6186698c375dd0";
+    private const string Pass42NavigationSha =
+        "c9f03bfe0c5da13972d5c149f88c4084da61b5804501419aebb6cddac51be4fd";
+    private readonly HashSet<ulong> _jumpEdgeKeys = [];
+    public bool IsPass42JumpGraph { get; private set; }
+    public int Pass42JumpEdgeCount => _jumpEdgeKeys.Count;
     public bool IsPass41SourceNativeGraph { get; private set; }
     public int Pass41NativeBridgeCount => IsPass41SourceNativeGraph ? 17 : 0;
     public int ConnectedComponentCount => _componentNodes.Count;
@@ -83,7 +88,8 @@ public partial class Pass25SourceNavigationRuntime : Node3D
     public static Pass25SourceNavigationRuntime? TryBuild(Node3D owner, string mapName)
     {
         if (mapName != "Laboratory") return null;
-        var navFiles = CandidatePaths("Navigation", "Laboratory.nav41.gz")
+        var navFiles = CandidatePaths("Navigation", "Laboratory.nav42.gz")
+            .Concat(CandidatePaths("Navigation", "Laboratory.nav41.gz"))
             .Concat(CandidatePaths("Navigation", "Laboratory.nav31.gz"))
             .Concat(CandidatePaths("Navigation", "Laboratory.nav25.gz"))
             .Where(File.Exists).Distinct(StringComparer.Ordinal).ToArray();
@@ -104,7 +110,8 @@ public partial class Pass25SourceNavigationRuntime : Node3D
                 GD.Print($"TWR_PASS31_NAV_READY map=Laboratory nodes={navigator.PointCount} " +
                     $"edges={navigator.EdgeCount} bridge_pack={navigator.IsBridgePackActive} " +
                     $"source_native_repair={navigator.IsPass41SourceNativeGraph} " +
-                    $"components={navigator.ConnectedComponentCount}");
+                    $"components={navigator.ConnectedComponentCount} " +
+                    $"jump_edges={navigator.Pass42JumpEdgeCount}");
                 return navigator;
             }
             catch (Exception error)
@@ -224,6 +231,27 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         return bounded.ToArray();
     }
 
+    private static ulong EdgeKey(long a, long b)
+    {
+        var low = Math.Min(a,b);
+        var high = Math.Max(a,b);
+        return ((ulong)(uint)low << 32) | (uint)high;
+    }
+
+    public bool IsJumpLinkBetween(Vector3 from, Vector3 to)
+    {
+        if (_jumpEdgeKeys.Count == 0 || _graph.GetPointCount() == 0)
+            return false;
+        var a = _graph.GetClosestPoint(from);
+        var b = _graph.GetClosestPoint(to);
+        if (a < 0 || b < 0 || a == b) return false;
+        // Require actual graph points, not a nearby wall/floor projection.
+        if (_graph.GetPointPosition(a).DistanceSquaredTo(from) > .0025f ||
+            _graph.GetPointPosition(b).DistanceSquaredTo(to) > .0025f)
+            return false;
+        return _jumpEdgeKeys.Contains(EdgeKey(a,b));
+    }
+
     private static int FindRoot(int[] parents, int i)
     {
         while (parents[i] != i)
@@ -256,19 +284,26 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         var packedHash = Convert.ToHexString(SHA256.HashData(
             File.ReadAllBytes(navFile))).ToLowerInvariant();
         var ownerSource = Convert.ToHexString(sceneDigest).ToLowerInvariant() == Pass40SceneSha;
-        IsPass41SourceNativeGraph = ownerSource && packedHash == Pass41NavigationSha;
+        IsPass42JumpGraph = ownerSource && packedHash == Pass42NavigationSha;
+        IsPass41SourceNativeGraph = ownerSource &&
+            (packedHash == Pass41NavigationSha || IsPass42JumpGraph);
         IsPass40GroundedGraph = ownerSource &&
             (packedHash == Pass40NavigationSha || IsPass41SourceNativeGraph);
         using var archive = File.OpenRead(navFile);
         using var gzip = new GZipStream(archive, CompressionMode.Decompress);
         using var reader = new BinaryReader(gzip);
         var marker = reader.ReadBytes(8);
+        var nav42 = marker.SequenceEqual(Encoding.ASCII.GetBytes("TWRNAV42"));
         var nav41 = marker.SequenceEqual(Encoding.ASCII.GetBytes("TWRNAV41"));
         var nav31 = marker.SequenceEqual(Encoding.ASCII.GetBytes("TWRNAV31"));
-        if (!nav41 && !nav31 && !marker.SequenceEqual(Magic))
+        if (!nav42 && !nav41 && !nav31 && !marker.SequenceEqual(Magic))
             throw new InvalidDataException("wrong navigation format");
-        if (reader.ReadUInt32() != (nav41 ? 3u : nav31 ? 2u : 1u))
+        if (reader.ReadUInt32() != (nav42 ? 4u : nav41 ? 3u : nav31 ? 2u : 1u))
             throw new InvalidDataException("unsupported navigation version");
+        // Synthetic smoke packs are never distributed as source originals.
+        if (nav42 && !IsPass42JumpGraph &&
+            !OS.GetCmdlineUserArgs().Contains("--smoke-pass42",StringComparer.Ordinal))
+            throw new InvalidDataException("Pass42 source jump navigation SHA mismatch");
         // For real original scenes a repaired graph is usable only when
         // it exactly matches the owner-derived 17-bridge source evidence.
         // Synthetic Windows QA fixtures are explicitly exempt, never
@@ -299,16 +334,34 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         {
             var a = reader.ReadInt32();
             var b = reader.ReadInt32();
+            var action = nav42 ? reader.ReadByte() : (byte)0;
+            if (action > 1)
+                throw new InvalidDataException("unsupported source jump edge action");
             if (a < 0 || b < 0 || a >= pointCount || b >= pointCount || a == b)
                 throw new InvalidDataException("navigation edge contains invalid node");
             var first = Math.Min(a,b);
             var last = Math.Max(a,b);
-            if (!knownEdges.Add(((ulong)(uint)first << 32) | (uint)last))
+            var edgeKey = EdgeKey(first,last);
+            if (!knownEdges.Add(edgeKey))
                 throw new InvalidDataException("duplicate navigation edge");
             var delta = _graph.GetPointPosition(a) - _graph.GetPointPosition(b);
-            if (delta.Length() > (nav31 || nav41 ? 2.46f : 1.5f) ||
-                Math.Abs(delta.Y) > .64f)
-                throw new InvalidDataException("navigation edge jumps unsupported distance");
+            if (action == 0)
+            {
+                if (delta.Length() > (nav31 || nav41 || nav42 ? 2.46f : 1.5f) ||
+                    Math.Abs(delta.Y) > .64f)
+                    throw new InvalidDataException("walk navigation edge jumps unsupported distance");
+            }
+            else
+            {
+                // Original Pathfind Lua: AgentCanJump=true, AgentCanClimb=false.
+                // The nine source-bounded jump links are NOT original navmesh.
+                if (!nav42 || delta.Length() > 8f * Stud + .001f ||
+                    Math.Abs(delta.Y) > 3.5f * Stud + .001f ||
+                    new Vector2(delta.X,delta.Z).Length() < 2.4f * Stud)
+                    throw new InvalidDataException("unsafe source jump edge bounds");
+                if (!_jumpEdgeKeys.Add(edgeKey) || _jumpEdgeKeys.Count > 64)
+                    throw new InvalidDataException("too many source jump edges");
+            }
             _graph.ConnectPoints(a, b, true);
             var rootA = FindRoot(parents, a);
             var rootB = FindRoot(parents, b);
@@ -316,8 +369,11 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         }
         if (reader.BaseStream.ReadByte() != -1)
             throw new InvalidDataException("extra data after navigation graph");
+        if (nav42 && (_jumpEdgeKeys.Count == 0 ||
+            (IsPass42JumpGraph && _jumpEdgeKeys.Count != 9)))
+            throw new InvalidDataException("incorrect source jump link count");
         _edgeCount = edgeCount;
-        _bridgePackActive = nav31 || nav41;
+        _bridgePackActive = nav31 || nav41 || nav42;
         _componentRoot = new int[pointCount];
         for (var i = 0; i < pointCount; i++)
         {
