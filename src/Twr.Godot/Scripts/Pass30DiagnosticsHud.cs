@@ -27,7 +27,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             Name = "DiagnosticsBackground",
             AnchorLeft = 1f, AnchorRight = 1f,
             OffsetLeft = -365f, OffsetRight = -15f,
-            OffsetTop = 12f, OffsetBottom = 252f,
+            OffsetTop = 12f, OffsetBottom = 300f,
             Color = new Color(.025f, .035f, .048f, .88f),
             MouseFilter = Control.MouseFilterEnum.Ignore,
             Visible = false
@@ -36,7 +36,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _label = new Label
         {
             OffsetLeft = 12f, OffsetTop = 10f,
-            OffsetRight = 335f, OffsetBottom = 232f,
+            OffsetRight = 335f, OffsetBottom = 280f,
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
         _label.AddThemeFontSizeOverride("font_size", 14);
@@ -78,7 +78,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         _refresh = .65;
         var mesh = Primitives;
         _label.Text =
-            "PASS 32 | F9 accessibility - F10 HUD - F11 report\n" +
+            "PASS 33 | F9 accessibility - F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
@@ -86,6 +86,10 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Collision tiles: {CollisionTiles}\n" +
             $"Visible native batches: {mesh?.VisibleBatchCount ?? 0}/{mesh?.BatchCount ?? 0}\n" +
             $"Source primitive instances: {mesh?.SourceInstanceCount ?? 0}\n" +
+            $"Nav queries: {Navigation?.RouteRequests ?? 0} / A*: {Navigation?.ActualPathSearches ?? 0}\n" +
+            $"Cached routes: {Navigation?.RouteCacheHits ?? 0} hits " +
+            $"({Navigation?.CachedRouteCount ?? 0} entries)\n" +
+            $"Disconnected rejects: {Navigation?.DisconnectedRouteRejects ?? 0}\n" +
             $"F9 spawn assist: {(Game?.AssistedInfectedSpawnsEnabled == true ? "ON" : "OFF")}, " +
             $"redirected: {Game?.AssistedInfectedSpawnCount ?? 0}\n" +
             $"Ground-checked rescues: {Game?.AssistedInfectedRecoveryCount ?? 0}\n" +
@@ -100,7 +104,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             var mesh = Primitives;
             var payload = new
             {
-                format = "twr-pass32-gameplay-diagnostics-v1",
+                format = "twr-pass33-gameplay-diagnostics-v1",
                 utc = DateTimeOffset.UtcNow.ToString("O"),
                 map = MapName,
                 wave = Game?.Runtime?.Match?.Wave ?? 0,
@@ -110,6 +114,12 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 world_pickups = Game?.ActivePickupCount ?? 0,
                 source_navigation_nodes = Navigation?.PointCount ?? 0,
                 source_navigation_edges = Navigation?.EdgeCount ?? 0,
+                source_navigation_requests = Navigation?.RouteRequests ?? 0,
+                source_navigation_astar_searches = Navigation?.ActualPathSearches ?? 0,
+                source_navigation_cache_hits = Navigation?.RouteCacheHits ?? 0,
+                source_navigation_cache_entries = Navigation?.CachedRouteCount ?? 0,
+                source_navigation_disconnected_rejects = Navigation?.DisconnectedRouteRejects ?? 0,
+                source_navigation_distant_anchor_rejects = Navigation?.DistantAnchorRejects ?? 0,
                 source_collision_tiles = CollisionTiles,
                 visible_source_batches = mesh?.VisibleBatchCount ?? 0,
                 total_source_batches = mesh?.BatchCount ?? 0,
@@ -120,7 +130,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 unsafe_assisted_spawn_attempts = Game?.RejectedAssistedSpawnAttempts ?? 0,
                 managed_memory_bytes = GC.GetTotalMemory(false)
             };
-            var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass30_Diagnostics.json");
+            var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass33_Diagnostics.json");
             File.WriteAllText(path, JsonSerializer.Serialize(payload,
                 new JsonSerializerOptions { WriteIndented = true }));
             GD.Print("TWR_PASS30_DIAGNOSTICS_SAVED " + path);
