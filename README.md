@@ -175,6 +175,10 @@ The **private owner Windows ZIP** adds ten-map source outlines, original Laborat
 - Completion reward is one-time and is persisted before results/lobby transition.
 - Release maps: Ranch, Mill, Bypass, Cabin, Cargo, District, Expressway, Prison, Laboratory, Manor.
 
+## Verified development checkpoint: Pass 52 (2026-10-10)
+
+The Pass52 development branch adds original per-weapon 3D loadout CFrame offsets, the source three-second easing function and 50-degree lobby camera field of view, right-mouse preview tilt and a read-only source-priced seven-case Shop. Owner-derived original art is not included in public Git. **Verified Windows CI:** [Actions run 38105034356](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38105034356): 485 Python tests passed, Windows C# export built (zero errors; one older Pass36 CS0108 warning), the 10-map 15-wave domain simulation, native Pass52 smoke and privacy audit all passed. No publicly downloadable Windows executable was uploaded. Gameplay, art, and original Shop functionality are still incomplete; read the [Pass52 source evidence and acceptance report](docs/development/PASS52_SOURCE_LOBBY_MOTION_AND_CASES.md).
+
 ## Verified development checkpoint: Pass 51 (2026-10-10)
 
 The Pass 51 branch adds a source-CFrame-anchored 3D weapon showcase to the original offline lobby's working 91-weapon armory. The five actual loadout marker transforms are preserved, weapon-hover previews are presentational only, and source model assets remain owner-private. Windows CI run [38104204978](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38104204978) passed **477 Python regressions**, native Godot/.NET Windows export, the 10-map/150-wave domain smoke, the new 3D armory native smoke and the private source asset exclusion gate. This is **not** proof of original 3D mesh/pixel fidelity, human 15-wave matches, or an installable private release. See [Pass 51 verification notes](docs/development/PASS51_ORIGINAL_LOADOUT_PREVIEW.md).

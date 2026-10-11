@@ -41,3 +41,17 @@ On the `twr-pass52-source-loadout-and-shop` branch, the Windows job runs native 
 ## Outstanding limitations
 
 The source positions and script constants are evidence-backed; exact render parity, original mesh/CSG triangles, original skins and images, dynamic physical gun pose, UI layout, all map interiors, human-driven 15-wave playthroughs, full offline case/skin inventory and final private Windows release are **not** complete. Windows compilation alone is not a true human gameplay certification.
+
+## Verified Pass 52 checkpoint — October 10, 2026
+
+**Source commit:** `58ea43b5d179933c5f53fb8aa6886e924bac9847` on `twr-pass52-source-loadout-and-shop`.
+
+**Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38105034356 — **SUCCESS**.
+
+- Python: **485 tests passed**, one existing Python FutureWarning in a Pass34 XML helper.
+- Native Godot/.NET Windows export: **build succeeded, zero errors, one pre-existing CS0108 warning** in `Pass36SourceFragmentsRuntime.Transform(JsonElement)`.
+- Baseline: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` (simulation acceptance, **not** 150 real-time human-played waves).
+- Native Pass52: `TWR_SMOKE_PASS52_LOBBY_SHOP_OK` with **91** parsed original weapon CFrames, three-second 50° camera, seven case prices, 25° preview tilt limit, read-only economy and no lobby leak into a Manor match.
+- Privacy: synthetic owner-style data removed before audit; GitHub Actions uploads remain disabled. No owner-only art, original lobby/source scripts or EXE binary was published.
+
+The exported test uses synthetic 3D assets. The private original lobby and custom MeshPart/UnionOperation binaries have not been visually validated in a full GUI playtest. The original Shop inventory, case RNG, paid products, achievements and complete 15-wave player-controlled matches remain unfinished.

@@ -1,3 +1,13 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 52
+
+**Date:** October 10, 2026 (US Central). **Branch:** `twr-pass52-source-loadout-and-shop`.
+
+**Successful Windows Actions run:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38105034356
+
+**485 Python tests passed**, exported Windows C# Godot build **0 errors / 1 old Pass36 compiler warning**, baseline **10-map × 15-wave domain smoke** passed, Pass52 native `TWR_SMOKE_PASS52_LOBBY_SHOP_OK` passed and public/private asset audit passed. Original loaded lobby cameras now interpolate over three seconds with the recovered 50° FOV, all **91** bundled normalized per-weapon `LoadoutOffset` CFrames parsed (including source RPG Y half-turn), user-facing loadout preview tilt is limited to ±25°, and the original Shop camera and seven credit-price case tiers are available in read-only mode. Case purchases, skins, owner mesh binaries, real 15-wave playthroughs and a privately distributed EXE remain unresolved. See [Pass52 evidence and limitations](PASS52_SOURCE_LOBBY_MOTION_AND_CASES.md).
+
+---
+
 ## Latest verified update: Pass 51 (October 10, 2026, US Central)
 
 Development branch: `twr-pass51-original-loadout-preview`. Successful native Windows CI: https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38104204978. **477 Python tests passed**, Godot/.NET Windows executable compiled with **0 build errors**, baseline 10-map/150-wave smoke passed, new Pass51 showroom native smoke returned `TWR_SMOKE_PASS51_LOADOUT_OK`, and owner/private/synthetic file exclusion passed. The exact five source loadout CFrames are used for a non-authoritative weapon showroom and the 91-weapon menu. Source mesh ownership and rendering remain explicitly distinguished from approximate presentation. This is tested on fabricated CI source packs; no original-asset 3D side-by-side comparison, human-driven 15-wave match or private distribution EXE was produced in this pass. [Detailed Pass51 record](PASS51_ORIGINAL_LOADOUT_PREVIEW.md).
