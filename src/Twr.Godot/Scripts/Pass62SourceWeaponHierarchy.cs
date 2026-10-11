@@ -342,7 +342,7 @@ public static class Pass62SourceWeaponHierarchy
                 throw new InvalidDataException("Unknown hierarchy format");
             var synthetic=root.GetProperty("synthetic").GetBoolean();
             var testMode=OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-pass62" or "--smoke-pass63" or "--smoke-pass64");
+                arg is "--smoke-pass62" or "--smoke-pass63" or "--smoke-pass64" or "--smoke-pass65");
             if(synthetic && !testMode)
                 throw new InvalidDataException(
                     "Synthetic motor hierarchy outside native smoke");
