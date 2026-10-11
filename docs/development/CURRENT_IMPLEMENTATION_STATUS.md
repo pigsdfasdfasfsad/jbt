@@ -1,3 +1,23 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 63
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass63-source-magazine-reload`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38161375690
+
+- **548 Python regressions passed**, one inherited Pass34 XML FutureWarning.
+- Godot/.NET Windows export succeeded with **zero errors**, one inherited Pass36 CS0108 compiler warning.
+- `Pass63SourceMagazineReload` now consumes inert, normalized original `Reload.Sequence.ModelMotor.Mag` keyframes for supported guns, including explicit source `Lerp`/`Time`/numeric CFrames and exact `module.Stats.Rels.MagRel` symbolic references. The latter is safely derived from the **separate Pass62 SHA-verified original Mag.Handle hierarchy**, without evaluating source Luau. Original manufacturer model geometry files are not newly recovered.
+- Original **Glock 17, AK-47, M4A1, P90 and Mossberg 500** magazine cue counts of **4, 5, 4, 8 and 3** are loaded and validated. Original magazine removal/insertion poses and rotations apply rigidly to all visible members of the owner-source top-level `Mag` subassembly, then reset to original rest poses. Existing generic magazine-drop fallback remains without the owner source pack.
+- Native exported-Windows `TWR_SMOKE_PASS63_MAGAZINE_OK` passed: exact cue counts, source magazine CFrame parsing, original-relative and absolute motion, two-piece Glock magazine motion and group-spacing preservation, return to rest, blocked executable expressions and unchanged ammo authority.
+- Pass59–62 weapon smokes and `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed. The latter remains **scripted domain progression**, not a full human-played 15-wave run on ten maps.
+- CI synthetic magazine pack creation and cleanup passed; private owner asset exclusion passed, and **no Windows EXE or owner-private source pack was published as a public artifact**.
+
+**Outstanding:** original Motor6D C0/C1 joints, detachable magazine meshes/shell-by-shell loading, original character hands/IK, texture UVs and missing MeshPart triangle bytes, original dynamic AimCF, complete visual and physical restoration across all ten maps, full player-controlled round tests, and private final Windows distribution. **Not yet a fully accurate 1:1 game.**
+
+[Pass63 original source magazine reload implementation and Windows CI details](PASS63_SOURCE_MAGAZINE_RELOAD.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 62
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass62-source-subassembly-hierarchy`.
