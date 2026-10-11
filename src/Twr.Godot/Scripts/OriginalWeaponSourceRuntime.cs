@@ -34,18 +34,22 @@ public static class OriginalWeaponSourceRuntime
     public static int LastNativePrimitiveParts { get; private set; }
     public static int LastDetailProfileProxies { get; private set; }
     public static int LastLensProxies { get; private set; }
+    public static Pass62SourceWeaponHierarchy.Binding? LastSubassemblyBinding
+        {get;private set;}
     private static JsonDocument? _document;
     private static bool _initialized;
     private static readonly Dictionary<string, Mesh?> CachedMeshes = new();
 
     public static bool TryBuild(Node3D parent, string weaponName)
     {
+        LastSubassemblyBinding=null;
         if (!LoadDocument()) return false;
         if (!_document!.RootElement.GetProperty("models")
             .TryGetProperty(weaponName, out var model))
             return false;
 
         var materials = new Dictionary<string, Material>(StringComparer.Ordinal);
+        var visibleBySourceIndex=new Dictionary<int,MeshInstance3D>();
         var sourceParts = model.GetProperty("parts").EnumerateArray().ToArray();
         // Roblox local model axes may point towards +Z after the conversion
         // into Godot's -Z-forward camera convention. Detect barrel direction
@@ -163,11 +167,18 @@ public static class OriginalWeaponSourceRuntime
                 weaponName,partIndex,out var skinSlot))
                 originalPart.SetMeta("TwrSkinSlot54",skinSlot);
             parent.AddChild(originalPart);
+            visibleBySourceIndex[partIndex]=originalPart;
             count++;
         }
         LastVisibleSourceParts = count;
         LastUnavailableMeshProxies = missingMeshProxies;
         if (count < 1) return false;
+        // A separate SHA-bound sidecar matches these original Pass47 source
+        // part indices (including invisible Handle helpers). No public
+        // original data is baked into the code or the Windows CI artifact.
+        LastSubassemblyBinding=Pass62SourceWeaponHierarchy.Bind(
+            weaponName,parent,sourceParts.Length,visibleBySourceIndex,
+            alignment,OwnerSourcePackVerified);
         GD.Print($"TWR_ORIGINAL_TOOL_ASSEMBLED name={weaponName} " +
             $"visible_parts={count} source_mesh_proxy_parts={missingMeshProxies} " +
             $"locally_resolved_mesh_parts={LastResolvedMeshParts} " +
@@ -256,7 +267,7 @@ public static class OriginalWeaponSourceRuntime
             var synthetic = root.TryGetProperty("synthetic",out var fixture) &&
                 fixture.ValueKind == JsonValueKind.True;
             var testMode = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58");
+                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58" or "--smoke-pass62");
             // A synthetic fixture may never silently impersonate an original
             // tool pack during ordinary play.
             if (synthetic && !testMode)
