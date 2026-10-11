@@ -42,7 +42,9 @@ def test_missing_source_mesh_uses_bounded_authored_shape_and_preserves_part_tran
     assert '"muzzle" or "nozzle" or "tube"' in geometry
     assert '"receiver"' not in geometry
     assert "new BoxMesh {Size=Vector3.One}" in geometry
-    assert "dims[axis]>=Math.Max(cross[0],cross[1])*1.6f" in geometry
+    assert "dims[axis]>=Math.Max(crossA,crossB)*1.6f" in geometry
+    assert "crossA=dims[(axis+1)%3]" in geometry
+    assert "crossB=dims[(axis+2)%3]" in geometry
     assert "CircularSides*12" in geometry
     assert "Max()" in geometry
     assert "ArrayMesh()" in geometry

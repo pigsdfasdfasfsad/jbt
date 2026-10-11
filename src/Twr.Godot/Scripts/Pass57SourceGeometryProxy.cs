@@ -62,13 +62,14 @@ public static class Pass57SourceGeometryProxy
             return false;
         var dims=new[]{size.X,size.Y,size.Z};
         axis=Array.IndexOf(dims,dims.Max());
-        var cross=dims.Where((_,i)=>i!=axis).ToArray();
+        // Do not close over an out parameter: use direct source bounds.
+        var crossA=dims[(axis+1)%3];
+        var crossB=dims[(axis+2)%3];
         // A long slender authored volume with approximately round cross-
         // section is a much safer approximation than an unconditional
         // cylinder based only on its name.
-        return dims[axis]>=Math.Max(cross[0],cross[1])*1.6f &&
-               Math.Min(cross[0],cross[1])>=
-                   Math.Max(cross[0],cross[1])*.58f;
+        return dims[axis]>=Math.Max(crossA,crossB)*1.6f &&
+               Math.Min(crossA,crossB)>=Math.Max(crossA,crossB)*.58f;
     }
 
     public static Mesh Tube(int majorAxis)
