@@ -17,7 +17,8 @@ public static class Pass65SourceHands
 {
     public enum Hand { Left, Right }
     public enum Ease { Linear, SlowDown, SpeedUp }
-    public readonly record struct Target(Transform3D Offset,string Group);
+    public readonly record struct Target(Transform3D Offset,string Group,
+        bool InverseRest=false);
     public readonly record struct Cue(float At,float Duration,bool Animate,
         Ease Easing,Target Destination,Target? Start);
     public sealed record Track(Cue[] Cues);
@@ -118,6 +119,32 @@ public static class Pass65SourceHands
         return TryLiteralPose(source,out pose);
     }
 
+    private static bool TryWeldTarget(string? source,Hand side,string group,
+        Transform3D leftHome,Transform3D rightHome,out Target target)
+    {
+        target=default;
+        // This is the exact author-provided stationary-grip convention
+        // used for pumps/bolts. It means "current moving Handle CFrame *
+        // original Handle inverse * default hand CFrame", not an
+        // evaluation of an arbitrary Roblox/Luau inverse expression.
+        var handSymbol=side==Hand.Left
+            ? "module.Stats.LeftCF":"module.Stats.RightCF";
+        foreach(var name in new[]{"Pump","Slide","Bolt","Charge"})
+        {
+            if(group==name && source==
+                "module.Stats.Rels."+name+"Rel:inverse() * "+handSymbol)
+            {
+                target=new Target(side==Hand.Left?leftHome:rightHome,
+                    group,true);
+                return true;
+            }
+        }
+        if(!ParseDestination(source,side,leftHome,rightHome,out var pose))
+            return false;
+        target=new Target(pose,group);
+        return true;
+    }
+
     private static bool GroupName(JsonElement node,out string group)
     {
         group="";
@@ -198,9 +225,10 @@ public static class Pass65SourceHands
                        (record.TryGetProperty("TargetChar",out var charFlag) &&
                         charFlag.ValueKind==JsonValueKind.True) ||
                        !GroupName(record,out var group) ||
-                       !ParseDestination(Expression(record,"OffsetEnd"),
-                           side,leftHome,rightHome,out var destination) ||
-                       destination.Origin.LengthSquared()>9f)
+                       !TryWeldTarget(Expression(record,"OffsetEnd"),
+                           side,group,leftHome,rightHome,
+                           out var destination) ||
+                       destination.Offset.Origin.LengthSquared()>9f)
                         continue;
                     var duration=dt;
                     if(record.TryGetProperty("Time",out var time) &&
@@ -211,12 +239,12 @@ public static class Pass65SourceHands
                     var animate=!record.TryGetProperty("Lerp",out var lerp) ||
                                 lerp.ValueKind!=JsonValueKind.False;
                     Target? start=null;
-                    if(ParseDestination(Expression(record,"OffsetStart"),
-                        side,leftHome,rightHome,out var explicitFrom))
-                        start=new Target(explicitFrom,group);
+                    if(TryWeldTarget(Expression(record,"OffsetStart"),
+                        side,group,leftHome,rightHome,out var explicitFrom))
+                        start=explicitFrom;
                     var cue=new Cue(now,animate?duration:0f,
                         animate,ReadEase(record),
-                        new Target(destination,group),start);
+                        destination,start);
                     if(side==Hand.Left)left.Add(cue);
                     else right.Add(cue);
                 }
@@ -269,7 +297,13 @@ public static class Pass65SourceHands
         if(binding is null ||
            !binding.TryGetCurrentGroupPose(target.Group,out var group))
             return false;
-        result=group*target.Offset;
+        if(target.InverseRest)
+        {
+            if(!binding.TryGetGroupRestPose(target.Group,out var rest))
+                return false;
+            result=group*rest.AffineInverse()*target.Offset;
+        }
+        else result=group*target.Offset;
         return result.Origin.LengthSquared()<=9f;
     }
 
