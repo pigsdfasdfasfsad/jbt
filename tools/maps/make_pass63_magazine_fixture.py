@@ -5,20 +5,35 @@ import argparse
 import gzip
 import json
 from pathlib import Path
-from make_pass62_motor_hierarchy_fixture import payloads,part
+from make_pass62_motor_hierarchy_fixture import payloads,part,IDENTITY
 
 def blobs():
     source,group=payloads()
     a=json.loads(gzip.decompress(source))
     h=json.loads(gzip.decompress(group))
-    for gun in ("Glock 17","Mossberg 500"):
-        parts=a["models"][gun]["parts"]
-        index=len(parts)
-        parts.append(part("MagazineSleeve",(-.13,-.36,.07)))
-        entry=h["models"][gun]
-        mag=next(g for g in entry["groups"] if g["path"]==["Mag"])
-        mag["part_indices"].append(index)
-        entry["part_count"]=len(parts)
+    glock=a["models"]["Glock 17"]["parts"]
+    glock_index=len(glock)
+    glock.append(part("MagazineSleeve",(-.13,-.36,.07)))
+    glock_group=h["models"]["Glock 17"]
+    mag=next(g for g in glock_group["groups"] if g["path"]==["Mag"])
+    mag["part_indices"].append(glock_index)
+    glock_group["part_count"]=len(glock)
+
+    # Pass62's synthetic Mossberg has only Pump and Slide, so create
+    # a fresh invented Mag group here. Do not modify the Pass62 fixture:
+    # older native regression counts must remain byte-identical.
+    moss=a["models"]["Mossberg 500"]["parts"]
+    index=len(moss)
+    moss.extend([
+        part("Handle",(0.,-.4,.04),visible=False),
+        part("Magazine",(0.,-.4,.12)),
+        part("MagazineSleeve",(-.13,-.36,.07))
+    ])
+    moss_group=h["models"]["Mossberg 500"]
+    moss_group["groups"].append({
+        "path":["Mag"],"part_indices":[index,index+1,index+2],
+        "pivot_t":[0.,-.4,.04],"pivot_r":IDENTITY})
+    moss_group["part_count"]=len(moss)
     h["original_part_count"]=sum(len(m["parts"]) for m in a["models"].values())
     return [gzip.compress(json.dumps(x,sort_keys=True,separators=(",",":")
                           ).encode(),mtime=0,compresslevel=6)
