@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass59",StringComparer.Ordinal))
+        {
+            RunPass59Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass58",StringComparer.Ordinal))
         {
             RunPass58Smoke();
@@ -520,6 +525,43 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass59Smoke()
+    {
+        if(!Pass59WeaponMotion.TryGet("Glock 17",out var glock) ||
+           !glock.HasHip || !glock.HasAim ||
+           Math.Abs(glock.Hip.Pullback-.028f)>.0001f ||
+           Math.Abs(glock.Aim.Pullback-.014f)>.0001f ||
+           Math.Abs(glock.Hip.Out-.075f)>.0001f ||
+           Math.Abs(glock.Hip.Back-.15f)>.0001f ||
+           Pass59WeaponMotion.ParseVector("module.Stats.GripCF",out _) ||
+           Pass59WeaponMotion.ParseVector("CFrame.new(999,0,0)",out _) ||
+           Pass59WeaponMotion.ParseVector("CFrame.new(1,0,NaN)",out _))
+            throw new InvalidOperationException("Pass59 source fire motion parse failed");
+        var view=new WeaponViewModelRuntime{Name="Pass59Viewmodel"};
+        AddChild(view);
+        view.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var rig=view.GetNodeOrNull<Node3D>("WeaponBody");
+        if(rig is null)throw new InvalidOperationException("Pass59 no viewmodel rig");
+        view.Fire(false);
+        view._Process(glock.Hip.Out);
+        var hipDistance=rig.Position.Z;
+        view.Fire(true);
+        view._Process(glock.Aim.Out);
+        var aimDistance=rig.Position.Z;
+        if(Math.Abs(hipDistance-glock.Hip.Pullback)>.0002f ||
+           Math.Abs(aimDistance-glock.Aim.Pullback)>.0002f ||
+           hipDistance<=aimDistance)
+            throw new InvalidOperationException("Pass59 aim/hip gun model displacement failed");
+        view._Process(glock.Aim.Back+.01f);
+        if(Math.Abs(rig.Position.Z)>.0002f)
+            throw new InvalidOperationException("Pass59 weapon fire pose failed to reset");
+        GD.Print("TWR_SMOKE_PASS59_SOURCE_MOTION_OK weapon=Glock17 "+
+            "hip_meters=0.028 aim_meters=0.014 "+
+            "source_shot_timing=true returned_to_rest=true "+
+            "inert_luau_expressions=true");
         GetTree().Quit(0);
     }
 
