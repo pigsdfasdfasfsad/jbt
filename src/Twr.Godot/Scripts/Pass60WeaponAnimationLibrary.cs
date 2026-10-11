@@ -68,9 +68,13 @@ public static class Pass60WeaponAnimationLibrary
     private static bool FrameTarget(JsonElement part,out string? expression)
     {
         expression=null;
-        return part.ValueKind==JsonValueKind.Object &&
-            part.TryGetProperty("To",out var field) &&
-            Field(field,"expression",out expression);
+        if(part.ValueKind!=JsonValueKind.Object ||
+           !part.TryGetProperty("To",out var target) ||
+           target.ValueKind!=JsonValueKind.Object ||
+           !target.TryGetProperty("expression",out var value) ||
+           value.ValueKind!=JsonValueKind.String)return false;
+        expression=value.GetString();
+        return expression is not null;
     }
 
     private static bool Duration(JsonElement part,out float duration)
@@ -114,7 +118,7 @@ public static class Pass60WeaponAnimationLibrary
            !FrameTarget(reset,out var resetLiteral) ||
            !Pass60WeaponPoseMath.TryParse(resetLiteral,null,out var rest) ||
            rest.Origin.LengthSquared()>.000001f ||
-           rest.Basis.GetRotationQuaternion().Angle()>0.001f)
+           Math.Abs(rest.Basis.GetRotationQuaternion().W-1f)>0.0001f)
             return null;
         return new Shot(pose,timeOut,timeBack);
     }
@@ -169,10 +173,9 @@ public static class Pass60WeaponAnimationLibrary
         if(!root.TryGetProperty("stats",out var stats) ||
            !root.TryGetProperty("animations",out var animations))
             return null;
-        var sprint=Field(stats,"SprintCF",out var sprintText) &&
-            Pass60WeaponPoseMath.TryParse(sprintText,null,out var pose)
-            ? pose : Transform3D.Identity;
-        var hasSprint=sprint!=Transform3D.Identity;
+        var hasSprint=Field(stats,"SprintCF",out var sprintText) &&
+            Pass60WeaponPoseMath.TryParse(sprintText,null,out var pose);
+        var sprint=hasSprint ? pose : Transform3D.Identity;
         var hip=ReadFire(animations,"Fire");
         var aimed=ReadFire(animations,"AimFire");
         var reload=ReadReload(stats,animations);
