@@ -2,7 +2,21 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 49 — Original 3D source lobby
+## Latest verified source branch: Pass 50 — Original 3D lobby bulletin board
+
+[Pass 50 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass50-original-bulletin-board) ·
+[Successful Windows build and native bulletin test](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38102627857) ·
+[Original Source SurfaceGui recovery notes](docs/development/PASS50_ORIGINAL_LOBBY_BULLETIN.md)
+
+- Restored the original 3D lobby's **static, source-authored bulletin signage**: nine physical panels and **34 original heading/category labels**, located using each Roblox SurfaceGui's actual Adornee CFrame, CanvasSize, nested UDim2 coordinates, source colors and font sizes
+- The source contained **26 SurfaceGui panels and 872 text labels**, including **838 historical leaderboard rankings, player names and old scores**. These historical values are not presented as live online rankings and are excluded from the private sign pack
+- Adds a real **BULLETIN BOARD** action on the map-selection menu, switching the recovered original **Leaderboards camera**. Four restored global ranking category headings (Highest Levels, Most Kills, Waves Survived, Amount Donated) rotate on an actionable NEXT BOARD PAGE button; BACK restores the original Start camera and ten map options
+- All 91 original-armory selection buttons, perks, Laboratory source world, private 3D weapon assemblies, infected variants, light/audio packs, and existing standalone 15-wave systems remain operational. When entering gameplay, the lobby and sign nodes are fully removed
+- The owner-only Windows Pass50 ZIP combines the freshly compiled executable with the unchanged prior source packs and the new SHA-pinned Content/Lobby/LobbySigns50.json.gz file; private original XML and sign data are not uploaded to the public CI artifact
+- **471 Python regressions plus the real Godot Windows exported executable smoke passed**, including nine fabricated 3D sign panels, 34 Godot Label3D instances, camera/page/back-button interaction, unchanged 91-row armory and match start
+- This is **not** the full Roblox SurfaceGui system. Fonts/UI shaders/online score updates remain approximated or missing. Custom MeshPart/CSG triangles, nine complete original worlds, animations/audio parity and a human-controlled 15-wave acceptance run are still outstanding
+
+## Previous verified source branch: Pass 49 — Original 3D source lobby
 
 [Pass49 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass49-original-lobby-3d) ·
 [Passed Windows build and 3D menu acceptance test](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38101644595) ·
