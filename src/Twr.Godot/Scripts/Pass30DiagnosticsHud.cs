@@ -79,7 +79,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         var mesh = Primitives;
         var frames = Game?.Pass43FrameTimes.Snapshot();
         _label.Text =
-            "PASS 45 | F1 proxy cull, F2 audio, F3 light, F4 maps, F9 spawn assist\n" +
+            "PASS 47 | Original 3D tools; F1 proxy cull, F4 maps, F9 assist\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
@@ -108,6 +108,10 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"F5 original native props: {Game?.Pass36RenderableOriginalPropCount ?? 0} " +
             $"({(Game?.Pass36NativePropsEnabled == true ? "ON" : "OFF")})\n" +
             $"Original custom props missing: {Game?.Pass36MissingOriginalMeshCount ?? 0}\n" +
+            $"Original source weapon: {(Game?.Pass47OriginalWeaponModelActive == true ? "ACTIVE" : "FALLBACK")}" +
+            $" (pack SHA verified: {Game?.Pass47OwnerWeaponPackVerified ?? false})\n" +
+            $"Weapon visible source parts: {Game?.Pass47WeaponSourceVisibleParts ?? 0} " +
+            $"missing triangle proxies: {Game?.Pass47MissingMeshProxies ?? 0}\n" +
             $"Source proxy batches: {Game?.Pass45ProxyVisibleBatches ?? 0} / " +
             $"{Game?.Pass45ProxyBatchCount ?? 0}  source proxies visible: " +
             $"{Game?.Pass45ProxyVisibleInstances ?? 0}/{Game?.Pass45ProxySourceInstances ?? 0}\n" +
@@ -177,6 +181,10 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 source_sound_installed_wav_emitter_count = Game?.Pass38OfflineWavEmitterCount ?? 0,
                 source_sound_active_voices = Game?.Pass38ActiveSourceVoices ?? 0,
                 source_sound_preview_enabled = Game?.Pass38SourceSoundEnabled ?? false,
+                pass47_owner_weapon_pack_sha_verified = Game?.Pass47OwnerWeaponPackVerified ?? false,
+                pass47_original_weapon_assembly_active = Game?.Pass47OriginalWeaponModelActive ?? false,
+                pass47_weapon_visible_source_parts = Game?.Pass47WeaponSourceVisibleParts ?? 0,
+                pass47_weapon_missing_mesh_proxies = Game?.Pass47MissingMeshProxies ?? 0,
                 pass45_fallback_proxy_stream_available = Game?.Pass45ProxyStreamingAvailable ?? false,
                 pass45_proxy_cull_enabled = Game?.Pass45ProxyCullEnabled ?? false,
                 pass45_total_fallback_batches = Game?.Pass45ProxyBatchCount ?? 0,
