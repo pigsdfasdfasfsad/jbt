@@ -32,7 +32,10 @@ def test_preview_is_model_only_and_provenance_is_never_hidden():
     assert 'SYNTHETIC SOURCE FIXTURE (TEST ONLY)' in stage
     assert 'APPROXIMATE WEAPON SHAPE - SOURCE MESH NOT INSTALLED' in stage
     assert 'LOCALLY PREPARED WEAPON MODEL' in stage
-    assert 'UNRESOLVED SOURCE MESHES' in stage
+    assert 'SOURCE MESH IDS UNAVAILABLE' in stage
+    assert 'LOCAL TRIANGLE MESHES' in stage
+    assert 'CYLINDER PROXIES' in stage
+    assert 'BOUNDS PROXIES' in stage
     assert 'public bool Preview(string? weaponName)' in stage
     assert 'RuntimeWeaponCatalog.All().FirstOrDefault' in stage
     assert 'model.SetWeapon(spec)' in stage

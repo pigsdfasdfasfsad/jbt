@@ -13,7 +13,11 @@ def test_source_maps_support_external_offline_art_and_material_detail():
     assert 'new SurfaceTool()' in resolver
     assert 'case "f" when fields.Length >= 4:' in resolver
     assert 'MaxTriangles = 300_000' in resolver
-    assert 'if (!NumericId(id)) return null' in resolver
+    assert 'id=CanonicalAssetId(id)' in resolver
+    assert resolver.count('id=CanonicalAssetId(id)')==2
+    assert 'if (id.Length==0) return null;' in resolver
+    assert 'const string prefix="rbxassetid://";' in resolver
+    assert "digit is <'0' or >'9'" in resolver
     assert 'OfflineAssetResolver.Mesh(id)' in map_loader
     assert 'OfflineAssetResolver.Texture(id)' in map_loader
     assert 'RobloxMaterialSurface.Apply(material, materialCode, preparedTexture)' in map_loader
