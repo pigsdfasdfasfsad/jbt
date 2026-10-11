@@ -43,7 +43,7 @@ jobs:
             $url = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/actions/artifacts?per_page=100&page=$page"
             $response = Invoke-RestMethod -Uri $url -Headers $headers -Method Get
             $batch = @($response.artifacts)
-            $matching += @($batch | Where-Object { $_.name -eq 'ThoseWhoRemainOffline-Windows-x64' -or $_.name -match '^TWR-Pass[0-9]+-Windows' })
+            $matching += @($batch | Where-Object { $_.name -eq 'ThoseWhoRemainOffline-Windows-x64' })
             $page++
           } while ($batch.Count -eq 100)
           foreach ($artifact in $matching) {
