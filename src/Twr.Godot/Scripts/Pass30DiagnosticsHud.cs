@@ -83,6 +83,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
+            $"Wave spawns: {Game?.WaveInfectedSpawnCount ?? 0} " +
+            $"frame catch-up caps: {Game?.SpawnCatchupCapsHit ?? 0}\n" +
             $"Original nav nodes: {Navigation?.PointCount ?? 0}\n" +
             $"Collision tiles: {CollisionTiles}\n" +
             $"Original client walls: {Game?.OriginalClientWallCount ?? 0} " +
@@ -117,6 +119,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 fps = Engine.GetFramesPerSecond(),
                 map_load_ms = Game?.MapLoadMilliseconds ?? 0,
                 infected_alive = Game?.ActiveInfectedCount ?? 0,
+                wave_infected_spawned = Game?.WaveInfectedSpawnCount ?? 0,
+                wave_spawn_catchup_caps = Game?.SpawnCatchupCapsHit ?? 0,
                 world_pickups = Game?.ActivePickupCount ?? 0,
                 source_navigation_nodes = Navigation?.PointCount ?? 0,
                 source_navigation_edges = Navigation?.EdgeCount ?? 0,
