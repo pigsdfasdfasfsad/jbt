@@ -2,7 +2,19 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 44 (October 10, 2026)
+## Pass 45 source development — Laboratory fallback proxy spatial culling
+
+[Pass 45 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass45-lab-proxy-visibility) ·
+[Original source geometry audit and technical notes](docs/development/PASS45_SOURCE_PROXY_STREAMING.md)
+
+- This pass adds distance culling to **15,678 original-positioned visible MeshPart/UnionOperation/SpecialMesh fallback proxy records** that Pass44's ordinary native-Part pack does not contain.
+- Uses a 256-source-stud spatial tile grid and shares material/mesh resources across tiles, rather than keeping geographically distant proxies in world-wide appearance batches. The original loaded Laboratory source produces **669 proxy batches**, with estimated **455 initially visible** (145m radius) at source spawn #1.
+- F1 switches *only the proxy culling* ON/OFF for same-match performance comparisons, default **ON**. F10/F11 reports active source proxies and real p50/p95/p99 frame times; no physics, enemy spawns or source navigation are changed.
+- Original native 18,213 ordinary source Parts, collision, maps, fallback meshes and Godot offline runtime remain present. If the original native28 pack is absent the existing global source batching remains supported.
+- No original custom MeshPart/CSG triangle data is reconstructed; improved FPS is **not claimed** until player-recorded F1 ON/OFF performance reports confirm it. CI uses synthetic source geometry only, with no private original assets in GitHub artifacts.
+- Outstanding completion gates remain the other nine missing full original map scenes, authentic custom meshes/terrain/recordings/animations, full enemy traversal and an actual human-controlled 15-wave match.
+
+## Previous verified source branch: Pass 44 (October 10, 2026)
 
 [Development code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass44-native-lab-streaming) · [Successful Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38097138396) · [Technical notes](docs/development/PASS44_NATIVE_LAB_RENDER_STREAMING.md)
 
