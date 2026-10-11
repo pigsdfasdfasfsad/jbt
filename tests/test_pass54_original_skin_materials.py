@@ -19,7 +19,7 @@ def test_source_extractor_uses_exact_owner_sha_and_bounded_luau_literal_parser()
     script=read("tools/skins/recover_private_source_skins54.py")
     assert 'SKINS_SHA = "aeff32781cc9eafdbbd5ae7bc12ff157cc32934e7dae6773c87d7bfba355a015"' in script
     assert 'PLACE_SHA = "272c478460c32bd332b7314eea0b69c08d0d78a34bfbfa1f796d6f059976f0d2"' in script
-    assert '"ModuleScript.Skins.Source.txt"' in script
+    assert 'scripts/ModuleScript.Skins.Source.txt' in script
     assert 'zipfile' not in script.lower() or "ZipFile" in script
     assert 'etree.iterparse' in script
     assert 'models.setdefault(weapon,{})[str(position)]' in script
