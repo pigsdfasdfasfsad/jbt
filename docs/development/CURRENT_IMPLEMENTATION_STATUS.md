@@ -1,3 +1,22 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 60
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass60-source-weapon-animations`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38124413516
+
+- **534 Python regression tests passed** with one inherited Pass34 FutureWarning.
+- **Godot/.NET Windows export succeeded: 0 errors**, one inherited CS0108 warning.
+- Native `TWR_SMOKE_PASS59_SOURCE_MOTION_OK` verifies source hip/aimed Glock 17 firing travel, weapon timing and safe inert-source parsing.
+- Native `TWR_SMOKE_PASS60_ANIMATION_OK` verifies 3D weapon transforms built from original numeric CFrame matrix and angle records; distinct source hip/aimed recoil translations and rotations; source sprint position/rotation; reload `AV.Main` keyframe playback; unchanged reload duration authority; blocked invalid source expressions.
+- Pre-existing domain smoke `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passes, but remains **scripted progression only**, not a real complete-wave manual gameplay playthrough.
+- Public CI private-asset exclusion passed. No owner-private source media or downloadable EXE is published to GitHub.
+
+**Remaining:** original Roblox remote mesh triangles/CSG and UV/texture assets, dynamic sight AimCF, exact source arm/hand/finger animations, magazine/shotgun shell handling, source timing/easing fidelity, all-map decorated interior reconstruction, first-person screenshot comparisons, full interactive 15-wave game tests on ten maps and private Windows release packaging. **The project is not 1:1 complete.**
+
+[Pass60 original first-person animation implementation and CI details](PASS60_SOURCE_WEAPON_ANIMATIONS.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 58
 
 **Date:** October 11, 2026 (America/New_York). **Branch:** `twr-pass58-original-weapon-silhouettes`.
