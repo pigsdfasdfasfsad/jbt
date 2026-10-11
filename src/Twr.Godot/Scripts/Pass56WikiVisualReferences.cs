@@ -50,8 +50,10 @@ public static class Pass56WikiVisualReferences
     public static int ImageCount {get {EnsureLoaded();return Files.Count;}}
     public static int SkinIconCount {get {EnsureLoaded();return Icons.Count;}}
     public static string Provenance => SyntheticFixture
-        ? "SYNTHETIC WIKI IMAGE FIXTURE (TEST ONLY)" :
-          "OWNER WIKI REFERENCE IMAGE - NOT ORIGINAL 3D/UV TEXTURE";
+        ? "SYNTHETIC WIKI IMAGE FIXTURE (TEST ONLY) - NOT ORIGINAL 3D/UV TEXTURE"
+        : OwnerPackVerified
+            ? "OWNER WIKI REFERENCE IMAGE - NOT ORIGINAL 3D/UV TEXTURE"
+            : "REFERENCE PACK NOT INSTALLED OR VERIFIED - NOT ORIGINAL 3D/UV TEXTURE";
 
     public static bool TryWeaponImage(string weapon,string? skinId,
         out Texture2D? texture,out string caption)
