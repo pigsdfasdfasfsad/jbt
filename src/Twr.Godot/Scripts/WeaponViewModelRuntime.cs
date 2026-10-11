@@ -40,6 +40,17 @@ public partial class WeaponViewModelRuntime : Node3D
     public int SourceLensProxies { get; private set; }
     public int SourceReloadFrames => _poseMotion?.Reload?.Frames.Length ?? 0;
     public bool SourceSprintRotationAvailable => _poseMotion?.HasSprint == true;
+    public bool HasSourceEquipClip => _handling?.Equip is not null;
+    public int SourceCyclingSlideFrames =>
+        _handling?.CyclingSlide?.Frames.Length ?? 0;
+    public int SourceCyclingPumpFrames =>
+        _handling?.CyclingPump?.Frames.Length ?? 0;
+    public int SourceReloadSlideFrames =>
+        _handling?.ReloadSlide?.Frames.Length ?? 0;
+    public int SourceReloadPumpFrames =>
+        _handling?.ReloadPump?.Frames.Length ?? 0;
+    public Vector3 LastSlideMotorOffset { get; private set; }
+    public Vector3 LastPumpMotorOffset { get; private set; }
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -54,8 +65,14 @@ public partial class WeaponViewModelRuntime : Node3D
     private bool _shotActive;
     private Pass60WeaponAnimationLibrary.Motion? _poseMotion;
     private Pass60WeaponAnimationLibrary.Shot? _poseFire;
+    private Pass61SourceWeaponHandling.Profile? _handling;
+    private float _equipDuration;
+    private float _equipRemaining;
+    private float _cycleDuration;
+    private float _cycleElapsed;
     private readonly List<(MeshInstance3D Part, Vector3 Home)> _slides = [];
     private readonly List<(MeshInstance3D Part, Vector3 Home)> _magazines = [];
+    private readonly List<(MeshInstance3D Part, Vector3 Home)> _pumps = [];
     private float _phase;
     private float _kick;
     private float _reloadRemaining;
@@ -247,6 +264,8 @@ public partial class WeaponViewModelRuntime : Node3D
             _sourceMotion=profile;
         if (Pass60WeaponAnimationLibrary.TryGet(spec.Name,out var motion))
             _poseMotion=motion;
+        if (Pass61SourceWeaponHandling.TryGet(spec.Name,out var handling))
+            _handling=handling;
         _melee = spec.IsMelee;
         _flash!.Position = new Vector3(0,.025f,
             spec.Slot == "Secondary" ? -.46f : -1.02f);
@@ -332,8 +351,19 @@ public partial class WeaponViewModelRuntime : Node3D
         }
     }
 
+    public void BeginEquip(double seconds)
+    {
+        _equipDuration=float.IsFinite((float)seconds)
+            ? (float)Math.Clamp(seconds,.01,30.0) : .1f;
+        _equipRemaining=_handling?.Equip is not null ? _equipDuration : 0f;
+    }
+
     public void Fire(bool aiming = false)
     {
+        _cycleElapsed=0f;
+        _cycleDuration=Math.Max(
+            _handling?.CyclingSlide?.Duration ?? 0f,
+            _handling?.CyclingPump?.Duration ?? 0f);
         _shotActive=false;
         _shotRemaining=0f;
         _poseFire=_poseMotion is { } poseMotion
@@ -366,6 +396,9 @@ public partial class WeaponViewModelRuntime : Node3D
 
     public void Reload(double seconds)
     {
+        _equipRemaining=0f;
+        _cycleDuration=0f;
+        _cycleElapsed=0f;
         _reloadDuration = (float)Math.Max(0.1, seconds);
         _reloadRemaining = _reloadDuration;
     }
@@ -379,9 +412,39 @@ public partial class WeaponViewModelRuntime : Node3D
         _flashSeconds = Mathf.Max(0,_flashSeconds - dt);
         _mechanicalKick = Mathf.Max(0,_mechanicalKick - dt);
         if (_flash is not null) _flash.Visible = _flashSeconds > 0;
+        _equipRemaining=Mathf.Max(0f,_equipRemaining-dt);
+        if(_cycleDuration>0f)
+            _cycleElapsed=Math.Min(_cycleDuration,_cycleElapsed+dt);
+        var reloadFraction=_reloadDuration>0f && _reloadRemaining>0f
+            ? 1f-_reloadRemaining/_reloadDuration : 0f;
+        Vector3 SampleMotor(Pass61SourceWeaponHandling.MotorClip? clip,
+            float seconds) => clip is null ? Vector3.Zero :
+            Pass61SourceWeaponHandling.SampleMotor(clip,seconds);
+        float ReloadTime(Pass61SourceWeaponHandling.MotorClip? clip) =>
+            clip is null ? 0f : reloadFraction*clip.Duration;
+        var reloadActive=_reloadRemaining>0f && _reloadDuration>0f;
+        LastSlideMotorOffset=reloadActive
+            ? SampleMotor(_handling?.ReloadSlide,
+                ReloadTime(_handling?.ReloadSlide))
+            : SampleMotor(_handling?.CyclingSlide,_cycleElapsed);
+        LastPumpMotorOffset=reloadActive
+            ? SampleMotor(_handling?.ReloadPump,
+                ReloadTime(_handling?.ReloadPump))
+            : SampleMotor(_handling?.CyclingPump,_cycleElapsed);
+        var slideTrack=reloadActive
+            ? _handling?.ReloadSlide : _handling?.CyclingSlide;
+        var pumpTrack=reloadActive
+            ? _handling?.ReloadPump : _handling?.CyclingPump;
         foreach (var (part,home) in _slides)
             if (GodotObject.IsInstanceValid(part))
-                part.Position = home + new Vector3(0,0,_mechanicalKick * .35f);
+                part.Position=home+(slideTrack is not null
+                    ? part.Basis.Orthonormalized()*LastSlideMotorOffset
+                    : new Vector3(0,0,_mechanicalKick*.35f));
+        foreach (var (part,home) in _pumps)
+            if (GodotObject.IsInstanceValid(part))
+                part.Position=home+(pumpTrack is not null
+                    ? part.Basis.Orthonormalized()*LastPumpMotorOffset
+                    : Vector3.Zero);
         var magazineDrop = _reloadDuration > 0 && _reloadRemaining > 0
             ? Mathf.Sin(Mathf.Pi *
                 (1f - _reloadRemaining / _reloadDuration)) * .14f : 0f;
@@ -423,14 +486,22 @@ public partial class WeaponViewModelRuntime : Node3D
             new Vector3(0f,0f,sourcePullback>0f
                 ? sourcePullback : _kick*.22f);
         var fallbackReload=sourceReload is null ? reload : 0f;
-        var position=reloadPose.Origin+sourceFirePose.Origin+fallbackFire+
+        var sourceEquip=_handling?.Equip;
+        var equipPose=sourceEquip is not null &&
+            _equipDuration>0f && _equipRemaining>0f
+            ? Pass61SourceWeaponHandling.SampleEquip(sourceEquip,
+                (1f-_equipRemaining/_equipDuration)*sourceEquip.Duration)
+            : Transform3D.Identity;
+        var position=equipPose.Origin+reloadPose.Origin+
+            sourceFirePose.Origin+fallbackFire+
             new Vector3(0f,-fallbackReload*.15f,0f);
         var sway=Basis.FromEuler(new Vector3(
             activeSourceFire ? 0f : -_kick*.75f,
             Mathf.Sin(_phase)*.003f,
             fallbackReload*.22f+Mathf.Sin(_phase*.8f)*.006f));
         _rig.Transform=new Transform3D(
-            reloadPose.Basis*sourceFirePose.Basis*sway,position);
+            equipPose.Basis*reloadPose.Basis*sourceFirePose.Basis*sway,
+            position);
     }
 
     private void ResetRig()
@@ -445,6 +516,7 @@ public partial class WeaponViewModelRuntime : Node3D
         _melee = false;
         _slides.Clear();
         _magazines.Clear();
+        _pumps.Clear();
         _flashSeconds = 0f;
         _mechanicalKick = 0f;
         _shotActive=false;
@@ -452,6 +524,10 @@ public partial class WeaponViewModelRuntime : Node3D
         _sourceMotion=null;
         _poseMotion=null;
         _poseFire=null;
+        _handling=null;
+        _equipDuration=_equipRemaining=0f;
+        _cycleDuration=_cycleElapsed=0f;
+        LastSlideMotorOffset=LastPumpMotorOffset=Vector3.Zero;
         _flash = new MeshInstance3D
         {
             Name = "MuzzleFlash",
@@ -507,6 +583,9 @@ public partial class WeaponViewModelRuntime : Node3D
                 name.Equals("Mag",StringComparison.OrdinalIgnoreCase) ||
                 name.Contains("Clip",StringComparison.OrdinalIgnoreCase))
                 _magazines.Add((node,node.Position));
+            if(name.Equals("Pump",StringComparison.OrdinalIgnoreCase) ||
+               name.Equals("ForeEnd",StringComparison.OrdinalIgnoreCase))
+                _pumps.Add((node,node.Position));
         }
     }
 
