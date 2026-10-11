@@ -2,7 +2,20 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 45 — Laboratory fallback proxy spatial culling
+## Latest verified source branch: Pass 46 — Owner offline reference art
+
+[Pass 46 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass46-offline-original-art) ·
+[Successful Windows native QA](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38098969880) ·
+[Art provenance and limitations](docs/development/PASS46_OWNER_REFERENCE_ART.md)
+
+- Supplied owner-side archive **images.zip** is now integrated into the **offline Windows map menu, armory/loadout screen and existing live-ammunition weapon HUD**. The previous Windows pack lacked the Content/Art folder even though the runtime already supported loading it
+- Source images provide **10 map reference screenshot cards and 88 of the 91 weapon reference silhouettes**. Ruger 10-22, Sawn Off Shotgun and Spiked Baseball Bat retain safe text/silhouette fallback instead of borrowing incorrect source images
+- All 98 images are packaged in the **owner-only** Content/Art folder under a validated source-art manifest with per-image SHA-256 checksums and a matching input-image provenance report. The generator works offline and does not fetch Roblox/Wiki assets
+- The public repository contains no user image data. Public GitHub Windows CI injects entirely synthetic 2x2 PNGs, tests actual menu cards, **all 91 functional armory buttons**, the images on three test weapon rows and a live weapon-dial icon, then removes the synthetic assets before uploading the executable
+- **453 Python regression tests and the exported Windows native integration smoke passed**. The compiled owner-side ZIP combines this new executable with the preserved Pass45 original Laboratory map/collision/navigation, earlier native source geometry/light/audio and private 2D image references
+- **Not original geometry:** these source pictures do not reconstruct the original 3D first-person guns or missing custom mesh triangles, terrain, map props and animations. The other nine complete original loaded maps, full real-world FPS QA and an actual human-controlled 15-wave match remain unfinished
+
+## Previous verified source branch: Pass 45 — Laboratory fallback proxy spatial culling
 
 [Pass 45 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass45-lab-proxy-visibility) ·
 [Successful Windows build / native QA](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38097949393) ·
