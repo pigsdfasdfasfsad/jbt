@@ -62,6 +62,32 @@ public static class Pass62SourceWeaponHierarchy
         }
 
         /// <summary>
+        /// Resolve animated, currently visible group Handle pose from the
+        /// source-index matched mesh's original transform. The companion
+        /// first-person hand can follow moving Mag, Pump and Bolt groups
+        /// instead of remaining glued to a static world position.
+        /// </summary>
+        public bool TryGetCurrentGroupPose(string name,out Transform3D pose)
+        {
+            pose=Transform3D.Identity;
+            if(!_groups.TryGetValue(name,out var group))return false;
+            foreach(var (part,home) in group.Parts)
+            {
+                if(!GodotObject.IsInstanceValid(part))continue;
+                var current=part.Transform*home.AffineInverse()*group.Pivot;
+                var determinant=current.Basis.Determinant();
+                if(!Finite(current.Origin) ||
+                   !float.IsFinite(determinant) ||
+                   Math.Abs(determinant-1f)>.08f)
+                    continue;
+                pose=new Transform3D(current.Basis.Orthonormalized(),
+                    current.Origin);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Convert a safe numeric source CFrame: a MagRel-relative target
         /// starts from the verified source Handle; an absolute target uses
         /// the original weapon Handle coordinate space. Both were already
