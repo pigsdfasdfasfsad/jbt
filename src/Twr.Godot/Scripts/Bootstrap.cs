@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass46",StringComparer.Ordinal))
+        {
+            RunPass46Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass45",StringComparer.Ordinal))
         {
             RunPass45Smoke();
@@ -432,6 +437,69 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass46Smoke()
+    {
+        // Windows Godot executable reads ONLY fabricated 2x2 PNG art here.
+        // Real image archive must never enter a public Actions artifact.
+        if (!Pass27SourceArtCatalog.OfflineArtReady ||
+            Pass27SourceArtCatalog.MapArtCount!=10 ||
+            Pass27SourceArtCatalog.WeaponArtCount!=3 ||
+            Pass27SourceArtCatalog.WeaponIcon("Glock 17") is null ||
+            Pass27SourceArtCatalog.WeaponIcon("M4A1") is null ||
+            Pass27SourceArtCatalog.WeaponIcon("AA-12") is null ||
+            Pass27SourceArtCatalog.WeaponIcon("Nonexistent Weapon") is not null ||
+            Pass27SourceArtCatalog.MapCard("Nonexistent Map") is not null)
+            throw new InvalidOperationException(
+                "Pass46 fabricated source-art manifest/hash or name lookup did not load");
+
+        ShowMenu();
+        var cards=_menu?.GetChildren().OfType<Button>()
+            .Count(b => b.GetNodeOrNull<TextureRect>("SourceMapCard") is not null) ?? 0;
+        if(cards!=10)
+            throw new InvalidOperationException(
+                "Pass46 map selection did not show all ten original-style source cards");
+        ShowArmory();
+        var all=_armory?.GetChildren().OfType<ScrollContainer>()
+            .SelectMany(scroll => scroll.GetChildren().OfType<VBoxContainer>())
+            .SelectMany(list => list.GetChildren().OfType<Button>()).ToArray();
+        if(all is null || all.Length!=91)
+            throw new InvalidOperationException(
+                "Pass46 visual armory removed any of the 91 selectable source weapon rows");
+        var decorated=all.Where(button =>
+            button.GetNodeOrNull<TextureRect>("SourceWeaponSilhouette") is not null)
+            .ToArray();
+        if(decorated.Length!=3 ||
+            !decorated.Any(button => button.TooltipText=="Glock 17") ||
+            !decorated.Any(button => button.TooltipText=="AA-12") ||
+            !decorated.Any(button => button.TooltipText=="M4A1"))
+            throw new InvalidOperationException(
+                "Pass46 armory failed to show all three synthetic source silhouettes");
+        if(all.Any(button => button.GetNodeOrNull<TextureRect>(
+            "SourceWeaponSilhouette") is not null &&
+            button.GetNodeOrNull<TextureRect>(
+                "SourceWeaponSilhouette")!.MouseFilter!=Control.MouseFilterEnum.Ignore))
+            throw new InvalidOperationException(
+                "Pass46 icon decoration intercepted functional purchase controls");
+        var fallback=all.FirstOrDefault(button =>
+            button.Text.Contains("Ruger 10-22",StringComparison.Ordinal));
+        if(fallback is null || fallback.GetNodeOrNull<TextureRect>(
+            "SourceWeaponSilhouette") is not null)
+            throw new InvalidOperationException(
+                "Pass46 missing art did not retain the original text-only armory row");
+
+        var dial=new WeaponDialHud { Name="Pass46OfflineReferenceHudSmoke" };
+        AddChild(dial);
+        dial.Display("Glock 17",17,136,17,"SIDEARM",false,false);
+        if(!dial.HasOfflineReferenceWeaponArt)
+            throw new InvalidOperationException(
+                "Pass46 original-style ammo HUD failed to load external offline weapon art");
+        GD.Print("TWR_SMOKE_PASS46_ART_OK source=synthetic_only " +
+            "map_cards=10 armory_rows=91 reference_weapon_icons=3 " +
+            "fallback_text_only=true original_purchase_buttons_unmodified=true " +
+            "live_ammo_dial_icon=true no_original_images_in_public_ci=true");
         GetTree().Quit(0);
     }
 
@@ -1533,6 +1601,10 @@ public partial class Bootstrap : Node
             "Select a recovered release map. Geometry is an evidence-guided reconstruction blockout\n" +
             "until original map transforms are recoverable. Gameplay rules remain source-labeled."));
         _menu.AddChild(MakeLabel(60, 210, 850, 36, 15, ProfileStatusText()));
+        if (Pass27SourceArtCatalog.OfflineArtReady)
+            _menu.AddChild(MakeLabel(60, 242, 850, 23, 12,
+                $"OFFLINE MAP ART {Pass27SourceArtCatalog.MapArtCount}/10  |  " +
+                $"WEAPON REFERENCES {Pass27SourceArtCatalog.WeaponArtCount}/91"));
         _menu.AddChild(MakeLabel(60, 650, 1160, 42, 15,
             "WASD move | Shift sprint | Space jump | Mouse aim/fire | R reload | 1/2/3 weapons | F hammer"));
 
@@ -1658,6 +1730,7 @@ public partial class Bootstrap : Node
                 Alignment = HorizontalAlignment.Left,
                 Disabled = !CanInteractWithArmoryWeapon(spec)
             };
+            Pass46ArmoryArtDecoration.Apply(button, spec.Name);
             var selected = spec;
             button.Pressed += () => HandleArmoryWeapon(selected);
             list.AddChild(button);
