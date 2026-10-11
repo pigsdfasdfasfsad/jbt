@@ -251,6 +251,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var equipSpeed=Runtime?.HasPerk("Dexterous")==true ? 1.3 : 1.0;
         _equipTimer=Math.Max(0.01,spec.EquipSeconds/equipSpeed);
         ApplyViewModel();
+        // Pass61: source equip animation uses the same authoritative equip
+        // duration, without changing the time before firing is permitted.
+        _viewModel.BeginEquip(_equipTimer);
     }
 
     private void ApplyViewModel()
