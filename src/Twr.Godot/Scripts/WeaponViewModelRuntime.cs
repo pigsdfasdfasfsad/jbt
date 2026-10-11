@@ -64,6 +64,22 @@ public partial class WeaponViewModelRuntime : Node3D
         _sourceHierarchy?.PartCount("Mag") ?? 0;
     public bool SourceMagazinePoseActive {get;private set;}
     public float SourceMagazineHandleTravel {get;private set;}
+    public int SourceBoltCarrierCueCount =>
+        _action?.Cycling.Bolt.Length ?? 0;
+    public int SourceBoltHandleCueCount =>
+        _action?.Cycling.BoltHandle.Length ?? 0;
+    public int SourceBoltCarrierGroupParts =>
+        _sourceHierarchy?.PartCount("Bolt") ?? 0;
+    public int SourceNestedBoltHandleParts =>
+        _sourceHierarchy?.PartCount("Bolt/Bolt Handle") ?? 0;
+    public float LastSourceBoltTravel {get;private set;}
+    public float LastSourceBoltHandleAngle {get;private set;}
+    public int SourceShellEjectionCueCount =>
+        _action?.Cycling.Ejections.Length ?? 0;
+    public int EjectedShellVisualCount {get;private set;}
+    public int ActiveEjectedShellVisualCount => _activeShells.Count;
+    public string LastEjectedShellSourceName {get;private set;} = "";
+    public bool SourceIncrementalShellInsertPoseActive {get;private set;}
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -81,6 +97,15 @@ public partial class WeaponViewModelRuntime : Node3D
     private Pass61SourceWeaponHandling.Profile? _handling;
     private Pass62SourceWeaponHierarchy.Binding? _sourceHierarchy;
     private Pass63SourceMagazineReload.Clip? _magazineReload;
+    private Pass64SourceAction.Profile? _action;
+    private int _nextShellEjection;
+    private sealed class SpentShellVisual
+    {
+        public MeshInstance3D Part {get;init;} = null!;
+        public Vector3 Velocity;
+        public float Remaining;
+    }
+    private readonly List<SpentShellVisual> _activeShells = [];
     private float _equipDuration;
     private float _equipRemaining;
     private float _cycleDuration;
@@ -283,6 +308,8 @@ public partial class WeaponViewModelRuntime : Node3D
             _handling=handling;
         if (Pass63SourceMagazineReload.TryGet(spec.Name,out var magClip))
             _magazineReload=magClip;
+        if (Pass64SourceAction.TryGet(spec.Name,out var action))
+            _action=action;
         _melee = spec.IsMelee;
         _flash!.Position = new Vector3(0,.025f,
             spec.Slot == "Secondary" ? -.46f : -1.02f);
@@ -380,8 +407,10 @@ public partial class WeaponViewModelRuntime : Node3D
     {
         _cycleElapsed=0f;
         _cycleDuration=Math.Max(
-            _handling?.CyclingSlide?.Duration ?? 0f,
-            _handling?.CyclingPump?.Duration ?? 0f);
+            Math.Max(_handling?.CyclingSlide?.Duration ?? 0f,
+                _handling?.CyclingPump?.Duration ?? 0f),
+            _action?.Cycling.Duration ?? 0f);
+        _nextShellEjection=0;
         _shotActive=false;
         _shotRemaining=0f;
         _poseFire=_poseMotion is { } poseMotion
@@ -417,6 +446,7 @@ public partial class WeaponViewModelRuntime : Node3D
         _equipRemaining=0f;
         _cycleDuration=0f;
         _cycleElapsed=0f;
+        _nextShellEjection=0;
         _reloadDuration = (float)Math.Max(0.1, seconds);
         _reloadRemaining = _reloadDuration;
     }
@@ -478,8 +508,36 @@ public partial class WeaponViewModelRuntime : Node3D
                     part.Position=home+(pumpTrack is not null
                         ? part.Basis.Orthonormalized()*LastPumpMotorOffset
                         : Vector3.Zero);
+        // Source bolt carrier motion and its nested bolt-handle twist are
+        // composed from the original Handle pivots, never double-applied
+        // to flattened parts. Without SHA-verified owner source geometry,
+        // original data remains inert and old animations are preserved.
+        var boltClip=reloadActive ? _action?.Reload : _action?.Cycling;
+        var boltTime=reloadActive && boltClip is not null
+            ? reloadFraction*boltClip.Duration : _cycleElapsed;
+        LastSourceBoltTravel=boltClip is null ? 0f :
+            Pass64SourceAction.Sample(boltClip.Bolt,boltTime);
+        LastSourceBoltHandleAngle=boltClip is null ? 0f :
+            Pass64SourceAction.Sample(boltClip.BoltHandle,boltTime);
+        if(_sourceHierarchy?.HasGroup("Bolt")==true)
+            _sourceHierarchy.ApplyBoltAction(
+                new Vector3(0f,0f,LastSourceBoltTravel),
+                LastSourceBoltHandleAngle);
+        // Shell names, source event timing, and ejection direction are
+        // original evidence. The actual shell shapes/port are explicit
+        // local proxies until original remote mesh bytes are recovered.
+        var shellSequence=_action?.Cycling.Ejections;
+        if(!reloadActive && shellSequence is not null)
+            while(_nextShellEjection<shellSequence.Length &&
+                  _cycleElapsed>=shellSequence[_nextShellEjection].At)
+                SpawnSourceShell(shellSequence[_nextShellEjection++]);
+        AdvanceSourceShells(dt);
+
         var magSourceReady=_magazineReload is not null &&
             _sourceHierarchy?.HasGroup("Mag")==true;
+        SourceIncrementalShellInsertPoseActive=
+            reloadActive && magSourceReady &&
+            _action?.IncrementalReload==true;
         SourceMagazinePoseActive=magSourceReady && reloadActive;
         SourceMagazineHandleTravel=0f;
         if(magSourceReady)
@@ -556,6 +614,61 @@ public partial class WeaponViewModelRuntime : Node3D
             position);
     }
 
+    private void SpawnSourceShell(Pass64SourceAction.ShellCue source)
+    {
+        if(_rig is null || _activeShells.Count>=8)return;
+        var shotgun=source.Name=="12 Gauge Shell";
+        var radius=shotgun ? .013f : .007f;
+        var length=shotgun ? .062f : .048f;
+        var mesh=new CylinderMesh
+        {
+            TopRadius=radius,BottomRadius=radius,Height=length
+        };
+        var material=new StandardMaterial3D
+        {
+            AlbedoColor=shotgun
+                ? new Color(.72f,.13f,.08f)
+                : new Color(.65f,.52f,.19f),
+            Metallic=.35f,
+            Roughness=.41f
+        };
+        var body=new MeshInstance3D
+        {
+            Name="SpentShellProxy64",
+            Mesh=mesh,
+            MaterialOverride=material,
+            Position=new Vector3(.11f,-.01f,-.40f)+source.Offset
+        };
+        _rig.AddChild(body);
+        _activeShells.Add(new SpentShellVisual
+        {
+            Part=body,
+            Velocity=source.Direction*source.SpeedMetersPerSecond,
+            Remaining=1.2f
+        });
+        EjectedShellVisualCount++;
+        LastEjectedShellSourceName=source.Name;
+    }
+
+    private void AdvanceSourceShells(float dt)
+    {
+        for(var i=_activeShells.Count-1;i>=0;i--)
+        {
+            var shell=_activeShells[i];
+            shell.Remaining-=Math.Clamp(dt,0f,1.2f);
+            if(shell.Remaining<=0f || !GodotObject.IsInstanceValid(shell.Part))
+            {
+                if(GodotObject.IsInstanceValid(shell.Part))
+                    shell.Part.QueueFree();
+                _activeShells.RemoveAt(i);
+                continue;
+            }
+            shell.Part.Position+=shell.Velocity*dt;
+            shell.Part.Rotation+=new Vector3(.3f,.7f,1.1f)*dt*7f;
+            shell.Velocity+=Vector3.Down*(6.0f*dt);
+        }
+    }
+
     private void ResetRig()
     {
         if (_rig is not null)
@@ -579,6 +692,17 @@ public partial class WeaponViewModelRuntime : Node3D
         _handling=null;
         _sourceHierarchy=null;
         _magazineReload=null;
+        _action=null;
+        _nextShellEjection=0;
+        LastSourceBoltTravel=0f;
+        LastSourceBoltHandleAngle=0f;
+        EjectedShellVisualCount=0;
+        LastEjectedShellSourceName="";
+        SourceIncrementalShellInsertPoseActive=false;
+        foreach(var visual in _activeShells)
+            if(GodotObject.IsInstanceValid(visual.Part))
+                visual.Part.QueueFree();
+        _activeShells.Clear();
         SourceMagazinePoseActive=false;
         SourceMagazineHandleTravel=0f;
         _equipDuration=_equipRemaining=0f;
