@@ -487,7 +487,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
                 _sourceSprintBlend;
         var blend=(float)Math.Clamp(delta/seconds,0.0,1.0);
         _viewModel.Position=_viewModel.Position.Lerp(desiredPosition,blend);
-        var home=new Basis(_hipViewRotation).GetRotationQuaternion();
+        var home=Basis.FromEuler(_hipViewRotation).GetRotationQuaternion();
         var sprintRotation=sourceSprint
             ? Quaternion.Identity.Slerp(
                 poseMotion.Sprint.Basis.GetRotationQuaternion(),
