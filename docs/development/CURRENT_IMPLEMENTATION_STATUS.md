@@ -1,3 +1,22 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 56
+
+**Date:** October 10, 2026 (US Central). **Branch:** `twr-pass56-source-wiki-gallery`.
+
+**Successful Windows Actions:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38109511432
+
+- **512 Python regression tests passed**, with one pre-existing Pass34 XML FutureWarning.
+- **Windows Godot/.NET build succeeded with 0 errors**, one inherited Pass36 CS0108 compile warning.
+- Native `TWR_SMOKE_PASS56_WIKI_REFERENCE_OK` passed for synthetic owner-style wiki reference PNGs, exact Glock 17/Neon Ego lookup, default-only fallback disclosure, Armory and Inventory gallery navigation, Back restore, no credits/ownership mutation, and gallery teardown when a Manor match starts.
+- The owner-supplied `images.zip` / `image-docs.zip` archives were matched against 91 normalized weapons and 118 known skin IDs. The separate private kit contains **2,033 integrity-checked reference images** (90 default weapon pictures, 1,563 weapon/skin variants, 270 pose/UI references, 110 icons) plus Pass54–55 metadata. Original source archive SHA256s and private reference pack SHA256 are pinned. **These wiki pictures are not original Roblox 3D texture/normal/UV resources**.
+- Baseline `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` covers a domain simulation, not 150 real-time human-played waves.
+- Public Windows Actions artifacts/EXE upload actions remain disabled; the private wiki ZIP and skin packs remain owner-local.
+
+**Remaining:** original UV textures/normal maps, original source mesh/UnionOperation triangles, actual animated finishes, map interior/light/sound pixel fidelity, fully player-controlled 15-wave gameplay validation, and a private Windows release with executable and assets.
+
+[Pass 56 development record](PASS56_WIKI_REFERENCE_GALLERY.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 55
 
 **Date:** October 10, 2026 (US Central). **Branch:** `twr-pass55-source-skin-textures-and-shimmer`.

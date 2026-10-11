@@ -175,6 +175,12 @@ The **private owner Windows ZIP** adds ten-map source outlines, original Laborat
 - Completion reward is one-time and is persisted before results/lobby transition.
 - Release maps: Ranch, Mill, Bypass, Cabin, Cargo, District, Expressway, Prison, Laboratory, Manor.
 
+## Verified development checkpoint: Pass 56 (October 10, 2026)
+
+Pass56 links the game's 91 normalized weapons and 118 known source skin identifiers to **owner-supplied wiki reference images** in a private, locally installed visual gallery. From image-docs metadata it verified **2,033 distinct images**, **90 default weapon screenshots**, **1,563 exact weapon/skin comparison images**, **270 pose/UI screenshots** and **110 skin icons**. Users can open them in Armory or Skin Inventory, with checksum-bound provenance, exact-match/default-only fallback notices, working Back navigation and no economy/gameplay side effects. These are **wiki screenshots, NOT original Roblox UV/normal texture files**. An owner-only install kit ZIP is provided separately and remains outside public Git.
+
+**Windows native CI verified:** [run 38109511432](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38109511432) — 512 Python regressions passed, Godot/.NET Windows build succeeded with **zero errors** (one inherited Pass36 CS0108 warning), native Pass56 synthetic PNG/gallery test passed, baseline 10-map × 15-wave simulated domain progression passed and private source-asset exclusion audit passed. No publicly distributed Windows EXE was uploaded. [Pass56 implementation and owner installation details](docs/development/PASS56_WIKI_REFERENCE_GALLERY.md).
+
 ## Verified development checkpoint: Pass 55 (October 10, 2026)
 
 **Branch:** `twr-pass55-source-skin-textures-and-shimmer`. The owner original skin source identifies **118 skin icon IDs, 94 Texture/Texture1 layers and 33 MeshPart TextureID assignments**; optional private metadata enables local PNG loading by numeric asset ID with original layer tints and UV parameters, deterministic and explicitly labeled procedural fallbacks when images are absent, and bounded reconstructed shimmer for source Neon/ForceField. Neither original images nor animation timings are falsely represented as recovered.

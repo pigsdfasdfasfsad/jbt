@@ -61,3 +61,19 @@ Pillow is required for safe image dimension and integrity inspection. Existing o
 The Windows CI branch twr-pass56-source-wiki-gallery requires the Python regression suite, a zero-error Godot/.NET Windows export, a native Pass56 image/gallery navigation test, and a public/private source asset exclusion check. The fixture contains only three fake PNG files (Glock17 default, Glock17 Neon/Ego, and Ego icon) and an isolated test-only profile; it does NOT upload the actual wiki image archive. Marker: TWR_SMOKE_PASS56_WIKI_REFERENCE_OK.
 
 Still outstanding: actual original UV texture image bytes for source texture asset IDs, all original weapon meshes, original animated effects, side-by-side human verification against the Roblox game, many fully accurate map environments, long-form real player-controlled matches, and the privately distributed final Windows EXE. This is a visual fidelity **reference and inspection** pass, not proof of 1:1 game visuals.
+
+
+## Verified Pass 56 Windows checkpoint
+
+**Code commit validated:** `6ccce36fb5def382778838c12489e70b2d6b142f`.
+
+**Successful Windows Actions run:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38109511432
+
+- **512 Python tests passed**, one unrelated pre-existing Pass34 FutureWarning.
+- Native Godot/.NET Windows EXE export **succeeded, zero errors**; one inherited Pass36 CS0108 compiler warning.
+- Baseline domain simulation: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150`. This is not a manually played full game.
+- Native Pass56: `TWR_SMOKE_PASS56_WIKI_REFERENCE_OK synthetic_only=true files=3 png_decoded=true fallback_disclosed=true gallery_back_restored=true inventory_view_preserved=true credits_unchanged=true gallery_removed_on_match=true owner_images_not_uploaded=true`.
+- Public/private asset leak check: passed. No public EXE, original owner source script or wiki reference ZIP uploaded by CI.
+- The complete owner-only reference archive underwent an independent local integrity check: **all 2,033 files matched SHA256 and image dimensions**. Its SHA256 is `c06abbaefcaa33430a5a37ddb10fe7540fb27ac39c863fd05c420cad0d2cd2c1`. The install-ready private kit ZIP also passed ZIP integrity checks.
+
+This native test exercises **synthetic image data** only; screenshot-by-screenshot fidelity of all 91 real weapon renders and complete human gameplay remains unverified.
