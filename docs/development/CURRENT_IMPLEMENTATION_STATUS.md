@@ -1,3 +1,23 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 62
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass62-source-subassembly-hierarchy`.
+
+**Verified exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38125821580
+
+- **543 Python regressions passed**; one pre-existing Pass34 XML FutureWarning.
+- **Godot/.NET Windows export succeeded with zero errors**, one pre-existing Pass36 CS0108 warning.
+- Original `TestPlace.rbxlx` analysis recovered authored ancestry and real nested Handle CFrames for **259** unambiguous groups across **78** source weapon models, from the existing verified **98 models/1,484 parts**. **Motor6D C0/C1 joint data and remote mesh triangles were not recovered**; moving group pivots are source Handle CFrames rather than exact motor joints.
+- New optional owner-only `SourceWeaponMotorHierarchy62.json.gz` is SHA-pinned to the exact `TestPlace.rbxlx` and unchanged Pass47 model-assembly pack. Original grouped Slide and Pump visible parts now move in their Handle-local axes and reset to source rest transforms where Pass61 has eligible source animations. Fallback remains unchanged without the sidecar.
+- Native `TWR_SMOKE_PASS62_SOURCE_HIERARCHY_OK` verifies **two visible Glock slide group children** and **two visible Mossberg pump group children**, including rotated/off-axis Handle pivots, group-local movement and return-to-rest. It uses only synthetic CI fixtures created and cleaned during the test.
+- Previous Pass59–61 first-person source-weapon smokes passed. `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` remains a **scripted domain progression test**, not manual end-to-end gameplay.
+- All synthetic source pack cleanup/private-asset exclusion checks passed; public CI still **does not publish the Windows EXE or private original source packs**. A separate owner-only ZIP contains exact SHA-verified original Pass47 assembly and new Pass62 hierarchy data for offline local installation.
+
+**Remaining:** actual cloud source MeshPart/CSG triangles and UV/texture binaries, original Motor6D C0/C1 joints, magazine and shotgun shell manipulation, source character hand/arm IK, dynamic AimCF, all-map interior/lighting and collision parity, ten full human-played 15-wave acceptance runs, and complete authorized private Windows EXE release. **Not a finished 1:1 game.**
+
+[Pass62 original nested weapon subassembly/owner-only pack engineering record](PASS62_SOURCE_WEAPON_SUBASSEMBLIES.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 61
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass61-source-weapon-cycling`.
