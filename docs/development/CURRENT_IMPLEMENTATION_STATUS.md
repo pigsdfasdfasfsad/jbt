@@ -1,3 +1,22 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 58
+
+**Date:** October 11, 2026 (America/New_York). **Branch:** `twr-pass58-original-weapon-silhouettes`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38117871532
+
+- **525 Python regression tests passed**, with one existing Pass34 XML FutureWarning.
+- **Windows Godot/.NET export succeeded: 0 errors**, one pre-existing Pass36 CS0108 compile warning.
+- Native `TWR_SMOKE_PASS58_DETAIL_GEOMETRY_OK`: synthetic original-style Glock tool, 12 visible parts, 1 local handmade OBJ, 8 unavailable source MeshIds, 5 reconstructed detail profile meshes, 1 optic lens disk, 1 narrow barrel tube, 1 conservative bounds object, 3 original-style primitives; smoke verified cached mesh geometry, invalid-size guards, source CFrame transform path, Armory fidelity counters, unchanged credits/skin state and scene cleanup upon entering Manor.
+- Owner-private original source inventory: **98 authored models, 1,484 source parts (548 invisible helpers, 936 visible)**; exactly **390** visible original parts eligible for geometry profile/tube approximation (140 chassis, 78 tube, 60 grips, 50 magazines, 43 stocks, 10 guards, 9 lenses). **525 MeshParts remain unclassified bounds**, **21 other visible native/Union parts**. **1,137 referenced source MeshIds do not include original triangle bytes in TestPlace**. Approximation is NOT complete recovery.
+- Verified previous baseline `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` remains a **domain simulation**, not human-controlled end-to-end gameplay.
+- Private Pass58 ZIP contains previous source tool/skin/wiki packs plus a per-weapon geometry opportunity audit. Owner-only asset ZIP and local original mesh files are not added to public Git; CI's artifact upload steps remain disabled.
+
+**Still missing:** actual custom Roblox MeshPart/CSG triangles, original shader animations and image bytes, exact 3D weapon silhouettes, map interiors and image-quality references across all 10 maps, manual full 15-wave match validation, and an installable private complete Windows release.
+
+[Pass58 engineering record](PASS58_SOURCE_WEAPON_SILHOUETTES.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 57
 
 **Date:** October 11, 2026 (America/New_York). **Branch:** `twr-pass57-offline-source-weapon-geometry`.

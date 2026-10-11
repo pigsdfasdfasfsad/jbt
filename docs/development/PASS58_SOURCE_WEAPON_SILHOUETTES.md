@@ -38,7 +38,7 @@ The Pass58 exported Windows Godot smoke (`--smoke-pass58`) uses a wholly fabrica
 
 - One handcrafted, local, fake OBJ mesh loaded by source MeshId (correctly taking precedence over any reconstructed profile)
 - Five named source-guided profiles: Receiver, Magazine, Stock, PistolGrip and TriggerGuard
-- One thin Retina/Optic glass disk, one narrow barrel tube, one anonymous fallback bounds proxy
+- One thin reticle/optic glass disk, one narrow barrel tube, one anonymous fallback bounds proxy
 - Three native source primitives (sphere, cylinder and wedge); invisible helper does not render
 - Mesh surface vertex counts, cached profile reuse, strict finite source size guards
 - Actual 3D Armory/Lobby preview counts, isolated offline save/credits, and cleaned scene on starting Manor
@@ -50,3 +50,20 @@ The native test fixture never contains owner source meshes and is removed before
 The private Pass57 kit still contains the original source tool transform metadata and the skin/gallery reference packs. No new original triangle binaries were recovered in Pass58; the supplied .zip files contain .rbxlx source references but not the actual 3D MeshPart byte streams. This pass is a targeted improvement in geometry and on-screen silhouette legibility, **not** a pixel-perfect recreation of original weapon geometry.
 
 Unfinished work: recover authorized original mesh assets when available, source-specific animated UV materials, first-person pose/animation parity, complete per-map indoor detail, genuine long-form player-controlled ten-map gameplay validation, and privately distribute the Windows EXE with all authorized owner assets.
+
+
+## Verified October 11, 2026 Windows checkpoint
+
+**Successful test run:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38117871532
+
+**Code revision tested:** `74349aec4c3ad5be3160c05429a3446312875c3b`
+
+- **525 Python regressions passed** (1 existing Pass34 FutureWarning), against unchanged original tool and game authority contracts.
+- Godot/.NET Windows build/export succeeded, **0 errors**, with one inherited Pass36 CS0108 warning.
+- Baseline native simulation: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150`; this does not certify real player-controlled wave combat.
+- Pass58 native exported Windows smoke:
+  `TWR_SMOKE_PASS58_DETAIL_GEOMETRY_OK synthetic_only=true visible=12 local_obj=1 missing_mesh_ids=8 detail_profiles=5 lens_disk=1 barrel_proxy=1 unclassified_bounds=1 native_primitives=3 trigger_guard_open=true source_pose_preserved=true profile_mesh_cached=true invalid_bounds_rejected=true armory_fidelity_counters=true credits_unchanged=true original_mesh_triangles_not_claimed=true`.
+- Original/synthetic asset exclusion passed after fake lobby/tool/OBJ cleanup; no public executable was uploaded.
+- The owner-only TWR_Pass58_Private_Weapon_Silhouettes_Kit.zip passed full ZIP integrity checks. SHA256:
+  `c39b8ceab70727fcd60c8cf430903d509fcae3f05c2fc6d4e0399e6349ec3054`.
+- Its audit measures 390 source-derived geometry eligibility opportunities and 525 remaining unclassified bounds without asserting original triangle recovery. The **native CI uses fake data only**, not the actual recovered owner source OBJ streams, which are still missing.

@@ -2,7 +2,21 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 50 — Original 3D lobby bulletin board
+## Latest verified source branch: Pass 58 — Source-guided weapon silhouettes
+
+[Pass 58 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass58-original-weapon-silhouettes) ·
+[Successful Windows build and native gun silhouette test](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38117871532) ·
+[Pass 58 engineering and private geometry audit](docs/development/PASS58_SOURCE_WEAPON_SILHOUETTES.md)
+
+- Expanded actual first-person and Armory 3D gun geometry with bounded procedural **magazine, stock, grip, receiver, open trigger-guard and optic-glass silhouettes**, all based on source object names, sizes and original part transforms
+- **Authentic locally installed OBJ mesh geometry always takes precedence**; these silhouettes are geometry approximations, not recovered Roblox custom MeshPart triangles
+- Owner source audit of **98 authored tool models / 1,484 original part records** identified **390 recognizable visible shapes** eligible for silhouette/tube reconstruction and **525 remaining unclassified MeshParts** that retain conservative bounds; all **1,137 original unique mesh IDs** still lack embedded triangle streams
+- Armory now displays mesh origin/quality counters (genuine local OBJ, rebuilt silhouettes, lens disks, tubes and bounding proxies)
+- **525 Python regressions passed** and Godot/.NET Windows export succeeded with **0 compiler errors and 1 inherited Pass36 warning**, including a native test with 12 visible synthetic parts and a genuine handmade local OBJ file; baseline simulated progression and private asset exclusion also passed
+- An owner-only 19 MB ZIP adds per-weapon source geometry gap metadata to the Pass57 private asset kit; the public repository does not upload the private original asset files or Windows EXE
+- Original real-time player-controlled 15-wave sessions, complete original mesh triangles and map/weapon visual 1:1 parity remain unfinished
+
+## Historical verified checkpoint: Pass 50 — Original 3D lobby bulletin board
 
 [Pass 50 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass50-original-bulletin-board) ·
 [Successful Windows build and native bulletin test](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38102627857) ·
@@ -174,6 +188,12 @@ The **private owner Windows ZIP** adds ten-map source outlines, original Laborat
 - Hardcore, Classic, Endless, enemy Juggernauts, Juggernaut waves, and ordinary-hit movement stun are disabled.
 - Completion reward is one-time and is persisted before results/lobby transition.
 - Release maps: Ranch, Mill, Bypass, Cabin, Cargo, District, Expressway, Prison, Laboratory, Manor.
+
+## Verified development checkpoint: Pass 58 (October 11, 2026)
+
+The original owner weapon-model source contains **98 authored models, 1,484 parts, 936 visible source parts and 1,137 distinct mesh references**. Pass58 builds bounded, source-guided detail silhouettes for **390** recognized visible shapes (140 chassis, 78 barrels/tubes, 60 grips, 50 magazines, 43 stocks, 10 guards, 9 optic lenses); unknown meshes still use conservative bounds. Authentic locally installed owner meshes override every fallback. Five reconstructed part profiles and one optic disk were verified in a native Windows gameplay/Armory smoke.
+
+**CI verified:** [run 38117871532](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38117871532) — **525 Python tests passed**, Windows Godot/.NET build **0 errors, 1 inherited Pass36 warning**, native `TWR_SMOKE_PASS58_DETAIL_GEOMETRY_OK` passed, baseline 10-map/150-wave simulated progression passed and private/synthetic asset leakage checks passed. No public EXE upload. The separate private owner pack adds an audit of unclassified weapon source geometry. See [Pass58 technical record](docs/development/PASS58_SOURCE_WEAPON_SILHOUETTES.md).
 
 ## Verified development checkpoint: Pass 57 (October 11, 2026)
 
