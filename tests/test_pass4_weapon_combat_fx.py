@@ -21,7 +21,9 @@ def test_original_source_weapons_have_barrel_alignment_and_animated_mechanics():
     assert 'OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)' in view
     assert 'TrackMechanicalParts()' in view
     assert '_mechanicalKick = .11f' in view
-    assert 'Vector3.Down * magazineDrop' in view
+    assert 'Vector3.Down*magazineDrop' in view
+    assert '_sourceHierarchy?.HasGroup("Mag")==true' in view
+    assert 'Pass63SourceMagazineReload.Sample(' in view
 
 def test_ballistic_effect_constructs_in_exported_windows():
     boot=(CS/"Bootstrap.cs").read_text()
