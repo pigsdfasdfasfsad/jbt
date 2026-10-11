@@ -8,7 +8,7 @@ def test_first_person_weapon_mesh_fallbacks_are_not_box_only():
     assert 'private WeaponViewModelRuntime _viewModel' in player
     assert '_viewModel.SetWeapon(spec)' in player
     assert '_viewModel.SetThrowable(type)' in player
-    assert '_viewModel.Fire()' in player
+    assert player.count('_viewModel.Fire(_aiming);')==2
     assert '_viewModel.Reload(_reloadTimer)' in player
     assert 'var box = (BoxMesh)_viewModel.Mesh;' not in player
     assert 'var box=(BoxMesh)_viewModel.Mesh;' not in player
