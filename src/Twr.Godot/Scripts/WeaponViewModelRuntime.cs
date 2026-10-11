@@ -46,6 +46,10 @@ public partial class WeaponViewModelRuntime : Node3D
     private bool _melee;
     private float _flashSeconds;
     private float _mechanicalKick;
+    private Pass59WeaponMotion.Profile? _sourceMotion;
+    private Pass59WeaponMotion.Shot _sourceShot;
+    private float _shotRemaining;
+    private bool _shotActive;
     private readonly List<(MeshInstance3D Part, Vector3 Home)> _slides = [];
     private readonly List<(MeshInstance3D Part, Vector3 Home)> _magazines = [];
     private float _phase;
@@ -235,6 +239,8 @@ public partial class WeaponViewModelRuntime : Node3D
     public void SetWeapon(RuntimeWeaponDefinition spec)
     {
         ResetRig();
+        if (Pass59WeaponMotion.TryGet(spec.Name,out var profile))
+            _sourceMotion=profile;
         _melee = spec.IsMelee;
         _flash!.Position = new Vector3(0,.025f,
             spec.Slot == "Secondary" ? -.46f : -1.02f);
@@ -320,9 +326,19 @@ public partial class WeaponViewModelRuntime : Node3D
         }
     }
 
-    public void Fire()
+    public void Fire(bool aiming = false)
     {
-        _kick = 0.16f;
+        _shotActive=false;
+        _shotRemaining=0f;
+        if(_sourceMotion is { } motion &&
+           (aiming ? motion.HasAim || motion.HasHip : motion.HasHip))
+        {
+            _sourceShot=aiming && motion.HasAim ? motion.Aim : motion.Hip;
+            _shotRemaining=_sourceShot.Out+_sourceShot.Back;
+            _shotActive=true;
+            _kick=0f;
+        }
+        else _kick = 0.16f;
         if (!_melee && _flash is not null)
         {
             _flashSeconds = .055f;
@@ -357,11 +373,24 @@ public partial class WeaponViewModelRuntime : Node3D
                 part.Position = home + Vector3.Down * magazineDrop;
         _phase += dt * 2.5f;
         _kick = Mathf.MoveToward(_kick, 0, dt * 1.2f);
+        if(_shotActive)
+        {
+            _shotRemaining=Mathf.Max(0f,_shotRemaining-dt);
+            var total=_sourceShot.Out+_sourceShot.Back;
+            var elapsed=total-_shotRemaining;
+            _kick=elapsed<=_sourceShot.Out
+                ? elapsed/_sourceShot.Out
+                : Mathf.Max(0f,1f-(elapsed-_sourceShot.Out)/_sourceShot.Back);
+            if(_shotRemaining<=0f)_shotActive=false;
+        }
         _reloadRemaining = Mathf.Max(0, _reloadRemaining - dt);
         var reload = _reloadDuration > 0 && _reloadRemaining > 0
             ? Mathf.Sin(Mathf.Pi * (1f - _reloadRemaining / _reloadDuration))
             : 0f;
-        _rig.Position = new Vector3(0, -reload * 0.15f, _kick * 0.22f);
+        var sourcePullback=_sourceMotion is not null && (_shotActive || _shotRemaining>0f)
+            ? _sourceShot.Pullback*_kick : 0f;
+        _rig.Position = new Vector3(0, -reload * 0.15f,
+            sourcePullback>0f ? sourcePullback : _kick * 0.22f);
         _rig.Rotation = new Vector3(-_kick * 0.75f,
             Mathf.Sin(_phase) * 0.003f,
             reload * 0.22f + Mathf.Sin(_phase * 0.8f) * 0.006f);
@@ -381,6 +410,9 @@ public partial class WeaponViewModelRuntime : Node3D
         _magazines.Clear();
         _flashSeconds = 0f;
         _mechanicalKick = 0f;
+        _shotActive=false;
+        _shotRemaining=0f;
+        _sourceMotion=null;
         _flash = new MeshInstance3D
         {
             Name = "MuzzleFlash",
