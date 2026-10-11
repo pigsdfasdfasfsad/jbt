@@ -38,6 +38,8 @@ public partial class WeaponViewModelRuntime : Node3D
     public int SourceNativePrimitiveParts { get; private set; }
     public int SourceDetailProfileProxies { get; private set; }
     public int SourceLensProxies { get; private set; }
+    public int SourceReloadFrames => _poseMotion?.Reload?.Frames.Length ?? 0;
+    public bool SourceSprintRotationAvailable => _poseMotion?.HasSprint == true;
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -50,6 +52,8 @@ public partial class WeaponViewModelRuntime : Node3D
     private Pass59WeaponMotion.Shot _sourceShot;
     private float _shotRemaining;
     private bool _shotActive;
+    private Pass60WeaponAnimationLibrary.Motion? _poseMotion;
+    private Pass60WeaponAnimationLibrary.Shot? _poseFire;
     private readonly List<(MeshInstance3D Part, Vector3 Home)> _slides = [];
     private readonly List<(MeshInstance3D Part, Vector3 Home)> _magazines = [];
     private float _phase;
@@ -241,6 +245,8 @@ public partial class WeaponViewModelRuntime : Node3D
         ResetRig();
         if (Pass59WeaponMotion.TryGet(spec.Name,out var profile))
             _sourceMotion=profile;
+        if (Pass60WeaponAnimationLibrary.TryGet(spec.Name,out var motion))
+            _poseMotion=motion;
         _melee = spec.IsMelee;
         _flash!.Position = new Vector3(0,.025f,
             spec.Slot == "Secondary" ? -.46f : -1.02f);
@@ -330,11 +336,22 @@ public partial class WeaponViewModelRuntime : Node3D
     {
         _shotActive=false;
         _shotRemaining=0f;
+        _poseFire=_poseMotion is { } poseMotion
+            ? (aiming ? poseMotion.AimFire ?? poseMotion.Fire : poseMotion.Fire)
+            : null;
         if(_sourceMotion is { } motion &&
            (aiming ? motion.HasAim || motion.HasHip : motion.HasHip))
         {
             _sourceShot=aiming && motion.HasAim ? motion.Aim : motion.Hip;
             _shotRemaining=_sourceShot.Out+_sourceShot.Back;
+            _shotActive=true;
+            _kick=0f;
+        }
+        else if(_poseFire is { } shot)
+        {
+            _sourceShot=new Pass59WeaponMotion.Shot(
+                Math.Max(0f,shot.Target.Origin.Z),0f,shot.Out,shot.Back);
+            _shotRemaining=shot.Out+shot.Back;
             _shotActive=true;
             _kick=0f;
         }
@@ -387,13 +404,33 @@ public partial class WeaponViewModelRuntime : Node3D
         var reload = _reloadDuration > 0 && _reloadRemaining > 0
             ? Mathf.Sin(Mathf.Pi * (1f - _reloadRemaining / _reloadDuration))
             : 0f;
-        var sourcePullback=_sourceMotion is not null && (_shotActive || _shotRemaining>0f)
+        var sourceReload=_poseMotion?.Reload;
+        var reloadPose=sourceReload is not null &&
+            _reloadDuration>0f && _reloadRemaining>0f
+            ? Pass60WeaponAnimationLibrary.SampleReload(sourceReload,
+                1f-_reloadRemaining/_reloadDuration)
+            : Transform3D.Identity;
+        var activeSourceFire=_poseFire.HasValue &&
+            (_shotActive || _shotRemaining>0f);
+        var sourceFirePose=activeSourceFire
+            ? Pass60WeaponPoseMath.Interpolate(Transform3D.Identity,
+                _poseFire!.Value.Target,_kick)
+            : Transform3D.Identity;
+        var sourcePullback=_sourceMotion is not null &&
+            (_shotActive || _shotRemaining>0f)
             ? _sourceShot.Pullback*_kick : 0f;
-        _rig.Position = new Vector3(0, -reload * 0.15f,
-            sourcePullback>0f ? sourcePullback : _kick * 0.22f);
-        _rig.Rotation = new Vector3(-_kick * 0.75f,
-            Mathf.Sin(_phase) * 0.003f,
-            reload * 0.22f + Mathf.Sin(_phase * 0.8f) * 0.006f);
+        var fallbackFire=activeSourceFire ? Vector3.Zero :
+            new Vector3(0f,0f,sourcePullback>0f
+                ? sourcePullback : _kick*.22f);
+        var fallbackReload=sourceReload is null ? reload : 0f;
+        var position=reloadPose.Origin+sourceFirePose.Origin+fallbackFire+
+            new Vector3(0f,-fallbackReload*.15f,0f);
+        var sway=new Basis(new Vector3(
+            activeSourceFire ? 0f : -_kick*.75f,
+            Mathf.Sin(_phase)*.003f,
+            fallbackReload*.22f+Mathf.Sin(_phase*.8f)*.006f));
+        _rig.Transform=new Transform3D(
+            reloadPose.Basis*sourceFirePose.Basis*sway,position);
     }
 
     private void ResetRig()
@@ -413,6 +450,8 @@ public partial class WeaponViewModelRuntime : Node3D
         _shotActive=false;
         _shotRemaining=0f;
         _sourceMotion=null;
+        _poseMotion=null;
+        _poseFire=null;
         _flash = new MeshInstance3D
         {
             Name = "MuzzleFlash",
