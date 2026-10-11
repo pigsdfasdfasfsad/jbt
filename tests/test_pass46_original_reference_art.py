@@ -94,7 +94,7 @@ def test_original_source_art_is_optin_and_genuine_armory_controls_survive():
     assert 'MapArtCount' in art and 'WeaponArtCount' in art
     assert 'Path.Combine(baseDir, "Content", "Art")' in art
     assert 'SHA256.HashData(png)' in art
-    assert 'MaxPngBytes' in art and 'MapFiles.Count != Maps.Length' in art
+    assert 'MaxPngBytes' in art and 'mapFiles.Count != Maps.Length' in art
     assert 'Pass27SourceArtCatalog.WeaponIcon(weaponName)' in decorate
     assert 'if (icon is null) return false;' in decorate
     assert 'MouseFilter = Control.MouseFilterEnum.Ignore' in decorate
