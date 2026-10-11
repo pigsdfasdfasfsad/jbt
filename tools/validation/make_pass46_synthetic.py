@@ -23,7 +23,7 @@ def paths(root:Path):
 
 def create(root:Path):
     art,files=paths(root)
-    if any(path.exists() for path in files) or (art.exists() and any(art.rglob('*'))):
+    if any(path.exists() for path in files) or (art.exists() and any(p.is_file() for p in art.rglob('*'))):
         raise FileExistsError('Refusing to replace owner offline art with synthetic fixture')
     png=png2x2()
     digest=hashlib.sha256(png).hexdigest()
