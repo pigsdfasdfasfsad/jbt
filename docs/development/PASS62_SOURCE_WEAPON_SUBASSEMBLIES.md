@@ -99,7 +99,35 @@ The private hierarchy sidecar alone has no effect without the owner's
 historically verified original weapon assembly pack. Do not call the
 game a 1:1 completed remake based on this pass.
 
-## Windows verification status
+## Verified Windows checkpoint — October 11, 2026
 
-Pending final Pass62 GitHub Actions run. The file and branch being
-committed are not evidence of a passing native build by themselves.
+**Successful native Windows CI:**
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38125821580
+
+**Tested source-code SHA:** `ee79449559052acf5897aa0bc9ba1ed60032b00d`.
+
+- **543 Python regressions passed** with one inherited Pass34 FutureWarning.
+- Godot/.NET Windows export passed: **zero errors**, one pre-existing
+  Pass36 `CS0108` compiler warning.
+- Previous Pass59, Pass60 and Pass61 native source-weapon animation smokes
+  passed on the exported Windows EXE.
+- New `TWR_SMOKE_PASS62_SOURCE_HIERARCHY_OK`: SHA-gated synthetic-only
+  sidecar, original-index group mapping, offset and rotated Handle pivots,
+  **two** distinct Glock slide child meshes and **two** distinct Mossberg
+  pump child meshes moved, exact reset to source rest positions, no
+  fabricated remote mesh bytes, and no combat-authority mutation.
+- CI created exactly two synthetic temporary test packs and confirmed
+  their cleanup. The owner-private pack exclusion step passed.
+- `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` remains a **scripted
+  state simulation** rather than full user-controlled 15-wave matches.
+
+**Separate owner ZIP:** includes both the recreated historically
+verified Pass47 `SourceWeaponModels.json.gz` (original SHA:
+`fa63bcfb3fc69c69c1066aa280372bdc8e2e093d61684c9c252c75c43d7080e7`)
+and the new Pass62 SHA-verified hierarchy pack. Both are owner-only
+artifacts, not embedded into the repository or publicly uploaded via
+Windows Actions.
+
+The build and smoke tests prove software paths, not source-triangle
+recovery, original animation joint fidelity, a complete playable
+Windows distribution, or full 10-map 1:1 parity.
