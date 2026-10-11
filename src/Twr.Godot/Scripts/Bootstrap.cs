@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass60",StringComparer.Ordinal))
+        {
+            RunPass60Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass59",StringComparer.Ordinal))
         {
             RunPass59Smoke();
@@ -525,6 +530,69 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass60Smoke()
+    {
+        if(Pass60WeaponPoseMath.TryParse("module.Stats.GripCF",null,out _) ||
+           Pass60WeaponPoseMath.TryParse("CFrame.new(999,0,0)",null,out _) ||
+           Pass60WeaponPoseMath.TryParse("CFrame.new(0,0,NaN)",null,out _) ||
+           Pass60WeaponPoseMath.TryParse(
+               "CFrame.new(0,0,0) * execute_remote_code()",null,out _) ||
+           !Pass60WeaponPoseMath.TryParse(
+               "CFrame.new(0,0,0.1) * CFrame.Angles(0.17453292519943295,0,0)",
+               null,out var literal) ||
+           Math.Abs(literal.Origin.Z-.028f)>.0001f)
+            throw new InvalidOperationException("Pass60 safe source CFrame parser failed");
+        if(!Pass60WeaponAnimationLibrary.TryGet("Glock 17",out var glock) ||
+           !glock.HasSprint || glock.Fire is null ||
+           glock.AimFire is null || glock.Reload is null ||
+           glock.Reload.Frames.Length<10 ||
+           Math.Abs(glock.Fire.Value.Target.Origin.Z-.028f)>.0001f ||
+           Math.Abs(glock.AimFire.Value.Target.Origin.Z-.014f)>.0001f ||
+           Math.Abs(glock.Sprint.Origin.X+.084f)>.0001f ||
+           Math.Abs(glock.Sprint.Origin.Z-.028f)>.0001f ||
+           Math.Abs(glock.Fire.Value.Target.Basis.GetEuler().X-
+               .1745329252f)>.002f)
+            throw new InvalidOperationException("Pass60 Glock source animation unavailable");
+        var reloadPose=Pass60WeaponAnimationLibrary.SampleReload(
+            glock.Reload,.10f);
+        if(reloadPose.Origin.LengthSquared()<.0001f ||
+           Pass60WeaponAnimationLibrary.SampleReload(
+               glock.Reload,1f).Origin.LengthSquared()>.000001f)
+            throw new InvalidOperationException("Pass60 reload keyframe progress invalid");
+        var view=new WeaponViewModelRuntime{Name="Pass60Viewmodel"};
+        AddChild(view);
+        view.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var rig=view.GetNodeOrNull<Node3D>("WeaponBody");
+        if(rig is null || view.SourceReloadFrames<10 ||
+           !view.SourceSprintRotationAvailable)
+            throw new InvalidOperationException("Pass60 viewmodel source animation missing");
+        view.Fire(false);
+        view._Process(glock.Fire.Value.Out);
+        if(Math.Abs(rig.Position.Z-.028f)>.0003f ||
+           Math.Abs(rig.Rotation.X-.1745329252f)>.004f)
+            throw new InvalidOperationException("Pass60 hip-fire source pose failed");
+        view.Fire(true);
+        view._Process(glock.AimFire.Value.Out);
+        if(Math.Abs(rig.Position.Z-.014f)>.0003f ||
+           Math.Abs(rig.Rotation.X-.0872664626f)>.004f)
+            throw new InvalidOperationException("Pass60 aimed source pose failed");
+        view._Process(glock.AimFire.Value.Back+.01f);
+        view.Reload(2.0);
+        view._Process(.2f);
+        if(rig.Position.LengthSquared()<.0001f)
+            throw new InvalidOperationException("Pass60 source reload position not sampled");
+        view._Process(1.81f);
+        if(rig.Position.LengthSquared()>.000001f)
+            throw new InvalidOperationException("Pass60 reload pose leaked past finish");
+        GD.Print("TWR_SMOKE_PASS60_ANIMATION_OK "+
+            "source_matrix_and_angles=true "+
+            "hip_translation_and_rotation=true aim_translation_and_rotation=true "+
+            "original_sprint_position_and_rotation=true "+
+            "original_reload_keyframes=true reload_duration_authority_unchanged=true "+
+            "invalid_source_expressions_blocked=true");
         GetTree().Quit(0);
     }
 
