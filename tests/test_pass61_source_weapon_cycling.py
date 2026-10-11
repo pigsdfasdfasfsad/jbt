@@ -32,7 +32,7 @@ def test_original_weapon_script_motor_offsets_are_preserved_in_catalog():
 def test_handling_library_keeps_literal_only_source_motor_security():
     lib=read("src/Twr.Godot/Scripts/Pass61SourceWeaponHandling.cs")
     assert "TryRelativeMotorOffset" in lib
-    assert 'relation is not ("SlideRel" or "PumpRel" or "MagRel")' in lib
+    assert 'relation is not ("SlideRel" or "PumpRel" or "MagRel" or "BoltRel")' in lib
     assert "Pass60WeaponPoseMath.TryParse(literal,null,out var pose)" in lib
     assert 'hierarchy.GetArrayLength()==3' in lib
     assert 'hierarchy[1].GetString()=="Handle"' in lib
