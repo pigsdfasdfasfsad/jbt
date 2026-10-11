@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass65",StringComparer.Ordinal))
+        {
+            RunPass65Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass64",StringComparer.Ordinal))
         {
             RunPass64Smoke();
@@ -550,6 +555,150 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass65Smoke()
+    {
+        if(!Pass65SourceHands.TryGet("Glock 17",out var glock) ||
+           glock is null || glock.Equip is null ||
+           glock.Reload is null ||
+           glock.Reload.Left.Cues.Length!=5 ||
+           glock.Reload.Right.Cues.Length!=2 ||
+           glock.Equip.Left.Cues.Length!=3 ||
+           !Pass65SourceHands.TryGet("Mossberg 500",out var moss) ||
+           moss is null || moss.Cycling is null ||
+           moss.Cycling.Left.Cues.Length!=2 ||
+           !Pass65SourceHands.TryGet("Mosin Nagant",out var mosin) ||
+           mosin is null || mosin.Cycling is null ||
+           mosin.Cycling.Right.Cues.Length!=4)
+            throw new InvalidOperationException(
+                "Pass65 original source left/right weld keyframes not recovered");
+        if(!Pass65SourceHands.TryLiteralPose(
+               "CFrame.new(-0.5, -0.35, 0.475) * CFrame.Angles((math.pi/2), 0, 0)",
+               out var source) ||
+           Math.Abs(source.Origin.X+.14f)>.0001f ||
+           Math.Abs(source.Origin.Y+.098f)>.0001f ||
+           Math.Abs(source.Origin.Z+.133f)>.0001f ||
+           !Pass65SourceHands.TryLiteralPose(
+               "CFrame.new(0.1, 0, 0) * CFrame.Angles(1.9198621771937625, 0, 0)",
+               out _) ||
+           Pass65SourceHands.TryLiteralPose(
+               "CFrame.Angles(math.pi/2, 0, 0)",out _) ||
+           Pass65SourceHands.TryLiteralPose(
+               "CFrame.Angles(0, execute(), 0)",out _) ||
+           Pass65SourceHands.TryLiteralPose(
+               "module.Stats.LeftCF * CFrame.new(0, 0, 0)",out _) ||
+           Pass65SourceHands.TryLiteralPose(
+               "CFrame.new(999, 0, 0)",out _))
+            throw new InvalidOperationException(
+                "Pass65 strict source hand CFrame parser failed");
+
+        if(OriginalWeaponSourceRuntime.OwnerSourcePackVerified ||
+           Pass62SourceWeaponHierarchy.OwnerHierarchyVerified)
+            throw new InvalidOperationException(
+                "Pass65 synthetic smoke cannot claim the original private owner assets");
+        var gun=new WeaponViewModelRuntime{Name="Pass65Glock"};
+        AddChild(gun);
+        gun.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var left=gun.GetNodeOrNull<Node3D>("WeaponBody/LeftHandProxy65");
+        var right=gun.GetNodeOrNull<Node3D>("WeaponBody/RightHandProxy65");
+        if(left is null || right is null ||
+           !gun.UsingOriginalToolAssembly ||
+           !gun.SourceHandProxiesAvailable ||
+           gun.SourceHandProxyMeshCount!=14 ||
+           gun.SourceLeftReloadWeldCues!=5 ||
+           gun.SourceRightReloadWeldCues!=2 ||
+           Math.Abs(gun.SourceLeftHandPosition.X+.14f)>.001f ||
+           Math.Abs(gun.SourceRightHandPosition.X-.0462f)>.001f ||
+           gun.SourceHierarchyOriginalVerified)
+            throw new InvalidOperationException(
+                "Pass65 source grip poses and paired hand proxies unavailable");
+        var glockLeftHome=left.Transform;
+        var glockRightHome=right.Transform;
+        gun.BeginEquip(.8);
+        gun._Process(.38);
+        if(!gun.SourceHandAnimationActive ||
+           left.Position.DistanceTo(glockLeftHome.Origin)<.02f)
+            throw new InvalidOperationException(
+                "Pass65 original Glock equip hand weld did not animate");
+        gun._Process(.43);
+        gun.Reload(2.0);
+        gun._Process(.16);
+        if(!gun.SourceHandAnimationActive ||
+           right.Position.DistanceTo(glockRightHome.Origin)<.01f)
+            throw new InvalidOperationException(
+                "Pass65 original Glock reload right-hand weld did not animate");
+        gun._Process(.64);
+        if(left.Position.DistanceTo(glockLeftHome.Origin)<.02f)
+            throw new InvalidOperationException(
+                "Pass65 original left-hand magazine reload grip did not move");
+        gun._Process(1.21);
+        if(gun.SourceHandAnimationActive ||
+           left.Position.DistanceTo(glockLeftHome.Origin)>.0002f ||
+           right.Position.DistanceTo(glockRightHome.Origin)>.0002f)
+            throw new InvalidOperationException(
+                "Pass65 Glock gloves did not reset after completed reload");
+
+        var pump=new WeaponViewModelRuntime{Name="Pass65Mossberg"};
+        AddChild(pump);
+        pump.SetWeapon(RuntimeWeaponCatalog.Get("Mossberg 500"));
+        var pumpHand=pump.GetNodeOrNull<Node3D>("WeaponBody/LeftHandProxy65");
+        if(pumpHand is null || pump.SourceCyclingPumpFrames!=5 ||
+           pump.SourceHandProxyMeshCount!=14)
+            throw new InvalidOperationException(
+                "Pass65 source shotgun support hand missing");
+        var originalPumpHand=pumpHand.Position;
+        pump.Fire(false);
+        pump._Process(.35f);
+        if(!pump.SourceHandAnimationActive ||
+           pumpHand.Position.DistanceTo(originalPumpHand)<.035f)
+            throw new InvalidOperationException(
+                "Pass65 original Mossberg left-hand inverse PumpRel did not follow pump");
+        pump._Process(.43f);
+        if(pump.SourceHandAnimationActive ||
+           pumpHand.Position.DistanceTo(originalPumpHand)>.0002f)
+            throw new InvalidOperationException(
+                "Pass65 source pump grip failed to return to rest");
+
+        var bolt=new WeaponViewModelRuntime{Name="Pass65Mosin"};
+        AddChild(bolt);
+        bolt.SetWeapon(RuntimeWeaponCatalog.Get("Mosin Nagant"));
+        var boltHand=bolt.GetNodeOrNull<Node3D>("WeaponBody/RightHandProxy65");
+        if(boltHand is null || bolt.SourceRightCyclingWeldCues!=4 ||
+           bolt.SourceNestedBoltHandleParts!=2)
+            throw new InvalidOperationException(
+                "Pass65 source bolt-action hand / nested handle missing");
+        var originalBoltHand=boltHand.Transform;
+        bolt.Fire(false);
+        bolt._Process(.35f);
+        if(!bolt.SourceHandAnimationActive ||
+           boltHand.Position.DistanceTo(originalBoltHand.Origin)<.03f)
+            throw new InvalidOperationException(
+                "Pass65 Mosin right hand did not reach source Bolt Handle weld");
+        bolt._Process(.20f);
+        if(Math.Abs(bolt.LastSourceBoltTravel)<.085f ||
+           boltHand.Position.DistanceTo(originalBoltHand.Origin)<.035f)
+            throw new InvalidOperationException(
+                "Pass65 right hand did not follow original moving bolt");
+        bolt._Process(.74f);
+        if(bolt.SourceHandAnimationActive ||
+           boltHand.Position.DistanceTo(originalBoltHand.Origin)>.0002f)
+            throw new InvalidOperationException(
+                "Pass65 bolt action grip failed to return to original hold");
+        GD.Print("TWR_SMOKE_PASS65_SOURCE_HAND_GRIPS_OK "+
+            "source_glock_left_reload_weld_cues=5 "+
+            "source_glock_right_reload_weld_cues=2 "+
+            "source_mosin_right_cycling_weld_cues=4 "+
+            "source_two_procedural_hands_per_weapon=true "+
+            "source_equip_hands_animated=true "+
+            "source_reload_magazine_hand_follows=true "+
+            "source_mossberg_left_pump_grip_follows=true "+
+            "source_mosin_right_bolt_handle_grip_follows=true "+
+            "end_of_clip_hands_reset=true "+
+            "nonliteral_luau_expressions_blocked=true "+
+            "no_original_character_mesh_claim=true "+
+            "gameplay_ammo_and_recoil_authority_unchanged=true");
         GetTree().Quit(0);
     }
 
