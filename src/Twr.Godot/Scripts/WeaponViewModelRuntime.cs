@@ -94,6 +94,21 @@ public partial class WeaponViewModelRuntime : Node3D
         _rightHandProxy?.Position ?? Vector3.Zero;
     public int SourceHandProxyMeshCount {get;private set;}
     public bool SourceHandAnimationActive {get;private set;}
+    public bool SourceArmRigAvailable => _armRig66 is not null &&
+        _leftUpperArm66 is not null && _rightUpperArm66 is not null;
+    public int SourceArmProxyMeshCount {get;private set;}
+    public Vector3 SourceLeftElbowPosition =>
+        _leftElbow66?.Position ?? Vector3.Zero;
+    public Vector3 SourceRightElbowPosition =>
+        _rightElbow66?.Position ?? Vector3.Zero;
+    public Vector3 SourceLeftShoulderPosition =>
+        Pass66ArmKinematics.Shoulder(true);
+    public Vector3 SourceRightShoulderPosition =>
+        Pass66ArmKinematics.Shoulder(false);
+    public bool LeftArmReachClamped {get;private set;}
+    public bool RightArmReachClamped {get;private set;}
+    public float LeftArmReachScale {get;private set;}=1f;
+    public float RightArmReachScale {get;private set;}=1f;
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -115,6 +130,16 @@ public partial class WeaponViewModelRuntime : Node3D
     private Pass65SourceHands.Profile? _handSource;
     private Node3D? _leftHandProxy;
     private Node3D? _rightHandProxy;
+    // Camera-local torso anchors are separate from the recoiling gun
+    // WeaponBody. Original Roblox first-person upper arm meshes and
+    // Motor6D shoulder/elbow joints are not present in owner sources.
+    private Node3D? _armRig66;
+    private MeshInstance3D? _leftUpperArm66;
+    private MeshInstance3D? _rightUpperArm66;
+    private MeshInstance3D? _leftForeArm66;
+    private MeshInstance3D? _rightForeArm66;
+    private MeshInstance3D? _leftElbow66;
+    private MeshInstance3D? _rightElbow66;
     private int _nextShellEjection;
     private sealed class SpentShellVisual
     {
@@ -486,6 +511,7 @@ public partial class WeaponViewModelRuntime : Node3D
             // proxy geometry. Live first-person views enable both hands.
             if(_leftHandProxy is not null)_leftHandProxy.Visible=false;
             if(_rightHandProxy is not null)_rightHandProxy.Visible=false;
+            if(_armRig66 is not null)_armRig66.Visible=false;
             return;
         }
         _flashSeconds = Mathf.Max(0,_flashSeconds - dt);
@@ -647,6 +673,10 @@ public partial class WeaponViewModelRuntime : Node3D
         _rig.Transform=new Transform3D(
             equipPose.Basis*reloadPose.Basis*sourceFirePose.Basis*sway,
             position);
+        // Evaluate arms AFTER the final source-gun transform. The
+        // torso-relative shoulder remains camera-stable during recoil
+        // while the wrists follow animated Left/Right Weld targets.
+        UpdateSourceArms();
     }
 
     private static void AddHandProxyBox(Node3D parent,
@@ -702,6 +732,123 @@ public partial class WeaponViewModelRuntime : Node3D
         _rightHandProxy=CreateHandProxy("RightHandProxy65",false);
         _leftHandProxy.Transform=_handSource.LeftRest;
         _rightHandProxy.Transform=_handSource.RightRest;
+        BuildSourceArms();
+    }
+
+    private static MeshInstance3D CreateArmSegment(
+        Node3D parent,string name,bool upper,Material material)
+    {
+        // Height=1 means Scale.Y can directly represent the solved
+        // R6-proportioned bone length in Godot metres.
+        var segment=new MeshInstance3D
+        {
+            Name=name,
+            Mesh=new CylinderMesh
+            {
+                TopRadius=upper?.052f:.044f,
+                BottomRadius=upper?.062f:.052f,
+                Height=1f,
+                RadialSegments=9
+            },
+            MaterialOverride=material
+        };
+        parent.AddChild(segment);
+        return segment;
+    }
+
+    private static MeshInstance3D CreateArmJoint(
+        Node3D parent,string name,float radius,Material material)
+    {
+        var joint=new MeshInstance3D
+        {
+            Name=name,
+            Mesh=new SphereMesh{Radius=radius,Height=radius*2f},
+            MaterialOverride=material
+        };
+        parent.AddChild(joint);
+        return joint;
+    }
+
+    private void BuildSourceArms()
+    {
+        if(_rig is null || _leftHandProxy is null ||
+           _rightHandProxy is null || _armRig66 is not null)return;
+        // The source R6 survivor limb dimensions (1 x 2 x 1 studs)
+        // establish approximate arm scale only. This rig and materials
+        // are procedurally reconstructed, not original character assets.
+        var sleeves=new StandardMaterial3D
+        {
+            AlbedoColor=new Color(.20f,.23f,.255f),
+            Metallic=.015f,
+            Roughness=.92f
+        };
+        var gloveForearms=new StandardMaterial3D
+        {
+            AlbedoColor=new Color(.17f,.19f,.21f),
+            Metallic=.02f,
+            Roughness=.87f
+        };
+        _armRig66=new Node3D{Name="ArmRig66"};
+        AddChild(_armRig66);
+        _leftUpperArm66=CreateArmSegment(
+            _armRig66,"LeftUpperArm66",true,sleeves);
+        _leftForeArm66=CreateArmSegment(
+            _armRig66,"LeftForeArm66",false,gloveForearms);
+        _leftElbow66=CreateArmJoint(
+            _armRig66,"LeftElbow66",.050f,gloveForearms);
+        CreateArmJoint(_armRig66,"LeftShoulder66",.058f,sleeves)
+            .Position=Pass66ArmKinematics.Shoulder(true);
+        _rightUpperArm66=CreateArmSegment(
+            _armRig66,"RightUpperArm66",true,sleeves);
+        _rightForeArm66=CreateArmSegment(
+            _armRig66,"RightForeArm66",false,gloveForearms);
+        _rightElbow66=CreateArmJoint(
+            _armRig66,"RightElbow66",.050f,gloveForearms);
+        CreateArmJoint(_armRig66,"RightShoulder66",.058f,sleeves)
+            .Position=Pass66ArmKinematics.Shoulder(false);
+        SourceArmProxyMeshCount=8;
+        UpdateSourceArms();
+    }
+
+    private static void PlaceArmSegment(MeshInstance3D segment,
+        Vector3 start,Vector3 end)
+    {
+        if(!Pass66ArmKinematics.TrySegment(
+            start,end,out var pose,out var length))
+        {
+            segment.Visible=false;
+            return;
+        }
+        segment.Visible=true;
+        segment.Transform=pose;
+        segment.Scale=new Vector3(1f,length,1f);
+    }
+
+    private void UpdateSourceArms()
+    {
+        if(_rig is null || _armRig66 is null ||
+           _leftHandProxy is null || _rightHandProxy is null ||
+           _leftUpperArm66 is null || _rightUpperArm66 is null ||
+           _leftForeArm66 is null || _rightForeArm66 is null ||
+           _leftElbow66 is null || _rightElbow66 is null)return;
+        // Wrist anchor is inside the existing Pass65 hand cuff; do NOT
+        // translate original weapon meshes or alter fire authority.
+        var cuff=new Vector3(0f,0f,.067f);
+        var leftWrist=_rig.Transform*(_leftHandProxy.Transform*cuff);
+        var rightWrist=_rig.Transform*(_rightHandProxy.Transform*cuff);
+        var left=Pass66ArmKinematics.Solve(true,leftWrist);
+        var right=Pass66ArmKinematics.Solve(false,rightWrist);
+        PlaceArmSegment(_leftUpperArm66,left.Shoulder,left.Elbow);
+        PlaceArmSegment(_leftForeArm66,left.Elbow,left.Wrist);
+        PlaceArmSegment(_rightUpperArm66,right.Shoulder,right.Elbow);
+        PlaceArmSegment(_rightForeArm66,right.Elbow,right.Wrist);
+        _leftElbow66.Position=left.Elbow;
+        _rightElbow66.Position=right.Elbow;
+        LeftArmReachClamped=left.ReachClamped;
+        RightArmReachClamped=right.ReachClamped;
+        LeftArmReachScale=left.ReachScale;
+        RightArmReachScale=right.ReachScale;
+        _armRig66.Visible=!StaticShowroomMode;
     }
 
     private void UpdateSourceHands(bool reloadActive,float reloadFraction)
@@ -794,6 +941,18 @@ public partial class WeaponViewModelRuntime : Node3D
 
     private void ResetRig()
     {
+        if(_armRig66 is not null)
+        {
+            RemoveChild(_armRig66);
+            _armRig66.QueueFree();
+            _armRig66=null;
+        }
+        _leftUpperArm66=_rightUpperArm66=null;
+        _leftForeArm66=_rightForeArm66=null;
+        _leftElbow66=_rightElbow66=null;
+        SourceArmProxyMeshCount=0;
+        LeftArmReachClamped=RightArmReachClamped=false;
+        LeftArmReachScale=RightArmReachScale=1f;
         if (_rig is not null)
         {
             RemoveChild(_rig);
