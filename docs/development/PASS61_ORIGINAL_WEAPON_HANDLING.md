@@ -72,7 +72,27 @@ IK, exact dynamic AimCF, original external mesh triangles, all ten maps'
 visual and collision fidelity, real 15-wave human-controlled playtests,
 and a private Windows release with authorized owner assets remain incomplete.
 
-## Windows verification
+## Verified October 11, 2026 Windows checkpoint
 
-Pending GitHub Actions acceptance at initial commit. Do not treat a
-committed feature as verified until the Windows workflow succeeds.
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38124940483
+
+**Tested code revision:** `360769f1581c65d7fb8c1902edba1f5b1f3c0d47`
+
+- **538 Python regressions passed**, one inherited Pass34 XML FutureWarning.
+- Native Godot/.NET Windows build/export passed: **0 errors** and one
+  pre-existing Pass36 `CS0108` warning.
+- Previous exported Windows Pass59 and Pass60 source weapon motion
+  smoke tests passed unchanged.
+- New `TWR_SMOKE_PASS61_CYCLING_OK` confirms source equip transforms,
+  original Glock 17 slide travel **0.063 m**, original Mossberg 500
+  pump travel **0.084 m**, original reload pump keyframes, actual
+  Godot MeshInstance3D displacements, return-to-rest, and rejection
+  of unsupported dynamic source motor expressions.
+- `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed as **domain-level
+  scripted progression**, not 10 complete player-controlled matches.
+- Original owner-private and synthetic assets were absent from public
+  Windows output, with GitHub EXE artifact uploads still disabled.
+
+**Not verified by this test:** full original Motor6D hierarchy positions,
+  all weapon animations, user-interactive gameplay, screenshot-level
+  visual matching, or a privately downloadable game executable.
