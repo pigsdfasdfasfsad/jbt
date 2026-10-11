@@ -424,7 +424,8 @@ public partial class Bootstrap : Node
             transitions++;
 
             game._Process(600); // WAVE -> WAVE END: spawns one real infected.
-            if (game.WaveStage != "WAVE END" || game.ActiveInfectedCount != 0)
+            if (game.WaveStage != "WAVE END" || game.ActiveInfectedCount != 0 ||
+                game.WaveInfectedSpawnCount != 4)
                 throw new InvalidOperationException($"Wave {wave} did not clean up surviving infected");
             enemiesSpawned++;
             transitions++;
