@@ -132,8 +132,12 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
             throw new InvalidDataException("Wrong source lobby pack format");
         var synthetic=root.TryGetProperty("synthetic",out var flag) &&
             flag.ValueKind==JsonValueKind.True;
-        var smoke=OS.GetCmdlineUserArgs().Contains("--smoke-pass49",
-            StringComparer.Ordinal);
+        // Pass50's native test composes a fabricated source-sign pack with
+        // the existing fabricated Pass49 3D lobby. Ordinary game startup
+        // still rejects all synthetic packs; only explicit CI smoke flags
+        // can enable this fixture.
+        var smoke=OS.GetCmdlineUserArgs().Any(arg =>
+            arg is "--smoke-pass49" or "--smoke-pass50");
         if(synthetic && !smoke)
             throw new InvalidDataException("Synthetic lobby used outside smoke test");
         if(!synthetic &&
