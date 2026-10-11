@@ -79,7 +79,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         var mesh = Primitives;
         var frames = Game?.Pass43FrameTimes.Snapshot();
         _label.Text =
-            "PASS 43 | F2 audio, F3 light, F4 jump maps, F9 spawn assist, F5 source props, F6 source walls\n" +
+            "PASS 44 | F2 audio, F3 light, F4 jump maps, F9 spawn assist, F5 source props, F6 source walls\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
@@ -108,6 +108,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"F5 original native props: {Game?.Pass36RenderableOriginalPropCount ?? 0} " +
             $"({(Game?.Pass36NativePropsEnabled == true ? "ON" : "OFF")})\n" +
             $"Original custom props missing: {Game?.Pass36MissingOriginalMeshCount ?? 0}\n" +
+            $"Source native instancing: {Game?.Pass44NativePrimitiveCount ?? 0} parts / " +
+            $"{Game?.Pass44NativeDrawBatches ?? 0} batches\n" +
             $"Visible native batches: {mesh?.VisibleBatchCount ?? 0}/{mesh?.BatchCount ?? 0}\n" +
             $"Source primitive instances: {mesh?.SourceInstanceCount ?? 0}\n" +
             $"Nav queries: {Navigation?.RouteRequests ?? 0} / A*: {Navigation?.ActualPathSearches ?? 0}\n" +
@@ -170,6 +172,10 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 source_sound_installed_wav_emitter_count = Game?.Pass38OfflineWavEmitterCount ?? 0,
                 source_sound_active_voices = Game?.Pass38ActiveSourceVoices ?? 0,
                 source_sound_preview_enabled = Game?.Pass38SourceSoundEnabled ?? false,
+                pass44_source_native_stream_loaded = (Game?.Pass44NativePrimitiveCount ?? 0) > 0,
+                pass44_source_native_instances = Game?.Pass44NativePrimitiveCount ?? 0,
+                pass44_source_native_draw_batches = Game?.Pass44NativeDrawBatches ?? 0,
+                pass44_source_visible_batches = Game?.Pass44VisibleNativeBatches ?? 0,
                 visible_source_batches = mesh?.VisibleBatchCount ?? 0,
                 total_source_batches = mesh?.BatchCount ?? 0,
                 source_native_instances = mesh?.SourceInstanceCount ?? 0,
