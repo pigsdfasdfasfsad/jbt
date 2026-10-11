@@ -111,6 +111,9 @@ public partial class Pass45FallbackProxyStreamer : Node3D
             var visible = !CullEnabled ||
                 Pass28PrimitiveStreamer.CanSeeBounds(
                     centre,group.Minimum,group.Maximum,
+                    // Initial Track/F1 re-enable uses the strict draw
+                    // radius; hysteresis only applies during ordinary travel.
+                    force ? DrawRadiusMetres :
                     group.Node.Visible ? HideRadiusMetres : DrawRadiusMetres);
             group.Node.Visible=visible;
             if(!visible)continue;
