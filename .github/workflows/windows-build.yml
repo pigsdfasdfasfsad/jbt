@@ -511,6 +511,31 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass47 private source tool fixture cleanup failed' }
           }
 
+      - name: Smoke Pass 48 source-derived infected visuals in exported Windows executable
+        if: success() && github.ref_name == 'twr-pass48-infected-source-asset-kit'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          $kit = Join-Path $outputDir 'Content/Enemies/InfectedSourceVariants.json.gz'
+          python tools/maps/make_pass48_infected_smoke_fixture.py --output $kit --create
+          if ($LASTEXITCODE -ne 0) { throw 'Synthetic infected fixture failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass48.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass48.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','300','--','--smoke-pass48') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS48_INFECTED_OK' })) {
+              throw "Pass48 native infected kit smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/maps/make_pass48_infected_smoke_fixture.py --output $kit --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass48 fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
         if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' || github.ref_name == 'twr-pass48-infected-source-asset-kit')
         shell: pwsh
