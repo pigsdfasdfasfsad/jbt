@@ -173,8 +173,9 @@ public static class Pass60WeaponAnimationLibrary
         if(!root.TryGetProperty("stats",out var stats) ||
            !root.TryGetProperty("animations",out var animations))
             return null;
+        var pose=Transform3D.Identity;
         var hasSprint=Field(stats,"SprintCF",out var sprintText) &&
-            Pass60WeaponPoseMath.TryParse(sprintText,null,out var pose);
+            Pass60WeaponPoseMath.TryParse(sprintText,null,out pose);
         var sprint=hasSprint ? pose : Transform3D.Identity;
         var hip=ReadFire(animations,"Fire");
         var aimed=ReadFire(animations,"AimFire");
