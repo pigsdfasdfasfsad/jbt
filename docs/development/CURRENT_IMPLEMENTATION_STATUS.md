@@ -1,3 +1,22 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 61
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass61-source-weapon-cycling`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38124940483
+
+- **538 Python regressions passed**, with one inherited Pass34 FutureWarning.
+- **Windows Godot/.NET export: zero errors**, one inherited Pass36 CS0108 warning.
+- Original-normalized `Equip.AV.Main` first-person weapon CFrame keyframes now play using existing equip-authority duration; source-authored `ModelMotor.SlideSliding` and `ModelMotor.Pump` offsets drive actual visual pistol slides, rifle bolts and shotgun pumps where matching meshes exist. Missing or dynamic motor expressions are refused.
+- Native Pass61 smoke `TWR_SMOKE_PASS61_CYCLING_OK`: source Glock 17 slide moves **0.063m**, source Mossberg 500 pump moves **0.084m**, source reload pump timeline recognized, original equip CFrames interpolated, real Godot viewmodel mesh positions change and reset, no ammo/economy contract changes.
+- Previous Pass59/60 native weapon motion smokes and `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` continue to pass. The latter is still **scripted domain progression**, not a full 10-map human-controlled game completion.
+- Private asset exclusion remains active; source packs and the Windows executable are **not uploaded publicly**. No player-downloadable fully populated Windows game is delivered.
+
+**Major unfinished fidelity:** original mesh/UnionOperation triangle files and textures, exact source Motor6D per-subassembly hierarchy, all magazine/hand/shell animations, dynamically built AimCF, a truly faithful visual/physical reconstruction of ten maps, real 15-wave manual playtests and private complete Windows distribution. **Not 1:1 complete.**
+
+[Pass61 original handling implementation and CI record](PASS61_ORIGINAL_WEAPON_HANDLING.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 60
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass60-source-weapon-animations`.
