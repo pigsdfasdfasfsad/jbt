@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass64",StringComparer.Ordinal))
+        {
+            RunPass64Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass63",StringComparer.Ordinal))
         {
             RunPass63Smoke();
@@ -545,6 +550,141 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass64Smoke()
+    {
+        if(!Pass64SourceAction.TryGet("Mosin Nagant",out var mosin) ||
+           mosin is null || mosin.Cycling.Bolt.Length!=2 ||
+           mosin.Cycling.BoltHandle.Length!=2 ||
+           mosin.Cycling.Ejections.Length!=1 ||
+           Math.Abs(mosin.Cycling.Duration-1.275f)>.0001f ||
+           mosin.Cycling.Ejections[0].Name!="7.62x54R Shell" ||
+           !Pass64SourceAction.TryGet("Winchester Model 70",out var win) ||
+           win is null || win.Cycling.Bolt.Length!=2 ||
+           win.Cycling.BoltHandle.Length!=2 ||
+           win.Cycling.Ejections.Length!=1 ||
+           !Pass64SourceAction.TryGet("Mossberg 500",out var moss) ||
+           moss is null || !moss.IncrementalReload ||
+           moss.Cycling.Ejections.Length!=1 ||
+           moss.Cycling.Ejections[0].Name!="12 Gauge Shell" ||
+           !Pass64SourceAction.TryGet("SPAS-12",out var spas) ||
+           spas is null || spas.Cycling.Ejections.Length!=1)
+            throw new InvalidOperationException(
+                "Pass64 original source bolt/shell evidence unavailable");
+        if(!Pass64SourceAction.TryBoltHandleAngle(
+               "CFrame.Angles(0, 0, (math.pi/2))",out var angle) ||
+           Math.Abs(angle+Mathf.Pi/2f)>.0001f ||
+           !Pass64SourceAction.TryBoltHandleAngle(
+               "CFrame.Angles(0, 0, 1.0471975511965976)",out var numeric) ||
+           Math.Abs(numeric+Mathf.Pi/3f)>.0001f ||
+           Pass64SourceAction.TryBoltHandleAngle(
+               "CFrame.Angles(0, 0, math.pi)",out _) ||
+           Pass64SourceAction.TryBoltHandleAngle(
+               "CFrame.Angles(0, 0, execute())",out _) ||
+           Pass64SourceAction.TryShellDirection(
+               "Vector3.new(1, NaN, 0)",out _) ||
+           !Pass64SourceAction.TryShellDirection(
+               "Vector3.new(0.86602, 0.5, 0)",out var ejection) ||
+           Math.Abs(ejection.Length()-1f)>.0001f)
+            throw new InvalidOperationException(
+                "Pass64 bounded original bolt/shell literal parser failed");
+        if(Pass62SourceWeaponHierarchy.OwnerHierarchyVerified ||
+           OriginalWeaponSourceRuntime.OwnerSourcePackVerified)
+            throw new InvalidOperationException(
+                "Pass64 synthetic fixture must not claim private owner verification");
+
+        var rifle=new WeaponViewModelRuntime{Name="Pass64Mosin"};
+        AddChild(rifle);
+        rifle.SetWeapon(RuntimeWeaponCatalog.Get("Mosin Nagant"));
+        var rig=rifle.GetNodeOrNull<Node3D>("WeaponBody");
+        var bolt=rig?.GetNodeOrNull<MeshInstance3D>("BoltBody");
+        var knob=rig?.GetNodeOrNull<MeshInstance3D>("BoltKnob");
+        var lever=rig?.GetNodeOrNull<MeshInstance3D>("BoltLever");
+        if(rig is null || bolt is null || knob is null || lever is null ||
+           !rifle.UsingOriginalToolAssembly ||
+           rifle.SourceBoltCarrierCueCount!=2 ||
+           rifle.SourceBoltHandleCueCount!=2 ||
+           rifle.SourceBoltCarrierGroupParts!=3 ||
+           rifle.SourceNestedBoltHandleParts!=2 ||
+           rifle.SourceShellEjectionCueCount!=1 ||
+           rifle.SourceHierarchyOriginalVerified)
+            throw new InvalidOperationException(
+                "Pass64 source nested Mosin bolt hierarchy not bound");
+        var boltHome=bolt.Transform;
+        var knobHome=knob.Transform;
+        var leverHome=lever.Transform;
+
+        rifle.Fire(false);
+        rifle._Process(.35f);
+        if(Math.Abs(rifle.LastSourceBoltHandleAngle)<.80f ||
+           knob.Position.DistanceTo(knobHome.Origin)<.015f ||
+           lever.Position.DistanceTo(leverHome.Origin)<.007f ||
+           bolt.Position.DistanceTo(boltHome.Origin)>.002f)
+            throw new InvalidOperationException(
+                "Pass64 authored nested bolt handle did not rotate independently");
+        rifle._Process(.17f);
+        if(Math.Abs(rifle.LastSourceBoltTravel)<.085f ||
+           bolt.Position.DistanceTo(boltHome.Origin)<.08f ||
+           knob.Position.DistanceTo(knobHome.Origin)<.06f ||
+           rifle.EjectedShellVisualCount!=1 ||
+           rifle.ActiveEjectedShellVisualCount!=1 ||
+           rifle.LastEjectedShellSourceName!="7.62x54R Shell")
+            throw new InvalidOperationException(
+                "Pass64 source bolt travel or single original ejection failed");
+        rifle._Process(.9f);
+        if(bolt.Transform.Origin.DistanceTo(boltHome.Origin)>.0002f ||
+           knob.Transform.Origin.DistanceTo(knobHome.Origin)>.0002f ||
+           lever.Transform.Origin.DistanceTo(leverHome.Origin)>.0002f ||
+           Math.Abs(rifle.LastSourceBoltTravel)>.00001f ||
+           Math.Abs(rifle.LastSourceBoltHandleAngle)>.00001f)
+            throw new InvalidOperationException(
+                "Pass64 original nested bolt failed to restore home transforms");
+
+        var shotgun=new WeaponViewModelRuntime{Name="Pass64Mossberg"};
+        AddChild(shotgun);
+        shotgun.SetWeapon(RuntimeWeaponCatalog.Get("Mossberg 500"));
+        if(shotgun.SourceShellEjectionCueCount!=1 ||
+           shotgun.SourceMagazineGroupParts!=2 ||
+           shotgun.SourceReloadPumpFrames!=13)
+            throw new InvalidOperationException(
+                "Pass64 shotgun source shell/pump/insertion evidence missing");
+        shotgun.Fire(false);
+        shotgun._Process(.35f);
+        if(shotgun.EjectedShellVisualCount!=1 ||
+           shotgun.ActiveEjectedShellVisualCount!=1 ||
+           shotgun.LastEjectedShellSourceName!="12 Gauge Shell")
+            throw new InvalidOperationException(
+                "Pass64 source shotgun shell ejection proxy not created");
+        shotgun._Process(1.4f);
+        if(shotgun.ActiveEjectedShellVisualCount!=0 ||
+           shotgun.EjectedShellVisualCount!=1)
+            throw new InvalidOperationException(
+                "Pass64 transient shotgun shell not reclaimed");
+        shotgun.Reload(2.0);
+        shotgun._Process(.50f);
+        if(!shotgun.SourceIncrementalShellInsertPoseActive ||
+           !shotgun.SourceMagazinePoseActive)
+            throw new InvalidOperationException(
+                "Pass64 original incremental shell feed did not reuse source magazine pose");
+        shotgun._Process(1.6f);
+        if(shotgun.SourceIncrementalShellInsertPoseActive ||
+           shotgun.SourceMagazinePoseActive)
+            throw new InvalidOperationException(
+                "Pass64 original incremental insertion leaked after reload");
+        GD.Print("TWR_SMOKE_PASS64_SOURCE_BOLT_SHELL_OK "+
+            "source_mosin_bolt_frames=2 source_mosin_handle_frames=2 "+
+            "source_winchester_bolt_frames=2 "+
+            "mosin_handle_angle_degrees=90 "+
+            "nested_bolt_children_follow_parent=true "+
+            "bolt_cycling_returns_to_rest=true "+
+            "source_mossberg_shell_ejection=12Gauge "+
+            "source_spas_shell_ejection=true "+
+            "source_shell_proxy_lifetime_bounded=true "+
+            "source_incremental_shell_feed_pose=true "+
+            "synthetic_private_source_gate=true "+
+            "no_luau_execution=true ammo_damage_unchanged=true");
         GetTree().Quit(0);
     }
 
