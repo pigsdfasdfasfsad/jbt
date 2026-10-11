@@ -200,10 +200,12 @@ public static class Pass62SourceWeaponHierarchy
             foreach(var g in entry.GetProperty("groups").EnumerateArray())
             {
                 var path=g.GetProperty("path");
-                // Pass62 animates top-level subassemblies; deeper nested
-                // groups are recovered in the owner pack for later passes.
-                if(path.GetArrayLength()!=1)continue;
-                var name=path[0].GetString()??"";
+                // Pass64 can bind the original nested Bolt Handle while
+                // retaining exact source indices and the original
+                // top-level Slide/Pump/Mag group behavior.
+                if(path.GetArrayLength() is <1 or >2)continue;
+                var name=string.Join("/",path.EnumerateArray()
+                    .Select(item=>item.GetString()??""));
                 if(name.Length is <1 or >80 || groups.ContainsKey(name))
                     continue;
                 if(!Pivot(g,alignment,out var pivot))continue;
