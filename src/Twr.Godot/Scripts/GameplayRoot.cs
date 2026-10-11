@@ -122,6 +122,11 @@ public partial class GameplayRoot : Node3D
     public int Pass44VisibleNativeBatches =>
         GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
             "/Pass28PrimitiveStream")?.VisibleBatchCount ?? 0;
+    public bool Pass47OriginalWeaponModelActive => _player?.SourceWeaponModelActive ?? false;
+    public bool Pass47OwnerWeaponPackVerified => _player?.SourceWeaponPackVerified ?? false;
+    public int Pass47WeaponSourceVisibleParts => _player?.SourceWeaponVisibleParts ?? 0;
+    public int Pass47MissingMeshProxies => _player?.SourceWeaponMissingMeshProxies ?? 0;
+
     public bool Pass45ProxyStreamingAvailable =>
         GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
             "/Pass45FallbackProxyStream") is not null;
