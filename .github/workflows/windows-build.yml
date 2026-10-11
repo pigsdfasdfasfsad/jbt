@@ -885,36 +885,44 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass56 lobby cleanup failed' }
           }
 
-      - name: Smoke Pass 57 source URL asset resolution and geometry proxies
+      - name: Smoke Pass 57 source URL mesh resolution, native geometry and Armory
         if: success() && github.ref_name == 'twr-pass57-offline-source-weapon-geometry'
         shell: pwsh
         run: |
           $outputDir = (Resolve-Path 'build/output').Path
+          $sourceLobby = Join-Path $outputDir 'Content/Lobby/SourceLobby49.json.gz'
           $sourceTools = Join-Path $outputDir 'Content/Weapons/SourceWeaponModels.json.gz'
           $meshDir = Join-Path $outputDir 'Content/Assets/Meshes'
           $testMesh = Join-Path $meshDir '555570001.obj'
-          foreach ($path in @($sourceTools, $testMesh)) {
+          foreach ($path in @($sourceLobby, $sourceTools, $testMesh)) {
             if (Test-Path -LiteralPath $path) {
               throw "Pass57 refuses overwrite of owner/synthetic source file: $path"
             }
           }
-          python tools/maps/make_pass57_weapon_geometry_fixture.py --output $sourceTools --mesh-dir $meshDir --create
-          if ($LASTEXITCODE -ne 0) { throw 'Pass57 synthetic original-style tool/OBJ fixture failed' }
+          python tools/maps/make_pass49_lobby_smoke_fixture.py --output $sourceLobby --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass57 source-style synthetic lobby creation failed' }
           try {
-            $stdout = Join-Path $env:RUNNER_TEMP 'pass57.stdout.txt'
-            $stderr = Join-Path $env:RUNNER_TEMP 'pass57.stderr.txt'
-            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
-            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','360','--','--smoke-pass57') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-            $output = @()
-            if (Test-Path $stdout) { $output += Get-Content $stdout }
-            if (Test-Path $stderr) { $output += Get-Content $stderr }
-            $output | ForEach-Object { Write-Host $_ }
-            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS57_GEOMETRY_OK' })) {
-              throw "Pass57 native source geometry/OBJ test failed. Exit: $($run.ExitCode)"
+            python tools/maps/make_pass57_weapon_geometry_fixture.py --output $sourceTools --mesh-dir $meshDir --create
+            if ($LASTEXITCODE -ne 0) { throw 'Pass57 synthetic original-style tool/OBJ fixture failed' }
+            try {
+              $stdout = Join-Path $env:RUNNER_TEMP 'pass57.stdout.txt'
+              $stderr = Join-Path $env:RUNNER_TEMP 'pass57.stderr.txt'
+              $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+              $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','360','--','--smoke-pass57') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+              $output = @()
+              if (Test-Path $stdout) { $output += Get-Content $stdout }
+              if (Test-Path $stderr) { $output += Get-Content $stderr }
+              $output | ForEach-Object { Write-Host $_ }
+              if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS57_GEOMETRY_OK' })) {
+                throw "Pass57 native source geometry/OBJ test failed. Exit: $($run.ExitCode)"
+              }
+            } finally {
+              python tools/maps/make_pass57_weapon_geometry_fixture.py --output $sourceTools --mesh-dir $meshDir --clean
+              if ($LASTEXITCODE -ne 0) { throw 'Pass57 synthetic source geometry cleanup failed' }
             }
           } finally {
-            python tools/maps/make_pass57_weapon_geometry_fixture.py --output $sourceTools --mesh-dir $meshDir --clean
-            if ($LASTEXITCODE -ne 0) { throw 'Pass57 synthetic source geometry cleanup failed' }
+            python tools/maps/make_pass49_lobby_smoke_fixture.py --output $sourceLobby --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass57 synthetic source lobby cleanup failed' }
           }
 
       - name: Verify no private map scenes entered the CI export
