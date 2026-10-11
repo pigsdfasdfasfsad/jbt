@@ -175,6 +175,12 @@ The **private owner Windows ZIP** adds ten-map source outlines, original Laborat
 - Completion reward is one-time and is persisted before results/lobby transition.
 - Release maps: Ranch, Mill, Bypass, Cabin, Cargo, District, Expressway, Prison, Laboratory, Manor.
 
+## Verified development checkpoint: Pass 54 (October 10, 2026)
+
+The Pass54 branch replaces arbitrary hashed cosmetic colors with the **source-authored RGB and Roblox material fields from 118 skins (590 values)** when optional authenticated owner-private sidecars are installed. The original TestPlace contains **728 original Value1–Value5 skin tags on 1,484 tool parts in 98 models**; the runtime maps tags by source part index, preserving untagged parts. This pass implements local Godot material approximations, not original shader/texture animation parity. Original skin palette and part maps remain private; no raw source archives are published.
+
+**Verified Windows Actions [run 38106666088](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38106666088):** 498 Python tests passed; Godot/.NET Windows build had zero errors (one old Pass36 warning); native Pass54 synthetic-only 3D source RGB/mapped part-tag, switch-and-reset, player-credit isolation and map lifecycle smoke passed; the baseline simulated 10-map/150-wave check and original-asset exclusion passed. No downloadable public EXE is uploaded. See the [Pass54 source materials implementation and owner pack setup](docs/development/PASS54_ORIGINAL_SKIN_MATERIALS.md).
+
 ## Verified development checkpoint: Pass 53 (October 10, 2026)
 
 **Branch:** `twr-pass53-offline-skin-cases` — original-source case names/prices, offline case credit transactions and case completion, persistent owned skins, skin selection/resale, and visibly approximate 3D cosmetic finishes in the 91-weapon loadout and first-person gameplay. Original random odds and original material textures are not recovered. High's nine event skins and off-sale Hallows are never sold via ordinary cases.

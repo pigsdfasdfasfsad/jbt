@@ -1,3 +1,19 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 54
+
+**Date:** October 10, 2026 (US Central). **Branch:** twr-pass54-original-skin-materials.
+
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38106666088
+
+- **498 Python regressions passed**, with one older Pass34 XML FutureWarning.
+- **Native Windows Godot/.NET build succeeded: zero errors, one existing Pass36 CS0108 warning.**
+- Native TWR_SMOKE_PASS54_SOURCE_SKINS_OK confirmed synthetic source-like skin RGB, exact Value1..Value5 part tags in a four-part weapon, safe switching and removal of cosmetic overlays, unchanged player credits and no source lobby objects leaking into Manor gameplay.
+- Baseline TWR_SMOKE_COMPLETE_OK maps=10 waves=150 is simulation coverage, not manually played real-time wave completion.
+- Owner scripts.zip records **118 source skins / 590 material slots**; owner TestPlace.zip records **728 tagged parts across 98 source tool models with 1,484 parts**. Two SHA-pinned private gzip sidecars can be installed beside the game to enable source-authored RGB and per-part tags. All original skin image/animation/mesh bytes are still incompletely recovered. Sidecars are never uploaded by public CI.
+
+**Still pending:** pixel-perfect material/animated texture recovery, full original map geometry, all map gameplay playthroughs, final offline installer and privately distributed Windows EXE. [Pass54 technical record](PASS54_ORIGINAL_SKIN_MATERIALS.md).
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 53
 
 **Date:** October 10, 2026 (US Central). **Branch:** `twr-pass53-offline-skin-cases`.

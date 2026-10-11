@@ -42,3 +42,16 @@ The branch twr-pass54-original-skin-materials builds/exports the native Windows 
 ## Outstanding fidelity
 
 Original 3D MeshPart triangles, accurately authored Roblox diffuse/normal/alpha textures, animated Ethereal finishes, exact shader parity, original skin drop rates, full map interior detail, manually played 15-wave matches, and a privately distributed installed Windows EXE are not yet complete.
+
+
+## Verified Windows checkpoint
+
+**Tested source revision:** 1de45b8821af5bc47bacf03b120b91f0750df1ab
+**Successful Windows Actions run:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38106666088
+
+- **498 Python tests passed** (one unrelated pre-existing Pass34 XML FutureWarning)
+- **Native Windows build succeeded** with zero errors, one pre-existing Pass36 CS0108 compiler warning
+- Baseline domain smoke: TWR_SMOKE_COMPLETE_OK maps=10 waves=150 (simulated wave progression only)
+- Native Pass54: TWR_SMOKE_PASS54_SOURCE_SKINS_OK with synthetic-only five material slots, four annotated weapon parts, verified fake RGB `40,17,17`, safe cosmetic switch/remove, no economy change and correct lobby cleanup
+- Synthetic source packs were cleaned before the private asset exclusion audit, and no EXE or owner-original materials were made publicly downloadable
+- Actual owner SHA-pinned palettes and tags were independently generated from the user uploads and provided as a **separate private installation ZIP**. The CI native smoke used synthetic data, not a pixel-by-pixel visual comparison with the real user-owned original source packs.
