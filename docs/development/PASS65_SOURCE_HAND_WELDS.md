@@ -84,6 +84,32 @@ skin and glove styling; dynamic source AimCF; proper collision and
 hand IK; complete ten-map restoration, real end-to-end 15-wave
 single-player acceptance, and owner-private release packaging.
 
-**Status:** native Windows acceptance pending until the Pass65 workflow
-runs successfully. Do not treat procedural gloves as proof of original
-TWR first-person visual fidelity.
+## Verified Windows acceptance — October 11, 2026
+
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38168111351
+
+**Tested code revision:** `e27aceb72c6d518f6c9d118b7db20f363eba650f`.
+
+- **558 Python regressions passed**, with one inherited Pass34 XML
+  FutureWarning; Godot/.NET Windows export succeeded with **zero errors**
+  and one pre-existing Pass36 `CS0108` warning.
+- Native `TWR_SMOKE_PASS65_SOURCE_HAND_GRIPS_OK` verified original
+  Glock 17 left/right weld cue counts, source literal-pose grammar,
+  two procedural hands in the first-person gun rig, animated equip/reload,
+  left hand following original magazine manipulation, Mossberg left
+  support hand following its pump, and Mosin right hand following the
+  recovered moving bolt-handle group. All gloves returned to source
+  rest positions at the ends of their clips.
+- Exported Windows smokes for Pass59–64 also passed, as did the domain
+  `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` scripted progression
+  simulation. That is **not** 10 full manually played 15-wave games.
+- Exact source named CFrames and whitelisted PumpRel inverse were
+  parsed without source Luau execution. Synthetic private-style weapon
+  source packs were created for the smoke and cleaned afterward.
+  Public asset-exclusion checks passed; no owner-private source pack
+  or playable Windows EXE was published to GitHub.
+
+**Still incomplete:** original first-person arm and finger meshes,
+recovered Motor6D C0/C1 avatar joints, exact player rig poses,
+source easing precision, screenshots proving visual fidelity,
+full ten-map parity and privately delivered Windows release.
