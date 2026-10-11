@@ -33,6 +33,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private bool _aiming;
     private Vector3 _hipViewPosition;
     private Vector3 _hipViewRotation;
+    private float _sourceSprintBlend;
     private string? _reloadWeapon;
     private string _primaryWeapon = StarterLoadoutService.SawnOff;
     private string _secondaryWeapon = StarterLoadoutService.Glock17;
@@ -284,6 +285,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         _hipViewPosition = _viewModel.Position;
         _hipViewRotation = _viewModel.Rotation;
+        _sourceSprintBlend=0f;
     }
 
     private void SelectThrowable(string type)
@@ -458,15 +460,32 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var fullTravel=Math.Max(1f,Math.Abs(60f-Math.Clamp(spec.AimFov,5f,60f)));
         _camera.Fov=Mathf.MoveToward(_camera.Fov,desiredFov,(float)(fullTravel/seconds*delta));
 
-        // APPROXIMATED Godot viewmodel alignment. The source AimCF transforms
-        // are Roblox CFrames and cannot be transferred directly.
+        // AimCF depends on dynamic Roblox assemblies, so keep the existing
+        // approximate ADS alignment. Sprint uses the original inert SprintCF
+        // translation while keeping all combat/cooldown authority unchanged.
+        var sourceSprint=Pass59WeaponMotion.TryGet(spec.Name,out var motion);
+        var running=Input.IsKeyPressed(Key.Shift) && IsOnFloor() &&
+            Velocity.LengthSquared()>.04f && !_aiming && _reloadTimer<=0;
+        var transition=sourceSprint
+            ? (running ? motion.SprintIn : motion.SprintOut) : .25f;
+        _sourceSprintBlend=Mathf.MoveToward(_sourceSprintBlend,
+            running && sourceSprint ? 1f : 0f,
+            (float)(delta/Math.Max(.02f,transition)));
         var desiredPosition=_aiming
             ? new Vector3(0,-0.18f,_hipViewPosition.Z)
             : _hipViewPosition;
+        if(sourceSprint)
+        {
+            // Original Roblox +Z becomes Godot -Z, in metres.
+            var offset=motion.Sprint*RobloxUnits.MetersPerStud;
+            desiredPosition+=new Vector3(offset.X,offset.Y,-offset.Z)*
+                _sourceSprintBlend;
+        }
         var blend=(float)Math.Clamp(delta/seconds,0.0,1.0);
         _viewModel.Position=_viewModel.Position.Lerp(desiredPosition,blend);
+        var rotationTarget=_hipViewRotation;
         if(!_aiming)
-            _viewModel.Rotation=_viewModel.Rotation.Lerp(_hipViewRotation,blend);
+            _viewModel.Rotation=_viewModel.Rotation.Lerp(rotationTarget,blend);
     }
 
     private void ApplyRecoil(RuntimeWeaponDefinition spec)
