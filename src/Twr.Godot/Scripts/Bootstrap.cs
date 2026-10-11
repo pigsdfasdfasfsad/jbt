@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass61",StringComparer.Ordinal))
+        {
+            RunPass61Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass60",StringComparer.Ordinal))
         {
             RunPass60Smoke();
@@ -530,6 +535,110 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass61Smoke()
+    {
+        if(!Pass61SourceWeaponHandling.TryGet("Glock 17",out var glock) ||
+           glock?.Equip is null || glock.CyclingSlide is null ||
+           glock.Equip.Frames.Length!=4 ||
+           glock.CyclingSlide.Frames.Length!=2 ||
+           Math.Abs(glock.CyclingSlide.Duration-.125f)>.0001f ||
+           !Pass61SourceWeaponHandling.TryRelativeMotorOffset(
+               "module.Stats.Rels.SlideRel * CFrame.new(0, 0, 0.225)",
+               "SlideRel",out var originalSlide) ||
+           Math.Abs(originalSlide.Z+.063f)>.0001f ||
+           Pass61SourceWeaponHandling.TryRelativeMotorOffset(
+               "module.Stats.Rels.SlideRel * execute()", "SlideRel",out _) ||
+           Pass61SourceWeaponHandling.TryRelativeMotorOffset(
+               "module.Stats.Rels.MagRel * CFrame.new(0,0,0.4)",
+               "SlideRel",out _) ||
+           Pass61SourceWeaponHandling.TryRelativeMotorOffset(
+               "module.Stats.Rels.SlideRel * CFrame.new(NaN,0,0)",
+               "SlideRel",out _))
+            throw new InvalidOperationException(
+                "Pass61 original Glock mechanical animation parsing failed");
+        var slidePeak=Pass61SourceWeaponHandling.SampleMotor(
+            glock.CyclingSlide,.05f);
+        var slideRest=Pass61SourceWeaponHandling.SampleMotor(
+            glock.CyclingSlide,.125f);
+        var equipPose=Pass61SourceWeaponHandling.SampleEquip(
+            glock.Equip,.16f);
+        if(Math.Abs(slidePeak.Z+.063f)>.0002f ||
+           slideRest.LengthSquared()>.000001f ||
+           equipPose.Origin.LengthSquared()<.0001f ||
+           Pass61SourceWeaponHandling.SampleEquip(
+               glock.Equip,glock.Equip.Duration).Origin.LengthSquared()>.000001f)
+            throw new InvalidOperationException(
+                "Pass61 source model motor/equip keyframe interpolation failed");
+
+        if(!Pass61SourceWeaponHandling.TryGet("Mossberg 500",out var moss) ||
+           moss?.CyclingPump is null || moss.CyclingSlide is null ||
+           moss.ReloadPump is null ||
+           Math.Abs(Pass61SourceWeaponHandling.SampleMotor(
+                moss.CyclingPump,.4125f).Z+.084f)>.0003f)
+            throw new InvalidOperationException(
+                "Pass61 source Mossberg pump and slide timelines missing");
+
+        var actor=new Node3D {Name="Pass61SourceHandling"};
+        AddChild(actor);
+        var glockModel=new WeaponViewModelRuntime{Name="Pass61Glock"};
+        actor.AddChild(glockModel);
+        glockModel.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var gunRig=glockModel.GetNodeOrNull<Node3D>("WeaponBody");
+        var slide=gunRig?.GetNodeOrNull<MeshInstance3D>("PistolSlide");
+        if(gunRig is null || slide is null ||
+           !glockModel.HasSourceEquipClip ||
+           glockModel.SourceCyclingSlideFrames!=2)
+            throw new InvalidOperationException(
+                "Pass61 source Glock visual assembly not initialized");
+        var startingSlide=slide.Position;
+        glockModel.BeginEquip(.8);
+        glockModel._Process(.16);
+        if(gunRig.Position.LengthSquared()<.0001f)
+            throw new InvalidOperationException("Pass61 equip clip not visible");
+        glockModel._Process(.65);
+        glockModel.Fire(false);
+        glockModel._Process(.05);
+        if(Math.Abs(glockModel.LastSlideMotorOffset.Z+.063f)>.0003f ||
+           slide.Position.DistanceTo(startingSlide)<.05f)
+            throw new InvalidOperationException("Pass61 Glock visual slide did not cycle");
+        glockModel._Process(.08);
+        if(slide.Position.DistanceTo(startingSlide)>.0002f)
+            throw new InvalidOperationException(
+                "Pass61 Glock slide did not reset after cycling");
+
+        var mossModel=new WeaponViewModelRuntime{Name="Pass61Mossberg"};
+        actor.AddChild(mossModel);
+        mossModel.SetWeapon(RuntimeWeaponCatalog.Get("Mossberg 500"));
+        var mossRig=mossModel.GetNodeOrNull<Node3D>("WeaponBody");
+        var pump=mossRig?.GetNodeOrNull<MeshInstance3D>("Pump");
+        if(pump is null || mossModel.SourceCyclingPumpFrames!=5 ||
+           mossModel.SourceReloadPumpFrames!=13)
+            throw new InvalidOperationException(
+                "Pass61 source shotgun pump viewmodel not initialized");
+        var initialPump=pump.Position;
+        mossModel.Fire(false);
+        mossModel._Process(.4125);
+        if(Math.Abs(mossModel.LastPumpMotorOffset.Z+.084f)>.0003f ||
+           pump.Position.DistanceTo(initialPump)<.075f)
+            throw new InvalidOperationException(
+                "Pass61 Mossberg pump did not move by recovered travel");
+        mossModel._Process(.38);
+        if(pump.Position.DistanceTo(initialPump)>.0002f)
+            throw new InvalidOperationException(
+                "Pass61 Mossberg pump failed to return");
+        if(_runtime.Player is not null && _runtime.Player.Credits<0)
+            throw new InvalidOperationException(
+                "Pass61 test unexpectedly changed player economy");
+        GD.Print("TWR_SMOKE_PASS61_CYCLING_OK "+
+            "source_equip_main_pose=true source_glock_slide_meters=0.063 "+
+            "source_mossberg_pump_meters=0.084 "+
+            "source_reload_pump_timeline=true "+
+            "actual_viewmodel_parts_moved=true returned_to_rest=true "+
+            "unknown_motor_expressions_blocked=true "+
+            "combat_ammo_and_economy_unmodified=true");
         GetTree().Quit(0);
     }
 
