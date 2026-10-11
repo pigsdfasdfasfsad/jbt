@@ -60,6 +60,7 @@ def test_original_collision_and_nonlaboratory_fallback_are_unchanged():
     assert 'if (fallbackStreamer is null)' in source
     assert 'TileSizeStuds = 256' in geometry
     assert 'Pass28PrimitiveStreamer.CanSeeBounds' in geometry
+    assert 'force ? DrawRadiusMetres :' in geometry
     assert 'group.Node.Visible ? HideRadiusMetres : DrawRadiusMetres' in geometry
     assert 'CullEnabled { get; private set; } = true;' in geometry
     assert 'visible = !CullEnabled ||' in geometry
