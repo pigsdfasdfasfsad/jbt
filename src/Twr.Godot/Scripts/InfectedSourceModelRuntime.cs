@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.Json;
 using Godot;
 
@@ -17,6 +18,17 @@ namespace Twr.Godot;
 public static class InfectedSourceModelRuntime
 {
     public const string PackName = "InfectedSourceVariants.json.gz";
+    public const string OriginalXmlSha =
+        "272c478460c32bd332b7314eea0b69c08d0d78a34bfbfa1f796d6f059976f0d2";
+    public const string Pass48PackSha =
+        "9ef29ce243992722dbab0ea5f5f78872ea4a6b5da4718c925662a34cfb743d64";
+    private const int MaxPackedBytes = 1024 * 1024;
+    private const int MaxUnpackedBytes = 8 * 1024 * 1024;
+    public static bool OwnerSourceKitVerified { get; private set; }
+    public static int LoadedVariantCount { get; private set; }
+    public static int LastSourceAssetParts { get; private set; }
+    public static int LastReconstructedR6Parts { get; private set; }
+    public static int LastUnresolvedMeshProxies { get; private set; }
     private static JsonDocument? _data;
     private static bool _attempted;
 
@@ -58,9 +70,17 @@ public static class InfectedSourceModelRuntime
         var materialCache = new Dictionary<string, StandardMaterial3D>();
         var meshCache = new Dictionary<string, Mesh?>();
         var hasSourceHead = false;
+        var sourceAssetParts = 0;
+        var reconstructedBodyParts = 0;
+        var missingMeshProxies = 0;
+        LastSourceAssetParts = LastReconstructedR6Parts =
+            LastUnresolvedMeshProxies = 0;
         foreach (var part in parts.EnumerateArray())
         {
             var partName = part.GetProperty("name").GetString() ?? "OriginalPart";
+            var opacity = part.GetProperty("opacity").GetSingle();
+            if (!float.IsFinite(opacity) || opacity <= .001f)
+                continue; // Never turn invisible source helper geometry into boxes.
             if (partName is "Head" or "BloatHead") hasSourceHead = true;
             // A recovered plain accessory Handle has no mesh of its own.
             // Showing it as a 2x1x1 solid block hides the face/eyes.
@@ -99,10 +119,21 @@ public static class InfectedSourceModelRuntime
                     meshCache[id] = mesh;
                 }
             }
+            if (!string.IsNullOrEmpty(id) && mesh is null)
+                missingMeshProxies++; // Missing original external MeshPart triangles.
             var dimensions = Size(part);
-            mesh ??= part.GetProperty("name").GetString() is "Head"
-                ? new SphereMesh { Radius = 0.5f, Height = 1.0f }
+            var nativeBall = part.TryGetProperty("shape", out var shape) &&
+                shape.ValueKind == JsonValueKind.String &&
+                shape.GetString() == "0";
+            mesh ??= partName is "Head" or "BloatHead" || nativeBall
+                ? new SphereMesh { Radius = .5f, Height = 1f }
                 : new BoxMesh { Size = Vector3.One };
+            if (part.TryGetProperty("source_authored",out var authored) &&
+                authored.ValueKind == JsonValueKind.True)
+                sourceAssetParts++;
+            if (part.TryGetProperty("reconstructed_r6_proxy",out var proxy) &&
+                proxy.ValueKind == JsonValueKind.True)
+                reconstructedBodyParts++;
             var basis = Rotation(part);
             var position = new Transform3D(basis,offset);
             parentNode.AddChild(new MeshInstance3D
@@ -135,11 +166,17 @@ public static class InfectedSourceModelRuntime
             });
         }
 
+        LastSourceAssetParts = sourceAssetParts;
+        LastReconstructedR6Parts = reconstructedBodyParts;
+        LastUnresolvedMeshProxies = missingMeshProxies;
         anchors.TryGetValue("LeftArm", out leftArm);
         anchors.TryGetValue("RightArm", out rightArm);
         anchors.TryGetValue("LeftLeg", out leftLeg);
         anchors.TryGetValue("RightLeg", out rightLeg);
-        GD.Print($"TWR_SOURCE_INFECTED_ASSEMBLED type={type} parts={parts.GetArrayLength()}");
+        GD.Print($"TWR_SOURCE_INFECTED_ASSEMBLED type={type} " +
+            $"source_asset_parts={sourceAssetParts} reconstructed_r6={reconstructedBodyParts} " +
+            $"missing_original_meshes={missingMeshProxies} " +
+            $"owner_source_sha_verified={OwnerSourceKitVerified}");
         return true;
     }
 
@@ -203,13 +240,63 @@ public static class InfectedSourceModelRuntime
         if (path is null) return false;
         try
         {
-            using var input = File.OpenRead(path);
+            var file = new FileInfo(path);
+            if (file.Length <= 0 || file.Length > MaxPackedBytes)
+                throw new InvalidDataException("Infected source pack outside size budget");
+            var packed = File.ReadAllBytes(path);
+            var hash = Convert.ToHexString(SHA256.HashData(packed)).ToLowerInvariant();
+            using var input = new MemoryStream(packed);
             using var gzip = new GZipStream(input,CompressionMode.Decompress);
-            _data = JsonDocument.Parse(gzip);
-            if (_data.RootElement.GetProperty("format").GetString() !=
+            using var unpacked = new MemoryStream();
+            var buffer = new byte[64 * 1024];
+            int received;
+            while ((received = gzip.Read(buffer)) > 0)
+            {
+                if (unpacked.Length + received > MaxUnpackedBytes)
+                    throw new InvalidDataException("Infected source expansion exceeds budget");
+                unpacked.Write(buffer,0,received);
+            }
+            unpacked.Position = 0;
+            _data = JsonDocument.Parse(unpacked);
+            var root = _data.RootElement;
+            if (root.GetProperty("format").GetString() !=
                 "twr-source-infected-variants-v1")
                 throw new InvalidDataException("Wrong private infected blueprint format");
-            GD.Print("TWR_SOURCE_INFECTED_VARIANTS_LOADED");
+            var synthetic = root.TryGetProperty("synthetic",out var smokeFlag) &&
+                smokeFlag.ValueKind == JsonValueKind.True;
+            var testMode = OS.GetCmdlineUserArgs().Any(arg =>
+                arg is "--smoke-source-infected" or "--smoke-pass48");
+            if (synthetic && !testMode)
+                throw new InvalidDataException("Synthetic infected pack outside smoke mode");
+            if (!synthetic &&
+                (hash != Pass48PackSha ||
+                 !root.TryGetProperty("original_rbxlx_sha256",out var source) ||
+                 source.GetString() != OriginalXmlSha ||
+                 !root.TryGetProperty("generation",out var generation) ||
+                 generation.GetString() !=
+                     "pass48_verified_source_ai_kit_plus_explicit_r6_proxy"))
+                throw new InvalidDataException("Original infected source pack SHA mismatch");
+            var types = root.GetProperty("types");
+            var count = 0;
+            foreach(var entry in types.EnumerateObject())
+            {
+                var variants = entry.Value;
+                if (entry.Name.Length>64 || variants.GetArrayLength() is <1 or >32)
+                    throw new InvalidDataException("Infected variant count outside budget");
+                foreach(var variant in variants.EnumerateArray())
+                {
+                    if (variant.GetProperty("parts").GetArrayLength() is <1 or >120)
+                        throw new InvalidDataException("Infected part count outside budget");
+                    count++;
+                }
+            }
+            if ((!synthetic && (types.EnumerateObject().Count()!=8 || count!=15)) ||
+                count>200)
+                throw new InvalidDataException("Incorrect original infected variant coverage");
+            OwnerSourceKitVerified = !synthetic;
+            LoadedVariantCount = count;
+            GD.Print($"TWR_SOURCE_INFECTED_VARIANTS_LOADED variants={count} " +
+                $"source_kit_sha_verified={OwnerSourceKitVerified}");
             return true;
         }
         catch (Exception ex)
