@@ -75,7 +75,7 @@ public static class Pass61SourceWeaponHandling
         string relation,out Vector3 delta)
     {
         delta=Vector3.Zero;
-        if(relation is not ("SlideRel" or "PumpRel" or "MagRel"))
+        if(relation is not ("SlideRel" or "PumpRel" or "MagRel" or "BoltRel"))
             return false;
         var prefix="module.Stats.Rels."+relation;
         if(expression==prefix)return true;
