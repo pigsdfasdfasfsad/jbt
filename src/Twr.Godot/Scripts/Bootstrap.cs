@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass36",StringComparer.Ordinal))
+        {
+            RunPass36NativeWaveSmoke();
+            return;
+        }
         if(args.Contains("--smoke-pass35",StringComparer.Ordinal))
         {
             RunPass35Smoke();
@@ -387,6 +392,65 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass36NativeWaveSmoke()
+    {
+        // This executes the REAL Godot GameplayRoot, including its objective,
+        // infected spawning, survival reward, cleanup and phase transitions.
+        // Accelerated time is a synthetic smoke, NOT human 15-wave playtesting.
+        _runtime.StartMap("Laboratory");
+        var game = new GameplayRoot
+        {
+            Name = "Pass36NativeWaveSmoke",
+            Runtime = _runtime,
+            MapName = "Laboratory"
+        };
+        AddChild(game);
+        if (game.WaveStage != "COUNTDOWN" || _runtime.Match?.Wave != 1)
+            throw new InvalidOperationException("Native gameplay did not start in wave-1 countdown");
+
+        var transitions = 0;
+        var enemiesSpawned = 0;
+        for (var wave = 1; wave <= 15; wave++)
+        {
+            if (_runtime.Match?.Wave != wave || game.WaveStage != "COUNTDOWN")
+                throw new InvalidOperationException($"Wave {wave} did not begin in countdown");
+
+            game._Process(600); // COUNTDOWN -> WAVE: starts real objectives.
+            if (game.WaveStage != "WAVE")
+                throw new InvalidOperationException($"Wave {wave} did not start");
+            transitions++;
+
+            game._Process(600); // WAVE -> WAVE END: spawns one real infected.
+            if (game.WaveStage != "WAVE END" || game.ActiveInfectedCount != 0)
+                throw new InvalidOperationException($"Wave {wave} did not clean up surviving infected");
+            enemiesSpawned++;
+            transitions++;
+
+            game._Process(600); // WAVE END -> INTERMISSION (or results).
+            transitions++;
+            if (wave == 15)
+            {
+                if (game.WaveStage != "RESULTS")
+                    throw new InvalidOperationException("Final wave did not reach game results");
+                break;
+            }
+            if (game.WaveStage != "INTERMISSION" || _runtime.Match?.Wave != wave + 1)
+                throw new InvalidOperationException($"Wave {wave} did not advance");
+
+            game._Process(600); // INTERMISSION -> COUNTDOWN.
+            if (game.WaveStage != "COUNTDOWN")
+                throw new InvalidOperationException($"Wave {wave} did not return to countdown");
+            transitions++;
+        }
+
+        if (transitions != 59 || enemiesSpawned != 15)
+            throw new InvalidOperationException("Native wave test missed a gameplay stage");
+        GD.Print($"TWR_SMOKE_PASS36_NATIVE_WAVES_OK map=Laboratory " +
+            $"waves=15 transitions={transitions} spawned_wave_checks={enemiesSpawned} " +
+            "actual_godot_scene=true accelerated=true human_playtest=false");
         GetTree().Quit(0);
     }
 
