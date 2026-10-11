@@ -80,6 +80,20 @@ public partial class WeaponViewModelRuntime : Node3D
     public int ActiveEjectedShellVisualCount => _activeShells.Count;
     public string LastEjectedShellSourceName {get;private set;} = "";
     public bool SourceIncrementalShellInsertPoseActive {get;private set;}
+    public bool SourceHandProxiesAvailable => _leftHandProxy is not null &&
+        _rightHandProxy is not null;
+    public int SourceLeftReloadWeldCues =>
+        _handSource?.Reload?.Left.Cues.Length ?? 0;
+    public int SourceRightReloadWeldCues =>
+        _handSource?.Reload?.Right.Cues.Length ?? 0;
+    public int SourceRightCyclingWeldCues =>
+        _handSource?.Cycling?.Right.Cues.Length ?? 0;
+    public Vector3 SourceLeftHandPosition =>
+        _leftHandProxy?.Position ?? Vector3.Zero;
+    public Vector3 SourceRightHandPosition =>
+        _rightHandProxy?.Position ?? Vector3.Zero;
+    public int SourceHandProxyMeshCount {get;private set;}
+    public bool SourceHandAnimationActive {get;private set;}
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -98,6 +112,9 @@ public partial class WeaponViewModelRuntime : Node3D
     private Pass62SourceWeaponHierarchy.Binding? _sourceHierarchy;
     private Pass63SourceMagazineReload.Clip? _magazineReload;
     private Pass64SourceAction.Profile? _action;
+    private Pass65SourceHands.Profile? _handSource;
+    private Node3D? _leftHandProxy;
+    private Node3D? _rightHandProxy;
     private int _nextShellEjection;
     private sealed class SpentShellVisual
     {
@@ -310,6 +327,8 @@ public partial class WeaponViewModelRuntime : Node3D
             _magazineReload=magClip;
         if (Pass64SourceAction.TryGet(spec.Name,out var action))
             _action=action;
+        if(Pass65SourceHands.TryGet(spec.Name,out var hands))
+            _handSource=hands;
         _melee = spec.IsMelee;
         _flash!.Position = new Vector3(0,.025f,
             spec.Slot == "Secondary" ? -.46f : -1.02f);
@@ -327,6 +346,7 @@ public partial class WeaponViewModelRuntime : Node3D
                     model.Name = "PreparedOriginalWeapon";
                     _rig!.AddChild(model);
                     UsingPreparedScene = true;
+                    BuildSourceHandProxies();
                     return;
                 }
                 instance.Free();
@@ -350,10 +370,12 @@ public partial class WeaponViewModelRuntime : Node3D
             _flash.Position = OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)
                 ?? _flash.Position;
             TrackMechanicalParts();
+            BuildSourceHandProxies();
             return;
         }
         BuildApproximateWeapon(spec);
         TrackMechanicalParts();
+        BuildSourceHandProxies();
     }
 
     public void SetThrowable(string type)
@@ -400,7 +422,8 @@ public partial class WeaponViewModelRuntime : Node3D
     {
         _equipDuration=float.IsFinite((float)seconds)
             ? (float)Math.Clamp(seconds,.01,30.0) : .1f;
-        _equipRemaining=_handling?.Equip is not null ? _equipDuration : 0f;
+        _equipRemaining=_handling?.Equip is not null ||
+            _handSource?.Equip is not null ? _equipDuration : 0f;
     }
 
     public void Fire(bool aiming = false)
@@ -409,7 +432,8 @@ public partial class WeaponViewModelRuntime : Node3D
         _cycleDuration=Math.Max(
             Math.Max(_handling?.CyclingSlide?.Duration ?? 0f,
                 _handling?.CyclingPump?.Duration ?? 0f),
-            _action?.Cycling.Duration ?? 0f);
+            Math.Max(_action?.Cycling.Duration ?? 0f,
+                _handSource?.Cycling?.Duration ?? 0f));
         _nextShellEjection=0;
         _shotActive=false;
         _shotRemaining=0f;
@@ -565,6 +589,7 @@ public partial class WeaponViewModelRuntime : Node3D
                 if(GodotObject.IsInstanceValid(part))
                     part.Position=home+Vector3.Down*magazineDrop;
         }
+        UpdateSourceHands(reloadActive,reloadFraction);
         _phase += dt * 2.5f;
         _kick = Mathf.MoveToward(_kick, 0, dt * 1.2f);
         if(_shotActive)
@@ -615,6 +640,94 @@ public partial class WeaponViewModelRuntime : Node3D
         _rig.Transform=new Transform3D(
             equipPose.Basis*reloadPose.Basis*sourceFirePose.Basis*sway,
             position);
+    }
+
+    private static void AddHandProxyBox(Node3D parent,
+        string name,Vector3 center,Vector3 size,
+        StandardMaterial3D material)
+    {
+        var mesh=new MeshInstance3D
+        {
+            Name=name,
+            Mesh=new BoxMesh{Size=size},
+            MaterialOverride=material,
+            Position=center
+        };
+        parent.AddChild(mesh);
+    }
+
+    private Node3D CreateHandProxy(string name,bool left)
+    {
+        var root=new Node3D{Name=name};
+        _rig!.AddChild(root);
+        // These are clearly identified non-original procedural glove
+        // proxies; they are NOT recovered TWR avatar or original arm meshes.
+        var glove=new StandardMaterial3D
+        {
+            AlbedoColor=new Color(.24f,.26f,.28f),
+            Metallic=.03f,
+            Roughness=.87f
+        };
+        var cuff=new StandardMaterial3D
+        {
+            AlbedoColor=new Color(.12f,.14f,.16f),
+            Roughness=.9f
+        };
+        AddHandProxyBox(root,"PalmProxy65",Vector3.Zero,
+            new Vector3(.073f,.035f,.085f),glove);
+        AddHandProxyBox(root,"WristProxy65",new Vector3(0f,0f,.066f),
+            new Vector3(.065f,.045f,.06f),cuff);
+        for(var finger=0;finger<4;finger++)
+            AddHandProxyBox(root,$"Finger{finger}Proxy65",
+                new Vector3((finger-1.5f)*.017f,-.003f,-.058f),
+                new Vector3(.013f,.025f,.050f),glove);
+        AddHandProxyBox(root,"ThumbProxy65",
+            new Vector3(left ? .049f : -.049f,-.006f,-.004f),
+            new Vector3(.026f,.028f,.040f),glove);
+        SourceHandProxyMeshCount+=7;
+        return root;
+    }
+
+    private void BuildSourceHandProxies()
+    {
+        if(_melee || _rig is null || _handSource is null)return;
+        _leftHandProxy=CreateHandProxy("LeftHandProxy65",true);
+        _rightHandProxy=CreateHandProxy("RightHandProxy65",false);
+        _leftHandProxy.Transform=_handSource.LeftRest;
+        _rightHandProxy.Transform=_handSource.RightRest;
+    }
+
+    private void UpdateSourceHands(bool reloadActive,float reloadFraction)
+    {
+        if(_handSource is null || _leftHandProxy is null ||
+           _rightHandProxy is null)return;
+        _leftHandProxy.Visible=!StaticShowroomMode;
+        _rightHandProxy.Visible=!StaticShowroomMode;
+        Pass65SourceHands.Clip? clip=null;
+        var seconds=0f;
+        if(reloadActive && _handSource.Reload is { } reloadClip)
+        {
+            clip=reloadClip;
+            seconds=reloadFraction*reloadClip.Duration;
+        }
+        else if(_equipRemaining>0f && _equipDuration>0f &&
+                _handSource.Equip is { } equipClip)
+        {
+            clip=equipClip;
+            seconds=(1f-_equipRemaining/_equipDuration)*equipClip.Duration;
+        }
+        else if(_cycleDuration>0f &&
+                _cycleElapsed<_cycleDuration &&
+                _handSource.Cycling is { } cyclingClip)
+        {
+            clip=cyclingClip;
+            seconds=Math.Min(_cycleElapsed,cyclingClip.Duration);
+        }
+        SourceHandAnimationActive=clip is not null;
+        _leftHandProxy.Transform=Pass65SourceHands.Sample(_handSource,
+            clip,Pass65SourceHands.Hand.Left,seconds,_sourceHierarchy);
+        _rightHandProxy.Transform=Pass65SourceHands.Sample(_handSource,
+            clip,Pass65SourceHands.Hand.Right,seconds,_sourceHierarchy);
     }
 
     private void SpawnSourceShell(Pass64SourceAction.ShellCue source)
@@ -696,6 +809,11 @@ public partial class WeaponViewModelRuntime : Node3D
         _sourceHierarchy=null;
         _magazineReload=null;
         _action=null;
+        _handSource=null;
+        _leftHandProxy=null;
+        _rightHandProxy=null;
+        SourceHandProxyMeshCount=0;
+        SourceHandAnimationActive=false;
         _nextShellEjection=0;
         LastSourceBoltTravel=0f;
         LastSourceBoltHandleAngle=0f;
