@@ -75,7 +75,8 @@ public static class Pass52SourceLoadoutOffsets
 
     /// <summary>
     /// Strict CFrame.new(x,y,z,r00,r01,r02,r10,r11,r12,r20,r21,r22)
-    /// numeric literal parser. This is not a Luau interpreter.
+    /// numeric literal parser, with the two RPG-7 source half-turns.
+    /// This is not a Luau interpreter.
     /// </summary>
     public static bool TryParse(string? expression, out Transform3D frame)
     {

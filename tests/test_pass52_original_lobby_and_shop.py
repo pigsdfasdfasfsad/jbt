@@ -15,12 +15,19 @@ def read(path: str) -> str:
 def test_all_original_source_cframe_offsets_are_parsed_from_inert_catalog():
     catalog = json.loads(read("content/weapons/catalog.json"))
     values = {}
+    half_turn_names = set()
     for item in catalog["weapons"]:
         doc = json.loads(read("content/weapons/" + item["path"]))
         field = doc["stats"].get("LoadoutOffset", {})
         expression = field.get("expression", "")
         if not expression:
             continue
+        # The authored RPG launchers add exactly this 180-degree Y turn
+        # to their otherwise literal CFrame. No Luau needs to execute.
+        suffix = " * CFrame.Angles(0, math.pi, 0)"
+        if expression.endswith(suffix):
+            expression = expression[:-len(suffix)]
+            half_turn_names.add(item["name"])
         assert re.fullmatch(
             r"CFrame[.]new[(][0-9eE+., -]+[)]", expression
         ), (item["name"], expression)
@@ -30,6 +37,7 @@ def test_all_original_source_cframe_offsets_are_parsed_from_inert_catalog():
         assert all(abs(number) <= 1.1001 for number in parts[3:])
         values[doc["name"]] = parts
     assert 75 <= len(values) <= 91
+    assert half_turn_names == {"Festive RPG-7", "RPG-7"}
     glock = values["Glock 17"]
     assert abs(glock[0] - .0393884182) < .000001
     assert abs(glock[1] - .0704264641) < .000001
@@ -44,6 +52,8 @@ def test_godot_source_offset_parser_is_bounded_and_does_not_execute_luau():
         '.GetProperty("weapons").EnumerateArray()' in source)
     assert 'TryParse(string? expression, out Transform3D frame)' in source
     assert 'expression.Length > 384' in source
+    assert 'HalfTurn = " * CFrame.Angles(0, math.pi, 0)"' in source
+    assert 'basis *= new Basis(Vector3.Up, Mathf.Pi)' in source
     assert 'values.Length != 12' in source
     assert 'float.IsFinite' in source
     assert 'Math.Abs(basis.Determinant()) < .3f' in source
