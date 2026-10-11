@@ -570,7 +570,7 @@ public partial class Bootstrap : Node
         foreach(var leftSide in new[]{true,false})
         {
             var shoulder=Pass66ArmKinematics.Shoulder(leftSide);
-            var wrist=shoulder+new Vector3(leftSide?.12f:-.12f,.12f,-.34f);
+            var wrist=shoulder+new Vector3(leftSide ? .12f : -.12f,.12f,-.34f);
             var solution=Pass66ArmKinematics.Solve(leftSide,wrist);
             if(!solution.IsFinite ||
                solution.ReachClamped ||
