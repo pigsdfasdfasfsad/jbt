@@ -1,3 +1,22 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 57
+
+**Date:** October 11, 2026 (America/New_York). **Branch:** `twr-pass57-offline-source-weapon-geometry`.
+
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38115844881
+
+- **518 Python regression tests passed**; one inherited Pass34 XML FutureWarning.
+- **Windows Godot/.NET export succeeded with zero errors** and one pre-existing Pass36 CS0108 warning.
+- Native `TWR_SMOKE_PASS57_GEOMETRY_OK`: synthetic nine-part Glock tool with **8 visible** authored-style parts; **1 installed OBJ**, **2 unavailable source MeshIds**, **1 circular MeshPart stand-in**, **2 conservative box stand-ins**, **4 native Part/Wedge primitives**, strict source `rbxassetid://` parser and traversal guards, working Armory provenance, intact credits/owned skins, and proper game-entry cleanup.
+- The verified TestPlace owner source metadata has **98 original tool models/1,484 parts/1,137 unique mesh IDs**. The owner-only Pass47 pack has **100 model names** after two documented aliases; it covers **all 91 active catalog weapons**. Missing original mesh triangle data remains unavailable and must not be counted as reconstructed.
+- Previously verified domain progression smoke: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150`, covering a simulated progression fixture only—not actual player-controlled full 15-wave matches.
+- Private geometry and art reference kit remains separate from GitHub; all synthetic source assets are removed before privacy audit. No public EXE is uploaded by CI.
+
+**Still pending:** actual original MeshPart/UnionOperation triangle files, richer original character/weapon animations, exact texture visual parity, all ten maps' interiors and lighting, manually played complete-wave acceptance, and distribution of a private playable Windows EXE with complete local assets.
+
+[Pass57 source geometry/CI evidence](PASS57_ORIGINAL_WEAPON_GEOMETRY.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 56
 
 **Date:** October 10, 2026 (US Central). **Branch:** `twr-pass56-source-wiki-gallery`.

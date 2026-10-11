@@ -57,3 +57,19 @@ The kit **does not contain the original 1,137 remote mesh triangle assets**. Add
 ## Fidelity work still open
 
 The largest remaining visual gaps include 1,137 custom remote mesh references, many original animated textures, UnionOperation geometry, exact original weapon animation timing and first-person pose, complete map interior geometry/surface appearance, original UI details, extended real player-controlled 15-wave sessions, and a private downloadable Windows EXE built with owner assets. A successful native smoke would verify **code behavior with fabricated assets**, not 1:1 visual or whole-game completion.
+
+
+## Verified Pass57 Windows checkpoint — October 11, 2026
+
+**Tested commit:** `1b948edb1133315838515b05e5bb5bb824bc4ec6`.
+
+**Successful CI run:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38115844881
+
+- **518 Python tests passed**, with one previously existing Pass34 FutureWarning.
+- Godot/.NET Windows EXE build/export **succeeded, zero errors**, with one pre-existing Pass36 `CS0108` compiler warning.
+- Base simulation: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` — domain-level wave progression only, not a human-played completion certificate.
+- Native Pass57: `TWR_SMOKE_PASS57_GEOMETRY_OK synthetic_only=true source_visible_parts=8 local_obj_meshes=1 unresolved_source_mesh_ids=2 circular_mesh_proxies=1 conservative_bounds=2 native_primitive_parts=4 wedge_mesh=true cylinder_mesh=true canonical_rbxassetid_url=true path_traversal_blocked=true armory_provenance_shown=true player_economy_unchanged=true owner_mesh_triangles_not_claimed=true`.
+- CI's owner-private/synthetic asset exclusion audit passed after source-lobby, weapon-assembly and hand-authored OBJ fixtures were removed. Public Windows executable upload actions remain disabled.
+- Separate owner-only geometry and reference kit ZIP passed independent archive-integrity checking and includes the source-derived 98-model tool transforms (100 names including two aliases), source weapon metadata, and the Pass54–56 private visual packs. It contains **no** custom remote mesh triangle bytes. Native CI tested a hand-authored tetrahedron OBJ, **not** a genuine remote Roblox mesh.
+
+**Result:** Verified functionality for optional local mesh resolution and source-based primitive approximation. Visual or gameplay-wide 1:1 completion is NOT established.
