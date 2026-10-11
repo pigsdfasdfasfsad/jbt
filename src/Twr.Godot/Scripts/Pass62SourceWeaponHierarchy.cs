@@ -26,7 +26,7 @@ public static class Pass62SourceWeaponHierarchy
     private static bool _initialized;
     public static bool OwnerHierarchyVerified {get;private set;}
 
-    private sealed record Group(Transform3D Pivot,
+    internal sealed record Group(Transform3D Pivot,
         (MeshInstance3D Part, Transform3D Home)[] Parts);
 
     public sealed class Binding
