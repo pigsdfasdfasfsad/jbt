@@ -17,11 +17,14 @@ public partial class LocalSessionNode : Node
     {
         var smoke54=OS.GetCmdlineUserArgs().Contains("--smoke-pass54",
             StringComparer.Ordinal);
-        // Pass54 uses a separate profile file, never touching normal saves.
+        var smoke55=OS.GetCmdlineUserArgs().Contains("--smoke-pass55",
+            StringComparer.Ordinal);
+        // Both passes use isolated test-only profile files.
         var save = ProjectSettings.GlobalizePath(smoke54
-            ? "user://pass54-smoke-profile.json" : "user://profile.json");
+            ? "user://pass54-smoke-profile.json" :
+            smoke55 ? "user://pass55-smoke-profile.json" : "user://profile.json");
         var store = new JsonProfileStore(save);
-        if(smoke54)
+        if(smoke54 || smoke55)
         {
             var fixture=JsonSerializer.Deserialize<Profile>(
                 "{\"Credits\":12000,\"OwnedSkins\":[\"Low/Cocoa\",\"High/Gold\",\"Ethereal/Spirit\"],"+

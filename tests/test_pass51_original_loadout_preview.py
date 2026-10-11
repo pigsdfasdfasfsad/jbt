@@ -36,7 +36,8 @@ def test_preview_is_model_only_and_provenance_is_never_hidden():
     assert 'public bool Preview(string? weaponName)' in stage
     assert 'RuntimeWeaponCatalog.All().FirstOrDefault' in stage
     assert 'model.SetWeapon(spec)' in stage
-    assert 'model.SetProcess(false)' in stage
+    assert 'model.StaticShowroomMode=true;' in stage
+    assert 'model.SetProcess(true);' in stage
     assert 'public void HideDisplay() => Visible = false' in stage
     assert 'spec.IsMelee' not in stage
     # No player economy, unlocks or ammunition may be mutated by a hover.

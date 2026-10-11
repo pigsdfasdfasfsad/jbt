@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer]
     paths:
       - 'src/**'
       - 'content/**'
@@ -782,8 +782,73 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass54 synthetic lobby cleanup failed' }
           }
 
+      - name: Smoke Pass 55 original skin layer metadata, installed local PNG and bounded shimmer
+        if: success() && github.ref_name == 'twr-pass55-source-skin-textures-and-shimmer'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          $sourceLobby = Join-Path $outputDir 'Content/Lobby/SourceLobby49.json.gz'
+          $sourceSigns = Join-Path $outputDir 'Content/Lobby/LobbySigns50.json.gz'
+          $sourceTools = Join-Path $outputDir 'Content/Weapons/SourceWeaponModels.json.gz'
+          $skinDir = Join-Path $outputDir 'Content/Skins'
+          $skinPalette = Join-Path $skinDir 'SourceSkinMaterials54.json.gz'
+          $skinSlots = Join-Path $skinDir 'SourceWeaponSkinSlots54.json.gz'
+          $skinLayers = Join-Path $skinDir 'SourceSkinLayers55.json.gz'
+          $textureDir = Join-Path $outputDir 'Content/Assets/Textures'
+          $smokeTexture = Join-Path $textureDir '5555500000001.png'
+          foreach ($path in @($sourceLobby, $sourceSigns, $sourceTools, $skinPalette, $skinSlots, $skinLayers, $smokeTexture)) {
+            if (Test-Path -LiteralPath $path) {
+              throw "Pass55 refuses to overwrite preexisting source asset: $path"
+            }
+          }
+          python tools/maps/make_pass49_lobby_smoke_fixture.py --output $sourceLobby --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass54 synthetic lobby creation failed' }
+          try {
+            python tools/maps/make_pass50_bulletin_smoke_fixture.py --output $sourceSigns --create
+            if ($LASTEXITCODE -ne 0) { throw 'Pass54 synthetic source signs creation failed' }
+            try {
+              python tools/maps/make_source_weapon_smoke_fixture.py --output $sourceTools
+              if ($LASTEXITCODE -ne 0) { throw 'Pass54 synthetic tool creation failed' }
+              try {
+                python tools/skins/make_pass54_smoke_fixture.py --output-dir $skinDir --create
+                if ($LASTEXITCODE -ne 0) { throw 'Pass54 synthetic source-skin packs creation failed' }
+                try {
+                  python tools/skins/make_pass55_smoke_fixture.py --output-dir $skinDir --assets-dir $textureDir --create
+                  if ($LASTEXITCODE -ne 0) { throw 'Pass55 synthetic layers/texture creation failed' }
+                  try {
+                $stdout = Join-Path $env:RUNNER_TEMP 'pass55.stdout.txt'
+                $stderr = Join-Path $env:RUNNER_TEMP 'pass55.stderr.txt'
+                $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+                $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','360','--','--smoke-pass55') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+                $output = @()
+                if (Test-Path $stdout) { $output += Get-Content $stdout }
+                if (Test-Path $stderr) { $output += Get-Content $stderr }
+                $output | ForEach-Object { Write-Host $_ }
+                if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS55_LAYERS_OK' })) {
+                  throw "Pass55 native skin layer, local PNG, missing-texture fallback and effect test failed. Exit: $($run.ExitCode)"
+                }
+                  } finally {
+                    python tools/skins/make_pass55_smoke_fixture.py --output-dir $skinDir --assets-dir $textureDir --clean
+                    if ($LASTEXITCODE -ne 0) { throw 'Pass55 synthetic skin layer cleanup failed' }
+                  }
+                } finally {
+                  python tools/skins/make_pass54_smoke_fixture.py --output-dir $skinDir --clean
+                  if ($LASTEXITCODE -ne 0) { throw 'Pass55 original-style palette cleanup failed' }
+                }
+              } finally {
+                Remove-Item -LiteralPath $sourceTools -Force -ErrorAction SilentlyContinue
+              }
+            } finally {
+              python tools/maps/make_pass50_bulletin_smoke_fixture.py --output $sourceSigns --clean
+              if ($LASTEXITCODE -ne 0) { throw 'Pass54 synthetic bulletin cleanup failed' }
+            }
+          } finally {
+            python tools/maps/make_pass49_lobby_smoke_fixture.py --output $sourceLobby --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass54 synthetic lobby cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview' || github.ref_name == 'twr-pass52-source-loadout-and-shop' || github.ref_name == 'twr-pass53-offline-skin-cases' || github.ref_name == 'twr-pass54-original-skin-materials')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview' || github.ref_name == 'twr-pass52-source-loadout-and-shop' || github.ref_name == 'twr-pass53-offline-skin-cases' || github.ref_name == 'twr-pass54-original-skin-materials' || github.ref_name == 'twr-pass55-source-skin-textures-and-shimmer')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -841,6 +906,10 @@ jobs:
           if ($bulletinPacks.Count -gt 0) { throw 'Owner or synthetic Pass50 original labels leaked into public output' }
           $bulletinManifests = @(Get-ChildItem -Path build/output -Filter 'SOURCE_LOBBY_SIGNS_MANIFEST50.json' -File -Recurse -ErrorAction SilentlyContinue)
           if ($bulletinManifests.Count -gt 0) { throw 'Source leaderboard historical UI metadata leaked into public output' }
+          foreach ($privatePattern in @('SourceSkinMaterials54.json.gz', 'SourceWeaponSkinSlots54.json.gz', 'SourceSkinLayers55.json.gz', '5555500000001.png')) {
+            $found = @(Get-ChildItem -Path build/output -Filter $privatePattern -File -Recurse -ErrorAction SilentlyContinue)
+            if ($found.Count -gt 0) { throw "Owner or synthetic skin texture/material data leaked into public output: $privatePattern" }
+          }
 
       # The original source packs and exported Windows binaries must not be publicly
       # released. Retained legacy download steps are explicitly disabled.

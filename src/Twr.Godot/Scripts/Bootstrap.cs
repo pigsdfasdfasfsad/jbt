@@ -31,6 +31,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass55",StringComparer.Ordinal))
+        {
+            RunPass55Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass54",StringComparer.Ordinal))
         {
             RunPass54Smoke();
@@ -491,6 +496,119 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass55Smoke()
+    {
+        // Real exported Windows Godot runner. Only synthetic palettes,
+        // source-style tool tags and a labeled fake PNG are installed.
+        // The original texture IDs never trigger network requests.
+        if(Pass55SourceSkinLayers.OwnerPackVerified ||
+           Pass55SourceSkinLayers.LoadedSkinCount!=3 ||
+           Pass55SourceSkinLayers.LayerReferenceCount!=1 ||
+           Pass55SourceSkinLayers.MeshTextureReferenceCount!=1 ||
+           !Pass55SourceSkinLayers.TryGetSlot("High/Gold",1,out var goldSource) ||
+           goldSource.Layers.Count!=1 ||
+           goldSource.Layers[0].TextureId!="5555500000001" ||
+           !Pass55SourceSkinLayers.TryGetSlot("Ethereal/Spirit",1,out var spiritSource) ||
+           spiritSource.MeshTextureId!="5555500000002" ||
+           Pass55SourceSkinLayers.TryGetSlot("NotOwned/NoSkin",1,out _) ||
+           OfflineAssetResolver.Texture("5555500000001") is null ||
+           OfflineAssetResolver.Texture("5555500000002") is not null)
+            throw new InvalidOperationException(
+                "Pass55 bounded original-style skin references or local PNG resolver failed");
+
+        var profile=_runtime.Profile ??
+            throw new InvalidOperationException("Pass55 test-only profile missing");
+        var credits=_runtime.Player?.Credits ?? -1;
+        if(credits!=12000 || profile.OwnedSkins.Count!=3 ||
+           profile.EquippedWeaponSkins.GetValueOrDefault("Glock 17")!="Low/Cocoa")
+            throw new InvalidOperationException("Pass55 isolated profile fixture invalid");
+
+        ShowMenu();
+        var lobby=_sourceLobby ??
+            throw new InvalidOperationException("Pass55 synthetic lobby missing");
+        var stage=lobby.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName) ??
+            throw new InvalidOperationException("Pass55 source-style showroom missing");
+        ShowArmory();
+
+        WeaponViewModelRuntime? Model() =>
+            stage.GetNodeOrNull<WeaponViewModelRuntime>(
+            "OriginalLoadoutAnchor_View/SourceSelectedPreviewTilt/DisplayedWeapon_View");
+        MeshInstance3D? Barrel() =>
+            stage.GetNodeOrNull<MeshInstance3D>(
+            "OriginalLoadoutAnchor_View/SourceSelectedPreviewTilt/DisplayedWeapon_View/WeaponBody/Barrel");
+
+        if(!stage.Preview("Glock 17") || Model()?.ActiveCosmeticSkinId!="Low/Cocoa")
+            throw new InvalidOperationException("Pass55 initial skin not selected");
+
+        if(!_runtime.ApplyWeaponSkin("Glock 17","High/Gold").Success)
+            throw new InvalidOperationException("Pass55 source texture skin assignment rejected");
+        ShowArmory();
+        if(!stage.Preview("Glock 17") ||
+           Barrel()?.MaterialOverlay is not StandardMaterial3D gold ||
+           gold.AlbedoTexture is null ||
+           Model()?.SourceInstalledTextureParts!=1 ||
+           Model()?.SourceProceduralTextureParts!=0 ||
+           Model()?.SourceTextureReferencedParts!=1 ||
+           Math.Abs(gold.Uv1Scale.X-.5f)>.001f ||
+           Math.Abs(gold.Uv1Scale.Y-1f/3f)>.001f ||
+           Math.Abs(gold.Uv1Offset.X-.25f)>.001f ||
+           Math.Abs(gold.Uv1Offset.Y+.125f)>.001f)
+            throw new InvalidOperationException(
+                "Pass55 installed PNG/tile/offset source metadata not applied");
+
+        if(!_runtime.ApplyWeaponSkin("Glock 17","Ethereal/Spirit").Success)
+            throw new InvalidOperationException("Pass55 ForceField skin assignment rejected");
+        ShowArmory();
+        if(!stage.Preview("Glock 17") ||
+           Model() is not {SourceProceduralTextureParts:1} fx ||
+           fx.AnimatedSkinMaterialCount<1 ||
+           Barrel()?.MaterialOverlay is not StandardMaterial3D material ||
+           material.AlbedoTexture is null ||
+           !fx.CosmeticSourceStatus.Contains("PROCEDURAL TEXTURE PROXY",
+               StringComparison.Ordinal) ||
+           !fx.CosmeticSourceStatus.Contains("RECONSTRUCTED SHIMMER",
+               StringComparison.Ordinal))
+            throw new InvalidOperationException(
+                "Pass55 absent source image not identified as procedural proxy");
+
+        var baseline=material.EmissionEnergyMultiplier;
+        fx.AdvanceCosmeticEffects(.10f);
+        if(fx.CosmeticEffectElapsed<=0f ||
+           Math.Abs(fx.LastShimmerMultiplier-1f)<.001f ||
+           Math.Abs(material.EmissionEnergyMultiplier-baseline)<.001f ||
+           !fx.StaticShowroomMode)
+            throw new InvalidOperationException(
+                "Pass55 deterministic showroom shimmer did not advance");
+        fx.AdvanceCosmeticEffects(float.NaN);
+        if(!float.IsFinite(fx.CosmeticEffectElapsed))
+            throw new InvalidOperationException("Pass55 rejected NaN timing incorrectly");
+
+        if(!_runtime.ApplyWeaponSkin("Glock 17",null).Success)
+            throw new InvalidOperationException("Pass55 skin reset rejected");
+        ShowArmory();
+        if(!stage.Preview("Glock 17") ||
+           Model()?.AnimatedSkinMaterialCount!=0 ||
+           Model()?.SourceTextureReferencedParts!=0 ||
+           Model()?.CosmeticProxyTintParts!=0 ||
+           Barrel()?.MaterialOverlay is not null ||
+           (_runtime.Player?.Credits??-1)!=credits ||
+           profile.OwnedSkins.Count!=3)
+            throw new InvalidOperationException(
+                "Pass55 cosmetic reset/economy invariants did not hold");
+
+        StartGame("Manor");
+        if(_sourceLobby is not null || _game is null)
+            throw new InvalidOperationException("Pass55 material showroom leaked into match");
+        GD.Print("TWR_SMOKE_PASS55_LAYERS_OK synthetic_only=true " +
+            "layer_count=1 mesh_texture_count=1 source_slot_1=true " +
+            "local_png_loaded=true uv_tiling_preserved=true " +
+            "unavailable_image_proxy_labeled=true reconstructed_shimmer=true " +
+            "material_reset=true economy_unchanged=true " +
+            "owner_source_textures_not_uploaded=true");
         GetTree().Quit(0);
     }
 

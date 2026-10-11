@@ -64,8 +64,12 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
             var skinNote = model is not null &&
                 model.ActiveCosmeticSkinId.Length>0
                 ? " | "+model.CosmeticSourceStatus+
+                  (model.SourceInstalledTextureParts>0
+                    ? $" | {model.SourceInstalledTextureParts} LOCAL TEXTURE PARTS" : "")+
+                  (model.SourceProceduralTextureParts>0
+                    ? $" | {model.SourceProceduralTextureParts} PROXY TEXTURE PARTS" : "")+
                   (model.SourceSkinMissingTextureParts>0
-                    ? $" | {model.SourceSkinMissingTextureParts} TEXTURE/VARIANT GAPS"
+                    ? $" | {model.SourceSkinMissingTextureParts} UNRESOLVED TEXTURE/VARIANT GAPS"
                     : "") : "";
             return $"3D PREVIEW: {PreviewWeaponName} | {provenance}{meshNote}{skinNote}";
         }
@@ -223,7 +227,10 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
             model.Transform = sourceOffset;
             model.Scale = Vector3.One * scale;
         }
-        model.SetProcess(false); // Static showroom model, not firing gameplay rig.
+        // Pass55: showroom displays animated cosmetic materials without
+        // advancing weapon recoil, reload or first-person sway.
+        model.StaticShowroomMode=true;
+        model.SetProcess(true);
         _models[slot] = model;
         _displayNames[slot] = spec.Name;
         return model;

@@ -20,6 +20,14 @@ public partial class WeaponViewModelRuntime : Node3D
     public int SourceSkinMappedParts { get; private set; }
     public int SourceSkinColorParts { get; private set; }
     public int SourceSkinMissingTextureParts { get; private set; }
+    public int SourceTextureReferencedParts { get; private set; }
+    public int SourceInstalledTextureParts { get; private set; }
+    public int SourceProceduralTextureParts { get; private set; }
+    public int SourceUnrenderedTextureLayers { get; private set; }
+    public int AnimatedSkinMaterialCount => _animatedSkinMaterials.Count;
+    public float CosmeticEffectElapsed { get; private set; }
+    public float LastShimmerMultiplier { get; private set; } = 1f;
+    public bool StaticShowroomMode { get; set; }
     public string CosmeticSourceStatus { get; private set; } = "";
     public bool UsingOriginalToolAssembly { get; private set; }
     public int SourceVisibleParts { get; private set; }
@@ -38,6 +46,8 @@ public partial class WeaponViewModelRuntime : Node3D
     private float _kick;
     private float _reloadRemaining;
     private float _reloadDuration;
+    private readonly List<(StandardMaterial3D Material,float Emission,Vector3 Uv,bool Scroll)>
+        _animatedSkinMaterials = [];
 
     /// <summary>
     /// Pass54: source material Values 1..5, applied ONLY to the authored
@@ -53,6 +63,13 @@ public partial class WeaponViewModelRuntime : Node3D
         SourceSkinMappedParts=0;
         SourceSkinColorParts=0;
         SourceSkinMissingTextureParts=0;
+        SourceTextureReferencedParts=0;
+        SourceInstalledTextureParts=0;
+        SourceProceduralTextureParts=0;
+        SourceUnrenderedTextureLayers=0;
+        _animatedSkinMaterials.Clear();
+        CosmeticEffectElapsed=0f;
+        LastShimmerMultiplier=1f;
         CosmeticSourceStatus="";
         if(_rig is null)return;
         var meshes=_rig.FindChildren("*","MeshInstance3D",true,false)
@@ -76,6 +93,23 @@ public partial class WeaponViewModelRuntime : Node3D
         }
 
         var surfaces=palette.Select(BuildSourceMaterial).ToArray();
+        var overlays=new Pass55SkinTextureRenderer.Applied[5];
+        for(var i=0;i<surfaces.Length;i++)
+        {
+            var surface=surfaces[i];
+            var animated=surface.EmissionEnabled;
+            if(Pass55SourceSkinLayers.TryGetSlot(skin.Id,i+1,out var slot))
+                overlays[i]=Pass55SkinTextureRenderer.Apply(
+                    surface,slot,skin.Id,i+1,animated);
+            else
+                overlays[i]=new Pass55SkinTextureRenderer.Applied(
+                    false,false,false,0,Vector3.Zero,false);
+            if(animated)
+            {
+                _animatedSkinMaterials.Add((surface,surface.EmissionEnergyMultiplier,
+                    overlays[i].OriginalUvOffset,overlays[i].HasReference));
+            }
+        }
         var approximate=0;
         foreach(var part in meshes)
         {
@@ -99,12 +133,27 @@ public partial class WeaponViewModelRuntime : Node3D
             SourceSkinColorParts++;
             if(tagged) SourceSkinMappedParts++;
             var slot=palette[sourceSlot-1];
-            if(slot.MissingTexture || slot.SurfaceAppearance.Length>0 ||
+            var layer=overlays[sourceSlot-1];
+            if(layer.HasReference) SourceTextureReferencedParts++;
+            if(layer.InstalledTexture) SourceInstalledTextureParts++;
+            if(layer.GeneratedFallback) SourceProceduralTextureParts++;
+            SourceUnrenderedTextureLayers+=layer.UnrenderedLayers;
+            if((slot.MissingTexture && !layer.InstalledTexture) ||
+                slot.SurfaceAppearance.Length>0 ||
                 slot.MaterialVariant.Length>0)
                 SourceSkinMissingTextureParts++;
         }
         CosmeticSourceStatus=Pass54SourceSkinMaterials.Provenance(
             SourceSkinMappedParts>0);
+        if(SourceTextureReferencedParts>0)
+        {
+            CosmeticSourceStatus+=" | "+
+                (SourceInstalledTextureParts>0 ? "LOCAL SOURCE TEXTURE" :
+                    "PROCEDURAL TEXTURE PROXY - ORIGINAL IMAGE UNAVAILABLE");
+            CosmeticSourceStatus+=" | UV MAPPING APPROXIMATE";
+        }
+        if(_animatedSkinMaterials.Count>0)
+            CosmeticSourceStatus+=" | RECONSTRUCTED SHIMMER (TIMING UNKNOWN)";
         ActiveCosmeticSkinId=skin.Id;
     }
 
@@ -152,6 +201,29 @@ public partial class WeaponViewModelRuntime : Node3D
             Transparency=BaseMaterial3D.TransparencyEnum.Alpha,
             Roughness=.58f
         };
+    }
+
+    /// <summary>
+    /// Deterministic, frame-rate-independent cosmetic-only animation.
+    /// The source defines material names but no original animation speed.
+    /// A static showroom may animate only these materials, not gun recoil.
+    /// </summary>
+    public void AdvanceCosmeticEffects(float dt)
+    {
+        if(!float.IsFinite(dt)||dt<=0f || _animatedSkinMaterials.Count==0)return;
+        CosmeticEffectElapsed=(CosmeticEffectElapsed+
+            Math.Clamp(dt,0f,.25f)) % 3600f;
+        LastShimmerMultiplier=Pass55SkinTextureRenderer.ShimmerMultiplier(
+            CosmeticEffectElapsed);
+        foreach(var item in _animatedSkinMaterials)
+        {
+            if(!GodotObject.IsInstanceValid(item.Material))continue;
+            item.Material.EmissionEnergyMultiplier=
+                item.Emission*LastShimmerMultiplier;
+            if(item.Scroll)
+                item.Material.Uv1Offset=Pass55SkinTextureRenderer.ScrollOffset(
+                    item.Uv,CosmeticEffectElapsed);
+        }
     }
 
     public void SetWeapon(RuntimeWeaponDefinition spec)
@@ -249,6 +321,8 @@ public partial class WeaponViewModelRuntime : Node3D
     {
         if (_rig is null) return;
         var dt = (float)delta;
+        AdvanceCosmeticEffects(dt);
+        if(StaticShowroomMode)return;
         _flashSeconds = Mathf.Max(0,_flashSeconds - dt);
         _mechanicalKick = Mathf.Max(0,_mechanicalKick - dt);
         if (_flash is not null) _flash.Visible = _flashSeconds > 0;
@@ -310,6 +384,13 @@ public partial class WeaponViewModelRuntime : Node3D
         SourceSkinMappedParts = 0;
         SourceSkinColorParts = 0;
         SourceSkinMissingTextureParts = 0;
+        SourceTextureReferencedParts = 0;
+        SourceInstalledTextureParts = 0;
+        SourceProceduralTextureParts = 0;
+        SourceUnrenderedTextureLayers = 0;
+        _animatedSkinMaterials.Clear();
+        CosmeticEffectElapsed = 0f;
+        LastShimmerMultiplier = 1f;
         CosmeticSourceStatus = "";
         SourceVisibleParts = 0;
         SourceMissingMeshProxies = 0;
