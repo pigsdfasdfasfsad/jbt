@@ -31,9 +31,9 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
-        if(args.Contains("--smoke-pass53",StringComparer.Ordinal))
+        if(args.Contains("--smoke-pass54",StringComparer.Ordinal))
         {
-            RunPass53Smoke();
+            RunPass54Smoke();
             return;
         }
         if(args.Contains("--smoke-pass53",StringComparer.Ordinal))
@@ -491,6 +491,87 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass54Smoke()
+    {
+        // Exported Windows Godot test with synthetic source packs only.
+        // The CI skin profile is isolated from user://profile.json.
+        if(Pass54SourceSkinMaterials.OwnerPaletteVerified ||
+           Pass54SourceSkinMaterials.OwnerSlotsVerified ||
+           Pass54SourceSkinMaterials.LoadedSkinCount!=3 ||
+           Pass54SourceSkinMaterials.LoadedTaggedParts!=4 ||
+           !Pass54SourceSkinMaterials.TryGet("Low/Cocoa",out var palette) ||
+           palette.Length!=5 ||
+           Math.Abs(palette[0].Color.R-40f/255f)>.0001f ||
+           Math.Abs(palette[1].Color.R-61f/255f)>.0001f ||
+           !Pass54SourceSkinMaterials.TryGetPartSlot("Glock 17",0,out var slot) ||
+           slot!=1 ||
+           Pass54SourceSkinMaterials.TryGetPartSlot("Glock 17",9,out _))
+            throw new InvalidOperationException(
+                "Pass54 synthetic palettes or original-style Value1..5 tags failed");
+
+        var profile=_runtime.Profile ??
+            throw new InvalidOperationException("Pass54 profile unavailable");
+        var credits=_runtime.Player?.Credits ?? -1;
+        if(credits!=12000 || profile.OwnedSkins.Count!=3 ||
+           profile.EquippedWeaponSkins.GetValueOrDefault("Glock 17")!="Low/Cocoa")
+            throw new InvalidOperationException("Pass54 isolated fixture profile absent");
+
+        ShowMenu();
+        var lobby=_sourceLobby ??
+            throw new InvalidOperationException("Pass54 source-style lobby missing");
+        var showroom=lobby.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName) ??
+            throw new InvalidOperationException("Pass54 showroom missing");
+        ShowArmory();
+
+        WeaponViewModelRuntime? Model() => showroom.GetNodeOrNull<WeaponViewModelRuntime>(
+            "OriginalLoadoutAnchor_View/SourceSelectedPreviewTilt/DisplayedWeapon_View");
+        MeshInstance3D? Barrel() => showroom.GetNodeOrNull<MeshInstance3D>(
+            "OriginalLoadoutAnchor_View/SourceSelectedPreviewTilt/DisplayedWeapon_View/WeaponBody/Barrel");
+        MeshInstance3D? Receiver() => showroom.GetNodeOrNull<MeshInstance3D>(
+            "OriginalLoadoutAnchor_View/SourceSelectedPreviewTilt/DisplayedWeapon_View/WeaponBody/Receiver");
+
+        if(!showroom.Visible || !showroom.Preview("Glock 17") ||
+           Model() is not {SourceSkinMappedParts:4, SourceSkinColorParts:4} firstModel ||
+           !firstModel.CosmeticSourceStatus.Contains("SYNTHETIC",StringComparison.Ordinal) ||
+           Barrel()?.MaterialOverlay is not StandardMaterial3D m1 ||
+           Receiver()?.MaterialOverlay is not StandardMaterial3D m2 ||
+           Math.Abs(m1.AlbedoColor.R-40f/255f)>.001f ||
+           Math.Abs(m2.AlbedoColor.R-61f/255f)>.001f)
+            throw new InvalidOperationException("Pass54 original source slot RGB mismatch");
+
+        if(!_runtime.ApplyWeaponSkin("Glock 17","High/Gold").Success)
+            throw new InvalidOperationException("Pass54 skin selection not saved");
+        ShowArmory();
+        if(!showroom.Preview("Glock 17") ||
+           Barrel()?.MaterialOverlay is not StandardMaterial3D gold ||
+           Math.Abs(gold.AlbedoColor.R-188f/255f)>.001f ||
+           Math.Abs(gold.AlbedoColor.G-155f/255f)>.001f ||
+           Model()?.SourceSkinMappedParts!=4)
+            throw new InvalidOperationException("Pass54 cached skin model kept old color");
+
+        if(!_runtime.ApplyWeaponSkin("Glock 17",null).Success)
+            throw new InvalidOperationException("Pass54 skin removal rejected");
+        ShowArmory();
+        if(!showroom.Preview("Glock 17") ||
+           Model()?.CosmeticProxyTintParts!=0 ||
+           Barrel()?.MaterialOverlay is not null ||
+           (_runtime.Player?.Credits ?? -1)!=credits ||
+           profile.OwnedSkins.Count!=3)
+            throw new InvalidOperationException(
+                "Pass54 failed to remove materials or altered player economy");
+
+        StartGame("Manor");
+        if(_sourceLobby is not null || _game is null)
+            throw new InvalidOperationException("Pass54 showroom leaked into match");
+        GD.Print("TWR_SMOKE_PASS54_SOURCE_SKINS_OK synthetic_only=true " +
+            "five_source_material_slots=true tagged_weapon_parts=4 " +
+            "exact_source_rgb_40_17_17=true 3d_material_switch=true " +
+            "skin_reset_clears_material=true no_economy_change=true " +
+            "no_lobby_in_match=true owner_assets_not_uploaded=true");
         GetTree().Quit(0);
     }
 
@@ -2538,7 +2619,7 @@ public partial class Bootstrap : Node
             "OFFLINE SKIN INVENTORY"));
         _skinInventory.AddChild(MakeLabel(60,110,1130,48,15,
             "OWNED "+owned.Length+"/118 SOURCE SKINS | EXCLUSIVES CANNOT BE SOLD | "+
-            "3D FINISHES ARE APPROXIMATE COLOR PROXIES"));
+            "SOURCE COLORS WITH PRIVATE PACK; ORIGINAL TEXTURES PARTIALLY MISSING"));
         var back=new Button {
             OffsetLeft=1020,OffsetTop=42,OffsetRight=1200,OffsetBottom=91,
             Text="BACK"

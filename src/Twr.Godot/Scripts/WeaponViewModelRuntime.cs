@@ -17,6 +17,10 @@ public partial class WeaponViewModelRuntime : Node3D
     public bool UsingPreparedScene { get; private set; }
     public string ActiveCosmeticSkinId { get; private set; } = "";
     public int CosmeticProxyTintParts { get; private set; }
+    public int SourceSkinMappedParts { get; private set; }
+    public int SourceSkinColorParts { get; private set; }
+    public int SourceSkinMissingTextureParts { get; private set; }
+    public string CosmeticSourceStatus { get; private set; } = "";
     public bool UsingOriginalToolAssembly { get; private set; }
     public int SourceVisibleParts { get; private set; }
     public int SourceMissingMeshProxies { get; private set; }
@@ -36,42 +40,117 @@ public partial class WeaponViewModelRuntime : Node3D
     private float _reloadDuration;
 
     /// <summary>
-    /// Pass53 reconstruction proxy: the original Skin module's animated
-    /// textures and per-part PBR materials are not installed. Applying a
-    /// skin tints 3D surfaces with a translucent, deterministic fallback.
-    /// This never modifies ballistic stats, hitboxes or authored geometry.
+    /// Pass54: source material Values 1..5, applied ONLY to the authored
+    /// Value-slot-tagged source parts when their private mapping is present.
+    /// For approximate geometry the five slot placements remain explicitly
+    /// approximate. Absent private palettes retain the Pass53 hash tint.
+    /// All code here affects rendering only, never weapon gameplay authority.
     /// </summary>
     public void ApplyCosmeticOverlay(string? skinId)
     {
-        ActiveCosmeticSkinId = "";
-        CosmeticProxyTintParts = 0;
-        if (_rig is null) return;
-        var skin = SkinCaseCatalog.FindSkin(skinId);
-        var tint = skin is null ? null : BuildCosmeticProxyTint(skin);
-        foreach(var part in _rig.FindChildren("*","MeshInstance3D",true,false)
-            .OfType<MeshInstance3D>())
+        ActiveCosmeticSkinId="";
+        CosmeticProxyTintParts=0;
+        SourceSkinMappedParts=0;
+        SourceSkinColorParts=0;
+        SourceSkinMissingTextureParts=0;
+        CosmeticSourceStatus="";
+        if(_rig is null)return;
+        var meshes=_rig.FindChildren("*","MeshInstance3D",true,false)
+            .OfType<MeshInstance3D>()
+            .Where(mesh=>mesh.Name.ToString()!="MuzzleFlash").ToArray();
+        foreach(var mesh in meshes) mesh.MaterialOverlay=null;
+        var skin=SkinCaseCatalog.FindSkin(skinId);
+        if(skin is null)return;
+        var hasSource=Pass54SourceSkinMaterials.TryGet(skin.Id,out var palette);
+        if(!hasSource)
         {
-            if(part.Name.ToString()=="MuzzleFlash") continue;
-            part.MaterialOverlay = tint;
-            if(tint is not null) CosmeticProxyTintParts++;
+            var tint=BuildCosmeticProxyTint(skin);
+            foreach(var part in meshes)
+            {
+                part.MaterialOverlay=tint;
+                CosmeticProxyTintParts++;
+            }
+            CosmeticSourceStatus=Pass54SourceSkinMaterials.Provenance(false);
+            ActiveCosmeticSkinId=skin.Id;
+            return;
         }
-        if(tint is not null) ActiveCosmeticSkinId = skin!.Id;
+
+        var surfaces=palette.Select(BuildSourceMaterial).ToArray();
+        var approximate=0;
+        foreach(var part in meshes)
+        {
+            var sourceSlot=0;
+            var tagged=part.HasMeta("TwrSkinSlot54") &&
+                int.TryParse(part.GetMeta("TwrSkinSlot54").ToString(),out sourceSlot)
+                && sourceSlot is >=1 and <=5;
+            if(!tagged)
+            {
+                // Untagged source parts are NOT skinned in the original
+                // author model: preserve their original colors/materials.
+                if(UsingOriginalToolAssembly &&
+                    Pass54SourceSkinMaterials.LoadedTaggedParts>0)
+                    continue;
+                // Prepared/approximate geometry has no original BoolValue
+                // children. Stable slot order is a disclosed reconstruction.
+                sourceSlot=(approximate++ % 5)+1;
+            }
+            part.MaterialOverlay=surfaces[sourceSlot-1];
+            CosmeticProxyTintParts++;
+            SourceSkinColorParts++;
+            if(tagged) SourceSkinMappedParts++;
+            var slot=palette[sourceSlot-1];
+            if(slot.MissingTexture || slot.SurfaceAppearance.Length>0 ||
+                slot.MaterialVariant.Length>0)
+                SourceSkinMissingTextureParts++;
+        }
+        CosmeticSourceStatus=Pass54SourceSkinMaterials.Provenance(
+            SourceSkinMappedParts>0);
+        ActiveCosmeticSkinId=skin.Id;
+    }
+
+    private static StandardMaterial3D BuildSourceMaterial(
+        Pass54SourceSkinMaterials.SourceMaterial source)
+    {
+        var kind=source.RobloxMaterial;
+        var metallic=kind is "Metal" or "CorrodedMetal" or "Foil";
+        var glass=kind=="Glass";
+        var forceField=kind=="ForceField";
+        var neon=kind=="Neon";
+        var alpha=source.Color.A;
+        // Godot's glass/ForceField shading is an optical approximation;
+        // the RGB and explicit Transparency/Reflectance come from the owner
+        // Luau source, not our previous skin-name hash.
+        if(glass && source.Transparency<=0f)alpha*=.68f;
+        if(forceField && source.Transparency<=0f)alpha*=.48f;
+        var color=new Color(source.Color.R,source.Color.G,source.Color.B,alpha);
+        return new StandardMaterial3D {
+            AlbedoColor=color,
+            Transparency=alpha<.995f
+                ? BaseMaterial3D.TransparencyEnum.Alpha
+                : BaseMaterial3D.TransparencyEnum.Disabled,
+            Metallic=metallic ? Math.Max(.68f,source.Reflectance) : .015f,
+            Roughness=glass ? .13f : metallic ? .36f : neon ? .35f :
+                kind=="Marble" ? .55f : .76f,
+            EmissionEnabled=neon || forceField,
+            Emission=color,
+            EmissionEnergyMultiplier=neon ? 1.45f : forceField ? .38f : 0f
+        };
     }
 
     private static StandardMaterial3D BuildCosmeticProxyTint(SkinCaseCatalog.Skin skin)
     {
-        // Not authentic source hues: a stable distinguishable fallback while
-        // the owner keeps original texture/material resources private.
-        uint hash = 2166136261;
-        foreach(var c in skin.Id)
-            hash = unchecked((hash ^ c) * 16777619);
-        var hue = (hash % 360) / 360f;
-        var saturation = skin.CaseName=="Neon" ? .82f : .56f;
-        var rgb = Color.FromHsv(hue,saturation,.86f,.34f);
+        // Pass53 fallback remains intentionally approximate ONLY when the
+        // owner has not installed SourceSkinMaterials54.json.gz.
+        uint hash=2166136261;
+        foreach(var ch in skin.Id)
+            hash=unchecked((hash ^ ch)*16777619);
+        var hue=(hash%360)/360f;
+        var saturation=skin.CaseName=="Neon" ? .82f : .56f;
+        var rgb=Color.FromHsv(hue,saturation,.86f,.34f);
         return new StandardMaterial3D {
-            AlbedoColor = rgb,
-            Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
-            Roughness = .58f
+            AlbedoColor=rgb,
+            Transparency=BaseMaterial3D.TransparencyEnum.Alpha,
+            Roughness=.58f
         };
     }
 
@@ -228,6 +307,10 @@ public partial class WeaponViewModelRuntime : Node3D
         UsingOriginalToolAssembly = false;
         ActiveCosmeticSkinId = "";
         CosmeticProxyTintParts = 0;
+        SourceSkinMappedParts = 0;
+        SourceSkinColorParts = 0;
+        SourceSkinMissingTextureParts = 0;
+        CosmeticSourceStatus = "";
         SourceVisibleParts = 0;
         SourceMissingMeshProxies = 0;
         _reloadRemaining = _reloadDuration = _kick = 0;

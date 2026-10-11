@@ -51,8 +51,9 @@ public static class OriginalWeaponSourceRuntime
         var missingMeshProxies = 0;
         LastVisibleSourceParts = 0;
         LastUnavailableMeshProxies = 0;
-        foreach (var part in sourceParts)
+        for(var partIndex=0;partIndex<sourceParts.Length;partIndex++)
         {
+            var part=sourceParts[partIndex];
             var name = part.GetProperty("name").GetString() ?? "OriginalPart";
             // Source Handle/Pos/AimPart helper geometry is intentionally
             // invisible in the original place; do not turn its missing
@@ -105,14 +106,20 @@ public static class OriginalWeaponSourceRuntime
                 material = surface;
                 materials[materialKey] = material;
             }
-            parent.AddChild(new MeshInstance3D
+            var originalPart = new MeshInstance3D
             {
                 Name = name,
                 Mesh = mesh,
                 MaterialOverride = material,
                 Transform = new Transform3D(alignment * SourceRotation(part),
                     alignment * SourcePosition(part)).ScaledLocal(size)
-            });
+            };
+            // The sidecar preserves original Value1..Value5 child BoolValue
+            // indices in this exact source part order, not guessed names.
+            if(Pass54SourceSkinMaterials.TryGetPartSlot(
+                weaponName,partIndex,out var skinSlot))
+                originalPart.SetMeta("TwrSkinSlot54",skinSlot);
+            parent.AddChild(originalPart);
             count++;
         }
         LastVisibleSourceParts = count;
@@ -200,7 +207,7 @@ public static class OriginalWeaponSourceRuntime
             var synthetic = root.TryGetProperty("synthetic",out var fixture) &&
                 fixture.ValueKind == JsonValueKind.True;
             var testMode = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53");
+                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54");
             // A synthetic fixture may never silently impersonate an original
             // tool pack during ordinary play.
             if (synthetic && !testMode)

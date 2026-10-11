@@ -60,7 +60,14 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
             var meshNote = PreviewUsesSourceAssembly && PreviewMissingSourceMeshes > 0
                 ? $" | {PreviewMissingSourceMeshes} UNRESOLVED SOURCE MESHES"
                 : "";
-            return $"3D PREVIEW: {PreviewWeaponName} | {provenance}{meshNote}";
+            var model=_models.GetValueOrDefault("View");
+            var skinNote = model is not null &&
+                model.ActiveCosmeticSkinId.Length>0
+                ? " | "+model.CosmeticSourceStatus+
+                  (model.SourceSkinMissingTextureParts>0
+                    ? $" | {model.SourceSkinMissingTextureParts} TEXTURE/VARIANT GAPS"
+                    : "") : "";
+            return $"3D PREVIEW: {PreviewWeaponName} | {provenance}{meshNote}{skinNote}";
         }
     }
 

@@ -15,8 +15,19 @@ public partial class LocalSessionNode : Node
 
     public override void _Ready()
     {
-        var save = ProjectSettings.GlobalizePath("user://profile.json");
+        var smoke54=OS.GetCmdlineUserArgs().Contains("--smoke-pass54",
+            StringComparer.Ordinal);
+        // Pass54 uses a separate profile file, never touching normal saves.
+        var save = ProjectSettings.GlobalizePath(smoke54
+            ? "user://pass54-smoke-profile.json" : "user://profile.json");
         var store = new JsonProfileStore(save);
+        if(smoke54)
+        {
+            var fixture=JsonSerializer.Deserialize<Profile>(
+                "{\"Credits\":12000,\"OwnedSkins\":[\"Low/Cocoa\",\"High/Gold\",\"Ethereal/Spirit\"],"+
+                "\"EquippedWeaponSkins\":{\"Glock 17\":\"Low/Cocoa\"}}") ?? new Profile();
+            store.Save(fixture);
+        }
         // Test-only profile fixture: loaded by the DOMAIN just as any
         // ordinary JSON profile. The presentation layer never changes
         // authoritative credits, wave, XP or health directly.
