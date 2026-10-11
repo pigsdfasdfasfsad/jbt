@@ -39,6 +39,15 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
     private readonly Dictionary<string, Transform3D> _loadoutPoints =
         new(StringComparer.Ordinal);
     private Camera3D? _camera;
+    private Transform3D _cameraFrom = Transform3D.Identity;
+    private Transform3D _cameraTo = Transform3D.Identity;
+    private float _cameraMoveElapsed;
+    private bool _cameraMoveActive;
+    public const float OriginalCameraMoveSeconds = 3f;
+    public const float OriginalLobbyFovDegrees = 50f;
+    public bool CameraTransitioning => _cameraMoveActive;
+    public float CameraTransitionProgress => !_cameraMoveActive ? 1f :
+        Math.Clamp(_cameraMoveElapsed / OriginalCameraMoveSeconds, 0f, 1f);
 
     public bool OwnerSourceVerified { get; private set; }
     public int SourceGeometryParts { get; private set; }
@@ -92,10 +101,59 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
     {
         if (_camera is null || !_cameras.TryGetValue(name,out var frame))
             return false;
-        _camera.Transform=frame;
+        if (name == ActiveCameraName) return true;
+        _camera.Fov = OriginalLobbyFovDegrees;
+        if (ActiveCameraName.Length == 0)
+        {
+            // On first load start at the real authored Start CFrame; only
+            // subsequent menu changes use the original 3-second movement.
+            _camera.Transform = frame;
+            _cameraMoveActive = false;
+        }
+        else
+        {
+            _cameraFrom = _camera.Transform;
+            _cameraTo = frame;
+            _cameraMoveElapsed = 0f;
+            _cameraMoveActive = true;
+        }
         _camera.Current=true;
         ActiveCameraName=name;
         return true;
+    }
+
+    public override void _Process(double delta)
+    {
+        if (_cameraMoveActive && delta > 0 && double.IsFinite(delta))
+            AdvanceCameraTransition((float)delta);
+    }
+
+    /// <summary>
+    /// Deterministic Godot interpolation matching the original 3-second
+    /// SlowDown2 easing curve. Available to native exported smoke fixtures.
+    /// </summary>
+    public void AdvanceCameraTransition(float elapsedSeconds)
+    {
+        if (!_cameraMoveActive || _camera is null ||
+            !float.IsFinite(elapsedSeconds) || elapsedSeconds < 0) return;
+        _cameraMoveElapsed = Math.Min(OriginalCameraMoveSeconds,
+            _cameraMoveElapsed + elapsedSeconds);
+        var t = _cameraMoveElapsed / OriginalCameraMoveSeconds;
+        // Source Ease.SlowDown2: 1.001 * (1 - 2 ^ (-10 * t)).
+        var eased = Math.Clamp(1.001f * (1f - MathF.Pow(2f,-10f*t)),0f,1f);
+        _camera.Transform = _cameraFrom.InterpolateWith(_cameraTo,eased);
+        if (t >= 1f)
+        {
+            _camera.Transform = _cameraTo;
+            _cameraMoveActive = false;
+        }
+    }
+
+    public bool IsCameraAtSourceAnchor(string name, float toleranceMeters = .001f)
+    {
+        return _camera is not null && _cameras.TryGetValue(name, out var frame)
+            && !_cameraMoveActive &&
+            _camera.Transform.Origin.DistanceTo(frame.Origin) <= toleranceMeters;
     }
 
     private static string? FindPack()
@@ -142,7 +200,7 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
         // still rejects all synthetic packs; only explicit CI smoke flags
         // can enable this fixture.
         var smoke=OS.GetCmdlineUserArgs().Any(arg =>
-            arg is "--smoke-pass49" or "--smoke-pass50" or "--smoke-pass51");
+            arg is "--smoke-pass49" or "--smoke-pass50" or "--smoke-pass51" or "--smoke-pass52");
         if(synthetic && !smoke)
             throw new InvalidDataException("Synthetic lobby used outside smoke test");
         if(!synthetic &&
@@ -306,7 +364,7 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
         });
         _camera=new Camera3D {
             Name="OriginalSourceLobbyCamera",
-            Fov=68,
+            Fov=OriginalLobbyFovDegrees,
             Near=.03f,
             Far=250f,
             Current=true

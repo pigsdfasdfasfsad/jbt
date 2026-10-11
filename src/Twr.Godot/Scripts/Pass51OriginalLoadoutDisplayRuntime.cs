@@ -26,6 +26,10 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
         new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _displayNames =
         new(StringComparer.Ordinal);
+    private Node3D? _previewPivot;
+    public float PreviewYawDegrees { get; private set; }
+    public float PreviewPitchDegrees { get; private set; }
+    public int AuthoredOffsetCount => Pass52SourceLoadoutOffsets.SourceOffsetCount;
 
     public bool OwnerLobbyVerified { get; private set; }
     public int AuthoredAnchorCount => _anchors.Count;
@@ -79,6 +83,8 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
                 stage.AddChild(anchor);
                 stage._anchors.Add(slot, anchor);
             }
+            stage._previewPivot = new Node3D { Name = "SourceSelectedPreviewTilt" };
+            stage._anchors["View"].AddChild(stage._previewPivot);
             lobby.AddChild(stage);
             GD.Print("TWR_PASS51_LOADOUT_ANCHORS_READY anchors=5 source_lobby_verified=" +
                 stage.OwnerLobbyVerified);
@@ -129,12 +135,38 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
         var spec = FindWeapon(weaponName);
         if (spec is null)
             return false;
+        var changed = PreviewWeaponName != spec.Name;
         var model = SetModel("View", spec, 0.85f);
+        if (changed && _previewPivot is not null)
+        {
+            PreviewYawDegrees = 0;
+            PreviewPitchDegrees = 0;
+            _previewPivot.RotationDegrees = Vector3.Zero;
+        }
         PreviewWeaponName = spec.Name;
         PreviewUsesSourceAssembly = model.UsingOriginalToolAssembly;
         PreviewUsesPreparedScene = model.UsingPreparedScene;
         PreviewVisibleParts = model.VisualPartCount;
         PreviewMissingSourceMeshes = model.SourceMissingMeshProxies;
+        return true;
+    }
+
+    /// <summary>
+    /// Explicit right-mouse showroom rotation. The original client clamps
+    /// vertical tilt to +/-25 degrees; yaw sensitivity is an approximation.
+    /// Never changes weapons, credits, the saved loadout or match camera.
+    /// </summary>
+    public bool RotatePreview(float deltaX, float deltaY)
+    {
+        if (!Visible || _previewPivot is null || !_models.ContainsKey("View") ||
+            !float.IsFinite(deltaX) || !float.IsFinite(deltaY))
+            return false;
+        PreviewYawDegrees = (PreviewYawDegrees +
+            Math.Clamp(deltaX, -600f, 600f) * .30f) % 360f;
+        PreviewPitchDegrees = Math.Clamp(PreviewPitchDegrees +
+            Math.Clamp(deltaY, -600f, 600f) * .30f, -25f, 25f);
+        _previewPivot.RotationDegrees = new Vector3(
+            -PreviewPitchDegrees, PreviewYawDegrees, 0f);
         return true;
     }
 
@@ -155,13 +187,23 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
             return current;
 
         ClearSlot(slot);
-        var holder = _anchors[slot];
+        var holder = slot == "View"
+            ? _previewPivot ?? _anchors["View"] : _anchors[slot];
         var model = new WeaponViewModelRuntime {
             Name = "DisplayedWeapon_" + slot,
             Scale = Vector3.One * scale
         };
         holder.AddChild(model);
         model.SetWeapon(spec);
+        // Source Shop/Lobby.lua uses authored LoadoutPoints[slot] CFrame
+        // * each weapon module's LoadoutOffset. The selected View position
+        // is separate and originally based on Handle/MidToHandle instead.
+        if (slot != "View" &&
+            Pass52SourceLoadoutOffsets.TryGet(spec.Name, out var sourceOffset))
+        {
+            model.Transform = sourceOffset;
+            model.Scale = Vector3.One * scale;
+        }
         model.SetProcess(false); // Static showroom model, not firing gameplay rig.
         _models[slot] = model;
         _displayNames[slot] = spec.Name;

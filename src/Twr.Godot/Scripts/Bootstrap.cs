@@ -10,6 +10,8 @@ public partial class Bootstrap : Node
     private CanvasLayer? _menu;
     private CanvasLayer? _armory;
     private CanvasLayer? _bulletin;
+    private CanvasLayer? _shop;
+    private Label? _shopCaseDetail;
     private Label? _bulletinPage;
     private Label? _armoryPreviewLabel;
     private PerkMenuRuntime? _perkMenu;
@@ -21,6 +23,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass52",StringComparer.Ordinal))
+        {
+            RunPass52Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass51",StringComparer.Ordinal))
         {
             RunPass51Smoke();
@@ -466,6 +473,125 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass52Smoke()
+    {
+        // Fully synthetic original-style lobby and tool models. The real
+        // source-derived case prices and normalized weapon offset expressions
+        // are regular checked-in metadata; no original mesh/skin asset leaks.
+        ShowMenu();
+        var lobby=_sourceLobby ??
+            throw new InvalidOperationException("Pass52 fake source lobby absent");
+        var showroom=lobby.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName) ??
+            throw new InvalidOperationException("Pass52 showroom absent");
+        if (lobby.OwnerSourceVerified || showroom.OwnerLobbyVerified ||
+            lobby.SourceCameraCount!=8 || lobby.SourceLoadoutPointCount!=5 ||
+            lobby.ActiveCameraName!="Start" ||
+            !lobby.IsCameraAtSourceAnchor("Start") ||
+            Math.Abs(Pass49OriginalLobbyRuntime.OriginalLobbyFovDegrees - 50f)>.001f ||
+            Math.Abs(Pass49OriginalLobbyRuntime.OriginalCameraMoveSeconds - 3f)>.001f)
+            throw new InvalidOperationException("Pass52 original camera/anchor provenance invalid");
+
+        var sourceCount=Pass52SourceLoadoutOffsets.SourceOffsetCount;
+        if(sourceCount<75 || sourceCount>91 ||
+            !Pass52SourceLoadoutOffsets.TryGet("Glock 17",out var glockFrame) ||
+            glockFrame.Origin.DistanceTo(
+                new Vector3(.0393884182f,.0704264641f,-.163572311f) *
+                RobloxUnits.MetersPerStud)>.0001f ||
+            Pass52SourceLoadoutOffsets.TryParse("CFrame.new(os.execute('bad'))",out _) ||
+            Pass52SourceLoadoutOffsets.TryGet("No Original Tool 52",out _))
+            throw new InvalidOperationException(
+                "Pass52 normalised original LoadoutOffset is invalid or unsafe");
+
+        var profile=_runtime.Profile ??
+            throw new InvalidOperationException("Pass52 offline profile missing");
+        var ownedBefore=profile.Unlocks.Count;
+        var creditsBefore=_runtime.Player?.Credits ?? -1;
+        var loadoutBefore=string.Join("|",profile.Loadout
+            .OrderBy(row=>row.Key,StringComparer.Ordinal)
+            .Select(row=>row.Key+":"+row.Value));
+
+        var shopButton=_menu?.GetChildren().OfType<Button>()
+            .FirstOrDefault(button=>button.Text=="SHOP / CASES") ??
+            throw new InvalidOperationException("Pass52 main shop navigation missing");
+        shopButton.EmitSignal(Button.SignalName.Pressed);
+        if(_shop is null || _menu is not null ||
+            lobby.ActiveCameraName!="Shop" || !lobby.CameraTransitioning ||
+            showroom.Visible || Pass52SourceShopCatalog.All.Count!=7)
+            throw new InvalidOperationException("Pass52 shop/CFrame transition missing");
+        lobby.AdvanceCameraTransition(1.5f);
+        if(!lobby.CameraTransitioning ||
+            lobby.CameraTransitionProgress<.45f ||
+            lobby.CameraTransitionProgress>.55f)
+            throw new InvalidOperationException("Pass52 camera half-time progress invalid");
+        lobby.AdvanceCameraTransition(1.5f);
+        if(lobby.CameraTransitioning || !lobby.IsCameraAtSourceAnchor("Shop"))
+            throw new InvalidOperationException("Pass52 eased shop camera did not settle");
+
+        var tiles=_shop.GetChildren().OfType<Button>()
+            .Where(button=>button.Text.StartsWith("CASE:",StringComparison.Ordinal))
+            .ToArray();
+        if(tiles.Length!=7 || !Pass52SourceShopCatalog.TryFind("Low",out var low) ||
+            low?.PriceCredits!=6000 ||
+            !Pass52SourceShopCatalog.TryFind("Ethereal",out var ethereal) ||
+            ethereal?.PriceCredits!=1000000 ||
+            Pass52SourceShopCatalog.TryFind("No Case 52",out _))
+            throw new InvalidOperationException("Pass52 original credit case catalog mismatch");
+        var lowTile=tiles.FirstOrDefault(button=>
+            button.Name.ToString()=="ShopCase_Low");
+        lowTile?.EmitSignal(Button.SignalName.Pressed);
+        if(lowTile is null || _shopCaseDetail is null ||
+            !_shopCaseDetail.Text.Contains("$6,000",StringComparison.Ordinal) ||
+            !_shopCaseDetail.Text.Contains("not implemented offline",StringComparison.Ordinal))
+            throw new InvalidOperationException("Pass52 read-only case detail failed");
+
+        var back=_shop.GetChildren().OfType<Button>()
+            .FirstOrDefault(button=>button.Text=="BACK");
+        back?.EmitSignal(Button.SignalName.Pressed);
+        if(_shop is not null || _menu is null ||
+            lobby.ActiveCameraName!="Start" || !lobby.CameraTransitioning)
+            throw new InvalidOperationException("Pass52 shop did not return to menu");
+        lobby.AdvanceCameraTransition(3f);
+        if(!lobby.IsCameraAtSourceAnchor("Start"))
+            throw new InvalidOperationException("Pass52 Start camera not source-aligned");
+
+        ShowArmory();
+        if(_armory is null || !showroom.Visible ||
+            lobby.ActiveCameraName!="Loadout" ||
+            !showroom.Preview("Glock 17") ||
+            !showroom.RotatePreview(100f,400f) ||
+            Math.Abs(showroom.PreviewPitchDegrees-25f)>.001f ||
+            !showroom.RotatePreview(-60f,-400f) ||
+            Math.Abs(showroom.PreviewPitchDegrees+25f)>.001f ||
+            showroom.RotatePreview(float.NaN,0f))
+            throw new InvalidOperationException(
+                "Pass52 source showroom mouse tilt/clamp preview is invalid");
+        lobby.AdvanceCameraTransition(3f);
+        if(!lobby.IsCameraAtSourceAnchor("Loadout"))
+            throw new InvalidOperationException("Pass52 Loadout camera not source-aligned");
+
+        var unchanged=string.Join("|",profile.Loadout
+            .OrderBy(row=>row.Key,StringComparer.Ordinal)
+            .Select(row=>row.Key+":"+row.Value));
+        if(ownedBefore!=profile.Unlocks.Count ||
+            creditsBefore!=(_runtime.Player?.Credits ?? -1) ||
+            loadoutBefore!=unchanged)
+            throw new InvalidOperationException(
+                "Pass52 read-only case or tilt unexpectedly mutated economy");
+
+        StartGame("Manor");
+        if(_sourceLobby is not null || _shop is not null || _game is null)
+            throw new InvalidOperationException(
+                "Pass52 menu/camera/preview nodes leaked into live gameplay");
+
+        GD.Print("TWR_SMOKE_PASS52_LOBBY_SHOP_OK synthetic_only=true " +
+            $"source_weapon_offsets={sourceCount} source_camera_duration=3 " +
+            "source_camera_fov=50 shop_case_prices=7 case_purchase_disabled=true " +
+            "loadout_preview_pitch_clamp=25 read_only_credit_balance=true " +
+            "lobby_unloaded_in_match=true private_assets_not_uploaded=true");
         GetTree().Quit(0);
     }
 
@@ -1971,6 +2097,19 @@ public partial class Bootstrap : Node
         GD.Print($"TWR_SMOKE_COMPLETE_OK maps={completed} waves={completed*ReleaseRules.MaxWaves}");
         GetTree().Quit(0);
     }
+    public override void _Input(InputEvent @event)
+    {
+        // The right mouse button tilts only the armory's local preview model,
+        // never the authoritative player camera, scene, purchases or weapons.
+        if (_armory is null || @event is not InputEventMouseMotion motion ||
+            !Input.IsMouseButtonPressed(MouseButton.Right))
+            return;
+        var preview=_sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName);
+        if(preview?.RotatePreview(motion.Relative.X,motion.Relative.Y)==true)
+            GetViewport().SetInputAsHandled();
+    }
+
     private void EnsureOriginalLobby(string cameraName)
     {
         if(_sourceLobby is null || !GodotObject.IsInstanceValid(_sourceLobby))
@@ -1984,6 +2123,9 @@ public partial class Bootstrap : Node
         _bulletin=null;
         _bulletinPage=null;
         _armoryPreviewLabel=null;
+        _shop?.QueueFree();
+        _shop=null;
+        _shopCaseDetail=null;
         _sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
             Pass51OriginalLoadoutDisplayRuntime.StageName)?.HideDisplay();
         EnsureOriginalLobby("Start");
@@ -1992,7 +2134,7 @@ public partial class Bootstrap : Node
         AddChild(_menu);
 
         AddBackground(_menu);
-        _menu.AddChild(MakeLabel(58, 38, 1160, 62, 40, "THOSE WHO REMAIN - OFFLINE"));
+        _menu.AddChild(MakeLabel(58, 38, 840, 62, 40, "THOSE WHO REMAIN - OFFLINE"));
         _menu.AddChild(MakeLabel(60, 98, 850, 38, 18, "REGULAR  |  15 WAVES  |  LOCAL SINGLE PLAYER"));
         _menu.AddChild(MakeLabel(60, 142, 1160, 66, 16,
             "Select a recovered release map. Geometry is an evidence-guided reconstruction blockout\n" +
@@ -2015,6 +2157,16 @@ public partial class Bootstrap : Node
         };
         armory.Pressed += ShowArmory;
         _menu.AddChild(armory);
+
+        var shop=new Button {
+            OffsetLeft=930,
+            OffsetTop=35,
+            OffsetRight=1190,
+            OffsetBottom=85,
+            Text="SHOP / CASES"
+        };
+        shop.Pressed += ShowShop;
+        _menu.AddChild(shop);
 
         var perks = new Button
         {
@@ -2060,6 +2212,70 @@ public partial class Bootstrap : Node
             button.Pressed += () => StartGame(selected);
             _menu.AddChild(button);
         }
+    }
+
+    private void ShowShop()
+    {
+        EnsureOriginalLobby("Shop");
+        _sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName)?.HideDisplay();
+        _menu?.QueueFree();
+        _menu=null;
+        _armory?.QueueFree();
+        _armory=null;
+        _bulletin?.QueueFree();
+        _bulletin=null;
+        _bulletinPage=null;
+        _perkMenu?.QueueFree();
+        _perkMenu=null;
+        _shop?.QueueFree();
+        Input.MouseMode=Input.MouseModeEnum.Visible;
+
+        _shop=new CanvasLayer { Name="OriginalSourceShop" };
+        AddChild(_shop);
+        AddBackground(_shop,.40f);
+        _shop.AddChild(MakeLabel(58,34,900,54,36,"SHOP / SOURCE CREDIT CASES"));
+        _shop.AddChild(MakeLabel(62,100,1110,76,16,
+            "Seven source-confirmed case prices from the original Shop module. " +
+            "This is a read-only catalog: skin inventory, odds, case opening " +
+            "and online purchase flows are not yet reconstructed."));
+        _shop.AddChild(MakeLabel(62,180,900,40,15,ProfileStatusText()));
+        var back=new Button {
+            OffsetLeft=1010,OffsetTop=40,OffsetRight=1200,OffsetBottom=90,
+            Text="BACK"
+        };
+        back.Pressed += ShowMenu;
+        _shop.AddChild(back);
+
+        var cases=Pass52SourceShopCatalog.All;
+        for(var i=0;i<cases.Count;i++)
+        {
+            var source=cases[i];
+            var column=i%2;
+            var row=i/2;
+            var left=62+column*590;
+            var top=240+row*79;
+            var button=new Button {
+                Name="ShopCase_"+source.Name,
+                OffsetLeft=left,
+                OffsetTop=top,
+                OffsetRight=left+545,
+                OffsetBottom=top+63,
+                Text="CASE: "+source.Name.ToUpperInvariant()+"  |  $"+
+                    source.PriceCredits.ToString("N0")+" CREDITS"
+            };
+            button.Pressed += () =>
+            {
+                if (_shopCaseDetail is not null)
+                    _shopCaseDetail.Text = source.Name+" source price: $"+
+                        source.PriceCredits.ToString("N0")+
+                        " credits. Case opening, rewards and transactions are not implemented offline.";
+            };
+            _shop.AddChild(button);
+        }
+        _shopCaseDetail=MakeLabel(62,563,1110,80,16,
+            "Select a case to inspect its original price. No credits are spent.");
+        _shop.AddChild(_shopCaseDetail);
     }
 
     private void ShowBulletin()
@@ -2173,6 +2389,8 @@ public partial class Bootstrap : Node
         _armoryPreviewLabel=MakeLabel(60,170,1140,36,14,
             showroom?.PreviewStatus ?? "3D loadout preview requires the private original lobby pack.");
         _armory.AddChild(_armoryPreviewLabel);
+        _armory.AddChild(MakeLabel(60,198,1130,24,12,
+            "Hold RIGHT MOUSE and drag to rotate the selected preview (pitch limited to 25 degrees)."));
 
         var scroll = new ScrollContainer
         {
@@ -2311,6 +2529,9 @@ public partial class Bootstrap : Node
         _bulletin=null;
         _bulletinPage=null;
         _armoryPreviewLabel=null;
+        _shop?.QueueFree();
+        _shop=null;
+        _shopCaseDetail=null;
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();
