@@ -2,7 +2,18 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 43 (October 10, 2026)
+## Latest verified source branch: Pass 44 (October 10, 2026)
+
+[Development code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass44-native-lab-streaming) · [Successful Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38097138396) · [Technical notes](docs/development/PASS44_NATIVE_LAB_RENDER_STREAMING.md)
+
+- **Missing content fixed:** Earlier owner Windows ZIPs lacked the SHA-bound `Content/Geometry/Laboratory.native28.gz` native source renderer pack. The Pass 44 owner package includes it.
+- Recovered **18,213 source-positioned, size/rotation/material-preserving native Part and Wedge instances**, grouped into **787 spatial draw batches across 47 tiles** with bounded distance culling.
+- Exact source spawn #1 geometry audit: 510/787 batches within 145m; 277 off-range batches and 6,228 instances are eligible for hiding. This is **static geometry culling**, not measured GPU FPS.
+- The source loader now preserves all 337 `SpecialMesh` legacy visual fallbacks (instead of inadvertently hiding type=6) and retains the original collision cache.
+- F10/F11 reports source-stream instance/batch/visibility counts. **443 Python tests and the exported Windows native smoke passed**, including near/far culling, source collision and special-mesh preservation.
+- Owner source files and derived private Part pack **remain outside GitHub Actions artifacts**. The game is playable offline but still lacks nine full original map scenes, original custom mesh triangle data, terrain and retail media parity. A real 15-wave private-source FPS playthrough remains unverified.
+
+## Previous verified source branch: Pass 43 (October 10, 2026)
 
 [Pass 43 development branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass43-physical-jump-verification) ·
 [Successful Windows native acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38094133273) ·
