@@ -28,13 +28,21 @@ public sealed class LocalSession
     private readonly ArmoryService _armory;
     private readonly PerkService _perks;
     private readonly ConsumableService _consumables;
+    private readonly SkinCaseService _skinCases;
+
+    public SkinCaseService.Result LastSkinAction { get; private set; } =
+        SkinCaseService.Result.Fail("No skin transaction selected.");
 
     public GameState State { get; } = new();
     public Profile Profile { get; private set; }
 
-    public LocalSession(IProfileStore profiles)
+    public LocalSession(IProfileStore profiles, SkinCaseService? skinCases = null)
     {
         Profile = profiles.Load();
+        // Old profile.json files predate offline cosmetic ownership.
+        Profile.OwnedSkins ??= new HashSet<string>(StringComparer.Ordinal);
+        Profile.EquippedWeaponSkins ??= new Dictionary<string,string>(StringComparer.Ordinal);
+        _skinCases = skinCases ?? new SkinCaseService();
         Profile.Unlocks.Add(StarterLoadoutService.SawnOff);
         Profile.Unlocks.Add(StarterLoadoutService.Glock17);
         Profile.Unlocks.Add(StarterLoadoutService.TwoByFour);
@@ -163,6 +171,83 @@ public sealed class LocalSession
                 if(_perks.Set(Profile,State.Player.Level,x.PerkName,x.Enabled,now))
                     PersistProfile("Perk:" + x.PerkName,now);
                 break;
+            case OpenSkinCaseCommand x:
+            {
+                if(State.Match.Phase!=MatchPhase.Lobby)
+                {
+                    LastSkinAction=SkinCaseService.Result.Fail("Cases can only be opened in the lobby.");
+                    break;
+                }
+                var oldCredits=State.Player.Credits;
+                LastSkinAction=_skinCases.Open(Profile,State.Player,x.CaseName);
+                if(!LastSkinAction.Success)break;
+                try
+                {
+                    PersistProfile("SkinCaseOpen:"+x.CaseName,now);
+                }
+                catch(Exception)
+                {
+                    // Cancel in-memory charge/grant if profile storage failed.
+                    State.Player.Credits=oldCredits;
+                    Profile.Credits=oldCredits;
+                    if(LastSkinAction.SkinId is not null)
+                        Profile.OwnedSkins.Remove(LastSkinAction.SkinId);
+                    LastSkinAction=SkinCaseService.Result.Fail(
+                        "Profile save failed; case purchase cancelled.");
+                }
+                break;
+            }
+            case SellOwnedSkinCommand x:
+            {
+                if(State.Match.Phase!=MatchPhase.Lobby)
+                {
+                    LastSkinAction=SkinCaseService.Result.Fail("Skins can only be sold in the lobby.");
+                    break;
+                }
+                var oldCredits=State.Player.Credits;
+                var oldAssignments=new Dictionary<string,string>(
+                    Profile.EquippedWeaponSkins,StringComparer.Ordinal);
+                LastSkinAction=_skinCases.Sell(Profile,State.Player,x.SkinId);
+                if(!LastSkinAction.Success)break;
+                try
+                {
+                    PersistProfile("SkinSale:"+x.SkinId,now);
+                }
+                catch(Exception)
+                {
+                    State.Player.Credits=oldCredits;
+                    Profile.Credits=oldCredits;
+                    Profile.OwnedSkins.Add(x.SkinId);
+                    Profile.EquippedWeaponSkins=oldAssignments;
+                    LastSkinAction=SkinCaseService.Result.Fail(
+                        "Profile save failed; sale cancelled.");
+                }
+                break;
+            }
+            case ApplyWeaponSkinCommand x:
+            {
+                if(State.Match.Phase!=MatchPhase.Lobby)
+                {
+                    LastSkinAction=SkinCaseService.Result.Fail("Skins can only be changed in the lobby.");
+                    break;
+                }
+                var prior=Profile.EquippedWeaponSkins
+                    .GetValueOrDefault(x.WeaponName);
+                LastSkinAction=_skinCases.Apply(Profile,x.WeaponName,x.SkinId);
+                if(!LastSkinAction.Success)break;
+                try
+                {
+                    PersistProfile("WeaponSkin:"+x.WeaponName,now);
+                }
+                catch(Exception)
+                {
+                    if(prior is null)Profile.EquippedWeaponSkins.Remove(x.WeaponName);
+                    else Profile.EquippedWeaponSkins[x.WeaponName]=prior;
+                    LastSkinAction=SkinCaseService.Result.Fail(
+                        "Profile save failed; skin selection cancelled.");
+                }
+                break;
+            }
             case PurchaseCommand x:
                 _economy.Purchase(State.Player, x.ItemId, x.Price, now);
                 break;

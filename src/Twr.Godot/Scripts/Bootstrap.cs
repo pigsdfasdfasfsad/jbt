@@ -1,4 +1,5 @@
 using Godot;
+using Twr.Domain.Persistence;
 using Twr.Domain.Model;
 using Twr.Domain.Services;
 
@@ -12,6 +13,13 @@ public partial class Bootstrap : Node
     private CanvasLayer? _bulletin;
     private CanvasLayer? _shop;
     private Label? _shopCaseDetail;
+    private Label? _shopCreditsLabel;
+    private Button? _shopOpenButton;
+    private string _selectedShopCase = "Low";
+    private CanvasLayer? _skinInventory;
+    private Label? _skinDetailLabel;
+    private string? _selectedSkinId;
+    private bool _skinInventoryReturnsToShop = true;
     private Label? _bulletinPage;
     private Label? _armoryPreviewLabel;
     private PerkMenuRuntime? _perkMenu;
@@ -23,6 +31,16 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass53",StringComparer.Ordinal))
+        {
+            RunPass53Smoke();
+            return;
+        }
+        if(args.Contains("--smoke-pass53",StringComparer.Ordinal))
+        {
+            RunPass53Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass52",StringComparer.Ordinal))
         {
             RunPass52Smoke();
@@ -473,6 +491,147 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass53Smoke()
+    {
+        // Native exported .exe smoke with synthetic lobby/source geometry.
+        // Checks a real persisted profile and the actual interactive Shop UI.
+        var cases=SkinCaseCatalog.Cases;
+        if(cases.Count!=7 || SkinCaseCatalog.AllSkins.Count!=118 ||
+            cases.Sum(c=>c.PurchasePool.Length)!=104 ||
+            cases.Sum(c=>c.EventOnlySkins.Length)!=14 ||
+            cases.Single(c=>c.Name=="High").EventOnlySkins.Length!=9 ||
+            cases.Single(c=>c.Name=="Hallows").OnSale ||
+            SkinCaseCatalog.FindSkin("Hallows/Hexbrew")?.Exclusive!=true)
+            throw new InvalidOperationException(
+                "Pass53 source case inventory or exclusive case bounds changed");
+
+        var deterministic=new SkinCaseService(_=>0);
+        var testProfile=new Profile {
+            Credits=15000,
+            Unlocks=new HashSet<string>(StringComparer.Ordinal) { "Glock 17" },
+            Loadout=new Dictionary<string,string>(StringComparer.Ordinal) {
+                ["Secondary"]="Glock 17"
+            }
+        };
+        var testPlayer=new PlayerState { Credits=15000 };
+        if(deterministic.Open(testProfile,testPlayer,"Hallows").Success ||
+            deterministic.Open(testProfile,testPlayer,"NoCase53").Success ||
+            testPlayer.Credits!=15000)
+            throw new InvalidOperationException("Pass53 offline case rejection charged credits");
+        var opened=deterministic.Open(testProfile,testPlayer,"Low");
+        if(!opened.Success || opened.SkinId!="Low/Cocoa" ||
+            testPlayer.Credits!=9000 || testProfile.OwnedSkins.Count!=1 ||
+            !deterministic.Apply(testProfile,"Glock 17",opened.SkinId).Success)
+            throw new InvalidOperationException("Pass53 seeded source case roll/equip failed");
+        if(deterministic.Open(testProfile,testPlayer,"Low").SkinId=="Low/Cocoa" ||
+            !deterministic.Sell(testProfile,testPlayer,"Low/Cocoa").Success ||
+            testPlayer.Credits!=6000 ||
+            testProfile.EquippedWeaponSkins.Count!=0 ||
+            deterministic.Sell(testProfile,testPlayer,"Low/Cocoa").Success ||
+            deterministic.Apply(testProfile,"Glock 17","Low/Cocoa").Success)
+            throw new InvalidOperationException(
+                "Pass53 duplicate prevention, sale, or unowned cosmetic guards failed");
+        testProfile.OwnedSkins.Add("Hallows/Hexbrew");
+        if(deterministic.Sell(testProfile,testPlayer,"Hallows/Hexbrew").Success)
+            throw new InvalidOperationException("Pass53 allowed exclusive skin sale");
+        foreach(var name in cases.Single(c=>c.Name=="Low").PurchasePool)
+            testProfile.OwnedSkins.Add("Low/"+name);
+        var beforeComplete=testPlayer.Credits;
+        if(deterministic.Open(testProfile,testPlayer,"Low").Success ||
+            testPlayer.Credits!=beforeComplete)
+            throw new InvalidOperationException("Pass53 full collection charged credits");
+
+        var profile=_runtime.Profile ??
+            throw new InvalidOperationException("Pass53 native runtime profile missing");
+        var player=_runtime.Player ??
+            throw new InvalidOperationException("Pass53 native runtime player missing");
+        // --smoke-pass53 explicitly authorizes temporary credits in the CI
+        // runner profile. This path is never invoked during normal play.
+        player.Credits=12000;
+        profile.Credits=12000;
+        profile.OwnedSkins.Clear();
+        profile.EquippedWeaponSkins.Clear();
+        ShowMenu();
+        var lobby=_sourceLobby ??
+            throw new InvalidOperationException("Pass53 synthetic source lobby unavailable");
+        var showroom=lobby.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName) ??
+            throw new InvalidOperationException("Pass53 original-positioned showroom missing");
+
+        var openShop=_menu?.GetChildren().OfType<Button>()
+            .FirstOrDefault(button=>button.Text=="SHOP / CASES");
+        openShop?.EmitSignal(Button.SignalName.Pressed);
+        if(openShop is null || _shop is null ||
+            lobby.ActiveCameraName!="Shop" || _shopOpenButton?.Disabled!=false)
+            throw new InvalidOperationException("Pass53 shop entry/action not working");
+        var lowCase=_shop.GetChildren().OfType<Button>()
+            .FirstOrDefault(button=>button.Name.ToString()=="ShopCase_Low");
+        lowCase?.EmitSignal(Button.SignalName.Pressed);
+        var opening=_shop.GetChildren().OfType<Button>()
+            .FirstOrDefault(button=>button.Name.ToString()=="ShopOpenSelectedCase");
+        opening?.EmitSignal(Button.SignalName.Pressed);
+        if(lowCase is null || opening is null ||
+            player.Credits!=6000 || profile.OwnedSkins.Count!=1 ||
+            _shopCaseDetail is null ||
+            !_shopCaseDetail.Text.Contains("Unlocked",StringComparison.Ordinal))
+            throw new InvalidOperationException("Pass53 GUI opening did not grant/charge exactly once");
+
+        var reward=profile.OwnedSkins.Single();
+        var persisted=new JsonProfileStore(
+            ProjectSettings.GlobalizePath("user://profile.json")).Load();
+        if(persisted.Credits!=6000 || !persisted.OwnedSkins.Contains(reward))
+            throw new InvalidOperationException("Pass53 case reward did not persist to JSON");
+        var inventory=_shop?.GetChildren().OfType<Button>()
+            .FirstOrDefault(button=>button.Name.ToString()=="ShopOwnedSkins");
+        inventory?.EmitSignal(Button.SignalName.Pressed);
+        if(inventory is null || _skinInventory is null ||
+            _selectedSkinId!=reward || lobby.ActiveCameraName!="Loadout")
+            throw new InvalidOperationException("Pass53 owned-skin inventory navigation failed");
+        var apply=_skinInventory.GetChildren().OfType<Button>()
+            .FirstOrDefault(button=>button.Name.ToString()=="ApplySkinSecondary");
+        apply?.EmitSignal(Button.SignalName.Pressed);
+        if(apply is null || profile.EquippedWeaponSkins.GetValueOrDefault(
+            profile.Loadout["Secondary"])!=reward ||
+            showroom.VisibleCosmeticProxyParts<1)
+            throw new InvalidOperationException(
+                "Pass53 3D cosmetic proxy was not applied to equipped weapon");
+        persisted=new JsonProfileStore(
+            ProjectSettings.GlobalizePath("user://profile.json")).Load();
+        if(persisted.EquippedWeaponSkins.GetValueOrDefault(
+            profile.Loadout["Secondary"])!=reward)
+            throw new InvalidOperationException("Pass53 applied skin failed JSON roundtrip");
+
+        var sell=_skinInventory?.GetChildren().OfType<Button>()
+            .FirstOrDefault(button=>button.Name.ToString()=="SellOwnedSkin");
+        sell?.EmitSignal(Button.SignalName.Pressed);
+        if(sell is null || profile.OwnedSkins.Count!=0 ||
+            player.Credits!=9000 || profile.EquippedWeaponSkins.Count!=0 ||
+            showroom.VisibleCosmeticProxyParts!=0)
+            throw new InvalidOperationException(
+                "Pass53 source resale and equipped proxy clearing failed");
+        persisted=new JsonProfileStore(
+            ProjectSettings.GlobalizePath("user://profile.json")).Load();
+        if(persisted.Credits!=9000 || persisted.OwnedSkins.Count!=0 ||
+            persisted.EquippedWeaponSkins.Count!=0)
+            throw new InvalidOperationException(
+                "Pass53 sold reward did not persist without stale cosmetic assignment");
+
+        StartGame("Manor");
+        if(_sourceLobby is not null || _shop is not null ||
+            _skinInventory is not null || _game is null)
+            throw new InvalidOperationException(
+                "Pass53 skin inventory/3D showroom leaked into active match");
+        GD.Print("TWR_SMOKE_PASS53_SKINS_OK source_skins=118 " +
+            "case_pool_skins=104 event_exclusive=14 cases=7 " +
+            "case_purchase=true uniform_unknown_odds_disclosed=true " +
+            "off_sale_hallows_blocked=true no_duplicate_rolls=true " +
+            "sale_half_price=true exclusive_sale_blocked=true " +
+            "owned_skin_saved_and_reloaded=true equipped_skin_saved=true " +
+            "original_textures_not_claimed=true 3d_proxy_applied=true " +
+            "sale_clears_3d_proxy=true no_skin_nodes_in_match=true");
         GetTree().Quit(0);
     }
 
@@ -2126,6 +2285,11 @@ public partial class Bootstrap : Node
         _shop?.QueueFree();
         _shop=null;
         _shopCaseDetail=null;
+        _shopCreditsLabel=null;
+        _shopOpenButton=null;
+        _skinInventory?.QueueFree();
+        _skinInventory=null;
+        _skinDetailLabel=null;
         _sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
             Pass51OriginalLoadoutDisplayRuntime.StageName)?.HideDisplay();
         EnsureOriginalLobby("Start");
@@ -2214,6 +2378,44 @@ public partial class Bootstrap : Node
         }
     }
 
+    private void UpdateShopSelection()
+    {
+        var definition=SkinCaseCatalog.FindCase(_selectedShopCase);
+        if(definition is null)return;
+        var profile=_runtime.Profile;
+        var owned=profile is null ? 0 : SkinCaseCatalog.OwnedCount(profile,definition);
+        var complete=profile is not null && SkinCaseCatalog.Completed(profile,definition);
+        var credits=_runtime.Player?.Credits ?? 0;
+        if(_shopCreditsLabel is not null)
+            _shopCreditsLabel.Text="OFFLINE CREDITS: $"+credits.ToString("N0")+
+                "  |  OWNED SKINS: "+(profile?.OwnedSkins.Count ?? 0);
+        if(_shopOpenButton is not null)
+        {
+            _shopOpenButton.Text=definition.OnSale
+                ? "OPEN "+definition.Name.ToUpperInvariant()+" CASE ($"+
+                    definition.PriceCredits.ToString("N0")+")"
+                : "HALLOWS OFF-SALE";
+            _shopOpenButton.Disabled=!definition.OnSale || complete ||
+                credits<definition.PriceCredits;
+        }
+        if(_shopCaseDetail is not null)
+            _shopCaseDetail.Text=definition.Name+"  |  $"+
+                definition.PriceCredits.ToString("N0")+" CREDITS  |  "+owned+
+                "/"+definition.PurchasePool.Length+" ORDINARY SKINS OWNED"+
+                (complete ? "  |  COLLECTION COMPLETE" : "")+
+                (!definition.OnSale ? "  |  OFF-SALE EXCLUSIVE" : "")+
+                "\nOffline case odds: uniform among missing skins (RECONSTRUCTION). "+
+                "Original paid-product transactions are not implemented offline.";
+    }
+
+    private void HandleOpenSelectedCase()
+    {
+        var result=_runtime.OpenSkinCase(_selectedShopCase);
+        ShowShop();
+        if(_shopCaseDetail is not null)
+            _shopCaseDetail.Text=result.Message+"\n"+_shopCaseDetail.Text;
+    }
+
     private void ShowShop()
     {
         EnsureOriginalLobby("Shop");
@@ -2223,6 +2425,9 @@ public partial class Bootstrap : Node
         _menu=null;
         _armory?.QueueFree();
         _armory=null;
+        _skinInventory?.QueueFree();
+        _skinInventory=null;
+        _skinDetailLabel=null;
         _bulletin?.QueueFree();
         _bulletin=null;
         _bulletinPage=null;
@@ -2234,48 +2439,228 @@ public partial class Bootstrap : Node
         _shop=new CanvasLayer { Name="OriginalSourceShop" };
         AddChild(_shop);
         AddBackground(_shop,.40f);
-        _shop.AddChild(MakeLabel(58,34,900,54,36,"SHOP / SOURCE CREDIT CASES"));
-        _shop.AddChild(MakeLabel(62,100,1110,76,16,
-            "Seven source-confirmed case prices from the original Shop module. " +
-            "This is a read-only catalog: skin inventory, odds, case opening " +
-            "and online purchase flows are not yet reconstructed."));
-        _shop.AddChild(MakeLabel(62,180,900,40,15,ProfileStatusText()));
+        _shop.AddChild(MakeLabel(58,34,740,54,32,"SHOP / OFFLINE SKIN CASES"));
+        _shop.AddChild(MakeLabel(62,100,1120,62,15,
+            "Source-confirmed case contents and credit prices. Case odds are "+
+            "not recovered: locally simulated uniform draws only among "+
+            "unowned standard skins. Exclusive Hallows is off-sale."));
+        _shopCreditsLabel=MakeLabel(62,172,1000,34,16,"");
+        _shop.AddChild(_shopCreditsLabel);
         var back=new Button {
-            OffsetLeft=1010,OffsetTop=40,OffsetRight=1200,OffsetBottom=90,
+            OffsetLeft=1030,OffsetTop=38,OffsetRight=1210,OffsetBottom=88,
             Text="BACK"
         };
         back.Pressed += ShowMenu;
         _shop.AddChild(back);
 
-        var cases=Pass52SourceShopCatalog.All;
+        var cases=SkinCaseCatalog.Cases;
         for(var i=0;i<cases.Count;i++)
         {
             var source=cases[i];
             var column=i%2;
             var row=i/2;
             var left=62+column*590;
-            var top=240+row*79;
+            var top=218+row*67;
             var button=new Button {
                 Name="ShopCase_"+source.Name,
                 OffsetLeft=left,
                 OffsetTop=top,
                 OffsetRight=left+545,
-                OffsetBottom=top+63,
+                OffsetBottom=top+55,
                 Text="CASE: "+source.Name.ToUpperInvariant()+"  |  $"+
-                    source.PriceCredits.ToString("N0")+" CREDITS"
+                    source.PriceCredits.ToString("N0")+" CREDITS"+
+                    (source.OnSale?"":"  [OFF-SALE]")
             };
             button.Pressed += () =>
             {
-                if (_shopCaseDetail is not null)
-                    _shopCaseDetail.Text = source.Name+" source price: $"+
-                        source.PriceCredits.ToString("N0")+
-                        " credits. Case opening, rewards and transactions are not implemented offline.";
+                _selectedShopCase=source.Name;
+                UpdateShopSelection();
             };
             _shop.AddChild(button);
         }
-        _shopCaseDetail=MakeLabel(62,563,1110,80,16,
-            "Select a case to inspect its original price. No credits are spent.");
+        _shopCaseDetail=MakeLabel(62,493,1130,80,15,"");
         _shop.AddChild(_shopCaseDetail);
+        _shopOpenButton=new Button {
+            Name="ShopOpenSelectedCase",
+            OffsetLeft=62,OffsetTop=604,OffsetRight=444,OffsetBottom=659,
+            Text="OPEN SELECTED CASE"
+        };
+        _shopOpenButton.Pressed += HandleOpenSelectedCase;
+        _shop.AddChild(_shopOpenButton);
+        var ownedButton=new Button {
+            Name="ShopOwnedSkins",
+            OffsetLeft=467,OffsetTop=604,OffsetRight=849,OffsetBottom=659,
+            Text="OWNED SKINS / APPLY / SELL"
+        };
+        ownedButton.Pressed += () => ShowSkinInventory(true);
+        _shop.AddChild(ownedButton);
+        UpdateShopSelection();
+    }
+
+    private void ShowSkinInventory(bool returnToShop)
+    {
+        _skinInventoryReturnsToShop=returnToShop;
+        _shop?.QueueFree();
+        _shop=null;
+        _shopCaseDetail=null;
+        _shopCreditsLabel=null;
+        _shopOpenButton=null;
+        _armory?.QueueFree();
+        _armory=null;
+        _menu?.QueueFree();
+        _menu=null;
+        _bulletin?.QueueFree();
+        _bulletin=null;
+        _perkMenu?.QueueFree();
+        _perkMenu=null;
+        EnsureOriginalLobby("Loadout");
+        var showroom=_sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName);
+        showroom?.ShowForProfile(_runtime.Profile);
+        _skinInventory?.QueueFree();
+        _skinInventory=new CanvasLayer { Name="Pass53OwnedSkinInventory" };
+        AddChild(_skinInventory);
+        AddBackground(_skinInventory,showroom is null ? (float?)null : .48f);
+        Input.MouseMode=Input.MouseModeEnum.Visible;
+
+        var profile=_runtime.Profile;
+        var owned=(profile?.OwnedSkins ?? [])
+            .Select(SkinCaseCatalog.FindSkin).Where(skin=>skin is not null)
+            .OrderBy(skin=>skin!.CaseName,StringComparer.Ordinal)
+            .ThenBy(skin=>skin!.Name,StringComparer.Ordinal)
+            .ToArray();
+        if(_selectedSkinId is null ||
+            !owned.Any(skin=>skin!.Id==_selectedSkinId))
+            _selectedSkinId=owned.FirstOrDefault()?.Id;
+
+        _skinInventory.AddChild(MakeLabel(58,38,910,57,34,
+            "OFFLINE SKIN INVENTORY"));
+        _skinInventory.AddChild(MakeLabel(60,110,1130,48,15,
+            "OWNED "+owned.Length+"/118 SOURCE SKINS | EXCLUSIVES CANNOT BE SOLD | "+
+            "3D FINISHES ARE APPROXIMATE COLOR PROXIES"));
+        var back=new Button {
+            OffsetLeft=1020,OffsetTop=42,OffsetRight=1200,OffsetBottom=91,
+            Text="BACK"
+        };
+        back.Pressed += () =>
+        {
+            if(_skinInventoryReturnsToShop)ShowShop();
+            else ShowArmory();
+        };
+        _skinInventory.AddChild(back);
+        _skinDetailLabel=MakeLabel(61,160,1130,42,15,"");
+        _skinInventory.AddChild(_skinDetailLabel);
+
+        var scroll=new ScrollContainer {
+            OffsetLeft=60,OffsetTop=210,OffsetRight=1205,OffsetBottom=541
+        };
+        _skinInventory.AddChild(scroll);
+        var list=new VBoxContainer {CustomMinimumSize=new Vector2(1090,0)};
+        list.AddThemeConstantOverride("separation",5);
+        scroll.AddChild(list);
+        foreach(var item in owned)
+        {
+            var skin=item!;
+            var button=new Button {
+                Name="OwnedSkin_"+skin.Name.Replace(' ','_'),
+                CustomMinimumSize=new Vector2(1080,36),
+                Text=(skin.Id==_selectedSkinId?"[SELECTED] ":"")+
+                    skin.CaseName+" | "+skin.Name+
+                    (skin.Exclusive?" [EXCLUSIVE]":""),
+                Alignment=HorizontalAlignment.Left
+            };
+            button.Pressed += () =>
+            {
+                _selectedSkinId=skin.Id;
+                UpdateOwnedSkinSelection();
+            };
+            list.AddChild(button);
+        }
+
+        var primary=new Button {
+            Name="ApplySkinPrimary",
+            OffsetLeft=62,OffsetTop=563,OffsetRight=335,OffsetBottom=612,
+            Text="APPLY TO PRIMARY",
+            Disabled=_selectedSkinId is null
+        };
+        primary.Pressed += () => HandleSkinApply("Primary");
+        _skinInventory.AddChild(primary);
+        var secondary=new Button {
+            Name="ApplySkinSecondary",
+            OffsetLeft=345,OffsetTop=563,OffsetRight=620,OffsetBottom=612,
+            Text="APPLY TO SECONDARY",
+            Disabled=_selectedSkinId is null
+        };
+        secondary.Pressed += () => HandleSkinApply("Secondary");
+        _skinInventory.AddChild(secondary);
+        var sell=new Button {
+            Name="SellOwnedSkin",
+            OffsetLeft=630,OffsetTop=563,OffsetRight=900,OffsetBottom=612,
+            Text="SELL SELECTED SKIN",
+            Disabled=_selectedSkinId is null ||
+                SkinCaseCatalog.FindSkin(_selectedSkinId)?.Exclusive == true
+        };
+        sell.Pressed += () =>
+        {
+            if(_selectedSkinId is null)return;
+            var outcome=_runtime.SellOwnedSkin(_selectedSkinId);
+            ShowSkinInventory(_skinInventoryReturnsToShop);
+            if(_skinDetailLabel is not null)
+                _skinDetailLabel.Text=outcome.Message;
+        };
+        _skinInventory.AddChild(sell);
+        var removePrimary=new Button {
+            Name="ClearSkinPrimary",
+            OffsetLeft=62,OffsetTop=627,OffsetRight=335,OffsetBottom=675,
+            Text="RESET PRIMARY FINISH"
+        };
+        removePrimary.Pressed += () => HandleSkinClear("Primary");
+        _skinInventory.AddChild(removePrimary);
+        var removeSecondary=new Button {
+            Name="ClearSkinSecondary",
+            OffsetLeft=345,OffsetTop=627,OffsetRight=620,OffsetBottom=675,
+            Text="RESET SECONDARY FINISH"
+        };
+        removeSecondary.Pressed += () => HandleSkinClear("Secondary");
+        _skinInventory.AddChild(removeSecondary);
+        UpdateOwnedSkinSelection();
+    }
+
+    private void HandleSkinApply(string slot)
+    {
+        var weapon=_runtime.Profile?.Loadout.GetValueOrDefault(slot) ?? "";
+        var outcome=_runtime.ApplyWeaponSkin(weapon,_selectedSkinId);
+        ShowSkinInventory(_skinInventoryReturnsToShop);
+        if(_skinDetailLabel is not null)
+            _skinDetailLabel.Text=outcome.Message;
+    }
+
+    private void HandleSkinClear(string slot)
+    {
+        var weapon=_runtime.Profile?.Loadout.GetValueOrDefault(slot) ?? "";
+        var outcome=_runtime.ApplyWeaponSkin(weapon,null);
+        ShowSkinInventory(_skinInventoryReturnsToShop);
+        if(_skinDetailLabel is not null)
+            _skinDetailLabel.Text=outcome.Message;
+    }
+
+    private void UpdateOwnedSkinSelection()
+    {
+        if(_skinDetailLabel is null)return;
+        var skin=SkinCaseCatalog.FindSkin(_selectedSkinId);
+        if(skin is null)
+        {
+            _skinDetailLabel.Text="No skins owned. Open an available case with credits.";
+            return;
+        }
+        var profile=_runtime.Profile;
+        var applied=profile?.EquippedWeaponSkins
+            .Where(pair=>pair.Value==skin.Id)
+            .Select(pair=>pair.Key).ToArray() ?? [];
+        _skinDetailLabel.Text=skin.Name+" ("+skin.CaseName+")"+
+            (skin.Exclusive?" | EXCLUSIVE - CANNOT SELL":" | SELL $"+
+                (SkinCaseCatalog.FindCase(skin.CaseName)!.PriceCredits/2).ToString("N0"))+
+            (applied.Length>0 ? " | ON "+string.Join(", ",applied) : "");
     }
 
     private void ShowBulletin()
@@ -2355,6 +2740,9 @@ public partial class Bootstrap : Node
         EnsureOriginalLobby("Loadout");
         var showroom=_sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
             Pass51OriginalLoadoutDisplayRuntime.StageName);
+        _skinInventory?.QueueFree();
+        _skinInventory=null;
+        _skinDetailLabel=null;
         showroom?.ShowForProfile(_runtime.Profile);
         _menu?.QueueFree();
         _menu = null;
@@ -2389,6 +2777,13 @@ public partial class Bootstrap : Node
         _armoryPreviewLabel=MakeLabel(60,170,1140,36,14,
             showroom?.PreviewStatus ?? "3D loadout preview requires the private original lobby pack.");
         _armory.AddChild(_armoryPreviewLabel);
+        var skinInventoryButton=new Button {
+            Name="ArmoryOpenSkins",
+            OffsetLeft=795,OffsetTop=133,OffsetRight=1018,OffsetBottom=176,
+            Text="SKIN INVENTORY"
+        };
+        skinInventoryButton.Pressed += () => ShowSkinInventory(false);
+        _armory.AddChild(skinInventoryButton);
         _armory.AddChild(MakeLabel(60,198,1130,24,12,
             "Hold RIGHT MOUSE and drag to rotate the selected preview (pitch limited to 25 degrees)."));
 
@@ -2532,6 +2927,11 @@ public partial class Bootstrap : Node
         _shop?.QueueFree();
         _shop=null;
         _shopCaseDetail=null;
+        _shopCreditsLabel=null;
+        _shopOpenButton=null;
+        _skinInventory?.QueueFree();
+        _skinInventory=null;
+        _skinDetailLabel=null;
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();

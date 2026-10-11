@@ -256,6 +256,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
     {
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
         _viewModel.SetWeapon(spec);
+        // Pass53 cosmetic proxy is render-only and never modifies damage,
+        // recoil, cooldowns, projectile paths or inventory authority.
+        _viewModel.ApplyCosmeticOverlay(
+            Runtime?.Profile?.EquippedWeaponSkins.GetValueOrDefault(spec.Name));
 
         if (spec.IsMelee)
         {

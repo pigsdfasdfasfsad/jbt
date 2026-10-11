@@ -83,6 +83,27 @@ public partial class LocalSessionNode : Node
     public void EndWaveCleanup() => Submit(new EndWaveCleanupCommand());
     public void CompleteObjective(string objectiveId, string family) =>
         Submit(new CompleteObjectiveCommand(objectiveId, family));
+    public SkinCaseService.Result OpenSkinCase(string caseName)
+    {
+        if(Session is null) return SkinCaseService.Result.Fail("No offline profile.");
+        Submit(new OpenSkinCaseCommand(caseName));
+        return Session.LastSkinAction;
+    }
+
+    public SkinCaseService.Result SellOwnedSkin(string skinId)
+    {
+        if(Session is null) return SkinCaseService.Result.Fail("No offline profile.");
+        Submit(new SellOwnedSkinCommand(skinId));
+        return Session.LastSkinAction;
+    }
+
+    public SkinCaseService.Result ApplyWeaponSkin(string weaponName,string? skinId)
+    {
+        if(Session is null) return SkinCaseService.Result.Fail("No offline profile.");
+        Submit(new ApplyWeaponSkinCommand(weaponName,skinId));
+        return Session.LastSkinAction;
+    }
+
     public bool PurchaseWeapon(string weapon,int requiredLevel,int price)
     {
         if(Session is null)return false;

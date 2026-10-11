@@ -8,9 +8,9 @@ namespace Twr.Godot;
 /// Pass52: source-confirmed credit-price labels for all seven original case
 /// families. From user-supplied ModuleScript.Shop.Source.txt,
 /// SHA256 4df17a84418b830e3a26f9246057a38b08234597344f62d2335a6a661e98e9db.
-/// Original case buy/drop/reward transactions are NOT implemented. This class
-/// is metadata only: reading it cannot spend credits, award skins or contact
-/// Roblox commerce services.
+/// This older source-price view remains read-only. Pass53 case purchases
+/// and rewards are now authorized by Twr.Domain.Services.SkinCaseService,
+/// not these display labels. No Roblox commerce services are contacted.
 /// </summary>
 public static class Pass52SourceShopCatalog
 {

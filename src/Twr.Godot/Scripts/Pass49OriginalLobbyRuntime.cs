@@ -200,7 +200,7 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
         // still rejects all synthetic packs; only explicit CI smoke flags
         // can enable this fixture.
         var smoke=OS.GetCmdlineUserArgs().Any(arg =>
-            arg is "--smoke-pass49" or "--smoke-pass50" or "--smoke-pass51" or "--smoke-pass52");
+            arg is "--smoke-pass49" or "--smoke-pass50" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53");
         if(synthetic && !smoke)
             throw new InvalidDataException("Synthetic lobby used outside smoke test");
         if(!synthetic &&

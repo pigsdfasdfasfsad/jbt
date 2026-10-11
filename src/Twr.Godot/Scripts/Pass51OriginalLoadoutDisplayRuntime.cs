@@ -27,6 +27,9 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
     private readonly Dictionary<string, string> _displayNames =
         new(StringComparer.Ordinal);
     private Node3D? _previewPivot;
+    private Profile? _skinProfile;
+    public int VisibleCosmeticProxyParts =>
+        _models.Values.Sum(model => model.CosmeticProxyTintParts);
     public float PreviewYawDegrees { get; private set; }
     public float PreviewPitchDegrees { get; private set; }
     public int AuthoredOffsetCount => Pass52SourceLoadoutOffsets.SourceOffsetCount;
@@ -106,6 +109,7 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
     /// </summary>
     public void ShowForProfile(Profile? profile)
     {
+        _skinProfile = profile;
         foreach (var slot in EquippedSlots)
         {
             var name = profile?.Loadout.GetValueOrDefault(slot) ?? "";
@@ -137,6 +141,8 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
             return false;
         var changed = PreviewWeaponName != spec.Name;
         var model = SetModel("View", spec, 0.85f);
+        model.ApplyCosmeticOverlay(
+            _skinProfile?.EquippedWeaponSkins.GetValueOrDefault(spec.Name));
         if (changed && _previewPivot is not null)
         {
             PreviewYawDegrees = 0;
@@ -184,7 +190,11 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
         if (_models.TryGetValue(slot, out var current) &&
             GodotObject.IsInstanceValid(current) &&
             _displayNames.GetValueOrDefault(slot) == spec.Name)
+        {
+            current.ApplyCosmeticOverlay(
+                _skinProfile?.EquippedWeaponSkins.GetValueOrDefault(spec.Name));
             return current;
+        }
 
         ClearSlot(slot);
         var holder = slot == "View"
@@ -195,6 +205,8 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
         };
         holder.AddChild(model);
         model.SetWeapon(spec);
+        model.ApplyCosmeticOverlay(
+            _skinProfile?.EquippedWeaponSkins.GetValueOrDefault(spec.Name));
         // Source Shop/Lobby.lua uses authored LoadoutPoints[slot] CFrame
         // * each weapon module's LoadoutOffset. The selected View position
         // is separate and originally based on Handle/MidToHandle instead.

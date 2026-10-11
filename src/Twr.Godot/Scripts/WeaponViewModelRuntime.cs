@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Godot;
+using Twr.Domain.Model;
 
 namespace Twr.Godot;
 
@@ -14,6 +15,8 @@ namespace Twr.Godot;
 public partial class WeaponViewModelRuntime : Node3D
 {
     public bool UsingPreparedScene { get; private set; }
+    public string ActiveCosmeticSkinId { get; private set; } = "";
+    public int CosmeticProxyTintParts { get; private set; }
     public bool UsingOriginalToolAssembly { get; private set; }
     public int SourceVisibleParts { get; private set; }
     public int SourceMissingMeshProxies { get; private set; }
@@ -31,6 +34,46 @@ public partial class WeaponViewModelRuntime : Node3D
     private float _kick;
     private float _reloadRemaining;
     private float _reloadDuration;
+
+    /// <summary>
+    /// Pass53 reconstruction proxy: the original Skin module's animated
+    /// textures and per-part PBR materials are not installed. Applying a
+    /// skin tints 3D surfaces with a translucent, deterministic fallback.
+    /// This never modifies ballistic stats, hitboxes or authored geometry.
+    /// </summary>
+    public void ApplyCosmeticOverlay(string? skinId)
+    {
+        ActiveCosmeticSkinId = "";
+        CosmeticProxyTintParts = 0;
+        if (_rig is null) return;
+        var skin = SkinCaseCatalog.FindSkin(skinId);
+        var tint = skin is null ? null : BuildCosmeticProxyTint(skin);
+        foreach(var part in _rig.FindChildren("*","MeshInstance3D",true,false)
+            .OfType<MeshInstance3D>())
+        {
+            if(part.Name.ToString()=="MuzzleFlash") continue;
+            part.MaterialOverlay = tint;
+            if(tint is not null) CosmeticProxyTintParts++;
+        }
+        if(tint is not null) ActiveCosmeticSkinId = skin!.Id;
+    }
+
+    private static StandardMaterial3D BuildCosmeticProxyTint(SkinCaseCatalog.Skin skin)
+    {
+        // Not authentic source hues: a stable distinguishable fallback while
+        // the owner keeps original texture/material resources private.
+        uint hash = 2166136261;
+        foreach(var c in skin.Id)
+            hash = unchecked((hash ^ c) * 16777619);
+        var hue = (hash % 360) / 360f;
+        var saturation = skin.CaseName=="Neon" ? .82f : .56f;
+        var rgb = Color.FromHsv(hue,saturation,.86f,.34f);
+        return new StandardMaterial3D {
+            AlbedoColor = rgb,
+            Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+            Roughness = .58f
+        };
+    }
 
     public void SetWeapon(RuntimeWeaponDefinition spec)
     {
@@ -183,6 +226,8 @@ public partial class WeaponViewModelRuntime : Node3D
         _rig.AddChild(_flash);
         UsingPreparedScene = false;
         UsingOriginalToolAssembly = false;
+        ActiveCosmeticSkinId = "";
+        CosmeticProxyTintParts = 0;
         SourceVisibleParts = 0;
         SourceMissingMeshProxies = 0;
         _reloadRemaining = _reloadDuration = _kick = 0;
