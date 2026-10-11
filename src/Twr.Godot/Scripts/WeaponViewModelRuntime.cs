@@ -15,6 +15,8 @@ public partial class WeaponViewModelRuntime : Node3D
 {
     public bool UsingPreparedScene { get; private set; }
     public bool UsingOriginalToolAssembly { get; private set; }
+    public int SourceVisibleParts { get; private set; }
+    public int SourceMissingMeshProxies { get; private set; }
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -60,6 +62,8 @@ public partial class WeaponViewModelRuntime : Node3D
         if (OriginalWeaponSourceRuntime.TryBuild(_rig!, spec.Name))
         {
             UsingOriginalToolAssembly = true;
+            SourceVisibleParts = OriginalWeaponSourceRuntime.LastVisibleSourceParts;
+            SourceMissingMeshProxies = OriginalWeaponSourceRuntime.LastUnavailableMeshProxies;
             _flash.Position = OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)
                 ?? _flash.Position;
             TrackMechanicalParts();
@@ -75,6 +79,8 @@ public partial class WeaponViewModelRuntime : Node3D
         if (OriginalWeaponSourceRuntime.TryBuild(_rig!, type))
         {
             UsingOriginalToolAssembly = true;
+            SourceVisibleParts = OriginalWeaponSourceRuntime.LastVisibleSourceParts;
+            SourceMissingMeshProxies = OriginalWeaponSourceRuntime.LastUnavailableMeshProxies;
             return;
         }
         var housing = Material(new Color(0.27f, 0.29f, 0.23f));
@@ -177,6 +183,8 @@ public partial class WeaponViewModelRuntime : Node3D
         _rig.AddChild(_flash);
         UsingPreparedScene = false;
         UsingOriginalToolAssembly = false;
+        SourceVisibleParts = 0;
+        SourceMissingMeshProxies = 0;
         _reloadRemaining = _reloadDuration = _kick = 0;
     }
 
