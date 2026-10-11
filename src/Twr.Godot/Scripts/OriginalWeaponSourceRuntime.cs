@@ -200,7 +200,7 @@ public static class OriginalWeaponSourceRuntime
             var synthetic = root.TryGetProperty("synthetic",out var fixture) &&
                 fixture.ValueKind == JsonValueKind.True;
             var testMode = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-source-weapons" or "--smoke-pass47");
+                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51");
             // A synthetic fixture may never silently impersonate an original
             // tool pack during ordinary play.
             if (synthetic && !testMode)

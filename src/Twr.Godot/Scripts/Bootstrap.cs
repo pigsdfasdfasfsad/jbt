@@ -11,6 +11,7 @@ public partial class Bootstrap : Node
     private CanvasLayer? _armory;
     private CanvasLayer? _bulletin;
     private Label? _bulletinPage;
+    private Label? _armoryPreviewLabel;
     private PerkMenuRuntime? _perkMenu;
     private GameplayRoot? _game;
     private Pass49OriginalLobbyRuntime? _sourceLobby;
@@ -20,6 +21,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass51",StringComparer.Ordinal))
+        {
+            RunPass51Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass50",StringComparer.Ordinal))
         {
             RunPass50Smoke();
@@ -460,6 +466,109 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass51Smoke()
+    {
+        // Exported Windows Godot runtime; all three content sidecars in this
+        // test are fabricated and are removed before the CI job terminates.
+        ShowMenu();
+        var lobby = _sourceLobby ??
+            throw new InvalidOperationException("Pass51 synthetic source lobby absent");
+        var stage = lobby.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName);
+        if (lobby.OwnerSourceVerified || stage is null ||
+            stage.OwnerLobbyVerified || stage.AuthoredAnchorCount != 5 ||
+            stage.Visible || stage.VisibleWeaponModels != 0 ||
+            !stage.HasAnchor("Primary") || !stage.HasAnchor("Secondary") ||
+            !stage.HasAnchor("Melee") || !stage.HasAnchor("Utility") ||
+            !stage.HasAnchor("View") ||
+            !lobby.TryGetLoadoutPoint("View", out var authoredFrame))
+            throw new InvalidOperationException(
+                "Pass51 source Loadout points were not reconstructed safely");
+
+        var physicalAnchor = stage.GetNodeOrNull<Node3D>(
+            "OriginalLoadoutAnchor_View");
+        if (physicalAnchor is null ||
+            physicalAnchor.Transform.Origin.DistanceTo(authoredFrame.Origin) > .000001f)
+            throw new InvalidOperationException(
+                "Pass51 showroom did not preserve the original source anchor position");
+
+        var creditsBefore = _runtime.Player?.Credits ?? -1;
+        var profile = _runtime.Profile ??
+            throw new InvalidOperationException("Pass51 profile is unavailable");
+        var ownedBefore = profile.Unlocks.Count;
+        var loadoutBefore = string.Join("|", profile.Loadout
+            .OrderBy(item => item.Key, StringComparer.Ordinal)
+            .Select(item => item.Key + ":" + item.Value));
+
+        ShowArmory();
+        var rows = _armory?.GetChildren().OfType<ScrollContainer>()
+            .SelectMany(scroll => scroll.GetChildren().OfType<VBoxContainer>())
+            .SelectMany(list => list.GetChildren().OfType<Button>()).ToArray()
+            ?? [];
+        if (lobby.ActiveCameraName != "Loadout" || !stage.Visible ||
+            rows.Length != 91 || stage.VisibleWeaponModels < 1 ||
+            _armoryPreviewLabel is null)
+            throw new InvalidOperationException(
+                "Pass51 original 3D loadout is not connected to the functional 91-weapon armory");
+
+        var glock = rows.FirstOrDefault(button =>
+            button.Text.Contains("Glock 17", StringComparison.Ordinal));
+        if (glock is null)
+            throw new InvalidOperationException("Pass51 armory hover target missing");
+        glock.EmitSignal(Control.SignalName.MouseEntered);
+        if (stage.PreviewWeaponName != "Glock 17" ||
+            !stage.PreviewUsesSourceAssembly ||
+            stage.PreviewVisibleParts < 4 ||
+            !_armoryPreviewLabel.Text.Contains("Glock 17",StringComparison.Ordinal) ||
+            OriginalWeaponSourceRuntime.OwnerSourcePackVerified)
+            throw new InvalidOperationException(
+                "Pass51 source-backed 3D weapon hover preview failed or impersonated owner art");
+
+        if (!stage.Preview("M60") || stage.PreviewUsesSourceAssembly ||
+            stage.PreviewVisibleParts < 2 ||
+            !stage.PreviewStatus.Contains("APPROXIMATE",StringComparison.Ordinal) ||
+            stage.Preview("UNAVAILABLE_51"))
+            throw new InvalidOperationException(
+                "Pass51 unavailable model fallback did not remain explicit");
+        var loadoutAfter = string.Join("|",profile.Loadout
+            .OrderBy(item => item.Key,StringComparer.Ordinal)
+            .Select(item => item.Key + ":" + item.Value));
+        if ((_runtime.Player?.Credits ?? -1) != creditsBefore ||
+            profile.Unlocks.Count != ownedBefore || loadoutAfter != loadoutBefore)
+            throw new InvalidOperationException(
+                "Pass51 preview wrongly purchased/equipped a weapon or changed credits");
+
+        var back = _armory?.GetChildren().OfType<Button>()
+            .FirstOrDefault(button => button.Text == "BACK");
+        back?.EmitSignal(Button.SignalName.Pressed);
+        if (_menu is null || stage.Visible || lobby.ActiveCameraName != "Start")
+            throw new InvalidOperationException(
+                "Pass51 showroom remained on screen after returning to Start");
+
+        var bulletinButton = _menu.GetChildren().OfType<Button>()
+            .FirstOrDefault(button => button.Text == "BULLETIN BOARD");
+        bulletinButton?.EmitSignal(Button.SignalName.Pressed);
+        if (_bulletin is null || lobby.ActiveCameraName != "Leaderboards" ||
+            stage.Visible)
+            throw new InvalidOperationException(
+                "Pass51 display leaked over Pass50 bulletin-board camera");
+
+        var boardBack = _bulletin.GetChildren().OfType<Button>()
+            .FirstOrDefault(button => button.Text == "BACK");
+        boardBack?.EmitSignal(Button.SignalName.Pressed);
+        StartGame("Manor");
+        if (_sourceLobby is not null || _game is null)
+            throw new InvalidOperationException(
+                "Pass51 source loadout display leaked into active survival map");
+
+        GD.Print("TWR_SMOKE_PASS51_LOADOUT_OK synthetic_only=true " +
+            "original_anchor_transforms=5 armory_rows=91 source_preview_parts=4 " +
+            "missing_source_fallback=true preview_does_not_purchase=true " +
+            "start_camera_restored=true bulletin_isolated=true " +
+            "match_scene_has_no_lobby=true no_public_exe_artifact=true");
         GetTree().Quit(0);
     }
 
@@ -1874,6 +1983,9 @@ public partial class Bootstrap : Node
         _bulletin?.QueueFree();
         _bulletin=null;
         _bulletinPage=null;
+        _armoryPreviewLabel=null;
+        _sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName)?.HideDisplay();
         EnsureOriginalLobby("Start");
         Input.MouseMode = Input.MouseModeEnum.Visible;
         _menu = new CanvasLayer { Name = "MainMenu" };
@@ -1952,6 +2064,8 @@ public partial class Bootstrap : Node
 
     private void ShowBulletin()
     {
+        _sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName)?.HideDisplay();
         EnsureOriginalLobby("Leaderboards");
         _menu?.QueueFree();
         _menu=null;
@@ -2000,6 +2114,8 @@ public partial class Bootstrap : Node
 
     private void ShowPerks()
     {
+        _sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName)?.HideDisplay();
         EnsureOriginalLobby("Perks");
         _menu?.QueueFree();
         _menu=null;
@@ -2021,6 +2137,9 @@ public partial class Bootstrap : Node
     private void ShowArmory()
     {
         EnsureOriginalLobby("Loadout");
+        var showroom=_sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName);
+        showroom?.ShowForProfile(_runtime.Profile);
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();
@@ -2028,7 +2147,7 @@ public partial class Bootstrap : Node
         Input.MouseMode = Input.MouseModeEnum.Visible;
         _armory = new CanvasLayer { Name = "Armory" };
         AddChild(_armory);
-        AddBackground(_armory);
+        AddBackground(_armory, showroom is null ? (float?)null : .45f);
 
         _armory.AddChild(MakeLabel(58, 34, 1160, 58, 36, "ARMORY / LOADOUT"));
         _armory.AddChild(MakeLabel(60, 92, 1000, 42, 16, ProfileStatusText()));
@@ -2051,10 +2170,14 @@ public partial class Bootstrap : Node
         };
         _armory.AddChild(back);
 
+        _armoryPreviewLabel=MakeLabel(60,170,1140,36,14,
+            showroom?.PreviewStatus ?? "3D loadout preview requires the private original lobby pack.");
+        _armory.AddChild(_armoryPreviewLabel);
+
         var scroll = new ScrollContainer
         {
             OffsetLeft = 60,
-            OffsetTop = 185,
+            OffsetTop = 215,
             OffsetRight = 1210,
             OffsetBottom = 685
         };
@@ -2079,6 +2202,11 @@ public partial class Bootstrap : Node
             Pass46ArmoryArtDecoration.Apply(button, spec.Name);
             var selected = spec;
             button.Pressed += () => HandleArmoryWeapon(selected);
+            button.MouseEntered += () =>
+            {
+                if(showroom?.Preview(selected.Name) == true && _armoryPreviewLabel is not null)
+                    _armoryPreviewLabel.Text=showroom.PreviewStatus;
+            };
             list.AddChild(button);
         }
     }
@@ -2182,6 +2310,7 @@ public partial class Bootstrap : Node
         _bulletin?.QueueFree();
         _bulletin=null;
         _bulletinPage=null;
+        _armoryPreviewLabel=null;
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();

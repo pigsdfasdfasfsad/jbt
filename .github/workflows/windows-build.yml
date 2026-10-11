@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview]
     paths:
       - 'src/**'
       - 'content/**'
@@ -43,7 +43,7 @@ jobs:
             $url = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/actions/artifacts?per_page=100&page=$page"
             $response = Invoke-RestMethod -Uri $url -Headers $headers -Method Get
             $batch = @($response.artifacts)
-            $matching += @($batch | Where-Object { $_.name -eq 'ThoseWhoRemainOffline-Windows-x64' })
+            $matching += @($batch | Where-Object { $_.name -eq 'ThoseWhoRemainOffline-Windows-x64' -or $_.name -match '^TWR-Pass[0-9]+-Windows' })
             $page++
           } while ($batch.Count -eq 100)
           foreach ($artifact in $matching) {
@@ -594,8 +594,51 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass50 fabricated underlying lobby cleanup failed' }
           }
 
+      - name: Smoke Pass 51 source-positioned 3D loadout preview and functional offline armory
+        if: success() && github.ref_name == 'twr-pass51-original-loadout-preview'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          $sourceLobby = Join-Path $outputDir 'Content/Lobby/SourceLobby49.json.gz'
+          $sourceSigns = Join-Path $outputDir 'Content/Lobby/LobbySigns50.json.gz'
+          $sourceTools = Join-Path $outputDir 'Content/Weapons/SourceWeaponModels.json.gz'
+          foreach ($path in @($sourceLobby, $sourceSigns, $sourceTools)) {
+            if (Test-Path -LiteralPath $path) { throw "Pass51 refuses to overwrite preexisting private asset: $path" }
+          }
+          python tools/maps/make_pass49_lobby_smoke_fixture.py --output $sourceLobby --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass51 synthetic original-style lobby creation failed' }
+          try {
+            python tools/maps/make_pass50_bulletin_smoke_fixture.py --output $sourceSigns --create
+            if ($LASTEXITCODE -ne 0) { throw 'Pass51 safe bulletin creation failed' }
+            try {
+              python tools/maps/make_source_weapon_smoke_fixture.py --output $sourceTools
+              if ($LASTEXITCODE -ne 0) { throw 'Pass51 fabricated weapon creation failed' }
+              try {
+                $stdout = Join-Path $env:RUNNER_TEMP 'pass51.stdout.txt'
+                $stderr = Join-Path $env:RUNNER_TEMP 'pass51.stderr.txt'
+                $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+                $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','360','--','--smoke-pass51') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+                $output = @()
+                if (Test-Path $stdout) { $output += Get-Content $stdout }
+                if (Test-Path $stderr) { $output += Get-Content $stderr }
+                $output | ForEach-Object { Write-Host $_ }
+                if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS51_LOADOUT_OK' })) {
+                  throw "Pass51 native source-anchored 3D loadout smoke failed. Exit: $($run.ExitCode)"
+                }
+              } finally {
+                Remove-Item -LiteralPath $sourceTools -Force -ErrorAction SilentlyContinue
+              }
+            } finally {
+              python tools/maps/make_pass50_bulletin_smoke_fixture.py --output $sourceSigns --clean
+              if ($LASTEXITCODE -ne 0) { throw 'Pass51 bulletin fixture cleanup failed' }
+            }
+          } finally {
+            python tools/maps/make_pass49_lobby_smoke_fixture.py --output $sourceLobby --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass51 lobby fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -654,8 +697,10 @@ jobs:
           $bulletinManifests = @(Get-ChildItem -Path build/output -Filter 'SOURCE_LOBBY_SIGNS_MANIFEST50.json' -File -Recurse -ErrorAction SilentlyContinue)
           if ($bulletinManifests.Count -gt 0) { throw 'Source leaderboard historical UI metadata leaked into public output' }
 
+      # The original source packs and exported Windows binaries must not be publicly
+      # released. Retained legacy download steps are explicitly disabled.
       - name: Upload verified Pass 29 Windows build (no private original assets)
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
+        if: false && success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass36-Windows-x64-NoPrivateAssets
@@ -665,7 +710,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 38 Windows build (no private source or audio assets)
-        if: success() && github.ref_name == 'twr-pass38-source-soundscapes'
+        if: false && success() && github.ref_name == 'twr-pass38-source-soundscapes'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass38-Windows-x64-NoPrivateAssets
@@ -675,7 +720,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 39 Windows build (no original private map assets)
-        if: success() && github.ref_name == 'twr-pass39-original-laboratory'
+        if: false && success() && github.ref_name == 'twr-pass39-original-laboratory'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass39-Windows-x64-NoPrivateAssets
@@ -685,7 +730,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 40 Windows build (no owner-derived private source packs)
-        if: success() && github.ref_name == 'twr-pass40-grounded-lab-navigation'
+        if: false && success() && github.ref_name == 'twr-pass40-grounded-lab-navigation'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass40-Windows-x64-NoPrivateAssets
@@ -695,7 +740,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 41 Windows build (no owner-private source packs)
-        if: success() && github.ref_name == 'twr-pass41-source-native-bridges'
+        if: false && success() && github.ref_name == 'twr-pass41-source-native-bridges'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass41-Windows-x64-NoPrivateAssets
@@ -705,7 +750,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 42 Windows build (no private original source data)
-        if: success() && github.ref_name == 'twr-pass42-jump-navigation'
+        if: false && success() && github.ref_name == 'twr-pass42-jump-navigation'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass42-Windows-x64-NoPrivateAssets
@@ -715,7 +760,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 43 Windows build (no owner-private original assets)
-        if: success() && github.ref_name == 'twr-pass43-physical-jump-verification'
+        if: false && success() && github.ref_name == 'twr-pass43-physical-jump-verification'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass43-Windows-x64-NoPrivateAssets
@@ -725,7 +770,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 44 Windows build (no owner-private original assets)
-        if: success() && github.ref_name == 'twr-pass44-native-lab-streaming'
+        if: false && success() && github.ref_name == 'twr-pass44-native-lab-streaming'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass44-Windows-x64-NoPrivateAssets
@@ -735,7 +780,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 45 Windows build (no owner-private original assets)
-        if: success() && github.ref_name == 'twr-pass45-lab-proxy-visibility'
+        if: false && success() && github.ref_name == 'twr-pass45-lab-proxy-visibility'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass45-Windows-x64-NoPrivateAssets
@@ -745,7 +790,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 46 Windows build (no original user images)
-        if: success() && github.ref_name == 'twr-pass46-offline-original-art'
+        if: false && success() && github.ref_name == 'twr-pass46-offline-original-art'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass46-Windows-x64-NoPrivateAssets
@@ -755,7 +800,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 47 Windows build (no owner original 3D model packs)
-        if: success() && github.ref_name == 'twr-pass47-original-weapon-assemblies'
+        if: false && success() && github.ref_name == 'twr-pass47-original-weapon-assemblies'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass47-Windows-x64-NoPrivateAssets
@@ -765,7 +810,7 @@ jobs:
           compression-level: 6
 
       - name: Upload validated Pass 48 Windows build
-        if: success() && github.ref_name == 'twr-pass48-infected-source-asset-kit'
+        if: false && success() && github.ref_name == 'twr-pass48-infected-source-asset-kit'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass48-Windows-x64-NoPrivateAssets
@@ -775,7 +820,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 49 Windows executable (no private original lobby)
-        if: success() && github.ref_name == 'twr-pass49-original-lobby-3d'
+        if: false && success() && github.ref_name == 'twr-pass49-original-lobby-3d'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass49-Windows-x64-NoPrivateAssets
@@ -785,7 +830,7 @@ jobs:
           compression-level: 6
 
       - name: Upload verified Pass 50 Windows executable (no owner source bulletin data)
-        if: success() && github.ref_name == 'twr-pass50-original-bulletin-board'
+        if: false && success() && github.ref_name == 'twr-pass50-original-bulletin-board'
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass50-Windows-x64-NoPrivateAssets

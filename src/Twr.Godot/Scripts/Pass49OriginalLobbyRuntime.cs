@@ -52,6 +52,8 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
     public string ActiveCameraName { get; private set; } = "";
     public bool HasCamera(string name) => _cameras.ContainsKey(name);
     public bool HasLoadoutPoint(string name) => _loadoutPoints.ContainsKey(name);
+    public bool TryGetLoadoutPoint(string name, out Transform3D frame) =>
+        _loadoutPoints.TryGetValue(name, out frame);
 
     public static Pass49OriginalLobbyRuntime? TryBuild(Node parent)
     {
@@ -68,6 +70,9 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
             // missing/corrupt owner-specific sign pack must never break the
             // actual map/armory/perks menu or the Pass49 3D lobby itself.
             Pass50SourceLobbySignsRuntime.TryBuild(stage);
+            // Pass51 is a display-only scene anchored to these five
+            // recovered original positions, not a mutation of gameplay.
+            Pass51OriginalLoadoutDisplayRuntime.TryBuild(stage);
             GD.Print($"TWR_PASS49_LOBBY_READY source_parts={stage.SourceGeometryParts} " +
                 $"visible={stage.VisibleSourceParts} proxy_meshes={stage.UnresolvedMeshProxyParts} " +
                 $"render_batches={stage.RenderBatchCount} cameras={stage.SourceCameraCount} " +
