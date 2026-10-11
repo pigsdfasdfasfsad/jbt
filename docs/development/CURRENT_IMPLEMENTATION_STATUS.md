@@ -1,3 +1,7 @@
+## Latest verified update: Pass 51 (October 10, 2026, US Central)
+
+Development branch: `twr-pass51-original-loadout-preview`. Successful native Windows CI: https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38104204978. **477 Python tests passed**, Godot/.NET Windows executable compiled with **0 build errors**, baseline 10-map/150-wave smoke passed, new Pass51 showroom native smoke returned `TWR_SMOKE_PASS51_LOADOUT_OK`, and owner/private/synthetic file exclusion passed. The exact five source loadout CFrames are used for a non-authoritative weapon showroom and the 91-weapon menu. Source mesh ownership and rendering remain explicitly distinguished from approximate presentation. This is tested on fabricated CI source packs; no original-asset 3D side-by-side comparison, human-driven 15-wave match or private distribution EXE was produced in this pass. [Detailed Pass51 record](PASS51_ORIGINAL_LOADOUT_PREVIEW.md).
+
 # PASS 4 — Verified source terrain and improved infected/weapon visuals (October 2026)
 
 **Source branch:** twr-offline-dev. **Latest pass 4 successful Windows

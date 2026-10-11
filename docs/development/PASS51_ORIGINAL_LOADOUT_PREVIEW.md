@@ -31,3 +31,16 @@ python tools/validation/run_all.py
 ```
 
 Run Windows Actions on `twr-pass51-original-loadout-preview`, and require the native marker `TWR_SMOKE_PASS51_LOADOUT_OK`. A green marker is required for a verified Phase 51 claim. 
+## Verified Windows checkpoint
+
+**Verified source commit:** `2730a0f0b584e0b60f8dba5567104cd33b7945e0` on `twr-pass51-original-loadout-preview`.
+**Successful Windows Actions run:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38104204978
+
+- Python: **477 tests passed** (one pytest warning unrelated to this pass).
+- .NET/Godot: Windows export **Build succeeded, 0 errors**.
+- Native baseline: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` (domain simulation only).
+- Pass51 native: `TWR_SMOKE_PASS51_LOADOUT_OK` with five anchors, 91 rows, synthetic weapon preview and fallback, no purchase side effects, Start/Leaderboards camera isolation and complete map-entry disposal.
+- CI private source exclusion gate: passed; no executable artifact was uploaded.
+
+This does not establish pixel-perfect original art or a player-controlled full 15-wave match.
+
