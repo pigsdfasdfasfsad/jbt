@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass66",StringComparer.Ordinal))
+        {
+            RunPass66Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass65",StringComparer.Ordinal))
         {
             RunPass65Smoke();
@@ -555,6 +560,183 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass66Smoke()
+    {
+        // Finite, camera-space two-bone solver with lengths anchored to
+        // the original source Survivor R6 2-stud total arm dimension.
+        foreach(var leftSide in new[]{true,false})
+        {
+            var shoulder=Pass66ArmKinematics.Shoulder(leftSide);
+            var wrist=shoulder+new Vector3(leftSide?.12f:-.12f,.12f,-.34f);
+            var solution=Pass66ArmKinematics.Solve(leftSide,wrist);
+            if(!solution.IsFinite ||
+               solution.ReachClamped ||
+               solution.ElbowError>.001f ||
+               solution.WristError>.001f ||
+               solution.Wrist.DistanceTo(wrist)>.001f ||
+               solution.UpperLength<.20f ||
+               solution.ForeLength<.20f)
+                throw new InvalidOperationException(
+                    "Pass66 bounded original-scale articulated arm failed ordinary reachable case");
+        }
+        var far=Pass66ArmKinematics.Solve(true,
+            new Vector3(-2f,-2f,-2f));
+        var invalid=Pass66ArmKinematics.Solve(false,
+            new Vector3(float.NaN,0f,0f));
+        if(!far.IsFinite || !far.ReachClamped ||
+           far.ReachScale>Pass66ArmKinematics.MaxReachScale+.0001f ||
+           !invalid.IsFinite ||
+           !Pass66ArmKinematics.TrySegment(Vector3.Zero,
+                new Vector3(0f,.36f,0f),out var upright,out var length) ||
+           Math.Abs(length-.36f)>.0001f ||
+           Math.Abs(upright.Basis.Determinant()-1f)>.001f ||
+           Pass66ArmKinematics.TrySegment(
+                Vector3.Zero,Vector3.Zero,out _,out _) ||
+           Pass66ArmKinematics.TrySegment(
+                Vector3.Zero,new Vector3(float.NaN,0f,0f),
+                out _,out _))
+            throw new InvalidOperationException(
+                "Pass66 arm overextension, degenerate segment or finite input guard failed");
+
+        if(Pass62SourceWeaponHierarchy.OwnerHierarchyVerified ||
+           OriginalWeaponSourceRuntime.OwnerSourcePackVerified)
+            throw new InvalidOperationException(
+                "Pass66 native smoke source packs must be fabricated, never original private files");
+        var glock=new WeaponViewModelRuntime{Name="Pass66Glock"};
+        AddChild(glock);
+        glock.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var armRoot=glock.GetNodeOrNull<Node3D>("ArmRig66");
+        var leftUpper=glock.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/LeftUpperArm66");
+        var leftLower=glock.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/LeftForeArm66");
+        var leftElbow=glock.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/LeftElbow66");
+        var leftShoulder=glock.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/LeftShoulder66");
+        var rightUpper=glock.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/RightUpperArm66");
+        var rightLower=glock.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/RightForeArm66");
+        var rightElbow=glock.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/RightElbow66");
+        var rightShoulder=glock.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/RightShoulder66");
+        if(armRoot is null || leftUpper is null ||
+           leftLower is null || leftElbow is null ||
+           leftShoulder is null || rightUpper is null ||
+           rightLower is null || rightElbow is null ||
+           rightShoulder is null ||
+           !glock.SourceArmRigAvailable ||
+           glock.SourceArmProxyMeshCount!=8 ||
+           glock.SourceHandProxyMeshCount!=14 ||
+           !glock.UsingOriginalToolAssembly)
+            throw new InvalidOperationException(
+                "Pass66 camera-anchored articulated upper and forearms missing");
+        if(armRoot.GetChildCount()!=8 ||
+           leftShoulder.Position.DistanceTo(
+               Pass66ArmKinematics.Shoulder(true))>.0001f ||
+           rightShoulder.Position.DistanceTo(
+               Pass66ArmKinematics.Shoulder(false))>.0001f)
+            throw new InvalidOperationException(
+                "Pass66 original-scale limb root or shoulder anchor invalid");
+        var originalLeftElbow=leftElbow.Position;
+        var originalRightElbow=rightElbow.Position;
+        glock.Reload(2.0);
+        glock._Process(.8f);
+        if(!glock.SourceHandAnimationActive ||
+           leftElbow.Position.DistanceTo(originalLeftElbow)<.012f ||
+           leftUpper.Scale.Y<.15f ||
+           leftLower.Scale.Y<.15f ||
+           rightUpper.Scale.Y<.15f ||
+           rightLower.Scale.Y<.15f ||
+           leftShoulder.Position.DistanceTo(
+               Pass66ArmKinematics.Shoulder(true))>.0001f ||
+           rightShoulder.Position.DistanceTo(
+               Pass66ArmKinematics.Shoulder(false))>.0001f)
+            throw new InvalidOperationException(
+                "Pass66 Glock wrist-following elbows did not solve while camera shoulders stayed still");
+        glock._Process(1.21);
+        if(glock.SourceHandAnimationActive ||
+           leftElbow.Position.DistanceTo(originalLeftElbow)>.0002f ||
+           rightElbow.Position.DistanceTo(originalRightElbow)>.0002f)
+            throw new InvalidOperationException(
+                "Pass66 arm elbows did not reset with source hand welds");
+
+        glock.StaticShowroomMode=true;
+        glock._Process(.02f);
+        if(armRoot.Visible)
+            throw new InvalidOperationException(
+                "Pass66 original armory preview must hide invented camera arm meshes");
+        glock.StaticShowroomMode=false;
+        glock._Process(.02f);
+        if(!armRoot.Visible)
+            throw new InvalidOperationException(
+                "Pass66 first-person arm geometry stayed hidden after showroom");
+
+        var pump=new WeaponViewModelRuntime{Name="Pass66Mossberg"};
+        AddChild(pump);
+        pump.SetWeapon(RuntimeWeaponCatalog.Get("Mossberg 500"));
+        var pumpElbow=pump.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/LeftElbow66");
+        var pumpRest=pumpElbow?.Position??Vector3.Zero;
+        pump.Fire(false);
+        pump._Process(.35f);
+        if(pumpElbow is null || !pump.SourceHandAnimationActive ||
+           pumpElbow.Position.DistanceTo(pumpRest)<.008f ||
+           !pump.SourceArmRigAvailable)
+            throw new InvalidOperationException(
+                "Pass66 source Mossberg pump support elbow failed to follow hand");
+        pump._Process(.43f);
+        if(pumpElbow.Position.DistanceTo(pumpRest)>.0002f)
+            throw new InvalidOperationException(
+                "Pass66 source shotgun arm failed to reset after pump");
+
+        var bolt=new WeaponViewModelRuntime{Name="Pass66Mosin"};
+        AddChild(bolt);
+        bolt.SetWeapon(RuntimeWeaponCatalog.Get("Mosin Nagant"));
+        var boltElbow=bolt.GetNodeOrNull<MeshInstance3D>(
+            "ArmRig66/RightElbow66");
+        var boltRest=boltElbow?.Position??Vector3.Zero;
+        bolt.Fire(false);
+        bolt._Process(.35f);
+        if(boltElbow is null || !bolt.SourceHandAnimationActive ||
+           boltElbow.Position.DistanceTo(boltRest)<.008f ||
+           !bolt.SourceArmRigAvailable)
+            throw new InvalidOperationException(
+                "Pass66 source Mosin right shoulder-elbow chain failed on bolt");
+        bolt._Process(.94f);
+        if(boltElbow.Position.DistanceTo(boltRest)>.0002f)
+            throw new InvalidOperationException(
+                "Pass66 source Mosin right arm failed to restore rest after cycling");
+
+        // A weapon switch removes the previous camera arm rig instead of
+        // leaving extra viewport geometry or stale hand joint references.
+        glock.SetWeapon(RuntimeWeaponCatalog.Get("AK-47"));
+        if(!glock.SourceArmRigAvailable ||
+           glock.SourceArmProxyMeshCount!=8 ||
+           glock.GetNodeOrNull<Node3D>("ArmRig66") is not { } newArmRoot ||
+           ReferenceEquals(armRoot,newArmRoot))
+            throw new InvalidOperationException(
+                "Pass66 weapon switch leaked or failed to rebuild arm rig");
+
+        GD.Print("TWR_SMOKE_PASS66_ARTICULATED_ARMS_OK "+
+            "original_survivor_r6_total_arm_studs=2 "+
+            "camera_fixed_shoulder_anchors=true "+
+            "deterministic_finite_two_bone_ik=true "+
+            "reach_limit_and_degenerate_input_guards=true "+
+            "two_upper_and_two_forearm_meshes=true "+
+            "source_glock_reload_elbows_follow=true "+
+            "source_mossberg_left_pump_elbow_follows=true "+
+            "source_mosin_right_bolt_elbow_follows=true "+
+            "source_hand_and_arm_rest_reset=true "+
+            "source_showroom_hides_approximate_arms=true "+
+            "weapon_switch_arm_rig_cleanup=true "+
+            "no_original_avatar_mesh_claim=true "+
+            "no_gameplay_ammo_or_damage_changes=true");
         GetTree().Quit(0);
     }
 
