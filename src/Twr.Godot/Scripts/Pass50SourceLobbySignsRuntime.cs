@@ -141,7 +141,9 @@ public partial class Pass50SourceLobbySignsRuntime : Node3D
         if(root.GetProperty("format").GetString()!="twr-pass50-source-lobby-signs-v1")
             throw new InvalidDataException("Unknown source bulletin format");
         var synthetic=root.GetProperty("synthetic").GetBoolean();
-        var smoke=OS.GetCmdlineUserArgs().Contains("--smoke-pass50",StringComparer.Ordinal);
+        var args=OS.GetCmdlineUserArgs();
+        var smoke=args.Contains("--smoke-pass50",StringComparer.Ordinal) ||
+            args.Contains("--smoke-pass51",StringComparer.Ordinal);
         if (synthetic && !smoke)
             throw new InvalidDataException("Synthetic bulletin used in normal gameplay");
         if(synthetic == ownerLobbyVerified)

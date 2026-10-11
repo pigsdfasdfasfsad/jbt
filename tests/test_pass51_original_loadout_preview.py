@@ -75,11 +75,14 @@ def test_source_lobby_is_removed_from_board_perk_and_match():
 def test_windows_action_runs_native_preview_smoke_and_does_not_ship_private_assets():
     action = read(".github/workflows/windows-build.yml")
     weapon = read("src/Twr.Godot/Scripts/OriginalWeaponSourceRuntime.cs")
+    lobby = read("src/Twr.Godot/Scripts/Pass49OriginalLobbyRuntime.cs")
+    boards = read("src/Twr.Godot/Scripts/Pass50SourceLobbySignsRuntime.cs")
     assert 'twr-pass51-original-loadout-preview' in action
     assert 'make_source_weapon_smoke_fixture.py --output $sourceTools' in action
     assert 'make_pass49_lobby_smoke_fixture.py --output $sourceLobby --create' in action
     assert 'make_pass50_bulletin_smoke_fixture.py --output $sourceSigns --create' in action
     assert '--smoke-pass51' in action and '--smoke-pass51' in weapon
+    assert '--smoke-pass51' in lobby and '--smoke-pass51' in boards
     assert 'TWR_SMOKE_PASS51_LOADOUT_OK' in action
     assert 'Remove-Item -LiteralPath $sourceTools -Force' in action
     assert 'make_pass49_lobby_smoke_fixture.py --output $sourceLobby --clean' in action
