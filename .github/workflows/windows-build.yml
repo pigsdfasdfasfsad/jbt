@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming]
     paths:
       - 'src/**'
       - 'content/**'
@@ -414,8 +414,32 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass43 synthetic physics fixture cleanup failed' }
           }
 
+      - name: Smoke Pass 44 real native source instancing and moving-player visibility in exported Windows
+        if: success() && github.ref_name == 'twr-pass44-native-lab-streaming'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          python tools/validation/make_pass44_synthetic.py --output $outputDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass44 synthetic original-Part fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass44-smoke.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass44-smoke.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','300','--','--smoke-pass44') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS44_NATIVE_OK' })) {
+              throw "Pass44 native batching culling/special-mesh smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/validation/make_pass44_synthetic.py --output $outputDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass44 synthetic private native pack fixture cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -450,6 +474,10 @@ jobs:
           if ($jumpNav.Count -gt 0) { throw 'Pass42 source jump navigation leaked into public Windows output' }
           $jumpPlans = @(Get-ChildItem -Path build/output -Filter '*.navgraph42-*.png' -File -Recurse -ErrorAction SilentlyContinue)
           if ($jumpPlans.Count -gt 0) { throw 'Pass42 source jump floorplan images leaked into public Windows output' }
+          $nativeParts = @(Get-ChildItem -Path build/output -Filter '*.native28.gz' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($nativeParts.Count -gt 0) { throw 'Pass44 original native Part cache or synthetic fixture leaked into public Windows output' }
+          $nativeManifests = @(Get-ChildItem -Path build/output -Filter 'LABORATORY_NATIVE_RENDER_MANIFEST44.json' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($nativeManifests.Count -gt 0) { throw 'Pass44 original native stream manifest leaked into public Windows output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
         if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
@@ -516,6 +544,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass43-Windows-x64-NoPrivateAssets
+          path: build/output/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
+      - name: Upload verified Pass 44 Windows build (no owner-private original assets)
+        if: success() && github.ref_name == 'twr-pass44-native-lab-streaming'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Pass44-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
