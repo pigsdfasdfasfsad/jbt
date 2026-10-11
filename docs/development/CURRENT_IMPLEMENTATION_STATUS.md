@@ -1,3 +1,24 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 64
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass64-source-shell-and-bolt`.
+
+**Verified native Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38163615096
+
+- **553 Python regressions passed**; one inherited Pass34 FutureWarning.
+- Godot/.NET Windows export compiled with **0 errors**, one inherited Pass36 CS0108 warning.
+- Recovered original per-gun `Sliding` and `Reload` keyframes now power `Pass64SourceAction` for original `BoltRel` translation and exact nested Mosin Nagant / Winchester Model 70 bolt-handle rotations. Pass62's optional SHA-verified original source hierarchy now binds nested `Bolt/Bolt Handle` Model groups, composing parent bolt movement with child-local Handle pivot rotation. Original Motor6D C0/C1 offsets were **not** recovered.
+- Original `Shell` marker timing, source direction, casing name and source velocity drive **bounded local visual shell proxies** for supported weapons such as Mossberg 500, SPAS-12, and Mosin Nagant. Their actual casing geometry, ejector port and collisions remain approximations; no Roblox dependencies or network calls were added.
+- Source-normalized incremental shotgun reloads continue to animate Pass63 original `Mag` shell-feeding poses. A **one-frame reload pose leak** was fixed by decrementing the visual reload timer before pose sampling; native acceptance verifies it returns to rest on completion.
+- `TWR_SMOKE_PASS64_SOURCE_BOLT_SHELL_OK` passed in an exported Windows game: original source cue counts, ninety-degree Mosin handle articulation before bolt motion, whole nested group movement/reset, source shotgun casing emission/deletion, incremental shell pose completion, and synthetically isolated owner pack handling.
+- Pass59–63 weapon native smoke tests all passed; `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` remains **scripted simulation**, not real manual ten-map 15-wave victory.
+- Synthetic source files were cleaned and public CI private-asset exclusion passed. **No public Windows EXE or private original assets were uploaded.**
+
+**Remaining:** original external MeshPart/CSG geometry triangles and UVs, exact Motor6D C0/C1 joint pivots, authentic casing shapes/port/physics/sounds, hand/arm IK, dynamic source AimCF, original complete ten-map visual/physical parity, player-controlled 15-wave acceptance, and authorized private Windows executable packaging. **Not a complete 1:1 remake.**
+
+[Pass64 shell and bolt original-source implementation and Windows CI verification](PASS64_SOURCE_SHOTGUN_AND_BOLT_ACTION.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 63
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass63-source-magazine-reload`.
