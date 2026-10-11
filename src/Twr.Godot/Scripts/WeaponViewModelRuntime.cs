@@ -36,6 +36,8 @@ public partial class WeaponViewModelRuntime : Node3D
     public int SourceCircularProxyParts { get; private set; }
     public int SourceConservativeProxyParts { get; private set; }
     public int SourceNativePrimitiveParts { get; private set; }
+    public int SourceDetailProfileProxies { get; private set; }
+    public int SourceLensProxies { get; private set; }
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -267,6 +269,8 @@ public partial class WeaponViewModelRuntime : Node3D
             SourceConservativeProxyParts =
                 OriginalWeaponSourceRuntime.LastConservativeProxyParts;
             SourceNativePrimitiveParts = OriginalWeaponSourceRuntime.LastNativePrimitiveParts;
+            SourceDetailProfileProxies = OriginalWeaponSourceRuntime.LastDetailProfileProxies;
+            SourceLensProxies = OriginalWeaponSourceRuntime.LastLensProxies;
             _flash.Position = OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)
                 ?? _flash.Position;
             TrackMechanicalParts();
@@ -289,6 +293,8 @@ public partial class WeaponViewModelRuntime : Node3D
             SourceConservativeProxyParts =
                 OriginalWeaponSourceRuntime.LastConservativeProxyParts;
             SourceNativePrimitiveParts = OriginalWeaponSourceRuntime.LastNativePrimitiveParts;
+            SourceDetailProfileProxies = OriginalWeaponSourceRuntime.LastDetailProfileProxies;
+            SourceLensProxies = OriginalWeaponSourceRuntime.LastLensProxies;
             return;
         }
         var housing = Material(new Color(0.27f, 0.29f, 0.23f));
@@ -412,6 +418,8 @@ public partial class WeaponViewModelRuntime : Node3D
         SourceCircularProxyParts = 0;
         SourceConservativeProxyParts = 0;
         SourceNativePrimitiveParts = 0;
+        SourceDetailProfileProxies = 0;
+        SourceLensProxies = 0;
         _reloadRemaining = _reloadDuration = _kick = 0;
     }
 

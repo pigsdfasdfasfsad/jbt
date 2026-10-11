@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass58",StringComparer.Ordinal))
+        {
+            RunPass58Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass57",StringComparer.Ordinal))
         {
             RunPass57Smoke();
@@ -515,6 +520,121 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass58Smoke()
+    {
+        // Synthetic-only 13-part original-style record with a handmade OBJ.
+        // Original remote Roblox triangle meshes have not been recovered.
+        if(OriginalWeaponSourceRuntime.SourceModelCount!=1 ||
+           OriginalWeaponSourceRuntime.OwnerSourcePackVerified)
+            throw new InvalidOperationException(
+                "Pass58 synthetic source weapon fixture not loaded safely");
+
+        var installed=OfflineAssetResolver.Mesh("rbxassetid://555580001");
+        if(installed is not ArrayMesh || installed.GetSurfaceCount()!=1)
+            throw new InvalidOperationException("Pass58 explicit local OBJ not resolved");
+
+        var scene=new Node3D {Name="Pass58SyntheticSourceModel"};
+        AddChild(scene);
+        var view=new WeaponViewModelRuntime {Name="Glock 17"};
+        scene.AddChild(view);
+        view.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var rig=view.GetNodeOrNull<Node3D>("WeaponBody");
+        var parts=rig?.GetChildren().OfType<MeshInstance3D>()
+            .ToDictionary(p=>p.Name.ToString(),StringComparer.Ordinal);
+        if(!view.UsingOriginalToolAssembly || rig is null ||
+           parts is null || parts.Count!=13 || parts.ContainsKey("Handle") ||
+           view.VisualPartCount!=12 || view.SourceVisibleParts!=12 ||
+           view.SourceLocallyResolvedMeshes!=1 ||
+           view.SourceMissingMeshProxies!=8 ||
+           view.SourceDetailProfileProxies!=5 ||
+           view.SourceLensProxies!=1 ||
+           view.SourceCircularProxyParts!=1 ||
+           view.SourceConservativeProxyParts!=1 ||
+           view.SourceNativePrimitiveParts!=3)
+            throw new InvalidOperationException(
+                "Pass58 original 3D source/shape proxy counts differ from fixture");
+
+        if(parts["Bolt"].Mesh!=installed ||
+           parts["Barrel"].Mesh is not ArrayMesh ||
+           parts["Receiver"].Mesh is not ArrayMesh ||
+           parts["Magazine"].Mesh is not ArrayMesh mag ||
+           parts["Stock"].Mesh is not ArrayMesh ||
+           parts["PistolGrip"].Mesh is not ArrayMesh ||
+           parts["TriggerGuard"].Mesh is not ArrayMesh ring ||
+           parts["ReticleGlass"].Mesh is not ArrayMesh lens ||
+           parts["UnknownCasing"].Mesh is not BoxMesh ||
+           parts["Ball"].Mesh is not SphereMesh ||
+           parts["Cylinder"].Mesh is not ArrayMesh ||
+           parts["StockWedge"].Mesh is not ArrayMesh ||
+           mag.SurfaceGetArrayLen(0)!=72 ||
+           ring.SurfaceGetArrayLen(0)!=144 ||
+           lens.SurfaceGetArrayLen(0)!=Pass57SourceGeometryProxy.CircularSides*12)
+            throw new InvalidOperationException(
+                "Pass58 source-guided magazine/grip/receiver/lens/guard geometry not used");
+
+        if(Pass58WeaponDetailGeometry.TryCreate(
+                "MeshPart","Receiver",new Vector3(float.NaN,.2f,.6f),
+                out _,out _) ||
+           Pass58WeaponDetailGeometry.TryCreate(
+                "MeshPart","Receiver",new Vector3(.3f,.4f,.6f)*-1f,
+                out _,out _) ||
+           Pass58WeaponDetailGeometry.TryCreate(
+                "MeshPart","RandomUnknown",new Vector3(.3f,.4f,.6f),
+                out _,out _) ||
+           Pass58WeaponDetailGeometry.TryCreate(
+                "Part","Magazine",new Vector3(.15f,.51f,.32f),
+                out _,out _) ||
+           !Pass58WeaponDetailGeometry.TryCreate(
+                "MeshPart","Magazine",new Vector3(.15f,.51f,.32f),
+                out var cached,out var category) ||
+           category!="magazine" || !ReferenceEquals(cached,mag) ||
+           !Pass58WeaponDetailGeometry.TryLensAxis(
+                new Vector3(.16f,.16f,.04f),out var axis) || axis!=2)
+            throw new InvalidOperationException(
+                "Pass58 source semantics/bounds protection or mesh cache failed");
+
+        var credits=_runtime.Player?.Credits ?? -1;
+        var owned=_runtime.Profile?.OwnedSkins.Count ?? -1;
+        RemoveChild(scene);
+        scene.Free();
+        ShowMenu();
+        ShowArmory();
+        var showroom=_sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName);
+        if(showroom is null || !showroom.Preview("Glock 17") ||
+           showroom.PreviewVisibleParts!=12 ||
+           showroom.PreviewLocallyResolvedMeshes!=1 ||
+           showroom.PreviewDetailProfiles!=5 ||
+           showroom.PreviewLensDisks!=1 ||
+           showroom.PreviewCircularProxies!=1 ||
+           showroom.PreviewConservativeProxies!=1 ||
+           !showroom.PreviewStatus.Contains("RECONSTRUCTED SILHOUETTES",
+               StringComparison.Ordinal) ||
+           !showroom.PreviewStatus.Contains("OPTIC DISKS",
+               StringComparison.Ordinal) ||
+           !showroom.PreviewStatus.Contains("SOURCE MESH IDS UNAVAILABLE",
+               StringComparison.Ordinal) ||
+           (_runtime.Player?.Credits ?? -1)!=credits ||
+           (_runtime.Profile?.OwnedSkins.Count ?? -1)!=owned)
+            throw new InvalidOperationException(
+                "Pass58 3D Armory geometry readouts or inventory changed");
+
+        StartGame("Manor");
+        if(_sourceLobby is not null || _game is null ||
+           GetChildren().Any(n=>n.Name.ToString()=="Pass58SyntheticSourceModel"))
+            throw new InvalidOperationException(
+                "Pass58 3D source geometry leaked into match lifecycle");
+        GD.Print("TWR_SMOKE_PASS58_DETAIL_GEOMETRY_OK synthetic_only=true " +
+            "visible=12 local_obj=1 missing_mesh_ids=8 " +
+            "detail_profiles=5 lens_disk=1 barrel_proxy=1 " +
+            "unclassified_bounds=1 native_primitives=3 " +
+            "trigger_guard_open=true source_pose_preserved=true " +
+            "profile_mesh_cached=true invalid_bounds_rejected=true " +
+            "armory_fidelity_counters=true credits_unchanged=true " +
+            "original_mesh_triangles_not_claimed=true");
         GetTree().Quit(0);
     }
 

@@ -32,6 +32,8 @@ public static class OriginalWeaponSourceRuntime
     public static int LastCircularProxyParts { get; private set; }
     public static int LastConservativeProxyParts { get; private set; }
     public static int LastNativePrimitiveParts { get; private set; }
+    public static int LastDetailProfileProxies { get; private set; }
+    public static int LastLensProxies { get; private set; }
     private static JsonDocument? _document;
     private static bool _initialized;
     private static readonly Dictionary<string, Mesh?> CachedMeshes = new();
@@ -59,6 +61,8 @@ public static class OriginalWeaponSourceRuntime
         LastCircularProxyParts = 0;
         LastConservativeProxyParts = 0;
         LastNativePrimitiveParts = 0;
+        LastDetailProfileProxies = 0;
+        LastLensProxies = 0;
         for(var partIndex=0;partIndex<sourceParts.Length;partIndex++)
         {
             var part=sourceParts[partIndex];
@@ -95,6 +99,13 @@ public static class OriginalWeaponSourceRuntime
             // Roblox native Cylinder has its cap axis along local X.
             var nativeCylinder=isNativePart && originalShape=="2";
             var size = SourceSize(part);
+            // Pass58 silhouette proxies are only used if an actual private
+            // OBJ could NOT be loaded. Contour meshes are explicitly
+            // reconstructed from source part names, never claimed original.
+            var detailKind="";
+            if(mesh is null && Pass58WeaponDetailGeometry.TryCreate(
+                sourceClass,name,size,out var detailMesh,out detailKind))
+                mesh=detailMesh;
             var circularProxy=false;
             mesh ??= nativeBall
                 ? new SphereMesh { Radius=.5f, Height=1f }
@@ -103,7 +114,9 @@ public static class OriginalWeaponSourceRuntime
                     sourceClass,name,size,out circularProxy);
             if(!recoveredFromLocalFile)
             {
-                if(sourceClass is "Part" or "WedgePart")
+                if(detailKind=="lens") LastLensProxies++;
+                else if(detailKind.Length>0) LastDetailProfileProxies++;
+                else if(sourceClass is "Part" or "WedgePart")
                     LastNativePrimitiveParts++;
                 else if(circularProxy) LastCircularProxyParts++;
                 else LastConservativeProxyParts++;
@@ -161,6 +174,8 @@ public static class OriginalWeaponSourceRuntime
             $"circular_proxies={LastCircularProxyParts} " +
             $"conservative_proxies={LastConservativeProxyParts} " +
             $"native_part_primitives={LastNativePrimitiveParts} " +
+            $"source_guided_profiles={LastDetailProfileProxies} " +
+            $"lens_disks={LastLensProxies} " +
             $"sha_verified={OwnerSourcePackVerified}");
         return true;
     }
@@ -241,7 +256,7 @@ public static class OriginalWeaponSourceRuntime
             var synthetic = root.TryGetProperty("synthetic",out var fixture) &&
                 fixture.ValueKind == JsonValueKind.True;
             var testMode = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57");
+                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58");
             // A synthetic fixture may never silently impersonate an original
             // tool pack during ordinary play.
             if (synthetic && !testMode)

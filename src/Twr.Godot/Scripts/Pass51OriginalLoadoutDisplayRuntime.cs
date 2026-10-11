@@ -45,6 +45,8 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
     public int PreviewLocallyResolvedMeshes { get; private set; }
     public int PreviewCircularProxies { get; private set; }
     public int PreviewConservativeProxies { get; private set; }
+    public int PreviewDetailProfiles { get; private set; }
+    public int PreviewLensDisks { get; private set; }
     public bool HasAnchor(string slot) => _anchors.ContainsKey(slot);
 
     public string PreviewStatus
@@ -64,6 +66,8 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
                 ? $" | {PreviewLocallyResolvedMeshes} LOCAL TRIANGLE MESHES"+
                   $" | {PreviewCircularProxies} CYLINDER PROXIES"+
                   $" | {PreviewConservativeProxies} BOUNDS PROXIES"+
+                  $" | {PreviewDetailProfiles} RECONSTRUCTED SILHOUETTES"+
+                  $" | {PreviewLensDisks} OPTIC DISKS"+
                   (PreviewMissingSourceMeshes>0
                     ? $" | {PreviewMissingSourceMeshes} SOURCE MESH IDS UNAVAILABLE"
                     : "")
@@ -176,6 +180,8 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
         PreviewLocallyResolvedMeshes = model.SourceLocallyResolvedMeshes;
         PreviewCircularProxies = model.SourceCircularProxyParts;
         PreviewConservativeProxies = model.SourceConservativeProxyParts;
+        PreviewDetailProfiles = model.SourceDetailProfileProxies;
+        PreviewLensDisks = model.SourceLensProxies;
         return true;
     }
 
@@ -263,5 +269,10 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
         PreviewUsesPreparedScene = false;
         PreviewVisibleParts = 0;
         PreviewMissingSourceMeshes = 0;
+        PreviewLocallyResolvedMeshes = 0;
+        PreviewCircularProxies = 0;
+        PreviewConservativeProxies = 0;
+        PreviewDetailProfiles = 0;
+        PreviewLensDisks = 0;
     }
 }
