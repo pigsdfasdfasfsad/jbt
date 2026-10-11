@@ -564,7 +564,7 @@ public partial class Bootstrap : Node
         var slideRest=Pass61SourceWeaponHandling.SampleMotor(
             glock.CyclingSlide,.125f);
         var equipPose=Pass61SourceWeaponHandling.SampleEquip(
-            glock.Equip,.16f);
+            glock.Equip,.32f);
         if(Math.Abs(slidePeak.Z+.063f)>.0002f ||
            slideRest.LengthSquared()>.000001f ||
            equipPose.Origin.LengthSquared()<.0001f ||
@@ -595,10 +595,10 @@ public partial class Bootstrap : Node
                 "Pass61 source Glock visual assembly not initialized");
         var startingSlide=slide.Position;
         glockModel.BeginEquip(.8);
-        glockModel._Process(.16);
+        glockModel._Process(.32);
         if(gunRig.Position.LengthSquared()<.0001f)
             throw new InvalidOperationException("Pass61 equip clip not visible");
-        glockModel._Process(.65);
+        glockModel._Process(.49);
         glockModel.Fire(false);
         glockModel._Process(.05);
         if(Math.Abs(glockModel.LastSlideMotorOffset.Z+.063f)>.0003f ||
