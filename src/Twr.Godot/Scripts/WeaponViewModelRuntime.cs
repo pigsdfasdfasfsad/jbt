@@ -425,7 +425,7 @@ public partial class WeaponViewModelRuntime : Node3D
         var fallbackReload=sourceReload is null ? reload : 0f;
         var position=reloadPose.Origin+sourceFirePose.Origin+fallbackFire+
             new Vector3(0f,-fallbackReload*.15f,0f);
-        var sway=new Basis(new Vector3(
+        var sway=Basis.FromEuler(new Vector3(
             activeSourceFire ? 0f : -_kick*.75f,
             Mathf.Sin(_phase)*.003f,
             fallbackReload*.22f+Mathf.Sin(_phase*.8f)*.006f));
