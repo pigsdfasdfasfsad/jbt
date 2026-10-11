@@ -463,6 +463,10 @@ public partial class WeaponViewModelRuntime : Node3D
         _equipRemaining=Mathf.Max(0f,_equipRemaining-dt);
         if(_cycleDuration>0f)
             _cycleElapsed=Math.Min(_cycleDuration,_cycleElapsed+dt);
+        // Sample source magazine, bolt and pump clips at the END of this
+        // frame, so a completed reload cannot leave an active insertion
+        // pose for one additional render frame.
+        _reloadRemaining=Mathf.Max(0f,_reloadRemaining-dt);
         var reloadFraction=_reloadDuration>0f && _reloadRemaining>0f
             ? 1f-_reloadRemaining/_reloadDuration : 0f;
         Vector3 SampleMotor(Pass61SourceWeaponHandling.MotorClip? clip,
@@ -573,7 +577,6 @@ public partial class WeaponViewModelRuntime : Node3D
                 : Mathf.Max(0f,1f-(elapsed-_sourceShot.Out)/_sourceShot.Back);
             if(_shotRemaining<=0f)_shotActive=false;
         }
-        _reloadRemaining = Mathf.Max(0, _reloadRemaining - dt);
         var reload = _reloadDuration > 0 && _reloadRemaining > 0
             ? Mathf.Sin(Mathf.Pi * (1f - _reloadRemaining / _reloadDuration))
             : 0f;
