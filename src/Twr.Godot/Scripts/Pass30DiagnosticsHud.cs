@@ -79,7 +79,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
         var mesh = Primitives;
         var frames = Game?.Pass43FrameTimes.Snapshot();
         _label.Text =
-            "PASS 47 | Original 3D tools; F1 proxy cull, F4 maps, F9 assist\n" +
+            "PASS 48 | Source infected assets; F1 proxy cull, F4 maps, F9 assist\n" +
             "F10 HUD - F11 report\n" +
             $"Map: {MapName}  Wave: {Game?.Runtime?.Match?.Wave ?? 0}\n" +
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
@@ -108,6 +108,11 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"F5 original native props: {Game?.Pass36RenderableOriginalPropCount ?? 0} " +
             $"({(Game?.Pass36NativePropsEnabled == true ? "ON" : "OFF")})\n" +
             $"Original custom props missing: {Game?.Pass36MissingOriginalMeshCount ?? 0}\n" +
+            $"Source infected actors: {Game?.Pass48SourceInfectedCount ?? 0} " +
+            $"(SHA-verified: {Game?.Pass48VerifiedSourceInfectedCount ?? 0})\n" +
+            $"Infected original accessory parts: {Game?.Pass48RecoveredInfectedAccessoryParts ?? 0} " +
+            $"| R6 body proxies: {Game?.Pass48ReconstructedInfectedR6Parts ?? 0} " +
+            $"| absent mesh proxies: {Game?.Pass48MissingInfectedMeshProxies ?? 0}\n" +
             $"Original source weapon: {(Game?.Pass47OriginalWeaponModelActive == true ? "ACTIVE" : "FALLBACK")}" +
             $" (pack SHA verified: {Game?.Pass47OwnerWeaponPackVerified ?? false})\n" +
             $"Weapon visible source parts: {Game?.Pass47WeaponSourceVisibleParts ?? 0} " +
@@ -181,6 +186,11 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 source_sound_installed_wav_emitter_count = Game?.Pass38OfflineWavEmitterCount ?? 0,
                 source_sound_active_voices = Game?.Pass38ActiveSourceVoices ?? 0,
                 source_sound_preview_enabled = Game?.Pass38SourceSoundEnabled ?? false,
+                pass48_infected_source_actors = Game?.Pass48SourceInfectedCount ?? 0,
+                pass48_infected_verified_source_actors = Game?.Pass48VerifiedSourceInfectedCount ?? 0,
+                pass48_original_infected_accessory_parts = Game?.Pass48RecoveredInfectedAccessoryParts ?? 0,
+                pass48_reconstructed_infected_r6_parts = Game?.Pass48ReconstructedInfectedR6Parts ?? 0,
+                pass48_unavailable_infected_mesh_proxies = Game?.Pass48MissingInfectedMeshProxies ?? 0,
                 pass47_owner_weapon_pack_sha_verified = Game?.Pass47OwnerWeaponPackVerified ?? false,
                 pass47_original_weapon_assembly_active = Game?.Pass47OriginalWeaponModelActive ?? false,
                 pass47_weapon_visible_source_parts = Game?.Pass47WeaponSourceVisibleParts ?? 0,
