@@ -175,6 +175,12 @@ The **private owner Windows ZIP** adds ten-map source outlines, original Laborat
 - Completion reward is one-time and is persisted before results/lobby transition.
 - Release maps: Ranch, Mill, Bypass, Cabin, Cargo, District, Expressway, Prison, Laboratory, Manor.
 
+## Verified development checkpoint: Pass 55 (October 10, 2026)
+
+**Branch:** `twr-pass55-source-skin-textures-and-shimmer`. The owner original skin source identifies **118 skin icon IDs, 94 Texture/Texture1 layers and 33 MeshPart TextureID assignments**; optional private metadata enables local PNG loading by numeric asset ID with original layer tints and UV parameters, deterministic and explicitly labeled procedural fallbacks when images are absent, and bounded reconstructed shimmer for source Neon/ForceField. Neither original images nor animation timings are falsely represented as recovered.
+
+**Native Windows CI verified:** [run 38108741473](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38108741473) passed **506 Python tests**, Godot/.NET Windows export (zero errors, one existing Pass36 warning), source-like synthetic PNG/UV/shimmer/material-reset smoke, 10-map × 15-wave simulated domain baseline, and private source-asset exclusion audit. No public EXE was uploaded. Owner-only skin metadata ZIP is delivered separately from source Git. See [Pass55 engineering/evidence](docs/development/PASS55_SOURCE_SKIN_TEXTURES_AND_SHIMMER.md).
+
 ## Verified development checkpoint: Pass 54 (October 10, 2026)
 
 The Pass54 branch replaces arbitrary hashed cosmetic colors with the **source-authored RGB and Roblox material fields from 118 skins (590 values)** when optional authenticated owner-private sidecars are installed. The original TestPlace contains **728 original Value1–Value5 skin tags on 1,484 tool parts in 98 models**; the runtime maps tags by source part index, preserving untagged parts. This pass implements local Godot material approximations, not original shader/texture animation parity. Original skin palette and part maps remain private; no raw source archives are published.

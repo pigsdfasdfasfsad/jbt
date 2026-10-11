@@ -1,3 +1,21 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 55
+
+**Date:** October 10, 2026 (US Central). **Branch:** `twr-pass55-source-skin-textures-and-shimmer`.
+
+**Verified Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38108741473
+
+- **506 Python regressions passed**; one inherited Pass34 XML FutureWarning.
+- **Native Godot/.NET Windows build succeeded** with zero errors and one existing Pass36 CS0108 warning.
+- Native `TWR_SMOKE_PASS55_LAYERS_OK`: validates synthetic original-style skin layer IDs, locally installed PNG, source UV tiling/offsets, a clearly labelled missing-image procedural proxy, deterministic reconstructed neon/ForceField shimmer, safe material reset, and unchanged player economy.
+- Source scripts enumerate **118 skin image icon IDs, 94 face texture layers and 33 MeshPart texture references**. Optional owner-only SourceSkinLayers55.json.gz contains inert source references and verified provenance; it contains no image bytes. Pass54 packs remain optional and can be installed together with Pass55 metadata next to the private game executable.
+- Previous domain baseline: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` (simulated progression, not a human-controlled match); owner/synthetic private assets are absent from public Windows CI output. All public EXE upload steps remain disabled.
+
+**Unfinished:** authentic original source diffuse/normal image bytes, precise Roblox UV six-face projection and layered effects, original animated shader/timing, full original geometry for all maps, human-played 15-wave gameplay QA, and a privately distributed final Windows EXE.
+
+[Pass55 implementation, provenance and installation record](PASS55_SOURCE_SKIN_TEXTURES_AND_SHIMMER.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 54
 
 **Date:** October 10, 2026 (US Central). **Branch:** twr-pass54-original-skin-materials.

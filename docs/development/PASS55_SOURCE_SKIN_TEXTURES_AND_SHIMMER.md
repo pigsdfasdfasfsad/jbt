@@ -42,3 +42,18 @@ To generate the Pass55 metadata yourself from the supplied scripts archive:
 Windows CI runs on twr-pass55-source-skin-textures-and-shimmer and requires 100% Python regression success, a zero-error Godot/.NET Windows export, native TWR_SMOKE_PASS55_LAYERS_OK with synthetic packs, and public/private source-asset leak checks. A green native marker is required before declaring the pass verified.
 
 Still unresolved: authentic diffuse/normal/alpha image bytes for many ID references; fully faithful Roblox six-face overlay UV projection and multi-layer compositing; actual original animation controller/timing; MeshPart triangles, complete 10-map 3D fidelity, manual full 15-wave sessions, and an installable private final game build.
+
+## Verified native Windows acceptance
+
+**Source commit under test:** `7d1c93140ac0e89ff4accaf9f9521a20ea415150`.
+
+**Successful CI run:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38108741473
+
+- **506 Python tests passed** (one old Pass34 XML helper FutureWarning).
+- Godot/.NET Windows EXE compilation/export **succeeded, zero errors**, one old Pass36 CS0108 warning.
+- Baseline: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150`, a simulated domain progression fixture, not a player-controlled campaign.
+- Native exported Windows: `TWR_SMOKE_PASS55_LAYERS_OK` with a fabricated installed PNG, synthetic skin layer and material palette, source-style Glock part tags, source UV metadata, a missing-image procedural fallback, reconstructed shimmer, material reset, and credit invariant.
+- Windows output passed owner-private source-asset exclusion. Prior artifact uploads are disabled, so no installable executable was publicly published.
+- Separate owner-only ZIP verified locally: exact Pass54 and Pass55 metadata pack SHAs, deterministic 118 skin/94 layer/33 mesh texture reference extraction, and valid ZIP integrity. It does NOT contain original texture image bytes.
+
+**Limitations:** This native smoke used fake PNG/metadata; no pixel-by-pixel visual comparison with the original Roblox rendering and no complete manual 15-wave playthrough were conducted.
