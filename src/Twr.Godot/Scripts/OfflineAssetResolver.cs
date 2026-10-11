@@ -22,7 +22,8 @@ public static class OfflineAssetResolver
 
     public static Texture2D? Texture(string id)
     {
-        if (!NumericId(id)) return null;
+        id=CanonicalAssetId(id);
+        if (id.Length==0) return null;
         if (Textures.TryGetValue(id, out var cached)) return cached;
 
         var bundled = $"res://Content/Assets/Textures/{id}.png";
@@ -44,7 +45,8 @@ public static class OfflineAssetResolver
 
     public static Mesh? Mesh(string id)
     {
-        if (!NumericId(id)) return null;
+        id=CanonicalAssetId(id);
+        if (id.Length==0) return null;
         if (Meshes.TryGetValue(id, out var cached)) return cached;
 
         var packed = $"res://Content/Assets/Meshes/{id}.res";
@@ -66,12 +68,22 @@ public static class OfflineAssetResolver
         return result;
     }
 
-    private static bool NumericId(string id)
+    /// <summary>
+    /// Original TestPlace.rbxlx MeshId and TextureID properties contain
+    /// rbxassetid://123, while private offline files are named 123.obj/png.
+    /// Accept only a bare ASCII decimal ID or that *exact* Roblox prefix;
+    /// never resolve HTTP URLs, local paths, or arbitrary user content.
+    /// </summary>
+    public static string CanonicalAssetId(string? id)
     {
-        if (id.Length is < 1 or > 20) return false;
-        foreach (var c in id)
-            if (c is < '0' or > '9') return false;
-        return true;
+        if (string.IsNullOrEmpty(id)) return "";
+        const string prefix="rbxassetid://";
+        var digits=id.StartsWith(prefix,StringComparison.Ordinal)
+            ? id[prefix.Length..] : id;
+        if(digits.Length is <1 or >20)return "";
+        foreach(var digit in digits)
+            if(digit is <'0' or >'9')return "";
+        return digits;
     }
 
     private static string? FindPrivateFile(string folder, string name, long maximumBytes)

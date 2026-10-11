@@ -32,6 +32,10 @@ public partial class WeaponViewModelRuntime : Node3D
     public bool UsingOriginalToolAssembly { get; private set; }
     public int SourceVisibleParts { get; private set; }
     public int SourceMissingMeshProxies { get; private set; }
+    public int SourceLocallyResolvedMeshes { get; private set; }
+    public int SourceCircularProxyParts { get; private set; }
+    public int SourceConservativeProxyParts { get; private set; }
+    public int SourceNativePrimitiveParts { get; private set; }
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -258,6 +262,11 @@ public partial class WeaponViewModelRuntime : Node3D
             UsingOriginalToolAssembly = true;
             SourceVisibleParts = OriginalWeaponSourceRuntime.LastVisibleSourceParts;
             SourceMissingMeshProxies = OriginalWeaponSourceRuntime.LastUnavailableMeshProxies;
+            SourceLocallyResolvedMeshes = OriginalWeaponSourceRuntime.LastResolvedMeshParts;
+            SourceCircularProxyParts = OriginalWeaponSourceRuntime.LastCircularProxyParts;
+            SourceConservativeProxyParts =
+                OriginalWeaponSourceRuntime.LastConservativeProxyParts;
+            SourceNativePrimitiveParts = OriginalWeaponSourceRuntime.LastNativePrimitiveParts;
             _flash.Position = OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)
                 ?? _flash.Position;
             TrackMechanicalParts();
@@ -275,6 +284,11 @@ public partial class WeaponViewModelRuntime : Node3D
             UsingOriginalToolAssembly = true;
             SourceVisibleParts = OriginalWeaponSourceRuntime.LastVisibleSourceParts;
             SourceMissingMeshProxies = OriginalWeaponSourceRuntime.LastUnavailableMeshProxies;
+            SourceLocallyResolvedMeshes = OriginalWeaponSourceRuntime.LastResolvedMeshParts;
+            SourceCircularProxyParts = OriginalWeaponSourceRuntime.LastCircularProxyParts;
+            SourceConservativeProxyParts =
+                OriginalWeaponSourceRuntime.LastConservativeProxyParts;
+            SourceNativePrimitiveParts = OriginalWeaponSourceRuntime.LastNativePrimitiveParts;
             return;
         }
         var housing = Material(new Color(0.27f, 0.29f, 0.23f));
@@ -394,6 +408,10 @@ public partial class WeaponViewModelRuntime : Node3D
         CosmeticSourceStatus = "";
         SourceVisibleParts = 0;
         SourceMissingMeshProxies = 0;
+        SourceLocallyResolvedMeshes = 0;
+        SourceCircularProxyParts = 0;
+        SourceConservativeProxyParts = 0;
+        SourceNativePrimitiveParts = 0;
         _reloadRemaining = _reloadDuration = _kick = 0;
     }
 

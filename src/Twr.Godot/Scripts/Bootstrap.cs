@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass57",StringComparer.Ordinal))
+        {
+            RunPass57Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass56",StringComparer.Ordinal))
         {
             RunPass56Smoke();
@@ -510,6 +515,115 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass57Smoke()
+    {
+        // Exported Windows Godot executable, synthetic owner-like tool
+        // metadata and synthetic local OBJ. NEVER needs Roblox or HTTP.
+        if(OfflineAssetResolver.CanonicalAssetId("rbxassetid://555570001")
+                != "555570001" ||
+           OfflineAssetResolver.CanonicalAssetId("555570001")!="555570001" ||
+           OfflineAssetResolver.CanonicalAssetId("https://evil.test/555570001")!="" ||
+           OfflineAssetResolver.CanonicalAssetId("rbxassetid://../555570001")!="" ||
+           OfflineAssetResolver.CanonicalAssetId("rbxassetid://555570001/")!="" ||
+           OfflineAssetResolver.CanonicalAssetId("rbxassetid://")!="")
+            throw new InvalidOperationException(
+                "Pass57 local asset ID canonicalization/safety failed");
+
+        var localMesh=OfflineAssetResolver.Mesh("rbxassetid://555570001");
+        if(localMesh is not ArrayMesh || localMesh.GetSurfaceCount()<1 ||
+           OfflineAssetResolver.Mesh("555570001")!=localMesh ||
+           OfflineAssetResolver.Mesh("rbxassetid://555570002") is not null ||
+           OfflineAssetResolver.Mesh("../../555570001") is not null)
+            throw new InvalidOperationException(
+                "Pass57 source URL form did not resolve local OBJ without network");
+
+        if(OriginalWeaponSourceRuntime.SourceModelCount!=1 ||
+           OriginalWeaponSourceRuntime.OwnerSourcePackVerified)
+            throw new InvalidOperationException(
+                "Pass57 private original models were unexpectedly used in CI");
+
+        var scene=new Node3D {Name="Pass57SyntheticGeometry"};
+        AddChild(scene);
+        var visual=new WeaponViewModelRuntime {Name="Glock 17"};
+        scene.AddChild(visual);
+        visual.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var rig=visual.GetNodeOrNull<Node3D>("WeaponBody");
+        var parts=rig?.GetChildren().OfType<MeshInstance3D>()
+            .ToDictionary(p=>p.Name.ToString(),StringComparer.Ordinal);
+        if(!visual.UsingOriginalToolAssembly || rig is null ||
+           parts is null || parts.Count!=9 || parts.ContainsKey("Handle") ||
+           visual.VisualPartCount!=8 || visual.SourceVisibleParts!=8 ||
+           visual.SourceLocallyResolvedMeshes!=1 ||
+           visual.SourceMissingMeshProxies!=2 ||
+           visual.SourceCircularProxyParts!=1 ||
+           visual.SourceConservativeProxyParts!=2 ||
+           visual.SourceNativePrimitiveParts!=4)
+            throw new InvalidOperationException(
+                "Pass57 original source part accounting or invisibility mismatch");
+
+        if(parts["Bolt"].Mesh!=localMesh ||
+           parts["Barrel"].Mesh is not ArrayMesh barrelMesh ||
+           parts["Receiver"].Mesh is not BoxMesh ||
+           parts["Ball"].Mesh is not SphereMesh ||
+           parts["Cylinder"].Mesh is not ArrayMesh ||
+           parts["Block"].Mesh is not BoxMesh ||
+           parts["StockWedge"].Mesh is not ArrayMesh ||
+           parts["Guard"].Mesh is not BoxMesh ||
+           barrelMesh.GetSurfaceCount()!=1 ||
+           barrelMesh.SurfaceGetArrayLen(0)!=Pass57SourceGeometryProxy.CircularSides*12)
+            throw new InvalidOperationException(
+                "Pass57 OBJ, round tube, source native primitives, wedge or conservative bounds failed");
+
+        if(!Pass57SourceGeometryProxy.TryTubeAxis(
+                new Vector3(.12f,.13f,1.15f),out var major) || major!=2 ||
+           Pass57SourceGeometryProxy.TryTubeAxis(
+                new Vector3(.45f,.35f,.51f),out _) ||
+           Pass57SourceGeometryProxy.IdentifiableTube("BarrelGrip") ||
+           !Pass57SourceGeometryProxy.IdentifiableTube("Barrel") ||
+           Pass57SourceGeometryProxy.IdentifiableTube("Receiver") ||
+           !ReferenceEquals(Pass57SourceGeometryProxy.Tube(2),
+                Pass57SourceGeometryProxy.Tube(2)))
+            throw new InvalidOperationException(
+                "Pass57 narrow source geometry proxy guards failed");
+
+        var credits=_runtime.Player?.Credits ?? -1;
+        var owned=_runtime.Profile?.OwnedSkins.Count ?? -1;
+        RemoveChild(scene);
+        scene.QueueFree();
+        ShowMenu();
+        ShowArmory();
+        var lobby=_sourceLobby;
+        var showroom=lobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName);
+        if(showroom is null || !showroom.Preview("Glock 17") ||
+           showroom.PreviewLocallyResolvedMeshes!=1 ||
+           showroom.PreviewCircularProxies!=1 ||
+           showroom.PreviewConservativeProxies!=2 ||
+           !showroom.PreviewStatus.Contains("LOCAL TRIANGLE MESHES",
+                StringComparison.Ordinal) ||
+           !showroom.PreviewStatus.Contains("SOURCE MESH IDS UNAVAILABLE",
+                StringComparison.Ordinal) ||
+           (_runtime.Player?.Credits ?? -1)!=credits ||
+           (_runtime.Profile?.OwnedSkins.Count ?? -1)!=owned)
+            throw new InvalidOperationException(
+                "Pass57 Armory source geometry diagnostics/economy integrity failed");
+
+        StartGame("Manor");
+        if(_sourceLobby is not null || _game is null ||
+           GetChildren().Any(node=>node.Name.ToString()=="Pass57SyntheticGeometry"))
+            throw new InvalidOperationException(
+                "Pass57 source visual assembly leaked into gameplay lifecycle");
+        GD.Print("TWR_SMOKE_PASS57_GEOMETRY_OK synthetic_only=true " +
+            "source_visible_parts=8 local_obj_meshes=1 " +
+            "unresolved_source_mesh_ids=2 circular_mesh_proxies=1 " +
+            "conservative_bounds=2 native_primitive_parts=4 " +
+            "wedge_mesh=true cylinder_mesh=true " +
+            "canonical_rbxassetid_url=true path_traversal_blocked=true " +
+            "armory_provenance_shown=true player_economy_unchanged=true " +
+            "owner_mesh_triangles_not_claimed=true");
         GetTree().Quit(0);
     }
 

@@ -28,6 +28,10 @@ public static class OriginalWeaponSourceRuntime
         LoadDocument() ? _document!.RootElement.GetProperty("models").EnumerateObject().Count() : 0;
     public static int LastVisibleSourceParts { get; private set; }
     public static int LastUnavailableMeshProxies { get; private set; }
+    public static int LastResolvedMeshParts { get; private set; }
+    public static int LastCircularProxyParts { get; private set; }
+    public static int LastConservativeProxyParts { get; private set; }
+    public static int LastNativePrimitiveParts { get; private set; }
     private static JsonDocument? _document;
     private static bool _initialized;
     private static readonly Dictionary<string, Mesh?> CachedMeshes = new();
@@ -51,6 +55,10 @@ public static class OriginalWeaponSourceRuntime
         var missingMeshProxies = 0;
         LastVisibleSourceParts = 0;
         LastUnavailableMeshProxies = 0;
+        LastResolvedMeshParts = 0;
+        LastCircularProxyParts = 0;
+        LastConservativeProxyParts = 0;
+        LastNativePrimitiveParts = 0;
         for(var partIndex=0;partIndex<sourceParts.Length;partIndex++)
         {
             var part=sourceParts[partIndex];
@@ -70,24 +78,47 @@ public static class OriginalWeaponSourceRuntime
                     CachedMeshes[meshId] = mesh;
                 }
             }
+            var recoveredFromLocalFile=mesh is not null;
+            if(recoveredFromLocalFile) LastResolvedMeshParts++;
             if (mesh is null && !string.IsNullOrEmpty(meshId))
                 missingMeshProxies++;
-            // Native Roblox ball Part is precisely approximable as a sphere
-            // from authored CFrame/Size. Custom MeshPart/CSG files are NOT
-            // embedded in TestPlace and remain explicit bounding proxies.
-            var nativeBall = part.GetProperty("class").GetString() == "Part" &&
-                part.TryGetProperty("shape", out var shape) &&
-                shape.GetString() == "0";
+            // Native Roblox Parts are recreated from authored CFrames,
+            // sizes and primitive type. MeshParts/CSGs have NO original
+            // triangle bytes in the place; narrow tube-shaped substitutes
+            // are visibly better than boxes for clearly tubular parts,
+            // but still explicitly approximate (not recovered meshes).
+            var sourceClass=part.GetProperty("class").GetString() ?? "";
+            var isNativePart=sourceClass=="Part";
+            var originalShape=part.TryGetProperty("shape",out var shape)
+                ? shape.GetString() ?? "1" : "1";
+            var nativeBall=isNativePart && originalShape=="0";
+            // Roblox native Cylinder has its cap axis along local X.
+            var nativeCylinder=isNativePart && originalShape=="2";
+            var size = SourceSize(part);
+            var circularProxy=false;
             mesh ??= nativeBall
                 ? new SphereMesh { Radius=.5f, Height=1f }
-                : new BoxMesh { Size = Vector3.One };
-            var size = SourceSize(part);
+                : nativeCylinder ? Pass57SourceGeometryProxy.Tube(0)
+                : Pass57SourceGeometryProxy.ForMissingOriginal(
+                    sourceClass,name,size,out circularProxy);
+            if(!recoveredFromLocalFile)
+            {
+                if(sourceClass is "Part" or "WedgePart")
+                    LastNativePrimitiveParts++;
+                else if(circularProxy) LastCircularProxyParts++;
+                else LastConservativeProxyParts++;
+            }
             var rgb = part.GetProperty("rgb").EnumerateArray()
                 .Select(c => c.GetSingle()).ToArray();
             var color = new Color(rgb[0]/255f,rgb[1]/255f,rgb[2]/255f,alpha);
             var textureId = part.TryGetProperty("textureId", out var sourceTexture)
                 ? sourceTexture.GetString() ?? "" : "";
-            var materialKey = color.ToHtml(true) + "|" + textureId;
+            var originalMaterial=part.TryGetProperty("mat",out var mat)
+                ? mat.GetString() ?? "" : "";
+            // Material is part of the cache key: the same color/texture
+            // may represent metal or smooth plastic in separate source parts.
+            var materialKey = color.ToHtml(true) + "|" + textureId+
+                "|" + originalMaterial;
             if (!materials.TryGetValue(materialKey, out var material))
             {
                 var preparedTexture = OfflineAssetResolver.Texture(textureId);
@@ -101,8 +132,7 @@ public static class OriginalWeaponSourceRuntime
                         : BaseMaterial3D.TransparencyEnum.Disabled
                 };
                 RobloxMaterialSurface.Apply(surface,
-                    part.TryGetProperty("mat", out var m) ? m.GetString() ?? "" : "",
-                    preparedTexture);
+                    originalMaterial,preparedTexture);
                 material = surface;
                 materials[materialKey] = material;
             }
@@ -127,6 +157,10 @@ public static class OriginalWeaponSourceRuntime
         if (count < 1) return false;
         GD.Print($"TWR_ORIGINAL_TOOL_ASSEMBLED name={weaponName} " +
             $"visible_parts={count} source_mesh_proxy_parts={missingMeshProxies} " +
+            $"locally_resolved_mesh_parts={LastResolvedMeshParts} " +
+            $"circular_proxies={LastCircularProxyParts} " +
+            $"conservative_proxies={LastConservativeProxyParts} " +
+            $"native_part_primitives={LastNativePrimitiveParts} " +
             $"sha_verified={OwnerSourcePackVerified}");
         return true;
     }
@@ -207,7 +241,7 @@ public static class OriginalWeaponSourceRuntime
             var synthetic = root.TryGetProperty("synthetic",out var fixture) &&
                 fixture.ValueKind == JsonValueKind.True;
             var testMode = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56");
+                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57");
             // A synthetic fixture may never silently impersonate an original
             // tool pack during ordinary play.
             if (synthetic && !testMode)
@@ -245,8 +279,9 @@ public static class OriginalWeaponSourceRuntime
     {
         foreach (var property in new[] {"meshId","specialMeshId"})
             if (part.TryGetProperty(property, out var id) &&
-                id.ValueKind == JsonValueKind.String)
-                return id.GetString() ?? "";
+                id.ValueKind == JsonValueKind.String &&
+                !string.IsNullOrWhiteSpace(id.GetString()))
+                return id.GetString()!;
         return "";
     }
 

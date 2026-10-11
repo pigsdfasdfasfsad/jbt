@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer, twr-pass56-source-wiki-gallery]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer, twr-pass56-source-wiki-gallery, twr-pass57-offline-source-weapon-geometry]
     paths:
       - 'src/**'
       - 'content/**'
@@ -885,8 +885,40 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass56 lobby cleanup failed' }
           }
 
+      - name: Smoke Pass 57 source URL asset resolution and geometry proxies
+        if: success() && github.ref_name == 'twr-pass57-offline-source-weapon-geometry'
+        shell: pwsh
+        run: |
+          $outputDir = (Resolve-Path 'build/output').Path
+          $sourceTools = Join-Path $outputDir 'Content/Weapons/SourceWeaponModels.json.gz'
+          $meshDir = Join-Path $outputDir 'Content/Assets/Meshes'
+          $testMesh = Join-Path $meshDir '555570001.obj'
+          foreach ($path in @($sourceTools, $testMesh)) {
+            if (Test-Path -LiteralPath $path) {
+              throw "Pass57 refuses overwrite of owner/synthetic source file: $path"
+            }
+          }
+          python tools/maps/make_pass57_weapon_geometry_fixture.py --output $sourceTools --mesh-dir $meshDir --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass57 synthetic original-style tool/OBJ fixture failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass57.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass57.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','360','--','--smoke-pass57') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS57_GEOMETRY_OK' })) {
+              throw "Pass57 native source geometry/OBJ test failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/maps/make_pass57_weapon_geometry_fixture.py --output $sourceTools --mesh-dir $meshDir --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass57 synthetic source geometry cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview' || github.ref_name == 'twr-pass52-source-loadout-and-shop' || github.ref_name == 'twr-pass53-offline-skin-cases' || github.ref_name == 'twr-pass54-original-skin-materials' || github.ref_name == 'twr-pass55-source-skin-textures-and-shimmer' || github.ref_name == 'twr-pass56-source-wiki-gallery')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview' || github.ref_name == 'twr-pass52-source-loadout-and-shop' || github.ref_name == 'twr-pass53-offline-skin-cases' || github.ref_name == 'twr-pass54-original-skin-materials' || github.ref_name == 'twr-pass55-source-skin-textures-and-shimmer' || github.ref_name == 'twr-pass56-source-wiki-gallery' || github.ref_name == 'twr-pass57-offline-source-weapon-geometry')
         shell: pwsh
         run: |
           $privateScenes = @(Get-ChildItem -Path build/output -Filter '*.scene.jsonl.gz' -File -Recurse -ErrorAction SilentlyContinue)
@@ -930,6 +962,8 @@ jobs:
           }
           $privateToolPacks = @(Get-ChildItem -Path build/output -Filter 'SourceWeaponModels.json.gz' -File -Recurse -ErrorAction SilentlyContinue)
           if ($privateToolPacks.Count -gt 0) { throw 'Owner-private or synthetic Pass47 original tool model pack leaked into public output' }
+          $pass57MeshFixture = @(Get-ChildItem -Path build/output -Filter '555570001.obj' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($pass57MeshFixture.Count -gt 0) { throw 'Pass57 synthetic OBJ remained in public Windows output' }
           $toolManifests = @(Get-ChildItem -Path build/output -Filter 'SOURCE_WEAPON_MODELS_MANIFEST47.json' -File -Recurse -ErrorAction SilentlyContinue)
           if ($toolManifests.Count -gt 0) { throw 'Owner weapon model manifest leaked into public output' }
           $zombiePacks = @(Get-ChildItem -Path build/output -Filter 'InfectedSourceVariants.json.gz' -File -Recurse -ErrorAction SilentlyContinue)

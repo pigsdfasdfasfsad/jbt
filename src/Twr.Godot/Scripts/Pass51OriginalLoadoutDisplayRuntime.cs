@@ -42,6 +42,9 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
     public bool PreviewUsesPreparedScene { get; private set; }
     public int PreviewVisibleParts { get; private set; }
     public int PreviewMissingSourceMeshes { get; private set; }
+    public int PreviewLocallyResolvedMeshes { get; private set; }
+    public int PreviewCircularProxies { get; private set; }
+    public int PreviewConservativeProxies { get; private set; }
     public bool HasAnchor(string slot) => _anchors.ContainsKey(slot);
 
     public string PreviewStatus
@@ -57,8 +60,13 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
                 : PreviewUsesPreparedScene
                     ? "LOCALLY PREPARED WEAPON MODEL"
                     : "APPROXIMATE WEAPON SHAPE - SOURCE MESH NOT INSTALLED";
-            var meshNote = PreviewUsesSourceAssembly && PreviewMissingSourceMeshes > 0
-                ? $" | {PreviewMissingSourceMeshes} UNRESOLVED SOURCE MESHES"
+            var meshNote = PreviewUsesSourceAssembly
+                ? $" | {PreviewLocallyResolvedMeshes} LOCAL TRIANGLE MESHES"+
+                  $" | {PreviewCircularProxies} CYLINDER PROXIES"+
+                  $" | {PreviewConservativeProxies} BOUNDS PROXIES"+
+                  (PreviewMissingSourceMeshes>0
+                    ? $" | {PreviewMissingSourceMeshes} SOURCE MESH IDS UNAVAILABLE"
+                    : "")
                 : "";
             var model=_models.GetValueOrDefault("View");
             var skinNote = model is not null &&
@@ -165,6 +173,9 @@ public partial class Pass51OriginalLoadoutDisplayRuntime : Node3D
         PreviewUsesPreparedScene = model.UsingPreparedScene;
         PreviewVisibleParts = model.VisualPartCount;
         PreviewMissingSourceMeshes = model.SourceMissingMeshProxies;
+        PreviewLocallyResolvedMeshes = model.SourceLocallyResolvedMeshes;
+        PreviewCircularProxies = model.SourceCircularProxyParts;
+        PreviewConservativeProxies = model.SourceConservativeProxyParts;
         return true;
     }
 
