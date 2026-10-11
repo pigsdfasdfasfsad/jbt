@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass48",StringComparer.Ordinal))
+        {
+            RunPass48Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass47",StringComparer.Ordinal))
         {
             RunPass47Smoke();
@@ -442,6 +447,68 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass48Smoke()
+    {
+        // CI source kit contains only fabricated geometry. The actual 285 MB
+        // TestPlace XML and its owner-only source accessories are NEVER uploaded.
+        var arena = new Node3D { Name="Pass48SourceInfectedSyntheticSmoke" };
+        AddChild(arena);
+        var types = new[] {
+            "Civilian", "Sprinter", "Bolter", "Military",
+            "Riot", "Hazmat", "Bloater", "Burster"
+        };
+        var loaded = 0;
+        foreach(var type in types)
+        {
+            var visual = new InfectedVisualAssembler {
+                Name=type+"SourceVisual",InfectedType=type
+            };
+            arena.AddChild(visual);
+            var body = visual.GetNodeOrNull<Node3D>("SourceR6Body");
+            if (!visual.UsingSourceBlueprint ||
+                visual.VerifiedOwnerSourceAccessoryKit ||
+                visual.RecoveredSourceAccessoryParts != 2 ||
+                visual.ReconstructedR6BodyParts != 6 ||
+                visual.MissingSourceMeshProxies != 1 ||
+                body is null)
+                throw new InvalidOperationException(
+                    "Pass48 source/proxy attribution invalid: " + type);
+            var meshes=body.FindChildren("*","MeshInstance3D",true,false)
+                .OfType<MeshInstance3D>().ToArray();
+            if(meshes.Length!=8 ||
+                !meshes.Any(node => node.Name=="Head" && node.Mesh is SphereMesh) ||
+                !meshes.Any(node => node.Name=="OriginalEyepiece" &&
+                    node.Mesh is BoxMesh) ||
+                meshes.Any(node => node.Name=="UnwantedHandle"))
+                throw new InvalidOperationException(
+                    "Pass48 visible body, original accessory, or missing-mesh proxy incorrect");
+            visual.Attack();
+            loaded++;
+        }
+        if (InfectedSourceModelRuntime.LoadedVariantCount != 15 ||
+            InfectedSourceModelRuntime.OwnerSourceKitVerified)
+            throw new InvalidOperationException(
+                "Pass48 synthetic fixture variant coverage or original-source SHA state invalid");
+        var zombie=new InfectedAgent {
+            Name="Pass48SyntheticPhysicalInfected",
+            InfectedType="Hazmat",Health=100
+        };
+        arena.AddChild(zombie);
+        if(!zombie.SourceInfectedKitActive || zombie.SourceInfectedKitVerified ||
+            zombie.SourceAccessoryPartCount!=2 ||
+            zombie.SourceBodyProxyPartCount!=6 ||
+            zombie.SourceMissingMeshProxyCount!=1)
+            throw new InvalidOperationException(
+                "Pass48 active infected actor did not receive source-kit geometry");
+        GD.Print("TWR_SMOKE_PASS48_INFECTED_OK synthetic_only=true " +
+            "source_playable_types=8 variants=15 body_proxy_per_actor=6 " +
+            "source_accessories_per_actor=2 cloud_mesh_proxy_per_actor=1 " +
+            "R6_head_sphere=true actual_infected_actor=true " +
+            "original_3d_asset_triangles_recovered=false " +
+            "original_r6_active_variant_rigs_recovered=false");
         GetTree().Quit(0);
     }
 
