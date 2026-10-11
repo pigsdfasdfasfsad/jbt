@@ -24,6 +24,7 @@ public partial class WeaponDialHud : Control
     private int _lastMag = -1;
     private int _lastReserve = -1;
     private Texture2D? _pass27Icon;
+    public bool HasOfflineReferenceWeaponArt => _pass27Icon is not null;
 
     private static readonly Color Cream = new(0.89f, 0.88f, 0.80f);
     private static readonly Color Green = new(0.35f, 0.67f, 0.35f);
