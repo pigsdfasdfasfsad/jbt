@@ -548,12 +548,13 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Pass53 native runtime profile missing");
         var player=_runtime.Player ??
             throw new InvalidOperationException("Pass53 native runtime player missing");
-        // --smoke-pass53 explicitly authorizes temporary credits in the CI
-        // runner profile. This path is never invoked during normal play.
-        player.Credits=12000;
-        profile.Credits=12000;
-        profile.OwnedSkins.Clear();
-        profile.EquippedWeaponSkins.Clear();
+        // LocalSessionNode installed an isolated fixture profile via the
+        // JSON store before the domain session was constructed. UI never
+        // writes authoritative player balances directly.
+        if(player.Credits!=12000 || profile.Credits!=12000 ||
+            profile.OwnedSkins.Count!=0 ||
+            profile.EquippedWeaponSkins.Count!=0)
+            throw new InvalidOperationException("Pass53 smoke profile fixture missing");
         ShowMenu();
         var lobby=_sourceLobby ??
             throw new InvalidOperationException("Pass53 synthetic source lobby unavailable");

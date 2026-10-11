@@ -1,4 +1,5 @@
 using Godot;
+using System.Text.Json;
 using Twr.Domain.Contracts;
 using Twr.Domain.Contracts.Commands;
 using Twr.Domain.Model;
@@ -15,7 +16,18 @@ public partial class LocalSessionNode : Node
     public override void _Ready()
     {
         var save = ProjectSettings.GlobalizePath("user://profile.json");
-        Session = new LocalSession(new JsonProfileStore(save));
+        var store = new JsonProfileStore(save);
+        // Test-only profile fixture: loaded by the DOMAIN just as any
+        // ordinary JSON profile. The presentation layer never changes
+        // authoritative credits, wave, XP or health directly.
+        if (OS.GetCmdlineUserArgs().Contains("--smoke-pass53",
+            StringComparer.Ordinal))
+        {
+            var fixture=JsonSerializer.Deserialize<Profile>(
+                "{\"SchemaVersion\":1,\"Credits\":12000}") ?? new Profile();
+            store.Save(fixture);
+        }
+        Session = new LocalSession(store);
     }
 
     public override void _Process(double delta)
