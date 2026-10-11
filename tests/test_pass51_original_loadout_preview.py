@@ -63,7 +63,6 @@ def test_armory_shows_existing_ninety_one_rows_and_updates_preview_by_hover():
 
 def test_source_lobby_is_removed_from_board_perk_and_match():
     boot = read("src/Twr.Godot/Scripts/Bootstrap.cs")
-    assert boot.count('Pass51OriginalLoadoutDisplayRuntime.StageName)?.__class__ is not None
     assert boot.count('Pass51OriginalLoadoutDisplayRuntime.StageName') >= 4
     assert 'showroom?.ShowForProfile(_runtime.Profile)' in boot
     assert 'HideDisplay();' in boot
