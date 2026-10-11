@@ -69,7 +69,31 @@ matching and other script events still need reconstruction and real
 screenshot-based validation. This is a **source-guided visual animation
 pass**, not full 1:1 first-person fidelity or proof of game completion.
 
-## Verification record
+## Verified October 11, 2026 Windows checkpoint
 
-Do not mark native Windows acceptance complete until the actual
-`twr-pass60-source-weapon-animations` Actions run passes.
+**Successful Windows CI run:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38124413516
+
+**Code revision tested:** `ca08e427a09822cb711327fd71d2cb5a9c958e79`
+
+- **534 Python regressions passed**, one inherited Pass34 FutureWarning.
+- Godot .NET Windows build/export succeeded: **0 errors**, one existing
+  Pass36 `CS0108` warning.
+- Baseline domain simulation: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150`
+  (automated states, not a full player-controlled combat playthrough).
+- Pass59 regression: `TWR_SMOKE_PASS59_SOURCE_MOTION_OK`, confirming
+  Glock 17 hip 0.028m, aimed 0.014m and source firing timings.
+- Pass60 native Windows: `TWR_SMOKE_PASS60_ANIMATION_OK` with
+  `source_matrix_and_angles=true`,
+  `hip_translation_and_rotation=true`,
+  `aim_translation_and_rotation=true`,
+  `original_sprint_position_and_rotation=true`,
+  `original_reload_keyframes=true`,
+  `reload_duration_authority_unchanged=true`,
+  `invalid_source_expressions_blocked=true`.
+- Owner-private map, meshes, skins and synthetic fixtures exclusion
+  passed; GitHub public EXE upload remains disabled.
+
+This verifies **source-data animation code paths under exported Windows
+headless smoke**, not original mesh restoration, screenshot-level
+1:1 fidelity, 10-map player-controlled acceptance, or a privately
+delivered executable.
