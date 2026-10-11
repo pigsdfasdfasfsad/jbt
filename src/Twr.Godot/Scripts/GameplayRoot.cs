@@ -113,6 +113,15 @@ public partial class GameplayRoot : Node3D
         .Sum(infected => infected.SourceJumpAttempts);
     public int Pass42JumpLandings => _infected.Where(GodotObject.IsInstanceValid)
         .Sum(infected => infected.SourceJumpLandings);
+    public int Pass44NativePrimitiveCount =>
+        GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
+            "/Pass28PrimitiveStream")?.SourceInstanceCount ?? 0;
+    public int Pass44NativeDrawBatches =>
+        GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
+            "/Pass28PrimitiveStream")?.BatchCount ?? 0;
+    public int Pass44VisibleNativeBatches =>
+        GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
+            "/Pass28PrimitiveStream")?.VisibleBatchCount ?? 0;
     private double _pass32RecoveryScan = 1.5;
 
     private enum Stage { Countdown, Wave, WaveEnd, Intermission, Results }
