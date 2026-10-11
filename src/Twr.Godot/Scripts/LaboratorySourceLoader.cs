@@ -48,6 +48,10 @@ public static class LaboratorySourceLoader
 
         var stage = new Node3D { Name = "Recovered" + mapName };
         var batches = new Dictionary<string, RenderBatch>(StringComparer.Ordinal);
+        // Each spatial batch shares exactly one source appearance/mesh
+        // resource per material+shape; do not duplicate 15k proxy materials.
+        var appearanceCache = new Dictionary<string, (Mesh Mesh,
+            StandardMaterial3D Material)>(StringComparer.Ordinal);
         var meshCache = new Dictionary<string, Mesh?>(StringComparer.Ordinal);
         var textureCache = new Dictionary<string, Texture2D?>(StringComparer.Ordinal);
         var collisions = new List<(Transform3D Transform, Vector3 Size, bool Wedge)>();
@@ -62,6 +66,10 @@ public static class LaboratorySourceLoader
         {
             // Source SHA-bound primitive stream; never invent custom mesh geometry.
             var packedNativeParts = Pass28PrimitiveStreamer.TryBuild(stage, mapName, filePath);
+            // Only split fallback source visuals when the already-verified
+            // full Laboratory native Part pack is installed. Earlier source
+            // maps and pack-free mode retain their original grouping.
+            var useProxyTiles = mapName == "Laboratory" && packedNativeParts;
             using var input = File.OpenRead(filePath);
             using var unpack = new GZipStream(input, CompressionMode.Decompress);
             using var reader = new StreamReader(unpack);
@@ -101,7 +109,8 @@ public static class LaboratorySourceLoader
                 switch (kind)
                 {
                     case "geometry":
-                        AddGeometry(record, batches, collisions, meshCache, textureCache, packedNativeParts);
+                        AddGeometry(record, batches, collisions, meshCache, textureCache,
+                            packedNativeParts, useProxyTiles, appearanceCache);
                         break;
                     case "collision":
                     {
@@ -160,6 +169,11 @@ public static class LaboratorySourceLoader
                     throw new InvalidDataException("incomplete or corrupted original scene pack: " + mapName);
             }
 
+            var fallbackStreamer = useProxyTiles
+                ? new Pass45FallbackProxyStreamer { Name = "Pass45FallbackProxyStream" }
+                : null;
+            if (fallbackStreamer is not null)
+                stage.AddChild(fallbackStreamer);
             foreach (var batch in batches.Values)
             {
                 var mm = new MultiMesh
@@ -168,16 +182,46 @@ public static class LaboratorySourceLoader
                     Mesh = batch.Mesh,
                     InstanceCount = batch.Instances.Count
                 };
+                // Real-world bounds protect huge source special meshes and
+                // loaded custom triangle meshes from false-negative culling.
+                var localMeshBounds = batch.Mesh.GetAabb();
+                if (localMeshBounds.Size.LengthSquared() < .000001f)
+                    localMeshBounds = new Aabb(new Vector3(-.5f,-.5f,-.5f),
+                        Vector3.One);
+                var low = new Vector3(float.PositiveInfinity, float.PositiveInfinity,
+                    float.PositiveInfinity);
+                var high = new Vector3(float.NegativeInfinity, float.NegativeInfinity,
+                    float.NegativeInfinity);
                 for (var index = 0; index < batch.Instances.Count; index++)
-                    mm.SetInstanceTransform(index, batch.Instances[index]);
-                stage.AddChild(new MultiMeshInstance3D
+                {
+                    var transform = batch.Instances[index];
+                    mm.SetInstanceTransform(index,transform);
+                    var bounds = Pass45FallbackProxyStreamer.WorldBounds(
+                        transform,localMeshBounds);
+                    low = new Vector3(Math.Min(low.X,bounds.Position.X),
+                        Math.Min(low.Y,bounds.Position.Y),
+                        Math.Min(low.Z,bounds.Position.Z));
+                    high = new Vector3(Math.Max(high.X,bounds.End.X),
+                        Math.Max(high.Y,bounds.End.Y),
+                        Math.Max(high.Z,bounds.End.Z));
+                }
+                // Godot MultiMesh has one visibility box for all instances.
+                // An explicitly derived source AABB is mandatory for tiled
+                // streamers and also fixes inconsistent legacy frustum bounds.
+                mm.CustomAabb = new Aabb(low,high-low);
+                var renderNode = new MultiMeshInstance3D
                 {
                     Multimesh = mm,
                     MaterialOverride = batch.Material,
                     CastShadow = batch.CastShadow
                         ? GeometryInstance3D.ShadowCastingSetting.On
                         : GeometryInstance3D.ShadowCastingSetting.Off
-                });
+                };
+                if (fallbackStreamer is null)
+                    stage.AddChild(renderNode);
+                else
+                    fallbackStreamer.Register(renderNode,mm.CustomAabb,
+                        batch.Instances.Count);
             }
 
             // Pass 26 source-bound tiled collider cache, optional and fail-closed.
@@ -270,7 +314,9 @@ public static class LaboratorySourceLoader
         JsonElement r, Dictionary<string, RenderBatch> batches,
         List<(Transform3D Transform, Vector3 Size, bool Wedge)> colliders,
         Dictionary<string, Mesh?> meshCache,
-        Dictionary<string, Texture2D?> textureCache, bool packedNativeParts)
+        Dictionary<string, Texture2D?> textureCache, bool packedNativeParts,
+        bool useProxyTiles, Dictionary<string, (Mesh Mesh,
+            StandardMaterial3D Material)> appearanceCache)
     {
         var opacity = Num(r, "opacity", 1);
         var size = Extents(r);
@@ -314,34 +360,51 @@ public static class LaboratorySourceLoader
         // their unrelated asset IDs in batch keys creates excess draw calls.
         var batchMeshKey = prepared is null ? "" : id;
         var batchTextureKey = preparedTexture is null ? "" : textureId;
-        var key = $"{cls}|{Str(r, "shape")}|{Str(r, "mat")}|{batchMeshKey}|{batchTextureKey}|" +
-                  $"{rgb[0]},{rgb[1]},{rgb[2]}|{opacity:F3}|{shadow}";
+        var appearanceKey = $"{cls}|{Str(r, "shape")}|{Str(r, "mat")}|{batchMeshKey}|{batchTextureKey}|" +
+            $"{rgb[0]},{rgb[1]},{rgb[2]}|{opacity:F3}|{shadow}";
+        var key = appearanceKey;
+        if (useProxyTiles)
+        {
+            // Bin by actual original source-centre XZ, while visibility is
+            // tested by the complete rotated world AABB after transformation.
+            var sourceCentre = Vec(r,"t");
+            var tileX = (int)Math.Floor(sourceCentre[0] /
+                Pass45FallbackProxyStreamer.TileSizeStuds);
+            var tileZ = (int)Math.Floor(sourceCentre[2] /
+                Pass45FallbackProxyStreamer.TileSizeStuds);
+            key += $"|source-tile:{tileX},{tileZ}";
+        }
         if (!batches.TryGetValue(key, out var batch))
         {
-            var mesh = prepared ?? ProxyMesh(cls, Str(r, "shape"));
-            var materialCode = Str(r, "mat");
-            var metallic = materialCode is "1088" or "1056" or "1040";
-            var neon = materialCode == "288";
-            var glass = materialCode == "1568";
-            // MaterialOverride also works on imported ArrayMesh resources,
-            // unlike setting PrimitiveMesh.Material only for fallback boxes.
-            var material = new StandardMaterial3D
+            if (!appearanceCache.TryGetValue(appearanceKey, out var shared))
             {
-                AlbedoColor = color,
-                AlbedoTexture = preparedTexture,
-                Metallic = metallic ? 0.75f : 0.02f,
-                Roughness = metallic ? 0.42f : glass ? 0.11f : 0.88f,
-                EmissionEnabled = neon,
-                Emission = color,
-                Transparency = opacity < 0.995f || preparedTexture is not null
-                    ? BaseMaterial3D.TransparencyEnum.Alpha
-                    : BaseMaterial3D.TransparencyEnum.Disabled
-            };
-            RobloxMaterialSurface.Apply(material, materialCode, preparedTexture);
+                var mesh = prepared ?? ProxyMesh(cls, Str(r, "shape"));
+                var materialCode = Str(r, "mat");
+                var metallic = materialCode is "1088" or "1056" or "1040";
+                var neon = materialCode == "288";
+                var glass = materialCode == "1568";
+                // Imported Mesh and material resources are shared between
+                // all tiles with an identical source visual appearance.
+                var material = new StandardMaterial3D
+                {
+                    AlbedoColor = color,
+                    AlbedoTexture = preparedTexture,
+                    Metallic = metallic ? 0.75f : 0.02f,
+                    Roughness = metallic ? 0.42f : glass ? 0.11f : 0.88f,
+                    EmissionEnabled = neon,
+                    Emission = color,
+                    Transparency = opacity < 0.995f || preparedTexture is not null
+                        ? BaseMaterial3D.TransparencyEnum.Alpha
+                        : BaseMaterial3D.TransparencyEnum.Disabled
+                };
+                RobloxMaterialSurface.Apply(material, materialCode, preparedTexture);
+                shared = (mesh, material);
+                appearanceCache.Add(appearanceKey,shared);
+            }
             batch = new RenderBatch
             {
-                Mesh = mesh,
-                Material = material,
+                Mesh = shared.Mesh,
+                Material = shared.Material,
                 CastShadow = shadow
             };
             batches.Add(key, batch);
