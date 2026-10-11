@@ -89,7 +89,36 @@ acceptance are not delivered by Pass64.
 Owner-private weapon packs are not committed to GitHub and public
 Windows executable upload remains disabled.
 
-## Verification record
+## Verified Windows checkpoint — October 11, 2026
 
-Pending successful actual Pass64 exported Windows CI. Implementation
-commits and regression assertions alone are not native verification.
+**Successful exported native Windows CI:**
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38163615096
+
+**Source revision tested:** `10ade6d78b913e597a807839e2b7fa6bd70a36ca`
+
+- **553 Python tests passed**, one inherited Pass34 FutureWarning.
+- Godot .NET Windows export succeeded: **0 errors**, one inherited
+  Pass36 `CS0108` compiler warning.
+- `TWR_SMOKE_PASS64_SOURCE_BOLT_SHELL_OK`: original Mosin bolt
+  carrier/handle and Winchester keyframe counts, restricted math.pi/2
+  and numeric handling, rotated nested parts moving with the carrier,
+  end-of-clip rest reset, original Mossberg and SPAS-12 shell markers,
+  a bounded casing proxy lifecycle, and incremental Mossberg reload
+  magazine-pose activation.
+- All older Pass59–63 native Windows weapon smokes passed.
+- `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed as **scripted
+  domain simulation**, not ten manually completed survival matches.
+- CI created and removed wholly synthetic owner-style packs before
+  the owner-private asset exclusion scan, which passed. No public
+  GitHub EXE artifact upload is enabled.
+
+The first Pass64 native acceptance exposed a **one-frame reload-state
+leak**: insertion state was sampled before decrementing the render
+timer. Production code was repaired to advance the visual reload timer
+**before** rendering magazine/pump/bolt/insertion poses. The run
+linked above includes this repair and verifies the previous native
+tests remain passing.
+
+This verifies code paths inside the exported game, not exact Roblox
+collision/easing, original shell mesh bytes, original Motor6D C0/C1
+joints, screenshot-level fidelity or a packaged private release.
