@@ -116,7 +116,9 @@ def test_native_ci_smoke_uses_synthetic_gallery_and_deletes_private_references()
     assert "make_pass49_lobby_smoke_fixture.py --output $sourceLobby --clean" in action
     assert "SourceWikiReferenceImages56.zip" in action
     assert "pass56-smoke-profile.json" in session
-    assert "if(smoke54 || smoke55 || smoke56)" in session
+    assert "if(smoke54 || smoke55 || smoke56 || smoke58)" in session
+    assert "pass56-smoke-profile.json" in session
+    assert "pass58-smoke-profile.json" in session
     for path in ("Pass49OriginalLobbyRuntime.cs","Pass50SourceLobbySignsRuntime.cs",
                  "OriginalWeaponSourceRuntime.cs","Pass54SourceSkinMaterials.cs",
                  "Pass55SourceSkinLayers.cs"):
