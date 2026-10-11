@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass45",StringComparer.Ordinal))
+        {
+            RunPass45Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass44",StringComparer.Ordinal))
         {
             RunPass44Smoke();
@@ -427,6 +432,89 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass45Smoke()
+    {
+        // Real exported Windows Godot game, fabricated source-only scene:
+        // 18 packed native Parts, two fabricated MeshPart visual proxies,
+        // one source-like SpecialMesh and no original Roblox mesh bytes.
+        _runtime.StartMap("Laboratory");
+        var game=new GameplayRoot
+        {
+            Name="Pass45SyntheticProxyVisibilitySmoke",
+            Runtime=_runtime,MapName="Laboratory"
+        };
+        AddChild(game);
+        var scene=game.GetNodeOrNull<Node3D>("RecoveredLaboratory");
+        var native=game.GetNodeOrNull<Pass28PrimitiveStreamer>(
+            "RecoveredLaboratory/Pass28PrimitiveStream");
+        var proxies=game.GetNodeOrNull<Pass45FallbackProxyStreamer>(
+            "RecoveredLaboratory/Pass45FallbackProxyStream");
+        var player=game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if(scene is null || native is null || proxies is null || player is null ||
+            native.SourceInstanceCount!=18 ||
+            !game.Pass45ProxyStreamingAvailable || !proxies.CullEnabled ||
+            proxies.SourceProxyInstanceCount!=3 || proxies.BatchCount!=3 ||
+            proxies.VisibleInstanceCount!=2 || proxies.VisibleBatchCount!=2)
+            throw new InvalidOperationException(
+                "Pass45 spatial source-proxy startup/culling unavailable or incorrect");
+        // Retain the one old SpecialMesh visual in addition to the two
+        // fabricated source MeshPart bounding approximations.
+        if(proxies.GetChildren().OfType<MultiMeshInstance3D>().Count()!=3 ||
+            scene.GetNodeOrNull<StaticBody3D>("LaboratoryCollision") is null)
+            throw new InvalidOperationException(
+                "Pass45 source proxy migration lost legacy special visuals or collision");
+
+        var local=new Aabb(new Vector3(-2,-1,-.5f),new Vector3(4,2,1));
+        var orientation=new Transform3D(
+            new Basis(Vector3.Up,Mathf.Pi/2f),new Vector3(10,0,0));
+        var rotated=Pass45FallbackProxyStreamer.WorldBounds(orientation,local);
+        if(Math.Abs(rotated.Size.X-1)>0.01f ||
+            Math.Abs(rotated.Size.Z-4)>0.01f ||
+            !Pass28PrimitiveStreamer.CanSeeBounds(
+                new Vector2(10,0),
+                new Vector2(rotated.Position.X,rotated.Position.Z),
+                new Vector2(rotated.End.X,rotated.End.Z),2))
+            throw new InvalidOperationException(
+                "Rotated actual source mesh AABB was truncated or culled");
+
+        // F1 does NOT affect original physics; it is an A/B visualization
+        // toggle so the owner can capture p95/p99 frame time in one match.
+        game._UnhandledInput(new InputEventKey {Keycode=Key.F1,Pressed=true});
+        if(proxies.CullEnabled || proxies.VisibleInstanceCount!=3 ||
+            proxies.VisibleBatchCount!=3 || game.Pass45ProxyCullEnabled)
+            throw new InvalidOperationException("F1 failed to display all source proxies");
+
+        game._UnhandledInput(new InputEventKey {Keycode=Key.F1,Pressed=true});
+        if(!proxies.CullEnabled || proxies.VisibleInstanceCount!=2 ||
+            proxies.VisibleBatchCount!=2)
+            throw new InvalidOperationException("F1 failed to restore spatial culling");
+
+        var home=player.GlobalPosition;
+        player.GlobalPosition=new Vector3(1800f*RobloxUnits.MetersPerStud,
+            home.Y,0);
+        proxies.Track(player);
+        if(proxies.VisibleBatchCount!=1 || proxies.VisibleInstanceCount!=1)
+            throw new InvalidOperationException("Source proxy far-camera culling incorrect");
+        player.GlobalPosition=home;
+        proxies.Track(player);
+        if(proxies.VisibleBatchCount!=2 || proxies.VisibleInstanceCount!=2)
+            throw new InvalidOperationException("Source proxy return-camera visibility failed");
+
+        game._Process(1.0/60.0);
+        game._Process(1.0/60.0);
+        if(game.Pass43FrameTimes.Snapshot().SampledFrames<2 ||
+            game.Pass44NativePrimitiveCount!=18 || game.Pass45ProxyBatchCount!=3)
+            throw new InvalidOperationException("Pass45 broke source graphics or perf telemetry");
+
+        GD.Print("TWR_SMOKE_PASS45_PROXY_OK map=Laboratory fabricated_scene=true " +
+            "native_ordinary_parts=18 fallback_special=1 " +
+            "fallback_meshproxies=2 original_collision_retained=true " +
+            "F1_cull_on_off_on=PASS rotated_mesh_bounds=PASS " +
+            "visible_at_spawn=2 visible_far=1 source_mesh_triangles_missing=true " +
+            "real_owner_fps_not_benchmarked=true");
         GetTree().Quit(0);
     }
 
