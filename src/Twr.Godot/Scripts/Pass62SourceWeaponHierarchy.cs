@@ -106,6 +106,43 @@ public static class Pass62SourceWeaponHierarchy
         }
 
         /// <summary>
+        /// Pass64: compose source Bolt translation with nested Bolt Handle
+        /// rotation against IMMUTABLE original part transforms. The outer
+        /// movement is applied AFTER the inner rotation, so the handle
+        /// follows its carrier, instead of snapping back to its old pivot.
+        /// This is anchored on recovered Model Handles, not a claim that
+        /// original Motor6D C0/C1 joint offsets were found.
+        /// </summary>
+        public int ApplyBoltAction(Vector3 delta,float handleRadians)
+        {
+            if(!_groups.TryGetValue("Bolt",out var carrier) ||
+               !Finite(delta) || delta.LengthSquared()>.25f ||
+               !float.IsFinite(handleRadians) ||
+               Math.Abs(handleRadians)>2.0f)
+                return 0;
+            var carrierDelta=carrier.Pivot*
+                new Transform3D(Basis.Identity,delta)*
+                carrier.Pivot.AffineInverse();
+            var nested=_groups.TryGetValue("Bolt/Bolt Handle",out var grip)
+                ? grip : null;
+            var localRotation=new Transform3D(
+                new Basis(Vector3.Back,handleRadians),Vector3.Zero);
+            var twist=nested is null ? Transform3D.Identity :
+                nested.Pivot*localRotation*nested.Pivot.AffineInverse();
+            int changed=0;
+            foreach(var (part,home) in carrier.Parts)
+            {
+                if(!GodotObject.IsInstanceValid(part))continue;
+                var nestedPart=nested is not null && Array.Exists(
+                    nested.Parts,item=>ReferenceEquals(item.Part,part));
+                part.Transform=carrierDelta*
+                    (nestedPart ? twist : Transform3D.Identity)*home;
+                changed++;
+            }
+            return changed;
+        }
+
+        /// <summary>
         /// Translate ALL visible source parts in an authored top-level Model
         /// around that Model's original Handle CFrame. The offset is Godot
         /// LOCAL coordinates from the strict Pass61 Rels.*Rel parser; no
