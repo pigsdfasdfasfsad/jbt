@@ -30,6 +30,9 @@ public partial class GameplayRoot : Node3D
     private Stage _stage = Stage.Countdown;
     private double _stageTime = RegularWaveRules.CountdownSeconds;
     private double _spawnTimer;
+    public int WaveInfectedSpawnCount { get; private set; }
+    public int SpawnCatchupCapsHit { get; private set; }
+    private const int MaxSpawnCatchupPerFrame = 4;
     private bool _supplyQueuedForNextWave;
     private double _queuedSupplySeconds=-1;
 
@@ -167,10 +170,26 @@ public partial class GameplayRoot : Node3D
                     }
                 }
                 _spawnTimer -= delta;
-                if (_spawnTimer <= 0 && _infected.Count < RegularWaveRules.MaxAlive(Runtime.Match.Wave))
+                // A single late frame may cover several original wave spawn
+                // intervals. Catch up at most four per frame; no unbounded
+                // horde burst when the game freezes or resumes.
+                var spawnedThisFrame = 0;
+                var limit = RegularWaveRules.MaxAlive(Runtime.Match.Wave);
+                var interval = Math.Max(.05,RegularWaveRules.SpawnIntervalSeconds(Runtime.Match.Wave));
+                while (_spawnTimer <= 0 && _infected.Count < limit &&
+                       spawnedThisFrame < MaxSpawnCatchupPerFrame)
                 {
                     SpawnInfected(Runtime.Match.Wave);
-                    _spawnTimer = RegularWaveRules.SpawnIntervalSeconds(Runtime.Match.Wave);
+                    WaveInfectedSpawnCount++;
+                    spawnedThisFrame++;
+                    _spawnTimer += interval;
+                }
+                if (_spawnTimer <= 0)
+                {
+                    if (spawnedThisFrame == MaxSpawnCatchupPerFrame) SpawnCatchupCapsHit++;
+                    // Discard stale backlog once the frame's bounded work
+                    // is exhausted. Preserve future spawn timing otherwise.
+                    _spawnTimer = interval;
                 }
                 if (_stageTime <= 0) EndWave();
                 break;
@@ -330,6 +349,7 @@ public partial class GameplayRoot : Node3D
         _stage = Stage.Wave;
         _stageTime = RegularWaveRules.WaveDurationSeconds;
         _spawnTimer = 0;
+        WaveInfectedSpawnCount = 0;
         _completedObjectivesThisWave = 0;
         if(_supplyQueuedForNextWave)
         {
