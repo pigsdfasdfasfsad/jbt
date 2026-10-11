@@ -1,3 +1,23 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 66
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass66-articulated-source-arms`.
+
+**Successful native Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38173001546
+
+- **563 Python regression tests passed**, one inherited Pass34 XML FutureWarning.
+- **Godot/.NET Windows export: 0 errors** and one inherited Pass36 CS0108 warning.
+- Supplied original `TestPlace.rbxlx` has R6-shaped **1 × 2 × 1 stud** arms attached to a source Supply Drop Survivor model. This supports an approximate nominal 2-stud limb length **but is not evidence of the original first-person player avatar**, its Motor6D C0/C1 joints, or missing textures.
+- New `Pass66ArmKinematics` provides a finite, deterministic camera-local two-bone shoulder/elbow/wrist solver with original-scale total 2-stud reach, bounded 1.65× extension, and degenerate-input safeguards. Eight visibly **procedural upper/forearm and shoulder/elbow pieces** follow the existing Pass65 source-authoritative left/right hand/wrist welds, not a recovered player arm mesh.
+- The `ArmRig66` root remains a sibling of the recoiling first-person `WeaponBody`, keeping camera-local shoulder anchors stable. Native `TWR_SMOKE_PASS66_ARTICULATED_ARMS_OK` verifies whole Glock reload arm action, Mossberg left pump support arm, Mosin right bolt support arm, bent segment bounds, returning to authored hand rest (within expected millimetre-scale existing idle sway on elbows), hide in static armory previews, and cleanup on weapon switches.
+- All Pass59–65 original weapon-smoke regressions passed. `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` is still **scripted domain state progression**, not genuine player-controlled full 15-wave survival runs on all ten maps.
+- Public owner-private source exclusions and temporary synthetic pack deletion passed. GitHub CI **does not publish an EXE or any owner-private map/weapon data**.
+
+**Major unfinished parity:** original player arm/body/finger models and rig joints, true source Motor6D offsets, remote original MeshPart/CSG geometry and UV/texture binaries, precise dynamic AimCF sight alignment, full decorated and physics-faithful ten-map reconstruction, first-person screenshot comparisons, complete manually played matches, and an owner-private playable offline Windows build. **Pass66 is verified; the entire 1:1 game is not finished.**
+
+[Pass66 camera-anchored source-hand-linked arm implementation, native acceptance and remaining limitations](PASS66_CAMERA_ANCHORED_SOURCE_ARMS.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 65
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass65-source-hand-grips`.
