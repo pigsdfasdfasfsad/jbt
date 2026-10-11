@@ -9,6 +9,12 @@ public partial class InfectedAgent : CharacterBody3D
     public ExpresswayNavigationRuntime? HighwayNavigator { get; set; }
     public Pass25SourceNavigationRuntime? SourceNavigator { get; set; }
     public string InfectedType { get; set; } = "Civilian";
+    public bool SourceInfectedKitActive => _visual?.UsingSourceBlueprint == true;
+    public bool SourceInfectedKitVerified =>
+        _visual?.VerifiedOwnerSourceAccessoryKit == true;
+    public int SourceAccessoryPartCount => _visual?.RecoveredSourceAccessoryParts ?? 0;
+    public int SourceBodyProxyPartCount => _visual?.ReconstructedR6BodyParts ?? 0;
+    public int SourceMissingMeshProxyCount => _visual?.MissingSourceMeshProxies ?? 0;
     public float Health { get; set; } = 65;
     public float Damage { get; set; } = 8;
     public float MoveSpeed { get; set; } = 15f * RobloxUnits.MetersPerStud;
