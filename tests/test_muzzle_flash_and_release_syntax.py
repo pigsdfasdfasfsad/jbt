@@ -9,7 +9,7 @@ def test_firearm_effect_and_reloading_remain_connected():
     assert '_flash.Visible = _flashSeconds > 0;' in visual
     assert 'if (!_melee && _flash is not null)' in visual
     assert 'EmissionEnergyMultiplier = 2.0f' in visual
-    assert '_viewModel.Fire()' in player
+    assert player.count('_viewModel.Fire(_aiming);')==2
     assert '_viewModel.Reload(_reloadTimer)' in player
 
 def test_private_power_shell_package_has_ast_gate_in_ci():
