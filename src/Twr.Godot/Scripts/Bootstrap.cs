@@ -11,12 +11,18 @@ public partial class Bootstrap : Node
     private CanvasLayer? _armory;
     private PerkMenuRuntime? _perkMenu;
     private GameplayRoot? _game;
+    private Pass49OriginalLobbyRuntime? _sourceLobby;
 
     public override void _Ready()
     {
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass49",StringComparer.Ordinal))
+        {
+            RunPass49Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass48",StringComparer.Ordinal))
         {
             RunPass48Smoke();
@@ -447,6 +453,59 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass49Smoke()
+    {
+        // Original TestPlace XML/derived owner lobby content is NOT in CI.
+        // This exercises the actual Windows renderer against fabricated
+        // 3D lobby boxes, native shapes, distant mesh bounds and cameras.
+        ShowMenu();
+        var stage=_sourceLobby;
+        if(stage is null || stage.OwnerSourceVerified ||
+            stage.SourceGeometryParts!=8 || stage.VisibleSourceParts!=7 ||
+            stage.UnresolvedMeshProxyParts!=3 || stage.SourceLights!=2 ||
+            stage.RenderBatchCount<2 || stage.SourceCameraCount!=8 ||
+            stage.SourceLoadoutPointCount!=5 ||
+            stage.ActiveCameraName!="Start" ||
+            !stage.HasCamera("Perks") || !stage.HasCamera("Loadout") ||
+            !stage.HasLoadoutPoint("Primary"))
+            throw new InvalidOperationException(
+                "Pass49 native source lobby geometric/camera counts failed");
+        if(_menu is null || _menu.GetChildren().OfType<Button>().Count()<12)
+            throw new InvalidOperationException(
+                "Pass49 3D lobby made the existing ten-map menu inaccessible");
+        var originalCam=stage.GetNodeOrNull<Camera3D>("OriginalSourceLobbyCamera");
+        if(originalCam is null || !originalCam.Current ||
+            originalCam.GlobalPosition.Length()>0.01f)
+            throw new InvalidOperationException(
+                "Pass49 original relative Start CFrame misaligned");
+        ShowArmory();
+        if(_sourceLobby!=stage || stage.ActiveCameraName!="Loadout" ||
+            _armory is null)
+            throw new InvalidOperationException(
+                "Pass49 owner lobby camera did not track existing armory");
+        var armoryButtons=_armory.GetChildren().OfType<ScrollContainer>()
+            .SelectMany(scroll=>scroll.GetChildren().OfType<VBoxContainer>())
+            .SelectMany(list=>list.GetChildren().OfType<Button>()).Count();
+        if(armoryButtons!=91)
+            throw new InvalidOperationException(
+                "Pass49 3D lobby intercepted or removed functional 91-weapon shop");
+        ShowMenu();
+        if(stage.ActiveCameraName!="Start")
+            throw new InvalidOperationException(
+                "Pass49 original source camera failed to return to Start");
+        StartGame("Manor");
+        if(_sourceLobby is not null || _game is null)
+            throw new InvalidOperationException(
+                "Pass49 lobby camera/geometry leaked into the active wave scene");
+        GD.Print("TWR_SMOKE_PASS49_LOBBY_OK source=synthetic_only " +
+            "geometry_parts=8 visible_parts=7 mesh_proxy_parts=3 " +
+            "source_cameras=8 loadout_points=5 source_lights=2 " +
+            "camera_Start_to_Loadout_to_Start=true " +
+            "menu_maps=10 armory_weapons=91 gameplay_switch=true " +
+            "original_cloud_mesh_triangles_missing=true");
         GetTree().Quit(0);
     }
 
@@ -1715,8 +1774,16 @@ public partial class Bootstrap : Node
         GD.Print($"TWR_SMOKE_COMPLETE_OK maps={completed} waves={completed*ReleaseRules.MaxWaves}");
         GetTree().Quit(0);
     }
+    private void EnsureOriginalLobby(string cameraName)
+    {
+        if(_sourceLobby is null || !GodotObject.IsInstanceValid(_sourceLobby))
+            _sourceLobby=Pass49OriginalLobbyRuntime.TryBuild(this);
+        _sourceLobby?.SetCamera(cameraName);
+    }
+
     private void ShowMenu()
     {
+        EnsureOriginalLobby("Start");
         Input.MouseMode = Input.MouseModeEnum.Visible;
         _menu = new CanvasLayer { Name = "MainMenu" };
         AddChild(_menu);
@@ -1783,6 +1850,7 @@ public partial class Bootstrap : Node
 
     private void ShowPerks()
     {
+        EnsureOriginalLobby("Perks");
         _menu?.QueueFree();
         _menu=null;
         _perkMenu?.QueueFree();
@@ -1802,6 +1870,7 @@ public partial class Bootstrap : Node
 
     private void ShowArmory()
     {
+        EnsureOriginalLobby("Loadout");
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();
@@ -1925,13 +1994,18 @@ public partial class Bootstrap : Node
             "  |  PRIMARY " + primary + "  |  SECONDARY " + secondary + "  |  MELEE " + melee;
     }
 
-    private static void AddBackground(CanvasLayer layer)
+    private void AddBackground(CanvasLayer layer)
     {
+        // Keep controls readable while allowing the 3D source-authored lobby
+        // to show behind them. No private pack = previous fully opaque UI.
         layer.AddChild(new ColorRect
         {
-            Color = new Color(0.025f, 0.027f, 0.03f),
-            AnchorRight = 1,
-            AnchorBottom = 1
+            Color = _sourceLobby is not null
+                ? new Color(.025f,.027f,.03f,.62f)
+                : new Color(.025f,.027f,.03f),
+            AnchorRight=1,
+            AnchorBottom=1,
+            MouseFilter=Control.MouseFilterEnum.Ignore
         });
     }
 
@@ -1951,6 +2025,10 @@ public partial class Bootstrap : Node
 
     private void StartGame(string map)
     {
+        // The authored Lobby is a menu-only backdrop, never collision or
+        // lighting inside an active game map.
+        _sourceLobby?.QueueFree();
+        _sourceLobby=null;
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();
