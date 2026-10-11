@@ -2,7 +2,20 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 46 — Owner offline reference art
+## Latest verified source branch: Pass 47 — Original 3D source tool assemblies
+
+[Pass 47 development branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass47-original-weapon-assemblies) ·
+[Successful Windows build and native tests](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38099854679)
+
+- Recovered the user's exact Roblox-place ReplicatedStorage/Models/Tools original **98 model assemblies**. The owner-only Windows ZIP now includes the previously missing 54 KB source-derived 3D tool pack, representing **1,484 authored 3D parts** with original CFrame transforms, dimensions, RGB and material tokens.
+- **All 91 selectable catalog weapons** match original tool model assemblies after two documented spelling aliases. Pack contains 100 total lookup keys including original names and two aliases; Molotov, Frag and other tool models also remain available.
+- Skip **548 original invisible helper/locator parts** that should never have been rendered as bounding cubes; **936 originally visible parts** retain source colors and geometry envelopes. 1,282 MeshPart and 16 UnionOperation references still lack original external triangle bytes: bounding proxies are explicitly identified, not misrepresented as originals.
+- The Godot loader now requires exact SHA-256 binding to the original XML and original derived weapon pack, rejects synthetic fixture packs during normal gameplay, and retains previous generic model fallback when an original/private source pack is unavailable.
+- **F10/F11** reports source-verified current first-person weapon model, visible original source components, and missing custom-mesh proxies. Pass46 source-map artwork, Pass45 proxy culling, Pass42 navigation and other earlier progress remain present.
+- **457 Python regressions passed** and the real exported Godot Windows executable passed a fabricated six-model native source-assembly test covering five guns, throwable, hidden markers, native sphere, original-coordinate relative transforms and unavailable MeshPart fallbacks.
+- **Still not 1:1:** missing externally hosted original weapon mesh polygons/UVs, original animations and 3D textures; nine full original-world maps, terrain, retail audio fidelity, full enemy traversal and a player-controlled real-time 15-wave match remain outstanding.
+
+## Previous verified source branch: Pass 46 — Owner offline reference art
 
 [Pass 46 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass46-offline-original-art) ·
 [Successful Windows native QA](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38098969880) ·
