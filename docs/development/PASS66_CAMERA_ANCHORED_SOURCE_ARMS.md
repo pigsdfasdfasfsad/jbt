@@ -89,7 +89,37 @@ ten-map decoration/collision, manual player-controlled full
 15-wave acceptance, screenshot parity, owner-only asset
 integration, and a privately distributable Windows executable.
 
-## Verification
+## Verified October 11, 2026 — exported Windows checkpoint
 
-Pending final Pass66 exported-Windows CI success. Do not treat
-commits alone as a verified native Windows result.
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38173001546
+
+**Code revision tested:** `81fe367e762bcc8fca1782739870bc7d8737cb44`.
+
+- **563 Python regressions passed** with one inherited Pass34
+  FutureWarning; Godot/.NET Windows export succeeded with
+  **0 errors** and one inherited Pass36 `CS0108` warning.
+- New `TWR_SMOKE_PASS66_ARTICULATED_ARMS_OK` in an actual exported
+  Windows process verified 2 original-survivor-R6-stud nominal reach,
+  finite bounded two-bone elbow math, safe overextension and degenerate
+  inputs, two visible procedural upper/forearm chains, camera-fixed
+  shoulder anchors, Glock reload elbow movement, Mossberg left-hand
+  pump-following, Mosin right-hand bolt-following, completion reset,
+  static showroom hide, and weapon-switch arm cleanup.
+- The first native smoke failed because its unreachable target was
+  incorrectly **outside** the finite input acceptance budget. The
+  next exposed an overly exact *world-space elbow-rest* assertion:
+  the earlier renderer intentionally retains small idle sway after
+  weapon reloads. The corrected test permits **up to 1.2 cm**
+  on camera-space elbow rest while prior Pass65 tests continue to
+  require hand-weld rest reset to within their strict tolerance.
+- Pass59–65 exported Windows weapon smoke checks passed unchanged,
+  as did `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` (scripted domain
+  simulation only, **not** ten full manual matches).
+- Wholly synthetic original-style weapon and motor hierarchy packs
+  were created solely for CI tests and deleted before the original
+  owner-private asset exclusion check, which passed.
+  No public Windows executable artifact upload is enabled.
+
+These assertions establish engine geometry and animation continuity,
+**not** original avatar meshes, exact animated Roblox joint fidelity,
+rendered screenshot parity, or a final owner-private Windows release.
