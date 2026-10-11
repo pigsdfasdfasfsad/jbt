@@ -583,6 +583,10 @@ jobs:
           if ($privateToolPacks.Count -gt 0) { throw 'Owner-private or synthetic Pass47 original tool model pack leaked into public output' }
           $toolManifests = @(Get-ChildItem -Path build/output -Filter 'SOURCE_WEAPON_MODELS_MANIFEST47.json' -File -Recurse -ErrorAction SilentlyContinue)
           if ($toolManifests.Count -gt 0) { throw 'Owner weapon model manifest leaked into public output' }
+          $zombiePacks = @(Get-ChildItem -Path build/output -Filter 'InfectedSourceVariants.json.gz' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($zombiePacks.Count -gt 0) { throw 'Infected model data must not enter the public output' }
+          $zombieReports = @(Get-ChildItem -Path build/output -Filter 'SOURCE_INFECTED_ASSET_KIT_MANIFEST48.json' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($zombieReports.Count -gt 0) { throw 'Infected source provenance file must not enter public output' }
 
       - name: Upload verified Pass 29 Windows build (no private original assets)
         if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments')
@@ -689,6 +693,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TWR-Pass47-Windows-x64-NoPrivateAssets
+          path: build/output/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
+      - name: Upload validated Pass 48 Windows build
+        if: success() && github.ref_name == 'twr-pass48-infected-source-asset-kit'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Pass48-Windows-x64-NoPrivateAssets
           path: build/output/
           if-no-files-found: error
           retention-days: 14
