@@ -14,6 +14,10 @@ public partial class InfectedVisualAssembler : Node3D
     public string InfectedType { get; set; } = "Civilian";
     public bool UsingOriginalScene { get; private set; }
     public bool UsingSourceBlueprint { get; private set; }
+    public bool VerifiedOwnerSourceAccessoryKit { get; private set; }
+    public int RecoveredSourceAccessoryParts { get; private set; }
+    public int ReconstructedR6BodyParts { get; private set; }
+    public int MissingSourceMeshProxies { get; private set; }
 
     private Node3D? _leftArm;
     private Node3D? _rightArm;
@@ -53,6 +57,14 @@ public partial class InfectedVisualAssembler : Node3D
             out _leftArm, out _rightArm, out _leftLeg, out _rightLeg))
         {
             UsingSourceBlueprint = true;
+            VerifiedOwnerSourceAccessoryKit =
+                InfectedSourceModelRuntime.OwnerSourceKitVerified;
+            RecoveredSourceAccessoryParts =
+                InfectedSourceModelRuntime.LastSourceAssetParts;
+            ReconstructedR6BodyParts =
+                InfectedSourceModelRuntime.LastReconstructedR6Parts;
+            MissingSourceMeshProxies =
+                InfectedSourceModelRuntime.LastUnresolvedMeshProxies;
             return;
         }
         BuildTemporaryHumanoid(safeType);
