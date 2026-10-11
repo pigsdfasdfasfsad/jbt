@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass44",StringComparer.Ordinal))
+        {
+            RunPass44Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass43",StringComparer.Ordinal))
         {
             RunPass43Smoke();
@@ -422,6 +427,72 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass44Smoke()
+    {
+        // Exported Windows executable, fabricated original map JSON and
+        // SHA-bound native TWRINS28 draw pack; no original Roblox assets.
+        _runtime.StartMap("Laboratory");
+        var game=new GameplayRoot
+        {
+            Name="Pass44NativeStreamingSmoke",
+            Runtime=_runtime, MapName="Laboratory"
+        };
+        AddChild(game);
+        var stage=game.GetNodeOrNull<Node3D>("RecoveredLaboratory");
+        var renderer=game.GetNodeOrNull<Pass28PrimitiveStreamer>(
+            "RecoveredLaboratory/Pass28PrimitiveStream");
+        var player=game.GetNodeOrNull<FirstPersonPlayer>("Player");
+        if(stage is null || renderer is null || player is null ||
+            renderer.SourceInstanceCount!=18 ||
+            game.Pass44NativePrimitiveCount!=18 ||
+            renderer.BatchCount<3 || renderer.BatchCount>12 ||
+            renderer.VisibleBatchCount<1 ||
+            renderer.VisibleBatchCount>=renderer.BatchCount)
+            throw new InvalidOperationException(
+                "Pass44 original native Part batching failed to load, partition or cull at spawn");
+
+        // All packed native Parts are removed from the legacy visible
+        // renderer, but the one nonpacked SpecialMesh type=6 MUST survive.
+        var legacySpecial=stage.GetChildren()
+            .OfType<MultiMeshInstance3D>().ToArray();
+        if(legacySpecial.Length!=1 ||
+            legacySpecial[0].Multimesh is null ||
+            legacySpecial[0].Multimesh.InstanceCount!=1)
+            throw new InvalidOperationException(
+                "Pass44 duplicate native geometry or dropped original SpecialMesh fallback");
+        if(stage.GetNodeOrNull<StaticBody3D>("LaboratoryCollision") is null)
+            throw new InvalidOperationException(
+                "Pass44 accidentally removed original native collision source");
+
+        var initiallyVisible=renderer.VisibleBatchCount;
+        player.GlobalPosition = new Vector3(1000f * RobloxUnits.MetersPerStud,
+            player.GlobalPosition.Y, 0);
+        renderer.Track(player);
+        var movedVisible=renderer.VisibleBatchCount;
+        if(movedVisible<1 || movedVisible>=renderer.BatchCount ||
+            movedVisible==initiallyVisible &&
+            renderer.BatchCount==3)
+            throw new InvalidOperationException(
+                "Pass44 native render culling failed to switch active source tiles");
+        player.GlobalPosition = new Vector3(0,player.GlobalPosition.Y,0);
+        renderer.Track(player);
+        if(renderer.VisibleBatchCount!=initiallyVisible)
+            throw new InvalidOperationException(
+                "Pass44 native source tiles failed to reappear on returning to player spawn");
+
+        game._Process(1.0/60.0);
+        game._Process(1.0/60.0);
+        if(game.Pass43FrameTimes.Snapshot().SampledFrames<2)
+            throw new InvalidOperationException("Pass44 map load broke performance frame sample telemetry");
+
+        GD.Print("TWR_SMOKE_PASS44_NATIVE_OK map=Laboratory synthetic=true " +
+            "source_native_parts=18 special_mesh_legacy=1 "+
+            $"batches={renderer.BatchCount} visible_spawn={initiallyVisible} "+
+            $"visible_far={movedVisible} dynamic_cull=true collision_retained=true "+
+            "original_custom_triangle_meshes_missing=true real_owner_fps_unmeasured=true");
         GetTree().Quit(0);
     }
 
