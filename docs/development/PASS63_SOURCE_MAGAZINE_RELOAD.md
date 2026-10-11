@@ -86,7 +86,29 @@ physics, dynamic AimCF, complete map restoration, ten full
 player-controlled 15-wave acceptance runs, and a privately packaged
 Windows game with authorized source assets remain unfinished.
 
-## Status
+## Verified Windows checkpoint — October 11, 2026
 
-Source code committed. Do not mark this pass native-Windows verified
-until its own Pass63 full CI run succeeds.
+**Successful Windows CI:**
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38161375690
+
+**Code revision tested:** `213fc40cd5765f3d2400e58633ac0aa321fe7394`.
+
+- **548 Python regressions passed**, one inherited XML FutureWarning.
+- Godot/.NET Windows export succeeded with **0 errors**, one inherited
+  Pass36 `CS0108` compiler warning.
+- Native `TWR_SMOKE_PASS63_MAGAZINE_OK` confirms source cue counts
+  for Glock 17, AK-47, M4A1, P90 and Mossberg 500; pure numeric absolute
+  and symbolic MagRel pose parsing; group movement and rotation of
+  **two visible Glock magazine parts**, preservation of group spacing,
+  rest reset, rejection of executable/dynamic Luau expressions, and
+  unchanged reload/ammo authority.
+- Previous Pass59–62 exported Windows native weapon smokes passed.
+- Synthetic owner-style source packs were created only for testing
+  and deleted afterward. Final private-asset exclusion passed, and
+  GitHub EXE uploads remain disabled.
+- `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed as **automated
+  progression simulation**, not a human-completed 15-wave match.
+
+**Important:** This verifies the implemented native software
+mechanics under exported Windows smoke tests. It is not screenshot-level
+1:1 gun animation verification or a packaged private user EXE.
