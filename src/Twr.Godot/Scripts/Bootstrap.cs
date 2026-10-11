@@ -17,6 +17,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass47",StringComparer.Ordinal))
+        {
+            RunPass47Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass46",StringComparer.Ordinal))
         {
             RunPass46Smoke();
@@ -437,6 +442,61 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass47Smoke()
+    {
+        // The exported Windows game reads six wholly INVENTED weapon models.
+        // The real owner's TestPlace 98-model source pack is never in CI.
+        if (OriginalWeaponSourceRuntime.SourceModelCount != 6 ||
+            OriginalWeaponSourceRuntime.OwnerSourcePackVerified)
+            throw new InvalidOperationException(
+                "Pass47 synthetic-only 3D tool pack was not loaded securely");
+
+        var scene = new Node3D { Name = "Pass47OriginalToolAssemblySynthetic" };
+        AddChild(scene);
+        var count=0;
+        foreach(var name in new[] {
+            "Glock 17","Sawn Off Shotgun","AK-47","RPG-7","2x4"
+        })
+        {
+            var tool = new WeaponViewModelRuntime { Name = name };
+            scene.AddChild(tool);
+            tool.SetWeapon(RuntimeWeaponCatalog.Get(name));
+            var rig = tool.GetNodeOrNull<Node3D>("WeaponBody");
+            if (!tool.UsingOriginalToolAssembly ||
+                tool.SourceVisibleParts!=4 || tool.VisualPartCount!=4 ||
+                tool.SourceMissingMeshProxies!=1 || rig is null)
+                throw new InvalidOperationException(
+                    "Pass47 source model or absent MeshPart fallback failed: "+name);
+            var meshes=rig.GetChildren().OfType<MeshInstance3D>().ToArray();
+            if (meshes.Length!=5 || // four visible plus noncounted muzzle flash
+                !meshes.Any(part => part.Mesh is SphereMesh) ||
+                meshes.Any(part => part.Name.ToString()=="Pos"))
+                throw new InvalidOperationException(
+                    "Pass47 original ball primitive or invisible marker filtering failed: "+name);
+            if (meshes.Any(part => part.Position.Length()>3f))
+                throw new InvalidOperationException(
+                    "Pass47 source CFrames were not converted to local viewmodel space");
+            count++;
+        }
+        var grenade=new WeaponViewModelRuntime {Name="SourceMolotov"};
+        scene.AddChild(grenade);
+        grenade.SetThrowable("Molotov");
+        if(!grenade.UsingOriginalToolAssembly ||
+            grenade.SourceVisibleParts!=4 ||
+            grenade.SourceMissingMeshProxies!=1)
+            throw new InvalidOperationException(
+                "Pass47 original throwable tool pack not reused correctly");
+        if (OriginalWeaponSourceRuntime.SourceModelCount!=6)
+            throw new InvalidOperationException(
+                "Pass47 preview unexpectedly required full original owner source pack");
+        GD.Print("TWR_SMOKE_PASS47_SOURCE_WEAPONS_OK source=synthetic_only " +
+            "active_models=5 thrown_models=1 visible_parts_per_model=4 " +
+            "absent_mesh_proxy_per_model=1 invisible_source_markers_hidden=true " +
+            "authored_sphere_shape=true local_source_transforms=true " +
+            "retail_mesh_triangles_recovered=false");
         GetTree().Quit(0);
     }
 
