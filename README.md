@@ -2,7 +2,21 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 48 — Original infected AI accessories
+## Latest verified source branch: Pass 49 — Original 3D source lobby
+
+[Pass49 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass49-original-lobby-3d) ·
+[Passed Windows build and 3D menu acceptance test](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38101644595) ·
+[Source lobby camera, geometry and limitations](docs/development/PASS49_ORIGINAL_3D_LOBBY.md)
+
+- Recover **818 original serialized lobby geometry records**, of which **774 are visible**, from the user's original `Workspace/Lobby` place hierarchy. This was a real missing 3D scene, not a synthetic map invented from TWR screenshots
+- Restore **8 exact source camera CFrames** (Start, Shop, Loadout, Perks, Options, Gifts, Leaderboards, WeaponNode), **5 original loadout placement points**, and **18 original light emitters**, all source-relative to the original Start camera for stable Godot positioning
+- The owner's offline Windows ZIP includes SHA-bound `Content/Lobby/SourceLobby49.json.gz` and provenance manifest, alongside all previous Laboratory, weapon, infected, map, UI art, and audio content. This real owner-only pack stays outside public GitHub
+- The original 3D lobby renders behind the current actionable 2D map menu. The original **Loadout camera** is selected when opening the 91-row armory and the original **Perks camera** for the perks screen. Source lobby geometry/cameras are removed from the active wave scene. Without a valid private pack, the previous 2D menu still works
+- **505** visible Lobby MeshPart/CSG parts still require actual-size geometric proxies because their externally hosted original mesh triangle data is missing. Original Roblox `SurfaceGui` panels, clothing/animations, textures and postprocessing are **not claimed recovered**
+- **466 Python regressions and real exported Windows integration passed** with an entirely fabricated 8-part lobby scene, proving actual camera switching, intact ten-map selection/91-weapon armory and game transition. This is not a screenshot-verified retail lobby comparison
+- Remaining full-game fidelity gates: original missing mesh triangle binaries/terrain, the other nine complete world maps, original animations/sound/skybox fidelity and a real-time player-controlled 15-wave match
+
+## Previous verified source branch: Pass 48 — Original infected AI accessories
 
 [Pass48 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass48-infected-source-asset-kit) ·
 [Verified Windows build and native smoke](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38100839832) ·
