@@ -460,32 +460,41 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var fullTravel=Math.Max(1f,Math.Abs(60f-Math.Clamp(spec.AimFov,5f,60f)));
         _camera.Fov=Mathf.MoveToward(_camera.Fov,desiredFov,(float)(fullTravel/seconds*delta));
 
-        // AimCF depends on dynamic Roblox assemblies, so keep the existing
-        // approximate ADS alignment. Sprint uses the original inert SprintCF
-        // translation while keeping all combat/cooldown authority unchanged.
-        var sourceSprint=Pass59WeaponMotion.TryGet(spec.Name,out var motion);
+        // AimCF depends on dynamic Roblox assemblies; this sight alignment
+        // remains APPROXIMATED. Original camera-local SprintCF translation
+        // and composed rotation are safe inert data, not executed Luau.
+        var sourceSprint=Pass60WeaponAnimationLibrary.TryGet(spec.Name,
+            out var poseMotion) && poseMotion.HasSprint;
+        var fallbackSprint=Pass59WeaponMotion.TryGet(spec.Name,out var motion);
         var running=Input.IsKeyPressed(Key.Shift) && IsOnFloor() &&
             Velocity.LengthSquared()>.04f && !_aiming && _reloadTimer<=0;
         var transition=sourceSprint
-            ? (running ? motion.SprintIn : motion.SprintOut) : .25f;
+            ? (running ? poseMotion.SprintIn : poseMotion.SprintOut)
+            : fallbackSprint ? (running ? motion.SprintIn : motion.SprintOut) : .25f;
         _sourceSprintBlend=Mathf.MoveToward(_sourceSprintBlend,
-            running && sourceSprint ? 1f : 0f,
+            running && (sourceSprint || fallbackSprint) ? 1f : 0f,
             (float)(delta/Math.Max(.02f,transition)));
         var desiredPosition=_aiming
             ? new Vector3(0,-0.18f,_hipViewPosition.Z)
             : _hipViewPosition;
         if(sourceSprint)
         {
-            // Original Roblox +Z becomes Godot -Z, in metres.
-            var offset=motion.Sprint*RobloxUnits.MetersPerStud;
-            desiredPosition+=new Vector3(offset.X,offset.Y,-offset.Z)*
-                _sourceSprintBlend;
+            // These are both weapon-camera local -Z-forward coordinates.
+            desiredPosition+=poseMotion.Sprint.Origin*_sourceSprintBlend;
         }
+        else if(fallbackSprint)
+            desiredPosition+=motion.Sprint*RobloxUnits.MetersPerStud*
+                _sourceSprintBlend;
         var blend=(float)Math.Clamp(delta/seconds,0.0,1.0);
         _viewModel.Position=_viewModel.Position.Lerp(desiredPosition,blend);
-        var rotationTarget=_hipViewRotation;
-        if(!_aiming)
-            _viewModel.Rotation=_viewModel.Rotation.Lerp(rotationTarget,blend);
+        var home=new Basis(_hipViewRotation).GetRotationQuaternion();
+        var sprintRotation=sourceSprint
+            ? Quaternion.Identity.Slerp(
+                poseMotion.Sprint.Basis.GetRotationQuaternion(),
+                _sourceSprintBlend)
+            : Quaternion.Identity;
+        _viewModel.Quaternion=_viewModel.Quaternion.Slerp(
+            home*sprintRotation,blend);
     }
 
     private void ApplyRecoil(RuntimeWeaponDefinition spec)
