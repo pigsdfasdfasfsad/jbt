@@ -175,6 +175,12 @@ The **private owner Windows ZIP** adds ten-map source outlines, original Laborat
 - Completion reward is one-time and is persisted before results/lobby transition.
 - Release maps: Ranch, Mill, Bypass, Cabin, Cargo, District, Expressway, Prison, Laboratory, Manor.
 
+## Verified development checkpoint: Pass 53 (October 10, 2026)
+
+**Branch:** `twr-pass53-offline-skin-cases` — original-source case names/prices, offline case credit transactions and case completion, persistent owned skins, skin selection/resale, and visibly approximate 3D cosmetic finishes in the 91-weapon loadout and first-person gameplay. Original random odds and original material textures are not recovered. High's nine event skins and off-sale Hallows are never sold via ordinary cases.
+
+**Verified [Windows CI run 38105813760](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38105813760):** 490 Python tests passed; Godot/.NET Windows executable built (zero errors, one older Pass36 CS0108 warning); native Pass53 smoke verified real credit debit, JSON persistence/reload, 3D tint assignment, resale, exclusive/duplicate protection and lobby cleanup; baseline 10-map × 15-wave simulated progression and private-asset exclusion passed. No downloadable public Windows executable was uploaded. Full art/map/skin visual parity and manually played 15-wave matches are not certified. [Pass53 implementation report](docs/development/PASS53_OFFLINE_SKIN_CASES.md).
+
 ## Verified development checkpoint: Pass 52 (2026-10-10)
 
 The Pass52 development branch adds original per-weapon 3D loadout CFrame offsets, the source three-second easing function and 50-degree lobby camera field of view, right-mouse preview tilt and a read-only source-priced seven-case Shop. Owner-derived original art is not included in public Git. **Verified Windows CI:** [Actions run 38105034356](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38105034356): 485 Python tests passed, Windows C# export built (zero errors; one older Pass36 CS0108 warning), the 10-map 15-wave domain simulation, native Pass52 smoke and privacy audit all passed. No publicly downloadable Windows executable was uploaded. Gameplay, art, and original Shop functionality are still incomplete; read the [Pass52 source evidence and acceptance report](docs/development/PASS52_SOURCE_LOBBY_MOTION_AND_CASES.md).

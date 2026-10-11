@@ -1,3 +1,18 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 53
+
+**Date:** October 10, 2026 (US Central). **Branch:** `twr-pass53-offline-skin-cases`.
+
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38105813760
+
+- **490 Python tests passed**, one existing Pass34 `FutureWarning`; exported Godot/.NET Windows build succeeded with **0 errors** and **1 pre-existing Pass36 compiler warning (CS0108)**.
+- Native `TWR_SMOKE_PASS53_SKINS_OK` exercised original-source 118 skin catalog (104 ordinary + 14 event/exclusive), seven cases, real local credit purchases, deliberate offline uniform weighting, source-offsale Hallows rejection, duplicate guard, 50% resale, safe exclusive guard, JSON profile save and reload, original-positioned 3D showroom skin proxy, skin reversion after selling, and clearing shop/lobby scene on Manor match entry.
+- Existing simulated progression acceptance: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` — **not** player-controlled real-time playthrough certification.
+- No publicly downloadable `.exe` is uploaded from this branch; the private source assets are excluded in the CI security test.
+
+**Remaining:** original skin/animated textures, precise original drop weight source, final offline paid-item policy, every map's mesh geometry, original interface fidelity, long-form player gameplay QA, and completed private Windows delivery. Details: [Pass53 source and acceptance record](PASS53_OFFLINE_SKIN_CASES.md).
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 52
 
 **Date:** October 10, 2026 (US Central). **Branch:** `twr-pass52-source-loadout-and-shop`.

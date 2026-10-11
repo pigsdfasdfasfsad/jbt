@@ -25,3 +25,17 @@ This pass builds on the verified Pass 52 Shop and original 3D lobby without repl
 The new Python regression suite validates exact 118/104/14 source skin catalog counts, case tiers and prices, profile/save wiring, read-only selection vs authorized purchases, source provenance and no public executable upload. Native Windows \`--smoke-pass53\` tests the actual exported Godot Shop UI with fabricated source lobby/weapon packs: case opening, credit debit, JSON reload, equipped skin 3D tint, half-price resale, no stale assignment, exclusive/offsale/duplicate rejection, and transition into active Manor gameplay without lingering shop objects. Test synthetic owner packs are explicitly cleaned before the privacy audit.
 
 **Important remaining limitations:** Original mesh triangles, original skin texture/color material images, exact original loot weighting, actual Robux product functions, network services, final map fidelity, real player-controlled 15-wave playthroughs and a private downloadable Windows build are not complete. This is a functional **offline reconstruction pass**, not a verified 1:1 skin system.
+
+
+## Verified Pass 53 checkpoint
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38105813760
+
+- Source commit tested: `2a268c709e9cd3217806eb600e9ee100811d65d8`.
+- **490 Python regression tests passed** (one old Pass34 XML `FutureWarning`).
+- Windows Godot/.NET export: **Build succeeded, 0 errors**, one old Pass36 `CS0108` warning.
+- Native baseline: `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` (simulated progression only).
+- Native GUI/domain smoke: `TWR_SMOKE_PASS53_SKINS_OK` (118 source skins; 104 ordinary pool; 14 event/exclusives; seven cases; purchase/save/reload/apply/proxy/sell/cleanup passed).
+- Public/private artifact audit passed; public CI does not upload the EXE or owner-original binary/source packs.
+
+These automated checks do not establish human-played full waves or pixel-perfect textures.
