@@ -81,11 +81,17 @@ public static class Pass52SourceLoadoutOffsets
     public static bool TryParse(string? expression, out Transform3D frame)
     {
         frame = Identity;
-        if (expression is null || expression.Length > 384 ||
-            !expression.StartsWith("CFrame.new(", StringComparison.Ordinal) ||
-            !expression.EndsWith(')'))
+        if (expression is null || expression.Length > 384)
             return false;
-        var values = expression.AsSpan(11, expression.Length - 12)
+        // The two original RPG launchers append exactly this Y half turn.
+        // No arbitrary Luau expression, callback or method can be evaluated.
+        const string HalfTurn = " * CFrame.Angles(0, math.pi, 0)";
+        var halfTurn = expression.EndsWith(HalfTurn,StringComparison.Ordinal);
+        var literal = halfTurn ? expression[..^HalfTurn.Length] : expression;
+        if (!literal.StartsWith("CFrame.new(",StringComparison.Ordinal) ||
+            !literal.EndsWith(')'))
+            return false;
+        var values = literal.AsSpan(11,literal.Length - 12)
             .ToString().Split(',', StringSplitOptions.TrimEntries);
         if (values.Length != 12) return false;
         var n = new float[12];
@@ -106,6 +112,8 @@ public static class Pass52SourceLoadoutOffsets
         if (!float.IsFinite(basis.Determinant()) ||
             Math.Abs(basis.Determinant()) < .3f)
             return false;
+        if (halfTurn)
+            basis *= new Basis(Vector3.Up,Mathf.Pi);
         frame = new Transform3D(basis,
             new Vector3(n[0], n[1], -n[2]) * Stud);
         return true;
