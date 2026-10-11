@@ -225,7 +225,8 @@ public static class Pass54SourceSkinMaterials
         var sha=Convert.ToHexString(SHA256.HashData(compressed)).ToLowerInvariant();
         var args=OS.GetCmdlineUserArgs();
         var test=args.Contains("--smoke-pass54",StringComparer.Ordinal) ||
-            args.Contains("--smoke-pass55",StringComparer.Ordinal);
+            args.Contains("--smoke-pass55",StringComparer.Ordinal) ||
+            args.Contains("--smoke-pass56",StringComparer.Ordinal);
         using var input=new MemoryStream(compressed);
         using var gzip=new GZipStream(input,CompressionMode.Decompress);
         using var buffer=new MemoryStream();

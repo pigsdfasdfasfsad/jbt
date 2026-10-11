@@ -17,6 +17,10 @@ public partial class Bootstrap : Node
     private Button? _shopOpenButton;
     private string _selectedShopCase = "Low";
     private CanvasLayer? _skinInventory;
+    private CanvasLayer? _wikiReferenceGallery;
+    private CanvasLayer? _wikiReferenceReturnLayer;
+    private TextureRect? _wikiReferenceImage;
+    private Label? _wikiReferenceCaption;
     private Label? _skinDetailLabel;
     private string? _selectedSkinId;
     private bool _skinInventoryReturnsToShop = true;
@@ -31,6 +35,16 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass56",StringComparer.Ordinal))
+        {
+            RunPass56Smoke();
+            return;
+        }
+        if(args.Contains("--smoke-pass56",StringComparer.Ordinal))
+        {
+            RunPass56Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass55",StringComparer.Ordinal))
         {
             RunPass55Smoke();
@@ -496,6 +510,71 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass56Smoke()
+    {
+        if(Pass56WikiVisualReferences.WeaponCount!=1 ||
+           Pass56WikiVisualReferences.OwnerPackVerified ||
+           !Pass56WikiVisualReferences.SyntheticFixture ||
+           Pass56WikiVisualReferences.ImageCount!=3 ||
+           Pass56WikiVisualReferences.SkinIconCount!=1 ||
+           !Pass56WikiVisualReferences.TryWeaponImage(
+                "Glock 17","Neon/Ego",out var picture,out var caption) ||
+           picture is null || picture.GetWidth()!=4 ||
+           !caption.Contains("Neon/Ego",StringComparison.Ordinal))
+            throw new InvalidOperationException("Pass56 source wiki image validation failed");
+        if(!Pass56WikiVisualReferences.TryWeaponImage(
+             "Glock 17","Low/Cocoa",out var fallback,out var fallbackCaption) ||
+           fallback is null || !fallbackCaption.Contains("DEFAULT image only",
+               StringComparison.Ordinal))
+            throw new InvalidOperationException("Pass56 missing skin fallback not labelled");
+
+        var credits=_runtime.Player?.Credits ?? -1;
+        var owned=_runtime.Profile?.OwnedSkins.Count ?? -1;
+        ShowMenu();
+        ShowArmory();
+        var showroom=_sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName);
+        if(showroom is null || !showroom.Preview("Glock 17"))
+            throw new InvalidOperationException("Pass56 Glock reference preview not selected");
+        var button=_armory?.GetChildren().OfType<Button>()
+            .FirstOrDefault(b=>b.Name.ToString()=="ArmoryWikiReference");
+        button?.EmitSignal(Button.SignalName.Pressed);
+        if(button is null || _wikiReferenceGallery is null ||
+           _wikiReferenceImage?.Texture is null ||
+           _wikiReferenceCaption is null ||
+           !_wikiReferenceCaption.Text.Contains("NOT ORIGINAL 3D/UV TEXTURE",
+                StringComparison.Ordinal) ||
+           _armory is null || _armory.Visible)
+            throw new InvalidOperationException("Pass56 armory gallery unavailable");
+        var back=_wikiReferenceGallery.GetChildren().OfType<Button>()
+            .FirstOrDefault(b=>b.Name.ToString()=="CloseWikiReferenceGallery");
+        back?.EmitSignal(Button.SignalName.Pressed);
+        if(back is null || _wikiReferenceGallery is not null || !_armory.Visible)
+            throw new InvalidOperationException("Pass56 gallery did not restore armory");
+
+        ShowSkinInventory(false);
+        var action=_skinInventory?.GetChildren().OfType<Button>()
+            .FirstOrDefault(b=>b.Name.ToString()=="InventoryWikiReference");
+        action?.EmitSignal(Button.SignalName.Pressed);
+        if(action is null || _wikiReferenceGallery is null ||
+           _skinInventory is null || _skinInventory.Visible)
+            throw new InvalidOperationException("Pass56 inventory gallery missing");
+        CloseWikiReferenceGallery();
+        if(!_skinInventory.Visible || (_runtime.Player?.Credits??-1)!=credits ||
+           (_runtime.Profile?.OwnedSkins.Count??-1)!=owned)
+            throw new InvalidOperationException("Pass56 changed domain state");
+        StartGame("Manor");
+        if(_sourceLobby is not null || _game is null ||
+           _wikiReferenceGallery is not null)
+            throw new InvalidOperationException("Pass56 gallery leaked into gameplay");
+        GD.Print("TWR_SMOKE_PASS56_WIKI_REFERENCE_OK synthetic_only=true "+
+            "files=3 png_decoded=true fallback_disclosed=true "+
+            "gallery_back_restored=true inventory_view_preserved=true "+
+            "credits_unchanged=true gallery_removed_on_match=true "+
+            "owner_images_not_uploaded=true");
         GetTree().Quit(0);
     }
 
@@ -2697,9 +2776,93 @@ public partial class Bootstrap : Node
         UpdateShopSelection();
     }
 
+    private void CloseWikiReferenceGallery()
+    {
+        _wikiReferenceGallery?.QueueFree();
+        _wikiReferenceGallery=null;
+        _wikiReferenceImage=null;
+        _wikiReferenceCaption=null;
+        if(_wikiReferenceReturnLayer is not null &&
+           GodotObject.IsInstanceValid(_wikiReferenceReturnLayer))
+            _wikiReferenceReturnLayer.Show();
+        _wikiReferenceReturnLayer=null;
+    }
+
+    private void ShowWikiReferenceGallery(string weapon,string? skin)
+    {
+        CloseWikiReferenceGallery();
+        // The 2D source wiki reference is NEVER used as a MeshPart texture.
+        // It is a read-only visual QA reference, not the rendered Godot gun.
+        _wikiReferenceReturnLayer=_skinInventory ?? _armory;
+        _wikiReferenceReturnLayer?.Hide();
+        _wikiReferenceGallery=new CanvasLayer {Name="Pass56WikiReferenceGallery"};
+        AddChild(_wikiReferenceGallery);
+        AddBackground(_wikiReferenceGallery,.97f);
+        _wikiReferenceGallery.AddChild(MakeLabel(60,34,900,60,32,
+            "ORIGINAL GAME / WIKI VISUAL REFERENCE"));
+        _wikiReferenceGallery.AddChild(MakeLabel(60,104,1130,60,16,
+            "Reference screenshots from your supplied image archive. "+
+            "These are NOT Roblox UV texture files or a guarantee of 1:1 render fidelity."));
+
+        _wikiReferenceImage=new TextureRect {
+            Name="Pass56SourceWikiScreenshot",
+            OffsetLeft=100,OffsetTop=185,OffsetRight=1110,OffsetBottom=555,
+            ExpandMode=TextureRect.ExpandModeEnum.IgnoreSize,
+            StretchMode=TextureRect.StretchModeEnum.KeepAspectCentered,
+            MouseFilter=Control.MouseFilterEnum.Ignore
+        };
+        _wikiReferenceGallery.AddChild(_wikiReferenceImage);
+        var has=Pass56WikiVisualReferences.TryWeaponImage(
+            weapon,skin,out var picture,out var caption);
+        _wikiReferenceImage.Texture=picture;
+        _wikiReferenceCaption=MakeLabel(68,580,1110,70,17,
+            (has?caption:"NO VERIFIED WIKI REFERENCE FOUND - "+caption)+
+            "\n"+Pass56WikiVisualReferences.Provenance);
+        _wikiReferenceGallery.AddChild(_wikiReferenceCaption);
+        var back=new Button {
+            Name="CloseWikiReferenceGallery",
+            OffsetLeft=980,OffsetTop=45,OffsetRight=1195,OffsetBottom=95,
+            Text="BACK"
+        };
+        back.Pressed+=CloseWikiReferenceGallery;
+        _wikiReferenceGallery.AddChild(back);
+        if(skin is not null && Pass56WikiVisualReferences.TrySkinIcon(skin,
+            out var icon) && icon is not null)
+        {
+            var iconView=new TextureRect {
+                Name="Pass56SkinReferenceIcon",
+                OffsetLeft=65,OffsetTop=660,OffsetRight=125,OffsetBottom=720,
+                Texture=icon,
+                ExpandMode=TextureRect.ExpandModeEnum.IgnoreSize,
+                StretchMode=TextureRect.StretchModeEnum.KeepAspectCentered
+            };
+            _wikiReferenceGallery.AddChild(iconView);
+        }
+    }
+
+    private void OpenArmoryWikiReference()
+    {
+        var name=_sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
+            Pass51OriginalLoadoutDisplayRuntime.StageName)?.PreviewWeaponName;
+        if(string.IsNullOrWhiteSpace(name))
+            name=_runtime.Profile?.Loadout.GetValueOrDefault("Primary");
+        if(string.IsNullOrWhiteSpace(name))name="Glock 17";
+        var selected=_runtime.Profile?.EquippedWeaponSkins.GetValueOrDefault(name);
+        ShowWikiReferenceGallery(name,selected);
+    }
+
+    private void OpenInventoryWikiReference()
+    {
+        var profile=_runtime.Profile;
+        var weapon=profile?.Loadout.GetValueOrDefault("Primary") ??
+            profile?.Loadout.GetValueOrDefault("Secondary") ?? "Glock 17";
+        ShowWikiReferenceGallery(weapon,_selectedSkinId);
+    }
+
     private void ShowSkinInventory(bool returnToShop)
     {
         _skinInventoryReturnsToShop=returnToShop;
+        CloseWikiReferenceGallery();
         _shop?.QueueFree();
         _shop=null;
         _shopCaseDetail=null;
@@ -2800,6 +2963,13 @@ public partial class Bootstrap : Node
             Disabled=_selectedSkinId is null ||
                 SkinCaseCatalog.FindSkin(_selectedSkinId)?.Exclusive == true
         };
+        var compareButton=new Button {
+            Name="InventoryWikiReference",
+            OffsetLeft=910,OffsetTop=563,OffsetRight=1200,OffsetBottom=612,
+            Text="WIKI REFERENCE IMAGE"
+        };
+        compareButton.Pressed+=OpenInventoryWikiReference;
+        _skinInventory.AddChild(compareButton);
         sell.Pressed += () =>
         {
             if(_selectedSkinId is null)return;
@@ -2937,6 +3107,7 @@ public partial class Bootstrap : Node
 
     private void ShowArmory()
     {
+        CloseWikiReferenceGallery();
         EnsureOriginalLobby("Loadout");
         var showroom=_sourceLobby?.GetNodeOrNull<Pass51OriginalLoadoutDisplayRuntime>(
             Pass51OriginalLoadoutDisplayRuntime.StageName);
@@ -2984,6 +3155,13 @@ public partial class Bootstrap : Node
         };
         skinInventoryButton.Pressed += () => ShowSkinInventory(false);
         _armory.AddChild(skinInventoryButton);
+        var referenceButton=new Button {
+            Name="ArmoryWikiReference",
+            OffsetLeft=1025,OffsetTop=133,OffsetRight=1205,OffsetBottom=176,
+            Text="WIKI IMAGE"
+        };
+        referenceButton.Pressed+=OpenArmoryWikiReference;
+        _armory.AddChild(referenceButton);
         _armory.AddChild(MakeLabel(60,198,1130,24,12,
             "Hold RIGHT MOUSE and drag to rotate the selected preview (pitch limited to 25 degrees)."));
 
@@ -3116,6 +3294,7 @@ public partial class Bootstrap : Node
 
     private void StartGame(string map)
     {
+        CloseWikiReferenceGallery();
         // The authored Lobby is a menu-only backdrop, never collision or
         // lighting inside an active game map.
         _sourceLobby?.QueueFree();

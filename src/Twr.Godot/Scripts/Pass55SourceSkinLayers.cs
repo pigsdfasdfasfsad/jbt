@@ -120,8 +120,9 @@ public static class Pass55SourceSkinLayers
                 throw new InvalidDataException("Wrong skin texture pack format");
             var synthetic=root.TryGetProperty("synthetic",out var synth) &&
                 synth.ValueKind==JsonValueKind.True;
-            var test=OS.GetCmdlineUserArgs().Contains("--smoke-pass55",
-                StringComparer.Ordinal);
+            var args=OS.GetCmdlineUserArgs();
+            var test=args.Contains("--smoke-pass55",StringComparer.Ordinal) ||
+                args.Contains("--smoke-pass56",StringComparer.Ordinal);
             if(synthetic && !test)
                 throw new InvalidDataException("Synthetic source textures refused outside smoke");
             if(!synthetic && (sha!=VerifiedPackSha256 ||

@@ -147,7 +147,8 @@ public partial class Pass50SourceLobbySignsRuntime : Node3D
             args.Contains("--smoke-pass52",StringComparer.Ordinal) ||
             args.Contains("--smoke-pass53",StringComparer.Ordinal) ||
             args.Contains("--smoke-pass54",StringComparer.Ordinal) ||
-            args.Contains("--smoke-pass55",StringComparer.Ordinal);
+            args.Contains("--smoke-pass55",StringComparer.Ordinal) ||
+            args.Contains("--smoke-pass56",StringComparer.Ordinal);
         if (synthetic && !smoke)
             throw new InvalidDataException("Synthetic bulletin used in normal gameplay");
         if(synthetic == ownerLobbyVerified)
