@@ -189,7 +189,7 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
             var shape=GetString(part,"shape","1");
             var special=GetString(part,"specialMeshType","");
             var meshKind=cls=="WedgePart" ? "wedge" :
-                cls=="Part" && (shape=="0" || special=="3") ? "sphere" :
+                cls=="Part" && (shape=="0" || special is "3" or "0") ? "sphere" :
                 cls=="Part" && (shape=="2" || special=="4") ? "cylinder" :
                 "box";
             var shadow=part.TryGetProperty("shadow",out var cast) &&
@@ -364,7 +364,10 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
             var s=ReadNumbers(source,"specialMeshScale",3);
             if(s.Any(v=>v<=0 || v>5000))
                 throw new InvalidDataException("Bad original SpecialMesh scale");
-            size=new Vector3(s[0],s[1],s[2])*Stud;
+            // Primitive SpecialMesh.Scale multiplies its carrier Part.Size.
+            // Treating Scale=(1,1,1) as an absolute one-stud mesh would
+            // incorrectly shrink the authored lobby shelf wires/windows.
+            size=new Vector3(size.X*s[0],size.Y*s[1],size.Z*s[2]);
         }
         if(source.TryGetProperty("specialMeshOffset",out var offset) &&
            offset.ValueKind==JsonValueKind.Array)
