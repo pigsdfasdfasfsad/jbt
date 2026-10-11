@@ -51,6 +51,14 @@ public partial class WeaponViewModelRuntime : Node3D
         _handling?.ReloadPump?.Frames.Length ?? 0;
     public Vector3 LastSlideMotorOffset { get; private set; }
     public Vector3 LastPumpMotorOffset { get; private set; }
+    public int SourceMotorHierarchyGroups => _sourceHierarchy?.GroupCount ?? 0;
+    public int SourceSlideGroupParts =>
+        _sourceHierarchy?.PartCount("Slide") ?? 0;
+    public int SourcePumpGroupParts =>
+        _sourceHierarchy?.PartCount("Pump") ?? 0;
+    public bool SourceHierarchyOriginalVerified =>
+        SourceMotorHierarchyGroups>0 &&
+        Pass62SourceWeaponHierarchy.OwnerHierarchyVerified;
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -66,6 +74,7 @@ public partial class WeaponViewModelRuntime : Node3D
     private Pass60WeaponAnimationLibrary.Motion? _poseMotion;
     private Pass60WeaponAnimationLibrary.Shot? _poseFire;
     private Pass61SourceWeaponHandling.Profile? _handling;
+    private Pass62SourceWeaponHierarchy.Binding? _sourceHierarchy;
     private float _equipDuration;
     private float _equipRemaining;
     private float _cycleDuration;
@@ -302,6 +311,7 @@ public partial class WeaponViewModelRuntime : Node3D
             SourceNativePrimitiveParts = OriginalWeaponSourceRuntime.LastNativePrimitiveParts;
             SourceDetailProfileProxies = OriginalWeaponSourceRuntime.LastDetailProfileProxies;
             SourceLensProxies = OriginalWeaponSourceRuntime.LastLensProxies;
+            _sourceHierarchy=OriginalWeaponSourceRuntime.LastSubassemblyBinding;
             _flash.Position = OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)
                 ?? _flash.Position;
             TrackMechanicalParts();
@@ -435,16 +445,31 @@ public partial class WeaponViewModelRuntime : Node3D
             ? _handling?.ReloadSlide : _handling?.CyclingSlide;
         var pumpTrack=reloadActive
             ? _handling?.ReloadPump : _handling?.CyclingPump;
-        foreach (var (part,home) in _slides)
-            if (GodotObject.IsInstanceValid(part))
-                part.Position=home+(slideTrack is not null
-                    ? part.Basis.Orthonormalized()*LastSlideMotorOffset
-                    : new Vector3(0,0,_mechanicalKick*.35f));
-        foreach (var (part,home) in _pumps)
-            if (GodotObject.IsInstanceValid(part))
-                part.Position=home+(pumpTrack is not null
-                    ? part.Basis.Orthonormalized()*LastPumpMotorOffset
-                    : Vector3.Zero);
+        // The Pass47 assembly was visually flattened. When the separately
+        // verified Pass62 source hierarchy is installed, transform ALL
+        // original Slide/Pump child meshes around their source Handle CFrame.
+        // A group without an eligible source track falls back to Pass61
+        // part-name approximations without retaining any stale group pose.
+        var groupSlide=_sourceHierarchy?.HasGroup("Slide")==true;
+        var groupPump=_sourceHierarchy?.HasGroup("Pump")==true;
+        if(groupSlide)
+            _sourceHierarchy!.ApplyTranslation("Slide",
+                slideTrack is null ? Vector3.Zero : LastSlideMotorOffset);
+        if(groupPump)
+            _sourceHierarchy!.ApplyTranslation("Pump",
+                pumpTrack is null ? Vector3.Zero : LastPumpMotorOffset);
+        if(!groupSlide || slideTrack is null)
+            foreach (var (part,home) in _slides)
+                if (GodotObject.IsInstanceValid(part))
+                    part.Position=home+(slideTrack is not null
+                        ? part.Basis.Orthonormalized()*LastSlideMotorOffset
+                        : new Vector3(0,0,_mechanicalKick*.35f));
+        if(!groupPump || pumpTrack is null)
+            foreach (var (part,home) in _pumps)
+                if (GodotObject.IsInstanceValid(part))
+                    part.Position=home+(pumpTrack is not null
+                        ? part.Basis.Orthonormalized()*LastPumpMotorOffset
+                        : Vector3.Zero);
         var magazineDrop = _reloadDuration > 0 && _reloadRemaining > 0
             ? Mathf.Sin(Mathf.Pi *
                 (1f - _reloadRemaining / _reloadDuration)) * .14f : 0f;
@@ -525,6 +550,7 @@ public partial class WeaponViewModelRuntime : Node3D
         _poseMotion=null;
         _poseFire=null;
         _handling=null;
+        _sourceHierarchy=null;
         _equipDuration=_equipRemaining=0f;
         _cycleDuration=_cycleElapsed=0f;
         LastSlideMotorOffset=LastPumpMotorOffset=Vector3.Zero;
