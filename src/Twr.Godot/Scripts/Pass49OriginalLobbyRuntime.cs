@@ -64,6 +64,10 @@ public partial class Pass49OriginalLobbyRuntime : Node3D
             parent.AddChild(stage);
             if (!stage.SetCamera("Start"))
                 throw new InvalidDataException("Original lobby Start camera missing");
+            // Optional Pass50 authentic static bulletin board headings. A
+            // missing/corrupt owner-specific sign pack must never break the
+            // actual map/armory/perks menu or the Pass49 3D lobby itself.
+            Pass50SourceLobbySignsRuntime.TryBuild(stage);
             GD.Print($"TWR_PASS49_LOBBY_READY source_parts={stage.SourceGeometryParts} " +
                 $"visible={stage.VisibleSourceParts} proxy_meshes={stage.UnresolvedMeshProxyParts} " +
                 $"render_batches={stage.RenderBatchCount} cameras={stage.SourceCameraCount} " +
