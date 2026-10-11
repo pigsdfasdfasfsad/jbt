@@ -1,3 +1,23 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 65
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass65-source-hand-grips`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38168111351
+
+- **558 Python regression tests passed** with one inherited Pass34 XML FutureWarning.
+- **Godot/.NET Windows export: 0 errors**, one inherited Pass36 CS0108 compiler warning.
+- `Pass65SourceHands.cs` recovers numeric original weapon `LeftCF`/`RightCF` grip CFrames and inert `AV.LeftWeld`/`AV.RightWeld` original keyframes for `Equip`, `Reload`, and `Sliding`. Source symbols are restricted to each weapon's exact left/right CFrame and a small explicit whitelist of original handle-inverse grip conventions; **no Lua/Luau execution** occurs.
+- Two **approximate procedural glove models** (palm, wrist, thumb and four fingers per hand) now follow these original grips in first-person. Pass62 source-indexed owner hierarchy supplies current moving subassembly Handle transforms so the left glove follows moving Glock magazines/Mossberg pumps and the right follows Mosin's Bolt Handle. Unsupported original avatar Base welds are skipped; showroom previews hide these glove placeholders. These are **not original Roblox character meshes or recovered skeletal IK**.
+- Exported Windows `TWR_SMOKE_PASS65_SOURCE_HAND_GRIPS_OK` verifies source Glock grip/weld cue counts, animated equip and reload, two complete glove proxy rigs, owner-synthetic magazine support, moving Mossberg left support grip, moving Mosin right bolt-action grip, end-of-clip reset, and rejection of source code-like expressions.
+- All Pass59–64 original weapon-smoke regressions and `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed. The latter remains **automated domain simulation**, not full manual ten-map end-to-end survival acceptance.
+- Synthetic weapon/hierarchy fixtures were removed before the private-asset exclusion scan. **No owner-private data or Windows EXE was publicly published**.
+
+**Outstanding:** true source character arms/hands, Motor6D C0/C1 avatar joints and dynamic AimCF; external original MeshPart/CSG triangle and texture binaries; 10 fully decorated and collision-faithful original maps; true 15-wave player-controlled smoke/playthroughs, screenshot parity, and an authorized privately packaged offline Windows release. **Still not a full 1:1 copy.**
+
+[Pass65 source hand grips, weld animation engineering record and native Windows acceptance](PASS65_SOURCE_HAND_WELDS.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 64
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass64-source-shell-and-bolt`.
