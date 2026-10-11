@@ -113,7 +113,7 @@ public static class Pass52SourceLoadoutOffsets
             Math.Abs(basis.Determinant()) < .3f)
             return false;
         if (halfTurn)
-            basis *= new Basis(Vector3.Up,Mathf.Pi);
+            basis *= new Basis(Vector3.Up, Mathf.Pi);
         frame = new Transform3D(basis,
             new Vector3(n[0], n[1], -n[2]) * Stud);
         return true;
