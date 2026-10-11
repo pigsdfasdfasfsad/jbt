@@ -32,9 +32,11 @@ public static class Pass62SourceWeaponHierarchy
     public sealed class Binding
     {
         private readonly Dictionary<string,Group> _groups;
-        internal Binding(Dictionary<string,Group> groups)
+        private readonly Basis _alignment;
+        internal Binding(Dictionary<string,Group> groups,Basis alignment)
         {
             _groups=groups;
+            _alignment=alignment;
         }
         public int GroupCount => _groups.Count;
         public bool HasGroup(string name) => _groups.ContainsKey(name);
@@ -43,6 +45,65 @@ public static class Pass62SourceWeaponHierarchy
         public Vector3 GroupPivot(string name) =>
             _groups.TryGetValue(name,out var group)
                 ? group.Pivot.Origin : Vector3.Zero;
+
+        /// <summary>
+        /// Expose original, immutable group Handle reference pose to the
+        /// bounded Pass63 magazine timeline. This is source group data, not
+        /// a recovered original Motor6D C0/C1 joint.
+        /// </summary>
+        public bool TryGetGroupRestPose(string name,out Transform3D rest)
+        {
+            if(_groups.TryGetValue(name,out var group))
+            {
+                rest=group.Pivot;return true;
+            }
+            rest=Transform3D.Identity;
+            return false;
+        }
+
+        /// <summary>
+        /// Convert a safe numeric source CFrame: a MagRel-relative target
+        /// starts from the verified source Handle; an absolute target uses
+        /// the original weapon Handle coordinate space. Both were already
+        /// reflected to Godot coordinates by the Pass63 parser.
+        /// </summary>
+        public Transform3D ResolveSourcePose(string name,Transform3D pose,
+            bool relativeToHandle)
+        {
+            if(!_groups.TryGetValue(name,out var group))
+                return Transform3D.Identity;
+            return relativeToHandle
+                ? group.Pivot*pose
+                : new Transform3D(_alignment*pose.Basis,
+                    _alignment*pose.Origin);
+        }
+
+        public int ApplyPose(string name,Transform3D target)
+        {
+            if(!_groups.TryGetValue(name,out var group) ||
+               !Finite(target.Origin) ||
+               target.Origin.DistanceSquaredTo(group.Pivot.Origin)>4f)
+                return 0;
+            var determinant=target.Basis.Determinant();
+            if(!float.IsFinite(determinant) ||
+               Math.Abs(determinant-1f)>.08f)
+                return 0;
+            var motion=target*group.Pivot.AffineInverse();
+            var count=0;
+            foreach(var (part,home) in group.Parts)
+            {
+                if(!GodotObject.IsInstanceValid(part))continue;
+                part.Transform=motion*home;
+                count++;
+            }
+            return count;
+        }
+
+        public int ResetGroup(string name)
+        {
+            return TryGetGroupRestPose(name,out var home)
+                ? ApplyPose(name,home) : 0;
+        }
 
         /// <summary>
         /// Translate ALL visible source parts in an authored top-level Model
@@ -172,7 +233,7 @@ public static class Pass62SourceWeaponHierarchy
         if(groups.Count==0)return null;
         GD.Print($"TWR_PASS62_HIERARCHY_BOUND weapon={weapon} "+
             $"groups={groups.Count} owner_verified={OwnerHierarchyVerified}");
-        return new Binding(groups);
+        return new Binding(groups,alignment);
     }
 
     private static bool Load()
