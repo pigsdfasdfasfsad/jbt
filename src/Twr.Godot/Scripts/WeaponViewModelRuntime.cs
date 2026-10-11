@@ -59,6 +59,11 @@ public partial class WeaponViewModelRuntime : Node3D
     public bool SourceHierarchyOriginalVerified =>
         SourceMotorHierarchyGroups>0 &&
         Pass62SourceWeaponHierarchy.OwnerHierarchyVerified;
+    public int SourceMagazineCueCount => _magazineReload?.Cues.Length ?? 0;
+    public int SourceMagazineGroupParts =>
+        _sourceHierarchy?.PartCount("Mag") ?? 0;
+    public bool SourceMagazinePoseActive {get;private set;}
+    public float SourceMagazineHandleTravel {get;private set;}
     public int VisualPartCount => _rig is null ? 0 :
         Math.Max(0, _rig.GetChildCount() - (_flash is null ? 0 : 1));
 
@@ -75,6 +80,7 @@ public partial class WeaponViewModelRuntime : Node3D
     private Pass60WeaponAnimationLibrary.Shot? _poseFire;
     private Pass61SourceWeaponHandling.Profile? _handling;
     private Pass62SourceWeaponHierarchy.Binding? _sourceHierarchy;
+    private Pass63SourceMagazineReload.Clip? _magazineReload;
     private float _equipDuration;
     private float _equipRemaining;
     private float _cycleDuration;
@@ -275,6 +281,8 @@ public partial class WeaponViewModelRuntime : Node3D
             _poseMotion=motion;
         if (Pass61SourceWeaponHandling.TryGet(spec.Name,out var handling))
             _handling=handling;
+        if (Pass63SourceMagazineReload.TryGet(spec.Name,out var magClip))
+            _magazineReload=magClip;
         _melee = spec.IsMelee;
         _flash!.Position = new Vector3(0,.025f,
             spec.Slot == "Secondary" ? -.46f : -1.02f);
@@ -470,12 +478,31 @@ public partial class WeaponViewModelRuntime : Node3D
                     part.Position=home+(pumpTrack is not null
                         ? part.Basis.Orthonormalized()*LastPumpMotorOffset
                         : Vector3.Zero);
-        var magazineDrop = _reloadDuration > 0 && _reloadRemaining > 0
-            ? Mathf.Sin(Mathf.Pi *
-                (1f - _reloadRemaining / _reloadDuration)) * .14f : 0f;
-        foreach (var (part,home) in _magazines)
-            if (GodotObject.IsInstanceValid(part))
-                part.Position = home + Vector3.Down * magazineDrop;
+        var magSourceReady=_magazineReload is not null &&
+            _sourceHierarchy?.HasGroup("Mag")==true;
+        SourceMagazinePoseActive=magSourceReady && reloadActive;
+        SourceMagazineHandleTravel=0f;
+        if(magSourceReady)
+        {
+            var progress=reloadActive
+                ? reloadFraction : 1f;
+            var pose=Pass63SourceMagazineReload.Sample(
+                _magazineReload!,progress,_sourceHierarchy!);
+            _sourceHierarchy!.ApplyPose("Mag",pose);
+            SourceMagazineHandleTravel=pose.Origin.DistanceTo(
+                _sourceHierarchy.GroupPivot("Mag"));
+        }
+        else
+        {
+            // Old visual fallback remains for uninstalled owner pack,
+            // unsupported/dynamic magazine clips and prepared meshes.
+            _sourceHierarchy?.ResetGroup("Mag");
+            var magazineDrop=reloadActive
+                ? Mathf.Sin(Mathf.Pi*reloadFraction)*.14f : 0f;
+            foreach (var (part,home) in _magazines)
+                if(GodotObject.IsInstanceValid(part))
+                    part.Position=home+Vector3.Down*magazineDrop;
+        }
         _phase += dt * 2.5f;
         _kick = Mathf.MoveToward(_kick, 0, dt * 1.2f);
         if(_shotActive)
@@ -551,6 +578,9 @@ public partial class WeaponViewModelRuntime : Node3D
         _poseFire=null;
         _handling=null;
         _sourceHierarchy=null;
+        _magazineReload=null;
+        SourceMagazinePoseActive=false;
+        SourceMagazineHandleTravel=0f;
         _equipDuration=_equipRemaining=0f;
         _cycleDuration=_cycleElapsed=0f;
         LastSlideMotorOffset=LastPumpMotorOffset=Vector3.Zero;
