@@ -31,6 +31,19 @@ public static class Pass27SourceArtCatalog
     private static readonly Dictionary<string, Asset> WeaponFiles = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, Texture2D?> Loaded = new(StringComparer.Ordinal);
 
+    public static int MapArtCount
+    {
+        get { EnsureManifest(); return MapFiles.Count; }
+    }
+
+    public static int WeaponArtCount
+    {
+        get { EnsureManifest(); return WeaponFiles.Count; }
+    }
+
+    public static bool OfflineArtReady => MapArtCount == Maps.Length &&
+        WeaponArtCount > 0;
+
     public static Texture2D? MapCard(string map)
     {
         EnsureManifest();
