@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass63",StringComparer.Ordinal))
+        {
+            RunPass63Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass62",StringComparer.Ordinal))
         {
             RunPass62Smoke();
@@ -540,6 +545,99 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass63Smoke()
+    {
+        if(!Pass63SourceMagazineReload.TryGet("Glock 17",out var glock) ||
+           glock is null || glock.Cues.Length!=4 ||
+           !Pass63SourceMagazineReload.TryGet("M4A1",out var m4) ||
+           m4 is null || m4.Cues.Length!=4 ||
+           !Pass63SourceMagazineReload.TryGet("AK-47",out var ak) ||
+           ak is null || ak.Cues.Length!=5 ||
+           !Pass63SourceMagazineReload.TryGet("P90",out var p90) ||
+           p90 is null || p90.Cues.Length!=8 ||
+           !Pass63SourceMagazineReload.TryGet("Mossberg 500",out var moss) ||
+           moss is null || moss.Cues.Length!=3 ||
+           Math.Abs(glock.Duration-1.85f)>.001f)
+            throw new InvalidOperationException(
+                "Pass63 original source magazine reload cues missing");
+
+        if(!Pass63SourceMagazineReload.TryParseTarget(
+               "module.Stats.Rels.MagRel * CFrame.new(0, -0.3, 0)",
+                out var rel) || !rel.RelativeToHandle ||
+           Math.Abs(rel.Pose.Origin.Y+.084f)>.0001f ||
+           !Pass63SourceMagazineReload.TryParseTarget(
+               "CFrame.new(0, 0, 0.1) * CFrame.Angles(0.15,0,0)",
+               out var abs) || abs.RelativeToHandle ||
+           Math.Abs(abs.Pose.Origin.Z+.028f)>.0001f ||
+           Pass63SourceMagazineReload.TryParseTarget(
+               "module.Stats.Rels.MagRel * execute()",out _) ||
+           Pass63SourceMagazineReload.TryParseTarget(
+               "module.Stats.Rels.BoltRel",out _) ||
+           Pass63SourceMagazineReload.TryParseTarget(
+               "CFrame.new(999,0,0)",out _) ||
+           Pass63SourceMagazineReload.TryParseTarget(
+               "module.Stats.Rels.MagRel * CFrame.Angles(math.pi/2,0,0)",out _))
+            throw new InvalidOperationException(
+                "Pass63 original magazine CFrame grammar or coordinate reflection failed");
+
+        if(Pass62SourceWeaponHierarchy.OwnerHierarchyVerified ||
+           OriginalWeaponSourceRuntime.OwnerSourcePackVerified)
+            throw new InvalidOperationException(
+                "Pass63 synthetic fixture incorrectly claims owner pack verification");
+        var gun=new WeaponViewModelRuntime{Name="Pass63Glock"};
+        AddChild(gun);
+        gun.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var root=gun.GetNodeOrNull<Node3D>("WeaponBody");
+        var magazine=root?.GetNodeOrNull<MeshInstance3D>("Magazine");
+        var sleeve=root?.GetNodeOrNull<MeshInstance3D>("MagazineSleeve");
+        if(root is null || magazine is null || sleeve is null ||
+           !gun.UsingOriginalToolAssembly ||
+           gun.SourceMagazineCueCount!=4 ||
+           gun.SourceMagazineGroupParts!=2 ||
+           gun.SourceHierarchyOriginalVerified)
+            throw new InvalidOperationException(
+                "Pass63 SHA-gated grouped magazine model unavailable");
+        var firstHome=magazine.Transform;
+        var secondHome=sleeve.Transform;
+        var spacing=magazine.Position.DistanceTo(sleeve.Position);
+        gun.Reload(2.0);
+        gun._Process(.30);
+        gun._Process(.10);
+        if(!gun.SourceMagazinePoseActive ||
+           gun.SourceMagazineHandleTravel<.045f ||
+           magazine.Position.DistanceTo(firstHome.Origin)<.045f ||
+           sleeve.Position.DistanceTo(secondHome.Origin)<.045f ||
+           Math.Abs(magazine.Position.DistanceTo(sleeve.Position)-spacing)>.0003f ||
+           Math.Abs(magazine.Basis.Orthonormalized()
+               .GetRotationQuaternion().W-1f)<.00001f)
+            throw new InvalidOperationException(
+                "Pass63 original Glock magazine removal did not animate both parts");
+        gun._Process(2.1);
+        gun._Process(.016);
+        if(gun.SourceMagazinePoseActive ||
+           gun.SourceMagazineHandleTravel>.00001f ||
+           magazine.Transform.Origin.DistanceTo(firstHome.Origin)>.0002f ||
+           sleeve.Transform.Origin.DistanceTo(secondHome.Origin)>.0002f)
+            throw new InvalidOperationException(
+                "Pass63 magazine failed to return to original assembly position");
+        if(gun.SourceMotorHierarchyGroups<2 ||
+           gun.SourceSlideGroupParts!=2)
+            throw new InvalidOperationException(
+                "Pass63 regressed verified source Slide subassembly");
+        GD.Print("TWR_SMOKE_PASS63_MAGAZINE_OK "+
+            "source_glock_cues=4 source_ak_cues=5 "+
+            "source_m4_cues=4 source_p90_cues=8 "+
+            "source_mossberg_cues=3 "+
+            "original_absolute_pose_and_magrel=true "+
+            "source_two_piece_magazine_moves_and_rotates=true "+
+            "source_group_spacing_preserved=true "+
+            "pose_returns_to_rest=true "+
+            "private_pack_synthetic_only=true "+
+            "dynamic_luau_expressions_blocked=true "+
+            "reload_ammo_authority_unchanged=true");
         GetTree().Quit(0);
     }
 
