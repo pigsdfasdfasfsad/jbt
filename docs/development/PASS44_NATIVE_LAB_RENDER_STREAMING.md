@@ -44,6 +44,20 @@ python tools/validation/build_source_primitives44.py --scene Content/Maps/Labora
 
 The generated `LABORATORY_NATIVE_RENDER_MANIFEST44.json` records byte hashes and counts. It can be compared to the owner ZIP's private version. The exporter accepts `--synthetic` only for synthetic CI scenes, never original owner packs. Public GitHub history contains **only the exporter, runtime, tests, documentation and synthetic fixture generator**—not the original source cache.
 
+## Original player-spawn static visibility audit (not measured FPS)
+
+An independent decoder of the exact owner-side `TWRINS28` pack ran the
+same 145-metre per-batch world-AABB distance calculation at the eight
+original source player spawns. **494–529 of 787 native batches** fall
+inside that distance depending on spawn. At spawn #1, **510 batches
+containing 11,985 ordinary native parts are in range**; **277 batches
+containing 6,228 native instances are outside**. This does not represent
+measured graphics framerate, does not include unavailable custom meshes,
+and does not establish a GPU performance improvement.
+
+The owner-only package includes `LABORATORY_STATIC_CULLING_ESTIMATE44.json`
+with per-spawn counts. This file is intentionally omitted from public CI.
+
 ## Testing
 
 `tests/test_pass44_native_source_streaming.py` checks deterministic cache generation and independently decodes the exact packed binary format, verifying source SHA, transforms, exclusion categories, and cleanup.
@@ -56,6 +70,10 @@ Windows CI exports an actual Godot/.NET Windows executable, installs a fully **f
 - Native parts in both near and distant regions are grouped into different source tiles.
 - The exported game verifies the correct native instance counts, batch counts, fallback special geometry, unchanged collision body and dynamic tile visibility after moving the player.
 - Synthetic scene and `native28.gz` files are removed before uploading the public executable build.
+
+The verified Windows run passed **443 Python tests** plus a native exported
+Godot smoke using entirely fabricated near and far source geometry, a
+preserved `SpecialMesh`, and the original collision fallback.
 
 **Remaining acceptance gate:** launch the owner-built private Windows ZIP with the full 34,268-record scene. Run an actual 15-wave, player-controlled Laboratory match, record F10/F11 frame-time distributions before/after the cache, and photograph or screenshot walls, floors and mesh proxies for visual QA. No native Windows synthetic fixture establishes original scene FPS or custom mesh accuracy.
 
