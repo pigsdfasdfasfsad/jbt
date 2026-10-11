@@ -9,6 +9,8 @@ public partial class Bootstrap : Node
     private LocalSessionNode _runtime = null!;
     private CanvasLayer? _menu;
     private CanvasLayer? _armory;
+    private CanvasLayer? _bulletin;
+    private Label? _bulletinPage;
     private PerkMenuRuntime? _perkMenu;
     private GameplayRoot? _game;
     private Pass49OriginalLobbyRuntime? _sourceLobby;
@@ -18,6 +20,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass50",StringComparer.Ordinal))
+        {
+            RunPass50Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass49",StringComparer.Ordinal))
         {
             RunPass49Smoke();
@@ -453,6 +460,87 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass50Smoke()
+    {
+        // Native Godot Windows process with fully FABRICATED 3D lobby and
+        // headings. Never installs the owner's historical leaderboard records.
+        ShowMenu();
+        var lobby=_sourceLobby;
+        var signs=lobby?.GetNodeOrNull<Pass50SourceLobbySignsRuntime>(
+            "Pass50SourceLobbySigns");
+        if(lobby is null || signs is null ||
+            lobby.OwnerSourceVerified || signs.OwnerSourceVerified ||
+            signs.PanelCount!=9 || signs.HeadingCount!=34 ||
+            signs.SourceSurfaceGuiCount!=26 || signs.SourceTextLabelCount!=872 ||
+            !signs.OriginalHistoricalValuesExcluded ||
+            signs.ActiveHeadingCount!=31 || signs.ActivePage!="level" ||
+            signs.GetChildCount()!=9)
+            throw new InvalidOperationException(
+                "Pass50 original authored UI heading extraction/count or privacy failed");
+        var nativeLabels=signs.FindChildren("*","Label3D",true,false)
+            .OfType<Label3D>().ToArray();
+        if(nativeLabels.Length!=34 ||
+            !nativeLabels.Any(l=>l.Text=="PERSONAL STATS:") ||
+            !nativeLabels.Any(l=>l.Text=="WEEKLY LEADERBOARD:") ||
+            nativeLabels.Any(l=>l.Text.Contains("rachel2006",StringComparison.Ordinal)))
+            throw new InvalidOperationException(
+                "Pass50 static authentic source headings absent or old rank user leaked");
+
+        var boardButton=_menu?.GetChildren().OfType<Button>()
+            .FirstOrDefault(b=>b.Text=="BULLETIN BOARD");
+        if(boardButton is null)
+            throw new InvalidOperationException("Pass50 main menu bulletin action missing");
+        boardButton.EmitSignal(Button.SignalName.Pressed);
+        if(_bulletin is null || _menu is not null ||
+            lobby.ActiveCameraName!="Leaderboards" ||
+            _bulletinPage is null ||
+            !_bulletinPage.Text.Contains("HIGHEST LEVELS",StringComparison.Ordinal))
+            throw new InvalidOperationException(
+                "Pass50 original Leaderboards camera/menu panel did not open");
+        var next=_bulletin.GetChildren().OfType<Button>()
+            .FirstOrDefault(b=>b.Text=="NEXT BOARD PAGE");
+        if(next is null)
+            throw new InvalidOperationException("Pass50 source 4-page headings toggle missing");
+        next.EmitSignal(Button.SignalName.Pressed);
+        if(signs.ActivePage!="kills" || signs.ActiveHeadingCount!=31 ||
+            !_bulletinPage!.Text.Contains("MOST KILLS",StringComparison.Ordinal))
+            throw new InvalidOperationException(
+                "Pass50 static leaderboard headings did not switch active panels");
+        next.EmitSignal(Button.SignalName.Pressed);
+        next.EmitSignal(Button.SignalName.Pressed);
+        next.EmitSignal(Button.SignalName.Pressed);
+        if(signs.ActivePage!="level")
+            throw new InvalidOperationException(
+                "Pass50 board pages did not cycle back without stale rank data");
+
+        var back=_bulletin.GetChildren().OfType<Button>()
+            .FirstOrDefault(b=>b.Text=="BACK");
+        back?.EmitSignal(Button.SignalName.Pressed);
+        if(_bulletin is not null || _menu is null ||
+            lobby.ActiveCameraName!="Start")
+            throw new InvalidOperationException(
+                "Pass50 original source board did not return to playable menu");
+        ShowArmory();
+        var armoryButtons=_armory?.GetChildren().OfType<ScrollContainer>()
+            .SelectMany(scroll=>scroll.GetChildren().OfType<VBoxContainer>())
+            .SelectMany(list=>list.GetChildren().OfType<Button>()).Count() ?? -1;
+        if(armoryButtons!=91 || lobby.ActiveCameraName!="Loadout")
+            throw new InvalidOperationException(
+                "Pass50 source board interfered with working original 91-weapon armory");
+        StartGame("Manor");
+        if(_sourceLobby is not null || _bulletin is not null || _game is null)
+            throw new InvalidOperationException(
+                "Pass50 source board geometry leaked into offline active match");
+
+        GD.Print("TWR_SMOKE_PASS50_BULLETIN_OK synthetic_only=true " +
+            "3d_original_lobby=true source_gui_panels=26 snapshot_labels=872 " +
+            "restored_static_headings=34 excluded_historical_values=838 " +
+            "panels=9 active_labels=31 authored_leaderboards_camera=true " +
+            "board_pages=4 board_button_action=true backward_navigation=true " +
+            "armory_buttons=91 game_switch=true private_source_not_uploaded=true");
         GetTree().Quit(0);
     }
 
@@ -1783,6 +1871,9 @@ public partial class Bootstrap : Node
 
     private void ShowMenu()
     {
+        _bulletin?.QueueFree();
+        _bulletin=null;
+        _bulletinPage=null;
         EnsureOriginalLobby("Start");
         Input.MouseMode = Input.MouseModeEnum.Visible;
         _menu = new CanvasLayer { Name = "MainMenu" };
@@ -1824,6 +1915,17 @@ public partial class Bootstrap : Node
         perks.Pressed += ShowPerks;
         _menu.AddChild(perks);
 
+        var bulletin=new Button
+        {
+            OffsetLeft=930,
+            OffsetTop=205,
+            OffsetRight=1190,
+            OffsetBottom=255,
+            Text="BULLETIN BOARD"
+        };
+        bulletin.Pressed += ShowBulletin;
+        _menu.AddChild(bulletin);
+
         var maps = MapCatalogRuntime.All();
         for (var i = 0; i < maps.Count; i++)
         {
@@ -1846,6 +1948,54 @@ public partial class Bootstrap : Node
             button.Pressed += () => StartGame(selected);
             _menu.AddChild(button);
         }
+    }
+
+    private void ShowBulletin()
+    {
+        EnsureOriginalLobby("Leaderboards");
+        _menu?.QueueFree();
+        _menu=null;
+        _armory?.QueueFree();
+        _armory=null;
+        _perkMenu?.QueueFree();
+        _perkMenu=null;
+        _bulletin?.QueueFree();
+        Input.MouseMode=Input.MouseModeEnum.Visible;
+
+        _bulletin=new CanvasLayer { Name="SourceBulletinView" };
+        AddChild(_bulletin);
+        AddBackground(_bulletin, .17f);
+        _bulletin.AddChild(MakeLabel(52,32,970,48,30,
+            "ORIGINAL LOBBY BULLETIN BOARD"));
+        _bulletin.AddChild(MakeLabel(52,91,1040,65,15,
+            "Original sign headings are restored in 3D. The saved online ranking snapshot " +
+            "is historical; live Roblox leaderboards are unavailable offline."));
+        var signs=_sourceLobby?.GetNodeOrNull<Pass50SourceLobbySignsRuntime>(
+            "Pass50SourceLobbySigns");
+        _bulletinPage=MakeLabel(52,165,1040,45,19,
+            signs is null ? "Original board lettering unavailable (2D fallback)" :
+            "SOURCE BOARD PAGE: " + signs.ActivePageTitle);
+        _bulletin.AddChild(_bulletinPage);
+
+        var next=new Button {
+            OffsetLeft=52,OffsetTop=630,OffsetRight=370,OffsetBottom=686,
+            Text="NEXT BOARD PAGE",
+            Disabled=signs is null
+        };
+        next.Pressed += () =>
+        {
+            if(signs is null)return;
+            signs.CyclePage();
+            if (_bulletinPage is not null)
+                _bulletinPage.Text="SOURCE BOARD PAGE: "+signs.ActivePageTitle;
+        };
+        _bulletin.AddChild(next);
+        var back=new Button {
+            OffsetLeft=1010,OffsetTop=38,OffsetRight=1200,OffsetBottom=90,
+            Text="BACK"
+        };
+        back.Pressed += ShowMenu;
+        _bulletin.AddChild(back);
     }
 
     private void ShowPerks()
@@ -1994,14 +2144,14 @@ public partial class Bootstrap : Node
             "  |  PRIMARY " + primary + "  |  SECONDARY " + secondary + "  |  MELEE " + melee;
     }
 
-    private void AddBackground(CanvasLayer layer)
+    private void AddBackground(CanvasLayer layer,float? backdropAlpha=null)
     {
         // Keep controls readable while allowing the 3D source-authored lobby
         // to show behind them. No private pack = previous fully opaque UI.
         layer.AddChild(new ColorRect
         {
             Color = _sourceLobby is not null
-                ? new Color(.025f,.027f,.03f,.62f)
+                ? new Color(.025f,.027f,.03f,backdropAlpha ?? .62f)
                 : new Color(.025f,.027f,.03f),
             AnchorRight=1,
             AnchorBottom=1,
@@ -2029,6 +2179,9 @@ public partial class Bootstrap : Node
         // lighting inside an active game map.
         _sourceLobby?.QueueFree();
         _sourceLobby=null;
+        _bulletin?.QueueFree();
+        _bulletin=null;
+        _bulletinPage=null;
         _menu?.QueueFree();
         _menu = null;
         _armory?.QueueFree();
