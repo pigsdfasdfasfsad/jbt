@@ -122,6 +122,20 @@ public partial class GameplayRoot : Node3D
     public int Pass44VisibleNativeBatches =>
         GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
             "/Pass28PrimitiveStream")?.VisibleBatchCount ?? 0;
+    public int Pass48SourceInfectedCount =>
+        _infected.Count(x => GodotObject.IsInstanceValid(x) && x.SourceInfectedKitActive);
+    public int Pass48VerifiedSourceInfectedCount =>
+        _infected.Count(x => GodotObject.IsInstanceValid(x) && x.SourceInfectedKitVerified);
+    public int Pass48RecoveredInfectedAccessoryParts =>
+        _infected.Where(GodotObject.IsInstanceValid)
+            .Sum(x => x.SourceAccessoryPartCount);
+    public int Pass48ReconstructedInfectedR6Parts =>
+        _infected.Where(GodotObject.IsInstanceValid)
+            .Sum(x => x.SourceBodyProxyPartCount);
+    public int Pass48MissingInfectedMeshProxies =>
+        _infected.Where(GodotObject.IsInstanceValid)
+            .Sum(x => x.SourceMissingMeshProxyCount);
+
     public bool Pass47OriginalWeaponModelActive => _player?.SourceWeaponModelActive ?? false;
     public bool Pass47OwnerWeaponPackVerified => _player?.SourceWeaponPackVerified ?? false;
     public int Pass47WeaponSourceVisibleParts => _player?.SourceWeaponVisibleParts ?? 0;
