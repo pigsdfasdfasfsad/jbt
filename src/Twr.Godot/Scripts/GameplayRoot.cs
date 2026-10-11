@@ -122,6 +122,24 @@ public partial class GameplayRoot : Node3D
     public int Pass44VisibleNativeBatches =>
         GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
             "/Pass28PrimitiveStream")?.VisibleBatchCount ?? 0;
+    public bool Pass45ProxyStreamingAvailable =>
+        GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
+            "/Pass45FallbackProxyStream") is not null;
+    public bool Pass45ProxyCullEnabled =>
+        GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
+            "/Pass45FallbackProxyStream")?.CullEnabled ?? false;
+    public int Pass45ProxyBatchCount =>
+        GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
+            "/Pass45FallbackProxyStream")?.BatchCount ?? 0;
+    public int Pass45ProxyVisibleBatches =>
+        GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
+            "/Pass45FallbackProxyStream")?.VisibleBatchCount ?? 0;
+    public int Pass45ProxySourceInstances =>
+        GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
+            "/Pass45FallbackProxyStream")?.SourceProxyInstanceCount ?? 0;
+    public int Pass45ProxyVisibleInstances =>
+        GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
+            "/Pass45FallbackProxyStream")?.VisibleInstanceCount ?? 0;
     private double _pass32RecoveryScan = 1.5;
 
     private enum Stage { Countdown, Wave, WaveEnd, Intermission, Results }
@@ -181,6 +199,8 @@ public partial class GameplayRoot : Node3D
             ?.Track(_player);
         GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName +
             "/Pass28PrimitiveStream")?.Track(_player);
+        GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
+            "/Pass45FallbackProxyStream")?.Track(_player);
 
         _hud = new GameplayHud { Name = "HUD", Runtime = Runtime };
         AddChild(_hud);
@@ -285,6 +305,24 @@ public partial class GameplayRoot : Node3D
     {
         if (@event is not InputEventKey key || !key.Pressed || key.Echo) return;
 
+        // F1 is a purely visual A/B test; it never changes collision,
+        // navigation, original player spawn or infected AI behavior.
+        if (key.Keycode == Key.F1)
+        {
+            var proxy=GetNodeOrNull<Pass45FallbackProxyStreamer>(
+                "Recovered" + MapName + "/Pass45FallbackProxyStream");
+            if (proxy is null)
+                _hud.SetUtility("F1 source proxy batching unavailable for this map");
+            else
+            {
+                proxy.ToggleCull();
+                _hud.SetUtility(proxy.CullEnabled
+                    ? "F1 SOURCE PROXY CULL ON (source geometry, same collision)"
+                    : "F1 SOURCE PROXY CULL OFF (A/B comparison only)");
+            }
+            GetViewport().SetInputAsHandled();
+            return;
+        }
         if (!_finished && key.Keycode == Key.F2)
         {
             if (_sourceSoundscape is null)
