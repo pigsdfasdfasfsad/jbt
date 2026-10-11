@@ -358,7 +358,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         if (spec.IsMelee)
         {
             _actionCooldown = Math.Max(0.05, spec.ActionSeconds);
-            _viewModel.Fire();
+            _viewModel.Fire(_aiming);
             Audio?.Play("melee");
             FireHitscan(spec, -_camera.GlobalTransform.Basis.Z, spec.Range, spec.Damage, "Melee", true);
             return;
@@ -372,7 +372,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         if (!Runtime.SpendAmmo(spec.Name, 1)) return;
         _actionCooldown = FireInterval(spec);
-        _viewModel.Fire();
+        _viewModel.Fire(_aiming);
         Audio?.Play(spec.IsLauncher ? "launcher" :
             spec.IsShotgun ? "shotgun" : "gunshot");
         ApplyRecoil(spec);
