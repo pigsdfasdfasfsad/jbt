@@ -480,7 +480,14 @@ public partial class WeaponViewModelRuntime : Node3D
         if (_rig is null) return;
         var dt = (float)delta;
         AdvanceCosmeticEffects(dt);
-        if(StaticShowroomMode)return;
+        if(StaticShowroomMode)
+        {
+            // The armory showroom displays the gun, not invented glove
+            // proxy geometry. Live first-person views enable both hands.
+            if(_leftHandProxy is not null)_leftHandProxy.Visible=false;
+            if(_rightHandProxy is not null)_rightHandProxy.Visible=false;
+            return;
+        }
         _flashSeconds = Mathf.Max(0,_flashSeconds - dt);
         _mechanicalKick = Mathf.Max(0,_mechanicalKick - dt);
         if (_flash is not null) _flash.Visible = _flashSeconds > 0;
