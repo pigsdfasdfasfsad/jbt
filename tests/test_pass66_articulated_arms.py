@@ -100,5 +100,5 @@ def test_arms_remain_render_only_not_fabricated_source_motor_data():
     assert "Motor6D" in solver
     assert "shoulder" in solver.lower() and "elbow" in solver.lower()
     assert "new CylinderMesh" in render and "new SphereMesh" in render
-    assert "original avatar" in solver
+    assert "original Roblox" in solver
     assert "No Roblox network access" in render
