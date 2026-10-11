@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass62",StringComparer.Ordinal))
+        {
+            RunPass62Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass61",StringComparer.Ordinal))
         {
             RunPass61Smoke();
@@ -535,6 +540,85 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass62Smoke()
+    {
+        if(Pass62SourceWeaponHierarchy.OwnerHierarchyVerified ||
+           OriginalWeaponSourceRuntime.OwnerSourcePackVerified)
+            throw new InvalidOperationException(
+                "Pass62 synthetic smoke must never impersonate private original source");
+
+        var glock=new WeaponViewModelRuntime{Name="Pass62Glock"};
+        AddChild(glock);
+        glock.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        var rig=glock.GetNodeOrNull<Node3D>("WeaponBody");
+        var slide=rig?.GetNodeOrNull<MeshInstance3D>("Slide");
+        var detail=rig?.GetNodeOrNull<MeshInstance3D>("HousingDetail");
+        if(rig is null || slide is null || detail is null ||
+           !glock.UsingOriginalToolAssembly ||
+           glock.SourceMotorHierarchyGroups!=2 ||
+           glock.SourceSlideGroupParts!=2 ||
+           glock.SourceHierarchyOriginalVerified ||
+           !glock.HasSourceEquipClip)
+            throw new InvalidOperationException(
+                "Pass62 Glock source hierarchy was not installed correctly");
+
+        var slideHome=slide.Position;
+        var detailHome=detail.Position;
+        glock.Fire(false);
+        glock._Process(.05);
+        var slideShift=slide.Position-slideHome;
+        var detailShift=detail.Position-detailHome;
+        if(Math.Abs(glock.LastSlideMotorOffset.Z+.063f)>.0002f ||
+           slideShift.DistanceTo(detailShift)>.0002f ||
+           Math.Abs(slideShift.X)<.045f ||
+           Math.Abs(slideShift.Z)>.02f)
+            throw new InvalidOperationException(
+                "Pass62 rotated source Handle pivot failed to move entire Glock Slide group");
+        glock._Process(.08);
+        if(slide.Position.DistanceTo(slideHome)>.0002f ||
+           detail.Position.DistanceTo(detailHome)>.0002f)
+            throw new InvalidOperationException(
+                "Pass62 source Glock Slide group failed to return to original rest pose");
+
+        var moss=new WeaponViewModelRuntime{Name="Pass62Mossberg"};
+        AddChild(moss);
+        moss.SetWeapon(RuntimeWeaponCatalog.Get("Mossberg 500"));
+        var mossRig=moss.GetNodeOrNull<Node3D>("WeaponBody");
+        var pump=mossRig?.GetNodeOrNull<MeshInstance3D>("Pump");
+        var rail=mossRig?.GetNodeOrNull<MeshInstance3D>("ForeRail");
+        if(mossRig is null || pump is null || rail is null ||
+           moss.SourceMotorHierarchyGroups!=2 ||
+           moss.SourcePumpGroupParts!=2)
+            throw new InvalidOperationException(
+                "Pass62 Mossberg source Pump group was not imported");
+        var pumpHome=pump.Position;
+        var railHome=rail.Position;
+        moss.Fire(false);
+        moss._Process(.4125);
+        var pumpShift=pump.Position-pumpHome;
+        var railShift=rail.Position-railHome;
+        if(Math.Abs(moss.LastPumpMotorOffset.Z+.084f)>.0003f ||
+           pumpShift.DistanceTo(railShift)>.0002f ||
+           Math.Abs(pumpShift.X)<.06f ||
+           Math.Abs(pumpShift.Z)>.025f)
+            throw new InvalidOperationException(
+                "Pass62 original pivot failed to move all source pump components");
+        moss._Process(.38);
+        if(pump.Position.DistanceTo(pumpHome)>.0002f ||
+           rail.Position.DistanceTo(railHome)>.0002f)
+            throw new InvalidOperationException(
+                "Pass62 source Pump group failed to return to rest");
+
+        GD.Print("TWR_SMOKE_PASS62_SOURCE_HIERARCHY_OK "+
+            "synthetic_private_pack_gate=true "+
+            "source_index_mapping=true source_nested_handle_pivots=true "+
+            "all_glock_slide_children_animated=2 "+
+            "all_mossberg_pump_children_animated=2 "+
+            "rotated_local_motor_axes=true returned_to_rest=true "+
+            "source_mesh_bytes_not_claimed=true combat_authority_unchanged=true");
         GetTree().Quit(0);
     }
 
