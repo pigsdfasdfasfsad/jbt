@@ -582,8 +582,11 @@ public partial class Bootstrap : Node
                 throw new InvalidOperationException(
                     "Pass66 bounded original-scale articulated arm failed ordinary reachable case");
         }
+        // This target is unreachable but remains inside the strict
+        // input safety budget. Inputs beyond that budget instead use
+        // the finite fallback shoulder pose.
         var far=Pass66ArmKinematics.Solve(true,
-            new Vector3(-2f,-2f,-2f));
+            new Vector3(-1.3f,-1.3f,-1.3f));
         var invalid=Pass66ArmKinematics.Solve(false,
             new Vector3(float.NaN,0f,0f));
         if(!far.IsFinite || !far.ReachClamped ||
