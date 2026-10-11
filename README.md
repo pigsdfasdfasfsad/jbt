@@ -2,7 +2,22 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 47 — Original 3D source tool assemblies
+## Latest verified source branch: Pass 48 — Original infected AI accessories
+
+[Pass48 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass48-infected-source-asset-kit) ·
+[Verified Windows build and native smoke](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38100839832) ·
+[Source asset evidence and limitations](docs/development/PASS48_INFECTED_SOURCE_ASSET_KIT.md)
+
+- Recovered the previously unused **ReplicatedStorage/Assets/AI/Infected** source kit from the owner's TestPlace.xml; extracted **35 original visible accessory components from 22 genuine source asset groups**, covering all **eight playable infected categories**
+- Assembled **15 explicitly reconstructed source-and-proxy visual combinations** using original Bloater/Burster head/torso/arm pieces, Hazmat hood/respirators, Military and Riot helmets, and Generic hair/head details
+- Each model has **six reconstructed standard R6 body proxy parts**. Missing custom MeshPart triangles, UVs, clothing and original animation tracks are **not** claimed as recovered. The 15 combinations are not the verified original retail spawn distribution
+- The owner-only Windows ZIP adds a compressed **3 KB** original-bound source kit `Content/Enemies/InfectedSourceVariants.json.gz` with SHA-256 `9ef29ce243992722dbab0ea5f5f78872ea4a6b5da4718c925662a34cfb743d64`. Original Laboratory, weapon source assemblies, UI art and other previously recovered assets remain present
+- The Godot source kit reader verifies original place identity and exact pack SHA, has compressed/decompressed budgets, excludes invisible marker geometry, and uses the previous procedural fallback when the private pack is unavailable
+- F10/F11 now reports the number of live source-kit infected, actual source-accessory parts, reconstructed R6 proxy parts and missing external mesh proxies
+- **461 Python regression tests and native exported Windows acceptance passed**, including all eight entirely fabricated infected types and an actual Godot infected actor. Private original packs remain outside the public GitHub CI artifact
+- **Not yet 1:1:** nine remaining full original map worlds, missing cloud mesh triangle files/terrain, original zombie animation/clothing, retail media and a full human-controlled 15-wave acceptance run remain incomplete
+
+## Previous verified source branch: Pass 47 — Original 3D source tool assemblies
 
 [Pass 47 development branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass47-original-weapon-assemblies) ·
 [Successful Windows build and native tests](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38099854679)
