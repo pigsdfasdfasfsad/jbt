@@ -74,7 +74,9 @@ def test_animated_effects_are_bounded_reconstructed_and_viewmodel_only():
     assert "Math.Clamp(dt,0f,.25f)" in gun
     assert "if(!float.IsFinite(dt)" in gun
     assert "EmissionEnergyMultiplier=" in gun
-    assert "if(StaticShowroomMode)return;" in gun
+    assert "if(StaticShowroomMode)" in gun
+    assert "_leftHandProxy.Visible=false" in gun
+    assert "AdvanceCosmeticEffects(dt);" in gun
     assert "model.StaticShowroomMode=true" in lobby
     assert "model.SetProcess(true)" in lobby
     assert "RECONSTRUCTED SHIMMER (TIMING UNKNOWN)" in gun
