@@ -83,7 +83,12 @@ def test_prepared_mesh_materials_apply_to_all_mesh_kinds_and_wedges():
     geometry = (ROOT/'src/Twr.Godot/Scripts/RobloxPrimitiveGeometry.cs').read_text()
     fixture = (ROOT/'tools/maps/make_lab_smoke_fixture.py').read_text()
     assert 'MaterialOverride = batch.Material' in loader
-    assert 'Material = material,' in loader
+    # Pass45 creates shared source Mesh/Material style resources, then
+    # references those resources from individual spatial tile batches.
+    assert 'var material = new StandardMaterial3D' in loader
+    assert 'RobloxMaterialSurface.Apply(material, materialCode, preparedTexture)' in loader
+    assert 'shared = (mesh, material);' in loader
+    assert 'Material = shared.Material,' in loader
     assert 'RobloxPrimitiveGeometry.WedgeMesh()' in loader
     assert 'RobloxPrimitiveGeometry.WedgeCollision(size)' in loader
     assert 'cls == "WedgePart"' in loader
