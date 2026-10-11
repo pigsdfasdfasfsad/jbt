@@ -282,8 +282,14 @@ public static class LaboratorySourceLoader
                 cls == "WedgePart"));
         // Keep exact collision from the source record above even when a native
         // mesh is already rendered by the optional streamed primitive layer.
+        // Exactly match the private TWRINS28 eligibility rule. The older
+        // implementation also hid SpecialMeshType=6 (sphere), even though
+        // Pass28 never generated a primitive for that source geometry.
+        // Preserving those exceptional parts avoids silent visible losses.
         if (packedNativeParts && (cls == "Part" || cls == "WedgePart") &&
-            Str(r, "shape", "1") == "1" && Str(r, "specialMeshType") != "5")
+            Str(r, "shape", "1") == "1" &&
+            string.IsNullOrEmpty(Str(r, "specialMeshType")) &&
+            !r.TryGetProperty("specialMeshOffset", out _) && opacity > .001f)
             return;
         if (opacity < 0.001f) return;
         var rgb = Vec(r, "rgb");
