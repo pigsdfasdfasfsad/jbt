@@ -17,3 +17,7 @@ These tests **do not** establish accurate original map navigation, source collis
 
 ## Validation
 The GitHub Actions Windows validation is the authoritative compile/runtime gate for this branch. Do not label this pass *verified* until the run completes successfully, including all Python tests and native executable smoke. This chat environment cannot build a Windows Godot/.NET game directly.
+
+## Verified checkpoint
+
+[Successful exported Windows CI (Pass71)](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201351136) — Python regression suite, Godot/.NET Windows build, actual two-map pursuit/occlusion/death/reload smoke and owner-private asset exclusion all passed. The test used synthetic raised collision lanes and does not claim native retail-map navigation or complete original asset parity.

@@ -1,3 +1,13 @@
+# PASS 72 — NATIVE ALL-TEN-MAP ENTRY IMPLEMENTED; WINDOWS CI PENDING
+
+**Branch:** `twr-pass72-native-ten-map-entry`. The previous Pass71 exported Windows build and native two-map enemy/damage test [passed](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201351136).
+
+Pass72 adds actual Godot gameplay-root instantiation on every release map; native first-person physics grounding, HUD/pickup construction, real infected spawn, accelerated Wave 1 to Wave 2 scene transitions, isolated Results-save teardown and runtime lobby roundtrip on all ten maps. **It is not verified until the Pass72 Windows Actions workflow succeeds.** These tests are not manual fifteen-wave matches or visual/floorplan parity with original Roblox.
+
+[Pass72 engineering report](PASS72_NATIVE_TEN_MAP_ENTRY.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 70
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass70-live-player-combat-loop`.
