@@ -251,6 +251,11 @@ public partial class GameplayRoot : Node3D
     {
         Pass43FrameTimes.Record(delta, ActiveInfectedCount);
         if (Runtime?.Player is null || Runtime.Match is null) return;
+        // Suppress the HUD plus only while the reconstructed optic
+        // reticle is actually displayed; non-scoped weapons retain
+        // the existing crosshair without gameplay input changes.
+        _hud.SetScopeCrosshairSuppressed(
+            _player.SourceScopeVisible69);
 
         if(!_finished)
         {
