@@ -62,6 +62,8 @@ public partial class Pass73GroundNavigationRuntime : Node3D
     public long RejectedElevatedRoutes77 { get; private set; }
     public long VerifiedDescendingRoutes78 { get; private set; }
     public long RejectedDescendingRoutes78 { get; private set; }
+    public long VerifiedUpperDirectRoutes79 { get; private set; }
+    public long RejectedUpperDirectRoutes79 { get; private set; }
     public int StairLinkCount77 => Layout?.ApproximateStairs77.Count ?? 0;
 
     public static Pass73GroundNavigationRuntime Attach(
@@ -231,6 +233,18 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         if (!IsGraphReady || !_connected ||
             !IsFinite(infectedCentre) || !IsFinite(playerCentre))
             return [];
+
+        // Pass79: an infected already upstairs must not use the ground-floor
+        // graph or direct steering across missing balcony support.
+        if (IsManorSameUpperFloor79(infectedCentre, playerCentre))
+        {
+            if (UpperCorridorSupported79(
+                    infectedCentre - Vector3.Up * .8f, playerCentre))
+                VerifiedUpperDirectRoutes79++;
+            else
+                RejectedUpperDirectRoutes79++;
+            return []; // Pass80 adds audited alternative cross-deck routes.
+        }
 
         // Pass77 supplements ONLY the approximate Manor blockout when a
         // player is above a ground-floor infected. It never overwrites the
@@ -474,6 +488,41 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         points.Add(playerFeet);
         result = points.ToArray();
         return true;
+    }
+
+
+    /// <summary>
+    /// Pass79 only applies to the three fallback Manor decks. Player
+    /// GlobalPosition is feet-level; infected GlobalPosition is body-center.
+    /// In particular this cannot route owner-original source geometry.
+    /// </summary>
+    public bool IsManorSameUpperFloor79(
+        Vector3 infectedCentre, Vector3 playerFeet)
+    {
+        var infectedFeet = infectedCentre - Vector3.Up * .8f;
+        return MapName == "Manor" && StairLinkCount77 == 3 &&
+            IsFinite(infectedCentre) && IsFinite(playerFeet) &&
+            infectedFeet.Y >= 2.70f && playerFeet.Y >= 2.70f &&
+            Math.Abs(infectedFeet.Y - playerFeet.Y) <= .50f;
+    }
+
+    public bool UpperCorridorSupported79(Vector3 fromFeet, Vector3 toFeet) =>
+        MapName == "Manor" && StairLinkCount77 == 3 &&
+        Pass79UpperFloorSafety.IsSupported(
+            this, fromFeet, toFeet, _exclude, CorridorClear);
+
+    public bool SafeUpperMove79(
+        Vector3 infectedCentre, Vector3 horizontalDirection)
+    {
+        if (MapName != "Manor" || StairLinkCount77 != 3 ||
+            !IsFinite(infectedCentre) || !IsFinite(horizontalDirection))
+            return false;
+        var direction = new Vector3(
+            horizontalDirection.X, 0, horizontalDirection.Z);
+        if (direction.LengthSquared() < .0001f) return true;
+        var feet = infectedCentre - Vector3.Up * .8f;
+        return UpperCorridorSupported79(
+            feet, feet + direction.Normalized() * .55f);
     }
 
     private bool VerifiedPhysicalStair77(Pass77StairLink stair)

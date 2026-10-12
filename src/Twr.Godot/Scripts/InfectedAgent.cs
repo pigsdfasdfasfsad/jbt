@@ -200,6 +200,9 @@ public partial class InfectedAgent : CharacterBody3D
             var fallbackReady = GroundNavigator73 is not null &&
                 GodotObject.IsInstanceValid(GroundNavigator73) &&
                 GroundNavigator73.IsGraphReady;
+            var manorSameUpper79 = fallbackReady &&
+                GroundNavigator73!.IsManorSameUpperFloor79(
+                    GlobalPosition, Target.GlobalPosition);
             if (highwayReady || sourceReady || fallbackReady)
             {
                 _navigationRefresh -= delta;
@@ -313,6 +316,19 @@ public partial class InfectedAgent : CharacterBody3D
                 }
             }
             var direction = SteerAroundObstacles(desired);
+            if (manorSameUpper79)
+            {
+                // Empty route is safe for DIRECT pursuit only if every
+                // sampled floor point is solid. A transparent/unsupported
+                // void may never become a movement instruction.
+                if ((_navigationRoute.Length == 0 &&
+                     !GroundNavigator73!.UpperCorridorSupported79(
+                         GlobalPosition - Vector3.Up * .8f,
+                         Target.GlobalPosition)) ||
+                    !GroundNavigator73!.SafeUpperMove79(
+                        GlobalPosition, direction))
+                    direction = Vector3.Zero;
+            }
             velocity.X = direction.X * MoveSpeed * _slowFactor;
             velocity.Z = direction.Z * MoveSpeed * _slowFactor;
             if (direction.LengthSquared() > 0.001f) LookAt(GlobalPosition + direction, Vector3.Up);
