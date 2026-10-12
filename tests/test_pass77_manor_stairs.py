@@ -35,7 +35,9 @@ def test_elevated_ai_path_requires_real_ramp_collider_and_ground_graph():
     assert "if (!alreadyOnRamp) points.Add(selected.LowerFeet);" in graph
     assert "startSegment = begin;" in graph
     assert "belowUpperTarget77" in read("src/Twr.Godot/Scripts/InfectedAgent.cs")
-    assert "playerCentre.Y - infectedCentre.Y > 1.45f" in graph
+    assert "playerCentre.Y >= 2.2f" in graph
+    # Continue following the actual stair while the infected's FEET remain
+    # below the target's upper-floor feet, not only on the first replan.
     assert "TryGetVerifiedManorAscent77(" in graph
     assert "VerifiedPhysicalStair77(stair)" in graph
     assert "var playerFeet = playerCentre;" in graph
