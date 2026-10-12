@@ -66,6 +66,8 @@ public partial class Pass73GroundNavigationRuntime : Node3D
     public long RejectedUpperDirectRoutes79 { get; private set; }
     public long VerifiedUpperCrossingRoutes80 { get; private set; }
     public long RejectedUpperCrossingRoutes80 { get; private set; }
+    public long VerifiedUpperDetours81 { get; private set; }
+    public long RejectedUpperDetours81 { get; private set; }
     public int CrossingCount80 => Layout?.ApproximateCrossings80.Count ?? 0;
     public int StairLinkCount77 => Layout?.ApproximateStairs77.Count ?? 0;
 
@@ -254,6 +256,13 @@ public partial class Pass73GroundNavigationRuntime : Node3D
                     return crossing;
                 }
                 RejectedUpperCrossingRoutes80++;
+                if (TryGetSupportedUpperDetour81(
+                        infectedCentre,playerCentre,out var detour))
+                {
+                    VerifiedUpperDetours81++;
+                    return detour;
+                }
+                RejectedUpperDetours81++;
             }
             return []; // An unsafe unsupported target receives no shortcut.
         }
@@ -574,6 +583,59 @@ public partial class Pass73GroundNavigationRuntime : Node3D
             return true;
         }
         return false;
+    }
+
+
+    /// <summary>
+    /// Pass81: search only short, pre-bounded corridor L-shaped routes
+    /// inside the SAME upper wing. Candidate legs are audited against actual
+    /// floor/wall collision. This is not a replacement for retail navigation.
+    /// </summary>
+    private bool TryGetSupportedUpperDetour81(
+        Vector3 infectedCentre, Vector3 playerFeet, out Vector3[] result)
+    {
+        result = [];
+        var from=infectedCentre-Vector3.Up*.8f;
+        var bestLength=float.MaxValue;
+        foreach (var crossing in Layout.ApproximateCrossings80)
+        {
+            var mid=crossing.CentreFeet;
+            if(Math.Abs(from.X-mid.X)>13.8f ||
+               Math.Abs(playerFeet.X-mid.X)>13.8f ||
+               Math.Abs(from.Z-mid.Z)>38f ||
+               Math.Abs(playerFeet.Z-mid.Z)>38f ||
+               Math.Abs(from.Y-mid.Y)>.45f ||
+               Math.Abs(playerFeet.Y-mid.Y)>.45f)
+                continue;
+            // Preserve distinct wings. Opposite-side pursuits must use the
+            // physically supported Pass80 bridge, never a phantom corridor.
+            var fromSide=Math.Sign(from.X-mid.X);
+            var targetSide=Math.Sign(playerFeet.X-mid.X);
+            if(fromSide == 0 || fromSide != targetSide) continue;
+            var corridorXs=new[]
+            {
+                mid.X + fromSide*3.2f,
+                mid.X + fromSide*4.3f,
+                mid.X + fromSide*6.2f,
+                from.X,
+                playerFeet.X
+            };
+            foreach(var laneX in corridorXs)
+            {
+                var a=new Vector3(laneX,from.Y,from.Z);
+                var b=new Vector3(laneX,playerFeet.Y,playerFeet.Z);
+                if (!UpperCorridorSupported79(from,a) ||
+                    !UpperCorridorSupported79(a,b) ||
+                    !UpperCorridorSupported79(b,playerFeet))
+                    continue;
+                var distance=from.DistanceTo(a)+a.DistanceTo(b)+
+                    b.DistanceTo(playerFeet);
+                if(distance >= bestLength) continue;
+                bestLength=distance;
+                result=[a,b,playerFeet];
+            }
+        }
+        return result.Length > 0;
     }
 
     private bool VerifiedPhysicalStair77(Pass77StairLink stair)
