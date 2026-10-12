@@ -197,17 +197,29 @@ public partial class ObjectiveRuntime : Node3D
         if (_escortRepathSeconds89 <= 0 ||
             _escortRouteIndex89 >= _escortRoute89.Length)
         {
-            _escortRoute89=nav.GetVerifiedEscortRoute89(
+            var newRoute=nav.GetVerifiedEscortRoute89(
                 from,target,actor.GetRid());
-            _escortRouteIndex89=0;
             _escortRepathSeconds89=.80;
-            if (_escortRoute89.Length == 0)
+            if (newRoute.Length != 0)
+            {
+                _escortRoute89=newRoute;
+                _escortRouteIndex89=0;
+                EscortSafeRoutePlans89++;
+            }
+            else
             {
                 EscortBlockedRoutePlans89++;
-                StopEscortHorizontal89(delta);
-                return;
+                // A short failed re-anchor at an edge/corner MUST NOT
+                // erase a previously collision-audited route that still
+                // leads around the obstacle. Each upcoming 55cm movement
+                // remains checked against live floor and wall physics.
+                // Once consumed, an exhausted route cannot be reused.
+                if (_escortRouteIndex89 >= _escortRoute89.Length)
+                {
+                    StopEscortHorizontal89(delta);
+                    return;
+                }
             }
-            EscortSafeRoutePlans89++;
         }
 
         var desired=Vector3.Zero;

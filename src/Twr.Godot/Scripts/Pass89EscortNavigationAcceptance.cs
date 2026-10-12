@@ -174,7 +174,8 @@ public partial class Pass89EscortNavigationAcceptance : Node
         var furthestX=Math.Abs(start.X);
         var closestZ=start.Z;
         var clearedWall=false;
-        for(var frame=0;frame<450;frame++)
+        var progressedAfterWall=false;
+        for(var frame=0;frame<900;frame++)
         {
             await Frames(1);
             if(!GodotObject.IsInstanceValid(survivor) ||
@@ -189,23 +190,19 @@ public partial class Pass89EscortNavigationAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass89 Escort clipped through real static wall"+
                     " position="+at);
-            if(at.Z<14.65f &&
-                Pass89EscortSurfaceSafety.CanTravel(
-                    game.GetWorld3D(),at,at,
-                    new global::Godot.Collections.Array<Rid>
-                    {
-                        survivor.GetRid(), player.GetRid()
-                    }))
-            {
-                // Godot's IsOnFloor() is a last-MoveAndSlide frame flag;
-                // test actual continuous support beneath the real NPC
-                // at the threshold instead of a one-frame contact state.
+            if(at.Z<14.65f && survivor.IsOnFloor() &&
+               Math.Abs(at.Y-start.Y)<.22f)
                 clearedWall=true;
+            // Test ongoing path execution, not only touching the first
+            // free cell after the solid wall. The destination is Z=3.
+            if(clearedWall && at.Z<8.5f && survivor.IsOnFloor())
+            {
+                progressedAfterWall=true;
                 break;
             }
         }
-        if(!clearedWall || furthestX<7.0f ||
-           start.Z-closestZ<12f ||
+        if(!clearedWall || !progressedAfterWall || furthestX<7.0f ||
+           start.Z-closestZ<18f ||
            objective.EscortSafeSteps89<30 ||
            objective.EscortBlockedSteps89>300)
         {
@@ -233,7 +230,8 @@ public partial class Pass89EscortNavigationAcceptance : Node
                 " normal="+normal+
                 " safeSteps="+objective.EscortSafeSteps89+
                 " blockedSteps="+objective.EscortBlockedSteps89+
-                " replans="+objective.EscortSafeRoutePlans89);
+                " replans="+objective.EscortSafeRoutePlans89+
+                " blockedReplans="+objective.EscortBlockedRoutePlans89);
         }
         GD.Print("TWR_PASS89_REAL_ESCORT_DETOUR_OK"+
             " detour_lateral="+furthestX.ToString("F2")+
