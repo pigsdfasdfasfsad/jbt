@@ -16,6 +16,12 @@ def test_physics_grounded_materials_are_opt_in_on_approximate_scenes_only():
     assert "Pass96GroundedMaterialLayout=layout.IsComplete(names.Length)" in objective
     assert "GlobalPosition=layout.DepositFeet!.Value;" in objective
     assert "Pass96MaterialFeet => _materialFeet96" in objective
+    assert "Pass96AuthoredMaterialAnchor=GlobalPosition;" in objective
+    old_wave=src("src/Twr.Godot/Scripts/Pass88TenMapPhysicalWaveAcceptance.cs")
+    assert "objective.Pass96AuthoredMaterialAnchor" in old_wave
+    assert "Pass87FallbackObjectiveRotation.GetIndex(" in old_wave
+    assert "expected.DistanceTo(scheduled)>.02f" in old_wave
+    assert "objective.Pass96GroundedMaterialLayout" in old_wave
     assert "Pass76InteractionSafety.CanReach(Player, nearest.GlobalPosition, 2.5f)" in objective
     assert "Pass76InteractionSafety.CanReach(Player, GlobalPosition, 3f)" in objective
 
