@@ -221,6 +221,20 @@ public partial class Pass83ManorUpperGameplayAcceptance : Node
             {
                 await Frames(1);
                 maxX=Math.Max(maxX,enemy.GlobalPosition.X);
+                if(frame%150==0)
+                {
+                    var now=nav.GetRoute(enemy.GlobalPosition,
+                        player.GlobalPosition);
+                    var towardCentre=bridge.CentreFeet-
+                        (enemy.GlobalPosition-Vector3.Up*.8f);
+                    GD.Print("TWR_PASS83_NAV_TELEMETRY stair="+name+
+                        " frame="+frame+
+                        " enemy="+enemy.GlobalPosition+
+                        " next="+(now.Length>0 ? now[0].ToString() : "NONE")+
+                        " legs="+now.Length+
+                        " safe="+nav.SafeUpperMove79(
+                            enemy.GlobalPosition,towardCentre));
+                }
                 if(enemy.IsOnFloor() &&
                     enemy.GlobalPosition.X >= bridge.RightFeet.X+.05f &&
                     Math.Abs(enemy.GlobalPosition.Y-
@@ -324,7 +338,7 @@ public partial class Pass83ManorUpperGameplayAcceptance : Node
         // both derived from the same reconstructed staircase endpoints.
         var sign=Math.Sign(stair.UpperFeet.Z-stair.LowerFeet.Z);
         var mid=stair.UpperFeet+
-            new Vector3(0,-.035f,sign*.70f);
+            new Vector3(0,0f,sign*.70f);
         return new Pass80UpperCrossing(stair.Name,mid,
             mid+Vector3.Left*3.50f,
             mid+Vector3.Right*3.50f);

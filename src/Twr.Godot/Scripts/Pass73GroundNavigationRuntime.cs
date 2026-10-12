@@ -578,7 +578,7 @@ public partial class Pass73GroundNavigationRuntime : Node3D
             // gate on every 0.75s replan after it has already reached the
             // actual walkable catwalk.
             var onBridge=Math.Abs(from.Z-mid.Z)<.72f &&
-                Math.Abs(from.X-mid.X)<3.65f &&
+                Math.Abs(from.X-mid.X)<4.45f &&
                 UpperCorridorSupported79(from,mid);
             if (onBridge)
             {

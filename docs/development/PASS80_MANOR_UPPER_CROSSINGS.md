@@ -3,7 +3,8 @@
 From Pass79, add a physical crosswalk next to each of the three verified
 reconstructed stair exits (West, East, Front). The walkable static box spans
 9.0 m across the original fallback split deck, 1.20 m along the bridge, and
-has its upper face 0.035 m below adjacent platforms, preventing a raised lip.
+has its upper face aligned with adjacent platform surfaces, preventing the
+physical capsule from catching on a lowered internal deck edge.
 This is a *new approximate* collision element, NOT recovered retail content.
 
 Previous fallback wing interior divider colliders visibly overlapped the

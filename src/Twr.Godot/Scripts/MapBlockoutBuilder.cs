@@ -224,7 +224,7 @@ public static class MapBlockoutBuilder
     {
         var sign = Math.Sign(stair.UpperFeet.Z-stair.LowerFeet.Z);
         var center = stair.UpperFeet +
-            new Vector3(0f, -.035f, sign*.70f);
+            new Vector3(0f, 0f, sign*.70f);
         return new Pass80UpperCrossing(stair.Name, center,
             center+Vector3.Left*3.50f, center+Vector3.Right*3.50f);
     }
@@ -374,12 +374,12 @@ public static class MapBlockoutBuilder
                 new Vector3(3.12f,.025f,.24f),color.Lightened(.03f));
         }
         // Pass80: a solid crosswalk JUST PAST the walkable ramp. The
-        // upper surface is 3.5cm below the side decks, avoiding a raised
-        // collision lip while connecting both reconstructed balcony halves.
+        // upper surface is exactly level with the side decks, avoiding
+        // an obstructing internal vertical seam at the balcony edge.
         // It does not pretend to replace retail Manor collision meshes.
         var crossingZ=upper.Z+zDir*.70f;
         StaticBox(root,name+"_UpperCrossing80",
-            new Vector3(center.X,upper.Y-.115f,crossingZ),
+            new Vector3(center.X,upper.Y-.08f,crossingZ),
             new Vector3(9.0f,.16f,1.20f),color.Lightened(.065f));
         return new Pass77StairLink(name,lower,upper);
     }
