@@ -46,8 +46,7 @@ def test_windows_ci_and_isolated_save_replay_previous_native_regressions():
     assert "else if(smoke96)" in session
     assert "TWR_SMOKE_PASS96_GROUNDED_MATERIALS_OK" in ci
     assert ci.index("Preflight Pass 96") < ci.index("Smoke Pass 78")
-    assert ci.index("Smoke Pass 95") < ci.index("Verify no private map scenes")
-        if "Smoke Pass 95" in ci else "Preflight Pass 95" in ci
+    assert ci.index("Preflight Pass 95") < ci.index("Verify no private map scenes")
     assert "twr-pass96-grounded-material-objectives" in ci
     assert ci.count("uses: actions/upload-artifact@v4") == ci.count(
         "if: false && success()")
