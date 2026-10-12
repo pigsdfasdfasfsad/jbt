@@ -157,8 +157,15 @@ public static class Pass68OriginalAimFormulas
         candidate=new Transform3D(candidate.Basis,
             candidate.Origin+offset);
         var settled=(candidate*renderedAimPart).Origin;
-        if(settled.Z is >-.12f or <-1.2f ||
-           Pass67SourceAimAlignment.ReticleError(candidate,
+        if(!Pass66ArmKinematics.Finite(settled))return false;
+        // The original SPAS-12 assignment can produce -1.41 metres
+        // of source-relative depth on the actual owner part markers.
+        // Preserve its exact formula separately, but clamp the *visual*
+        // camera eye relief to avoid a vanishing first-person gun.
+        var safeDepth=Math.Clamp(settled.Z,-1.2f,-.12f);
+        candidate=new Transform3D(candidate.Basis,
+            candidate.Origin+new Vector3(0f,0f,safeDepth-settled.Z));
+        if(Pass67SourceAimAlignment.ReticleError(candidate,
                 renderedAimPart)>.001f)
             return false;
         root=candidate;
