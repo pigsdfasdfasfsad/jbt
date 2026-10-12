@@ -72,10 +72,20 @@ public partial class Pass91MultimapEscortAcceptance : Node
                 "Pass91 must use actual player and fallback graph "+map);
         for(var frame=0;frame<360 && !nav.IsGraphReady;frame++)
             await Frames(1);
+        // Small blockouts (Cabin in particular) complete their Pass73
+        // graph before the player has fallen from the authored 1m spawn
+        // to the actual ground collider. Wait for real physics contact,
+        // rather than interpreting a transient airborne frame as a map
+        // with no playable floor.
+        for(var frame=0;frame<120 && !player.IsOnFloor();frame++)
+            await Frames(1);
         if(!nav.IsGraphReady || !player.IsOnFloor())
             throw new InvalidOperationException(
                 "Pass91 no usable real ground physics "+map+
-                " nodes="+nav.PointCount);
+                " nodes="+nav.PointCount+
+                " player="+player.GlobalPosition+
+                " velocity="+player.Velocity+
+                " onFloor="+player.IsOnFloor());
 
         var families=MapCatalogRuntime.Get(map).Objectives;
         var escortIndex=Array.IndexOf(families.ToArray(),"Escort");
