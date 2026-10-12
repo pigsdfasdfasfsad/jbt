@@ -2,7 +2,20 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 77 — Manor stair and balcony physical traversal
+## Latest verified branch: Pass 78 — Three Manor stair flights, physical ascent and descent
+
+[Pass 78 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass78-manor-bidirectional-stairs) ·
+[Verified Windows build and all 12 native stair movement checks](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38213401718) ·
+[Pass 78 engineering record](docs/development/PASS78_MANOR_BIDIRECTIONAL_STAIRS.md)
+
+- Fallback Manor navigation now allows physically verified **upstairs-to-downstairs infected pursuit** across each of the three reconstructed stair flights. Seven collision-floor samples and line-of-sight checks gate the downhill route; replanning can resume from the nearest downhill ramp segment rather than sending an enemy back upstairs.
+- The original 1.58m flat-ground waypoint tolerance no longer permits skipping downhill route heights on Manor. An infected cannot perform a melee attack from another floor merely because the player's horizontal coordinates are nearby. Movement remains ordinary Godot `CharacterBody3D.MoveAndSlide`, never animation-triggered teleportation.
+- **All 12 native Windows traversal tests passed** on a production reconstructed Manor `GameplayRoot`: real W-key player ascents, S-key descents, infected uphill and downhill movement on **West Wing, East Wing and Front Hall** stairs.
+- Measured player rises/drops: West **2.78m/2.69m**, East **2.78m/2.69m**, Front **2.65m/2.55m**. Actual infected rises/drops: West **2.70m/2.55m**, East **2.70m/2.39m**, Front **2.62m/2.50m**. Each occurred with solid physics support, no forced enemy movement and zero source-jump attempts.
+- **632 Python regressions passed**, Godot/.NET Windows export succeeded with **0 compiler errors**, the Pass78 native marker passed, domain-only ten-map progression remained passing, and owner-private content exclusion passed.
+- **Fidelity boundary:** No retail-original Manor stair meshes or collisions are authenticated by this test. Routes through distant upstairs rooms and between wings, other-map multi-storey navigation, authentic original assets, 15 human-played waves and final packaged user-ready Windows EXE are still unfinished.
+
+## Historical verified branch: Pass 77 — Manor stair and balcony physical traversal
 
 [Pass 77 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass77-manor-stair-traversal) ·
 [Successful Windows CI: 627 Python tests and full native Front Hall ascent](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38212138620) ·

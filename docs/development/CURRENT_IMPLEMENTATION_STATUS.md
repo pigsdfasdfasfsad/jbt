@@ -1,4 +1,4 @@
-# PASS 78 — THREE MANOR STAIR FLIGHTS AND DOWNSTAIRS INFECTED NAVIGATION (WINDOWS CI PENDING)
+# PASS 78 — VERIFIED WINDOWS BIDIRECTIONAL MANOR STAIR TRAVERSAL
 
 **Branch:** `twr-pass78-manor-bidirectional-stairs`; based on [verified Pass77 exported Windows native gameplay](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38212138620).
 
@@ -6,7 +6,11 @@ Pass78 extends the approximate fallback Manor collision and route functionality 
 
 A new exported Windows `--smoke-pass78` scenario iterates the reconstructed **FrontHallUpper, WestWingUpper, and EastWingUpper** ramps. It requires 12 distinct native acceptance markers: first-person W-key ascent, first-person S-key descent, infected body ascent to the top, and the **same infected** descending under authentic physics to the lower target for each of the three. No per-frame enemy position assignment or original asset pack is involved. The test uses isolated `user://pass78-manor-bidirectional-smoke-profile.json`, all target/player placements occur only before a traverse, and the usual owner-private asset exclusion remains required.
 
-**Verification pending:** Python suite, Godot/.NET Windows export, native physical traversal of all 3 staircases in both directions, privacy gate. Pass78 does not imply original retail geometry, fully navigable all-map interiors, 15-wave human completion or public downloadable private-asset EXE.
+**Verified exported Windows CI:** [run 38213401718](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38213401718) on source commit `936e1fb1b615acf80ffd5a33aee9915e760ccb48`. **632 Python regressions passed**, Godot/.NET Windows export compiled with **zero errors**, all twelve physical W/S player and infected up/down tests passed for West/East/Front flights, the final `TWR_SMOKE_PASS78_BIDIRECTIONAL_STAIRS_OK` marker appeared, and owner-private assets were excluded.
+
+**Measured rises/drops (metres):** West player 2.78/2.69, infected 2.70/2.55; East player 2.78/2.69, infected 2.70/2.39; Front player 2.65/2.55, infected 2.62/2.50. The same infected traversed in both directions per flight without any mid-motion teleport and without source jump attempts. All player traversal was triggered using actual W/S keyboard events.
+
+**Remaining:** These are reconstructed collision ramps rather than original Roblox Manor geometry. Room-to-room upstairs routing, stairs on other maps, manual 15-wave survival, source visual parity and a user-ready privately packaged offline .exe are not established.
 
 [Pass78 engineering record](PASS78_MANOR_BIDIRECTIONAL_STAIRS.md)
 

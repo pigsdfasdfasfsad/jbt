@@ -13,4 +13,16 @@
 
 **4. Fidelity boundary.** The recovered exact retail Manor stair meshes and true collision layout are not present in this public fallback branch. Real source map geometry remains owner-private and deliberately unmodified. The test covers only all three reconstructed stair runs under controlled navigation targets, not arbitrary upstairs routes across the complete building, 15 human-played waves, or a user-ready private-asset Windows executable.
 
-**Status:** implemented; full Python/Windows/native acceptance pending.
+## Verified Windows acceptance
+
+**Verified:** [GitHub Actions run 38213401718](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38213401718) from gameplay commit `936e1fb1b615acf80ffd5a33aee9915e760ccb48`.
+
+- **632 Python regressions passed** (one inherited XML parser FutureWarning).
+- Godot/.NET exported Windows build passed with **0 compiler errors**.
+- **West Wing:** player up 2.78m, player down 2.69m, infected up 2.70m, infected down 2.55m.
+- **East Wing:** player up 2.78m, player down 2.69m, infected up 2.70m, infected down 2.39m.
+- **Front Hall:** player up 2.65m, player down 2.55m, infected up 2.62m, infected down 2.50m.
+- All twelve markers `TWR_PASS78_PLAYER_UP_OK`, `TWR_PASS78_PLAYER_DOWN_OK`, `TWR_PASS78_INFECTED_UP_OK` and `TWR_PASS78_INFECTED_DOWN_OK` appeared with the matching three distinct stair names. The final `TWR_SMOKE_PASS78_BIDIRECTIONAL_STAIRS_OK` marker and owner-private asset exclusion also passed.
+- Existing scripted ten-map `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` is **domain simulation**, not a full player-controlled survival run.
+
+**Scope:** Production reconstructed Manor actors and genuine Godot physics, but the geometry is still APPROXIMATE. No proof of exact original retail stair positions/parts, arbitrary upstairs route planning, other-map stair traversal or a distributable complete offline EXE is asserted.
