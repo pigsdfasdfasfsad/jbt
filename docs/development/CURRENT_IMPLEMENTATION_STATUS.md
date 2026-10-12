@@ -1,3 +1,17 @@
+# PASS 74 — SPECIAL INFECTED ATTACK SAFETY (NATIVE WINDOWS VALIDATION PENDING)
+
+**Branch:** `twr-pass74-special-infected-safety` based on verified [Pass73 CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38202837479).
+
+Pass74 fixes two concrete gameplay problems: **Burster's instant detonation could damage through solid walls** (while the lingering spore cloud already used occlusion); **Bolter leaps lacked target-floor support validation** and used a fixed 0.55-second horizontal flight time even at very close ranges, risking overshoot. Both now use physical collision/landing checks. Bolter maintains source-described fixed-direction jump and recovery, while its exact numerical velocities/cooldowns remain labelled reconstruction approximations.
+
+The Windows-native smoke uses real Godot gameplay roots on Ranch and Manor, a clearly synthetic raised collision lane, the genuine wave-spawned infected actor, source-type smoke/melee/fire multipliers for all eight variants, Bolter launch/contact behavior, Burster wall-occluded and unblocked damage, gas mask immunity, Bloater line-of-sight gate, and solid-world spore projectile collision. Native test actions use an isolated profile and never publish owner-original packs.
+
+**Pending:** Windows compile, Python contracts, native acceptance markers and private-asset exclusion. This is **not** proof of exact original creature models/behavior, ten map fidelity, or a human 15-wave survival run.
+
+[Pass74 engineering record](PASS74_SPECIAL_INFECTED_SAFETY.md)
+
+---
+
 # PASS 73 — VERIFIED NATIVE GROUND-ROUTE FALLBACK + FULL-MAP INTERACTIONS
 
 **Branch:** `twr-pass73-fullmap-ground-navigation`. Builds on [verified Pass72 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201737219), which passed 596 Python regressions and ten actual Godot map scene/Wave 2 tests.
