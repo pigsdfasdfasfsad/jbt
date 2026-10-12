@@ -63,7 +63,10 @@ public static class Pass94ManorEscortRoute
 
         // Once real physical descent is complete, hand off to the unchanged
         // Escort-only ground graph. Do not reuse the thinner infected graph.
-        if (fromFeet.Y<=2.20f)
+        // A survivor halfway down the 2.96m sloped ramp must keep
+        // descending. Handing it to Pass73's strictly ground-floor graph
+        // at Y=2.20m wrongly anchors it to a vertex 2m below its feet.
+        if (fromFeet.Y<=.55f && goalFeet.Y<=2.2f)
             return nav.GetVerifiedEscortRoute89(fromFeet,goalFeet,survivorRid);
 
         var exclude=new global::Godot.Collections.Array<Rid>
