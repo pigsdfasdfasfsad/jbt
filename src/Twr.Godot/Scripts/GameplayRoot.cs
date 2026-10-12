@@ -68,6 +68,9 @@ public partial class GameplayRoot : Node3D
     public int ActiveInfectedCount => _infected.Count(agent => GodotObject.IsInstanceValid(agent));
     public int VerifiedFallbackSpawns85 { get; private set; }
     public int RejectedFallbackSpawns85 { get; private set; }
+    public int VerifiedFallbackNaturalPickups86 { get; private set; }
+    public int RejectedFallbackNaturalPickups86 { get; private set; }
+    private bool _isFallbackScene86;
     public int ActivePickupCount => _pickups.Count(actor => GodotObject.IsInstanceValid(actor));
     public string WaveStage => StageName();
     public bool Pass73FallbackNavReady => _groundNavigation73?.IsGraphReady == true;
@@ -190,6 +193,7 @@ public partial class GameplayRoot : Node3D
         // held Roblox place snapshots; retain blockouts as pack-free fallbacks.
         var originalWorldAvailable =
             LaboratorySourceLoader.TryBuild(this, MapName, out var recovered);
+        _isFallbackScene86 = !originalWorldAvailable;
         _mapLayout = originalWorldAvailable
             ? recovered
             : MapBlockoutBuilder.Build(this, _mapDefinition);
@@ -706,25 +710,41 @@ public partial class GameplayRoot : Node3D
         // The recovered Laboratory pack supplies distinct original item and
         // fortification marker pools. Keep only a small opening selection,
         // without repeating a marker in the same spawn batch.
-        foreach (var position in ChooseUniqueMarkers(_mapLayout.PickupPoints, 4))
-            SpawnNaturalAt(position, "Item");
+        // Pass86 scans shuffled candidate anchors until four ACTUALLY
+        // world-supported items are placed, rather than permanently
+        // losing loot when one of the first four markers is inside walls.
+        var placedItems86=0;
+        foreach (var position in ChooseUniqueMarkers(
+                     _mapLayout.PickupPoints, _mapLayout.PickupPoints.Count))
+        {
+            if (SpawnNaturalAt(position,"Item") && ++placedItems86>=4)
+                break;
+        }
 
         if (_mapLayout.FortificationPoints.Count > 0)
         {
-            foreach (var position in ChooseUniqueMarkers(_mapLayout.FortificationPoints, 2))
-                SpawnNaturalAt(position, "Fortification");
+            var placedForts86=0;
+            foreach (var position in ChooseUniqueMarkers(
+                         _mapLayout.FortificationPoints, _mapLayout.FortificationPoints.Count))
+            {
+                if (SpawnNaturalAt(position,"Fortification") &&
+                    ++placedForts86>=2) break;
+            }
         }
         else
         {
             // Legacy blockout maps have no recovered fortification markers.
             // Keep their existing approximate positions until proper source
             // location data is obtained for each individual map.
-            var fortCount=Math.Min(2,_mapLayout.PickupPoints.Count);
-            for(var i=0;i<fortCount;i++)
+            var fortCount=0;
+            var attempted=0;
+            foreach(var basePoint in ChooseUniqueMarkers(
+                        _mapLayout.PickupPoints,_mapLayout.PickupPoints.Count))
             {
-                var basePoint=_mapLayout.PickupPoints[i];
+                var i=attempted++;
                 var offset=new Vector3(i%2==0 ? 1.8f : -1.8f,0,(i%3-1)*1.2f);
-                SpawnNaturalAt(basePoint+offset,"Fortification");
+                if(SpawnNaturalAt(basePoint+offset,"Fortification") &&
+                   ++fortCount>=2) break;
             }
         }
     }
@@ -740,17 +760,30 @@ public partial class GameplayRoot : Node3D
         }
     }
 
-    private void SpawnNaturalAt(Vector3 position,string group)
+    private bool SpawnNaturalAt(Vector3 position,string group)
     {
+        if (_isFallbackScene86)
+        {
+            var grounded=Pass86NaturalLootPlacement.TryGround(
+                GetWorld3D(),position);
+            if (!grounded.HasValue)
+            {
+                RejectedFallbackNaturalPickups86++;
+                return false;
+            }
+            position=grounded.Value;
+            VerifiedFallbackNaturalPickups86++;
+        }
         if(group=="Fortification")
         {
             var forts=new[]{"Barbed Wire","Clap Bomb","Jack"};
             SpawnPickup(forts[_rng.RandiRange(0,forts.Length-1)],position,1,true,group);
-            return;
+            return true;
         }
 
         var items=new[]{"Bandages","Ammo","Body Armor","Medkit","Energy Drink","Gas Mask","Frag","Molotov","Nerve Gas"};
         SpawnPickup(items[_rng.RandiRange(0,items.Length-1)],position,1,true,group);
+        return true;
     }
 
     private void TickNaturalRespawns(double delta)
