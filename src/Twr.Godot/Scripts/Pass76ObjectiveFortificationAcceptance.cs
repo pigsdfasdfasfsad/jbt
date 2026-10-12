@@ -223,14 +223,16 @@ public partial class Pass76ObjectiveFortificationAcceptance : Node
         if (Runtime.Player.Inventory.GetValueOrDefault("Frag") != initialFrag + 1 ||
             Runtime.Player.Inventory.GetValueOrDefault("Molotov") != initialMolotov ||
             Runtime.Player.Inventory.GetValueOrDefault("Jack") != initialJack ||
-            !near.IsQueuedForDeletion())
+            (GodotObject.IsInstanceValid(near) &&
+                !near.IsQueuedForDeletion()))
             throw new InvalidOperationException(
                 "Pass76 single E press collected multiple overlapping pickups");
         await PressE();
         if (Runtime.Player.Inventory.GetValueOrDefault("Molotov") !=
                 initialMolotov + 1 ||
             Runtime.Player.Inventory.GetValueOrDefault("Jack") != initialJack ||
-            !second.IsQueuedForDeletion())
+            (GodotObject.IsInstanceValid(second) &&
+                !second.IsQueuedForDeletion()))
             throw new InvalidOperationException(
                 "Pass76 next E press did not select second nearest pickup");
         await PressE();
@@ -350,7 +352,8 @@ public partial class Pass76ObjectiveFortificationAcceptance : Node
             new Vector3(0, .80f, -1.70f);
         await Frames(6);
         if (Math.Abs(enemy.Health - startingEnemyHp) > .001f ||
-            bomb.IsQueuedForDeletion())
+            (GodotObject.IsInstanceValid(bomb) &&
+                bomb.IsQueuedForDeletion()))
             throw new InvalidOperationException(
                 "Pass76 Clap Bomb triggered or damaged through solid wall");
 
