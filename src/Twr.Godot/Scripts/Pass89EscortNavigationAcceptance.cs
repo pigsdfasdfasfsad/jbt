@@ -208,12 +208,33 @@ public partial class Pass89EscortNavigationAcceptance : Node
            start.Z-closestZ<12f ||
            objective.EscortSafeSteps89<30 ||
            objective.EscortBlockedSteps89>300)
+        {
+            var at=survivor.GlobalPosition;
+            var ray=PhysicsRayQueryParameters3D.Create(
+                at+Vector3.Up*.68f,at+Vector3.Down*6f);
+            ray.CollisionMask=1u;
+            ray.Exclude=new global::Godot.Collections.Array<Rid>
+            {
+                survivor.GetRid(),player.GetRid()
+            };
+            var ground=game.GetWorld3D().DirectSpaceState.IntersectRay(ray);
+            var floor=ground.Count==0
+                ? "missing"
+                : ((Vector3)ground["position"]).ToString();
+            var normal=ground.Count==0
+                ? "missing"
+                : ((Vector3)ground["normal"]).ToString();
             throw new InvalidOperationException(
                 "Pass89 Escort did not physically traverse wall detour"+
                 " maxX="+furthestX+" minZ="+closestZ+
+                " current="+at+
+                " groundedFlag="+survivor.IsOnFloor()+
+                " floor="+floor+
+                " normal="+normal+
                 " safeSteps="+objective.EscortSafeSteps89+
                 " blockedSteps="+objective.EscortBlockedSteps89+
                 " replans="+objective.EscortSafeRoutePlans89);
+        }
         GD.Print("TWR_PASS89_REAL_ESCORT_DETOUR_OK"+
             " detour_lateral="+furthestX.ToString("F2")+
             " progress_z="+(start.Z-closestZ).ToString("F2")+
