@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass67",StringComparer.Ordinal))
+        {
+            RunPass67Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass66",StringComparer.Ordinal))
         {
             RunPass66Smoke();
@@ -560,6 +565,132 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass67Smoke()
+    {
+        if(!Pass67SourceAimAlignment.TryGet("Glock 17",out var glockAim) ||
+           glockAim is null ||
+           Math.Abs(glockAim.Aim.Duration-.5f)>.00001f ||
+           Math.Abs(glockAim.UnAim.Duration-.25f)>.00001f ||
+           glockAim.Aim.Ease!=Pass67SourceAimAlignment.EaseKind.SlowDown2 ||
+           glockAim.UnAim.Ease!=Pass67SourceAimAlignment.EaseKind.SlowDown ||
+           !Pass67SourceAimAlignment.TryGet("M4A1",out var m4Aim) ||
+           m4Aim is null ||
+           !Pass67SourceAimAlignment.TryGet("Mossberg 500",out var pumpAim) ||
+           pumpAim is null ||
+           !Pass67SourceAimAlignment.TryGet("P90",out var p90Aim) ||
+           p90Aim is null ||
+           Math.Abs(glockAim.SourceCameraAimOffset.X-.07f)>.0001f ||
+           Math.Abs(glockAim.SourceCameraAimOffset.Y-.121244f)>.001f)
+            throw new InvalidOperationException(
+                "Pass67 original Aim/UnAim source timings or inert camera pose missing");
+        if(Math.Abs(Pass67SourceAimAlignment.Eased(.5f,
+                Pass67SourceAimAlignment.EaseKind.SlowDown2)-.875f)>.0001f ||
+           Math.Abs(Pass67SourceAimAlignment.Eased(.5f,
+                Pass67SourceAimAlignment.EaseKind.SlowDown)-.75f)>.0001f ||
+           Pass67SourceAimAlignment.Eased(float.NaN,
+                Pass67SourceAimAlignment.EaseKind.SlowDown)!=0f ||
+           Pass67SourceAimAlignment.TryAimRoot(
+                new Transform3D(Basis.Identity,
+                    new Vector3(float.NaN,0f,0f)),out _) ||
+           Pass67SourceAimAlignment.TryAimRoot(
+                new Transform3D(Basis.Identity,
+                    new Vector3(10f,0f,0f)),out _))
+            throw new InvalidOperationException(
+                "Pass67 easing, NaN or impossible sight offset guard failed");
+
+        if(OriginalWeaponSourceRuntime.OwnerSourcePackVerified ||
+           Pass62SourceWeaponHierarchy.OwnerHierarchyVerified)
+            throw new InvalidOperationException(
+                "Pass67 exported smoke must not impersonate original owner-only packs");
+        if(!OriginalWeaponSourceRuntime.TryGetSourceSightLocal(
+                "Glock 17",out var sourceSight) ||
+           !Pass67SourceAimAlignment.TryAimRoot(
+                sourceSight,out var sourceRoot) ||
+           Pass67SourceAimAlignment.ReticleError(
+                sourceRoot,sourceSight)>.0002f ||
+           Math.Abs((sourceRoot*sourceSight).Origin.Z+
+                Pass67SourceAimAlignment.SourceSightCameraDepth)>.0002f)
+            throw new InvalidOperationException(
+                "Pass67 invisible original-style AimPart CFrame did not center to camera");
+        var gun=new WeaponViewModelRuntime{Name="Pass67Glock"};
+        AddChild(gun);
+        gun.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        if(!gun.UsingOriginalToolAssembly ||
+           !gun.SourceAimPartAvailable ||
+           gun.SourceAimGeometryOwnerVerified ||
+           !gun.TryGetSourceAimRoot(out var aimRoot) ||
+           aimRoot.Origin.DistanceTo(sourceRoot.Origin)>.0001f ||
+           !gun.SourceArmRigAvailable)
+            throw new InvalidOperationException(
+                "Pass67 source sight did not bind to existing source weapon and arm rig");
+        var hip=gun.Transform;
+        var arm=gun.GetNodeOrNull<Node3D>("ArmRig66");
+        var shoulder=arm?.GetNodeOrNull<MeshInstance3D>("LeftShoulder66");
+        if(arm is null || shoulder is null)
+            throw new InvalidOperationException(
+                "Pass67 camera shoulder geometry missing");
+        gun.Transform=aimRoot;
+        gun._Process(.016f);
+        var shoulderCamera=arm.GlobalTransform*shoulder.Position;
+        if(shoulderCamera.DistanceTo(
+                Pass66ArmKinematics.Shoulder(true))>.0002f ||
+           gun.SourceAimReticleLateralError>.0002f)
+            throw new InvalidOperationException(
+                "Pass67 ADS sight center displaced camera-fixed shoulder");
+        var half=Pass60WeaponPoseMath.Interpolate(
+            hip,aimRoot,Pass67SourceAimAlignment.Eased(
+                .5f,glockAim.Aim.Ease));
+        if(Pass67SourceAimAlignment.ReticleError(
+                half,sourceSight)>=
+           Pass67SourceAimAlignment.ReticleError(
+                hip,sourceSight))
+            throw new InvalidOperationException(
+                "Pass67 source ease did not move sight closer to camera center");
+        gun.Transform=hip;
+        gun._Process(.016f);
+        if(arm.GlobalTransform.Origin.Length()>.0002f ||
+           gun.SourceAimReticleLateralError<0f)
+            throw new InvalidOperationException(
+                "Pass67 hip-rest sight/shoulder were not restored");
+
+        var shotgun=new WeaponViewModelRuntime{Name="Pass67Mossberg"};
+        AddChild(shotgun);
+        shotgun.SetWeapon(RuntimeWeaponCatalog.Get("Mossberg 500"));
+        if(!shotgun.SourceAimPartAvailable ||
+           !shotgun.TryGetSourceAimRoot(out var shotgunAim))
+            throw new InvalidOperationException(
+                "Pass67 authored shotgun sight marker not installed");
+        shotgun.Transform=shotgunAim;
+        shotgun._Process(.016f);
+        if(shotgun.SourceAimReticleLateralError>.0002f)
+            throw new InvalidOperationException(
+                "Pass67 longer original shotgun AimPart does not center");
+
+        var unsupported=new WeaponViewModelRuntime{Name="Pass67Mosin"};
+        AddChild(unsupported);
+        unsupported.SetWeapon(RuntimeWeaponCatalog.Get("Mosin Nagant"));
+        if(unsupported.SourceAimPartAvailable ||
+           unsupported.TryGetSourceAimRoot(out _) ||
+           unsupported.SourceAimReticleLateralError!=-1f)
+            throw new InvalidOperationException(
+                "Pass67 missing synthetic sight should retain prior approximate ADS fallback");
+
+        GD.Print("TWR_SMOKE_PASS67_SOURCE_SIGHT_OK "+
+            "original_glock_aim_duration=.5 original_glock_unaim_duration=.25 "+
+            "source_slowdown2_visual_easing=true "+
+            "owner_style_invisible_aimpart_consumed=true "+
+            "source_pistol_and_shotgun_sight_centered=true "+
+            "camera_axis_target_depth=.43m "+
+            "camera_fixed_shoulders_during_ads=true "+
+            "continuous_aim_ease_centers_sights=true "+
+            "unsupported_source_sight_uses_fallback=true "+
+            "no_dynamic_luau_aimcf_evaluation=true "+
+            "source_sight_not_original_scope_mesh=true "+
+            "shooting_recoil_and_fov_authority_unchanged=true "+
+            "owner_private_pack_upload_disabled=true");
         GetTree().Quit(0);
     }
 
