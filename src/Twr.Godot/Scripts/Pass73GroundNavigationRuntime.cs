@@ -337,6 +337,73 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         return path;
     }
 
+
+    /// <summary>
+    /// Pass89 route for the feet-origin Escort CharacterBody3D. Unlike
+    /// zombie GetRoute, this ALWAYS returns an explicit destination when
+    /// the direct corridor is physically supported; [] means stop rather
+    /// than blindly steering through solid walls or an unsupported void.
+    /// The ground graph is reused but its edges are re-audited against
+    /// live Godot collision before each escort plan is accepted.
+    /// </summary>
+    public Vector3[] GetVerifiedEscortRoute89(
+        Vector3 escortFeet, Vector3 destinationFeet, Rid escortRid)
+    {
+        if (!IsGraphReady || !_connected ||
+            !IsFinite(escortFeet) || !IsFinite(destinationFeet))
+            return [];
+        var exclude = new global::Godot.Collections.Array<Rid>();
+        foreach (var rid in _exclude) exclude.Add(rid);
+        if (escortRid.IsValid) exclude.Add(escortRid);
+        var world = GetWorld3D();
+
+        if (Pass89EscortSurfaceSafety.CanTravel(
+                world,escortFeet,destinationFeet,exclude))
+            return [destinationFeet];
+
+        // Fallback Pass73 covers ground-level surfaces; never anchor a
+        // balcony escort to a downstairs vertex and let it fall.
+        if (escortFeet.Y > 2.2f || destinationFeet.Y > 2.2f)
+            return [];
+        var fromId=_graph.GetClosestPoint(escortFeet);
+        var toId=_graph.GetClosestPoint(destinationFeet);
+        if (fromId < 0 || toId < 0 || fromId == toId)
+            return [];
+        var fromAnchor=_graph.GetPointPosition(fromId);
+        var toAnchor=_graph.GetPointPosition(toId);
+        if (!EscortAnchorMatches89(escortFeet,fromAnchor) ||
+            !EscortAnchorMatches89(destinationFeet,toAnchor))
+            return [];
+
+        var path=_graph.GetPointPath(fromId,toId);
+        if (path.Length < 2 || path.Length > 160) return [];
+        var route=new List<Vector3>(path.Length+1);
+        var last=escortFeet;
+        foreach(var waypoint in path)
+        {
+            // Live world rechecks reject synthetic walls/fortifications
+            // introduced after Pass73 sampled its original graph.
+            if(!Pass89EscortSurfaceSafety.CanTravel(
+                    world,last,waypoint,exclude))
+                return [];
+            route.Add(waypoint);
+            last=waypoint;
+        }
+        if(!Pass89EscortSurfaceSafety.CanTravel(
+                world,last,destinationFeet,exclude))
+            return [];
+        route.Add(destinationFeet);
+        return route.ToArray();
+    }
+
+    private static bool EscortAnchorMatches89(Vector3 feet,Vector3 anchor)
+    {
+        var dx=feet.X-anchor.X;
+        var dz=feet.Z-anchor.Z;
+        return dx*dx+dz*dz <= 36f &&
+            Math.Abs(feet.Y-anchor.Y) <= .90f;
+    }
+
     private bool TryGetVerifiedManorAscent77(
         Vector3 infectedCentre, Vector3 playerCentre, out Vector3[] result)
     {

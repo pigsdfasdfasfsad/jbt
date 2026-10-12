@@ -639,6 +639,14 @@ public partial class GameplayRoot : Node3D
                 // Manor uses the tighter same-floor security ring.
                 RequireSameFloorSecure84 = MapName == "Manor" &&
                     _mapLayout.ApproximateStairs77.Count == 3,
+                // Pass89: real collision-grounded escort navigation is
+                // available only where Pass73 actually sampled fallback
+                // terrain. Expressway, original owner packs and elevated
+                // Manor still retain their existing actor behavior.
+                UseFallbackEscortNavigation89 =
+                    _groundNavigation73 is not null &&
+                    (MapName != "Manor" || ObjectivePosition(i).Y < 2.3f),
+                EscortGroundNavigator89 = _groundNavigation73,
                 Player = _player,
                 Runtime = Runtime,
                 Position = ObjectivePosition(i)

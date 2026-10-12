@@ -7,6 +7,17 @@ public partial class ObjectiveRuntime : Node3D
     public string ObjectiveId { get; set; } = "";
     public string Family { get; set; } = "Radio";
     public bool RequireSameFloorSecure84 { get; set; }
+    public bool UseFallbackEscortNavigation89 { get; set; }
+    public Pass73GroundNavigationRuntime? EscortGroundNavigator89 { get; set; }
+    public int EscortSafeRoutePlans89 { get; private set; }
+    public int EscortBlockedRoutePlans89 { get; private set; }
+    public int EscortSafeSteps89 { get; private set; }
+    public int EscortBlockedSteps89 { get; private set; }
+    public bool EscortDestinationAdjusted89 { get; private set; }
+    private Vector3[] _escortRoute89 = [];
+    private int _escortRouteIndex89;
+    private double _escortRepathSeconds89;
+    private bool _escortDestinationResolved89;
     public FirstPersonPlayer? Player { get; set; }
     public LocalSessionNode? Runtime { get; set; }
     public Action<ObjectiveRuntime>? Completed { get; set; }
@@ -74,6 +85,13 @@ public partial class ObjectiveRuntime : Node3D
             _escort is null || _escortDestination is null)
             return;
 
+        if (UseFallbackEscortNavigation89)
+        {
+            TickFallbackEscort89(delta);
+            PublishStatus();
+            return;
+        }
+
         var remaining = _escortDestination.GlobalPosition - _escort.GlobalPosition;
         remaining.Y = 0;
         if (remaining.Length() <= 1.5f)
@@ -96,6 +114,150 @@ public partial class ObjectiveRuntime : Node3D
         }
 
         PublishStatus();
+    }
+
+
+    /// <summary>
+    /// Pass89: same production Escort survivor body, no scripted motion or
+    /// teleports. The fallback-only Pass73 graph supplies collision-checked
+    /// waypoints. Every short physical step is rechecked for floor support,
+    /// so a stale or disconnected graph causes a safe stop, not a wall clip.
+    /// </summary>
+    private void TickFallbackEscort89(double delta)
+    {
+        if (_escort is null || _escortDestination is null || Player is null)
+            return;
+        var nav=EscortGroundNavigator89;
+        if (nav is null || !GodotObject.IsInstanceValid(nav) ||
+            !nav.IsGraphReady)
+        {
+            StopEscortHorizontal89(delta);
+            return;
+        }
+
+        var actor=_escort;
+        var from=actor.GlobalPosition;
+        var target=_escortDestination.GlobalPosition;
+        if (!_escortDestinationResolved89)
+        {
+            // Reject impossible fixed -24Z locations on approximate maps.
+            // Keep the original point whenever it IS safely reachable.
+            var options=new[]
+            {
+                target,
+                from+new Vector3(-12,0,-20),
+                from+new Vector3(12,0,-20),
+                from+new Vector3(-20,0,0),
+                from+new Vector3(20,0,0),
+                from+new Vector3(0,0,20),
+                from+new Vector3(0,0,-16),
+                from+new Vector3(-12,0,-12),
+                from+new Vector3(12,0,-12)
+            };
+            foreach(var option in options)
+            {
+                var candidate=nav.GetVerifiedEscortRoute89(
+                    from,option,actor.GetRid());
+                if(candidate.Length == 0) continue;
+                _escortDestination.GlobalPosition=option;
+                _escortDestinationResolved89=true;
+                EscortDestinationAdjusted89 = option!=target;
+                _escortStartDistance=from.DistanceTo(option);
+                _escortRoute89=candidate;
+                _escortRouteIndex89=0;
+                _escortRepathSeconds89=.8;
+                EscortSafeRoutePlans89++;
+                break;
+            }
+            if (!_escortDestinationResolved89)
+            {
+                EscortBlockedRoutePlans89++;
+                StopEscortHorizontal89(delta);
+                return;
+            }
+        }
+
+        target=_escortDestination.GlobalPosition;
+        var toGoal=target-from;
+        toGoal.Y=0;
+        if (toGoal.Length() <= 1.5f)
+        {
+            StopEscortHorizontal89(delta);
+            Complete();
+            return;
+        }
+
+        if (Player.GlobalPosition.DistanceTo(from)>EscortProximity)
+        {
+            StopEscortHorizontal89(delta);
+            return;
+        }
+
+        _escortRepathSeconds89-=delta;
+        if (_escortRepathSeconds89 <= 0 ||
+            _escortRouteIndex89 >= _escortRoute89.Length)
+        {
+            _escortRoute89=nav.GetVerifiedEscortRoute89(
+                from,target,actor.GetRid());
+            _escortRouteIndex89=0;
+            _escortRepathSeconds89=.80;
+            if (_escortRoute89.Length == 0)
+            {
+                EscortBlockedRoutePlans89++;
+                StopEscortHorizontal89(delta);
+                return;
+            }
+            EscortSafeRoutePlans89++;
+        }
+
+        var desired=Vector3.Zero;
+        while(_escortRouteIndex89 < _escortRoute89.Length)
+        {
+            desired=_escortRoute89[_escortRouteIndex89]-from;
+            desired.Y=0;
+            if(desired.LengthSquared() > .60f*.60f) break;
+            _escortRouteIndex89++;
+        }
+        if(_escortRouteIndex89 >= _escortRoute89.Length)
+        {
+            StopEscortHorizontal89(delta);
+            return;
+        }
+
+        var direction=desired.Normalized();
+        var exclude=new global::Godot.Collections.Array<Rid>
+        {
+            actor.GetRid(),Player.GetRid()
+        };
+        if (!Pass89EscortSurfaceSafety.CanTravel(
+                GetWorld3D(),from,from+direction*.55f,exclude))
+        {
+            EscortBlockedSteps89++;
+            _escortRepathSeconds89=0; // next frame re-audits world graph
+            StopEscortHorizontal89(delta);
+            return;
+        }
+
+        EscortSafeSteps89++;
+        var velocity=actor.Velocity;
+        velocity.X=direction.X*_escortSpeed;
+        velocity.Z=direction.Z*_escortSpeed;
+        velocity.Y=actor.IsOnFloor()
+            ? 0f : velocity.Y-20f*(float)delta;
+        actor.Velocity=velocity;
+        actor.MoveAndSlide();
+    }
+
+    private void StopEscortHorizontal89(double delta)
+    {
+        if (_escort is null) return;
+        var velocity=_escort.Velocity;
+        velocity.X=0;
+        velocity.Z=0;
+        velocity.Y=_escort.IsOnFloor()
+            ? 0f : velocity.Y-20f*(float)delta;
+        _escort.Velocity=velocity;
+        _escort.MoveAndSlide();
     }
 
     private void BuildObjective()
