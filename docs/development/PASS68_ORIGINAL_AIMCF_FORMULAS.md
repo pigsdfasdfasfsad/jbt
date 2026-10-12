@@ -131,8 +131,38 @@ packaged Windows EXE.
 
 The game is still **not** a complete 1:1 copy.
 
-## Acceptance status
+## Verified exported Windows checkpoint — October 11, 2026
 
-Implementation committed. Native Pass68 remains **unverified**
-until its full CI run, including new Windows smoke and privacy
-gate, completes successfully.
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38192674647
+
+**Verified code revision:** `c70de30324508ddc29d09224bea94ea315e565dc`.
+
+- **576 Python regressions passed**, with one inherited XML
+  FutureWarning. Godot/.NET Windows export succeeded with
+  **0 errors** and one inherited `CS0108` warning.
+- Exported Windows `TWR_SMOKE_PASS68_ORIGINAL_AIMCF_OK`
+  verified all **73** normalized original source formula
+  classifications, the inverse-sight vs inside/outside source
+  matrix orders using noncommuting rotations, SPAS-12 **-0.6**
+  inverted literal multiplication semantics, MP7 **+0.45**
+  source sight offset, Winchester **-0.2** and Flamethrower
+  literal formula. Original formula results are available to
+  test code independently of the bounded Godot visual pose.
+- Five completely **synthetic** owner-shaped gun models
+  supplied Glock 17, Mossberg 500, MP7, SPAS-12 and Winchester
+  AimPart/primary Handle markers. The native runtime validated
+  their source formulas, sight centering, SPAS-12 **visual eye
+  relief clamp** and MP7 visually distinct sight offset.
+- Previous Pass59–67 exported Windows smokes and
+  `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed. The latter
+  is still **scripted domain progression**, not a series of
+  player-controlled end-to-end survival playthroughs.
+- Synthetic owner-style packs were removed before the
+  final owner-private asset exclusion check, which passed.
+  Public CI executable uploads remain disabled.
+
+The **original AimCF algebra has been reconstructed from inert
+source evidence**. Precise *screen-rendered original ADS positions*
+remain unverified without original player-camera attachment and
+avatar Motor6D data. This is not a finished 1:1 remake or a
+downloadable privately packaged game.
