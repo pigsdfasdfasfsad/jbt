@@ -14,6 +14,10 @@ public partial class ObjectiveRuntime : Node3D
     // onto player-sized supported floors with line-of-sight to the depot.
     public bool UseFallbackMaterialGrounding96 { get; set; }
     public bool Pass96GroundedMaterialLayout { get; private set; }
+    // Preserve the exact Pass87 scheduled source-neutral marker before any
+    // justified floor adjustment, so older objective rotation tests remain
+    // independently checkable rather than silently changing the schedule.
+    public Vector3 Pass96AuthoredMaterialAnchor { get; private set; }
     public int Pass96RejectedMaterialCandidates { get; private set; }
     public int Pass96OverlappingMaterialFallbacks { get; private set; }
     public IReadOnlyList<Vector3> Pass96MaterialFeet => _materialFeet96;
@@ -487,6 +491,7 @@ public partial class ObjectiveRuntime : Node3D
         Vector3[]? supportedFeet=null;
         if(UseFallbackMaterialGrounding96 && Player is not null)
         {
+            Pass96AuthoredMaterialAnchor=GlobalPosition;
             var layout=Pass96GroundedMaterials.TryPlan(
                 GetWorld3D(),GlobalPosition,Player.GetRid(),names.Length);
             Pass96RejectedMaterialCandidates=layout.RejectedCandidates;
