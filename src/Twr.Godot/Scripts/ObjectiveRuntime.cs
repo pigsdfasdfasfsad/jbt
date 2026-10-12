@@ -46,7 +46,7 @@ public partial class ObjectiveRuntime : Node3D
 
     public override void _Process(double delta)
     {
-        if (_completed || Player is null)
+        if (_completed || Player is null || Runtime?.Player?.IsAlive != true)
             return;
 
         var interactDown = Input.IsKeyPressed(Key.E);
@@ -68,7 +68,9 @@ public partial class ObjectiveRuntime : Node3D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_completed || Family != "Escort" || Player is null || _escort is null || _escortDestination is null)
+        if (_completed || Family != "Escort" || Player is null ||
+            Runtime?.Player?.IsAlive != true ||
+            _escort is null || _escortDestination is null)
             return;
 
         var remaining = _escortDestination.GlobalPosition - _escort.GlobalPosition;
@@ -279,7 +281,7 @@ public partial class ObjectiveRuntime : Node3D
 
     private void Complete()
     {
-        if (_completed)
+        if (_completed || Runtime?.Player?.IsAlive != true)
             return;
 
         _completed = true;

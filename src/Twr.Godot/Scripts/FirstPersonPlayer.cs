@@ -45,6 +45,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private readonly RandomNumberGenerator _rng = new();
     private float _pitch;
     private bool _jumpRequested;
+    // Pass73: a short intentional landing buffer, not indefinite queued
+    // auto-jumping after pressing Space while airborne.
+    private const double JumpBufferSeconds73 = .14;
+    private double _jumpRequestRemaining73;
     private double _actionCooldown;
     private double _reloadTimer;
     private double _equipTimer;
@@ -134,6 +138,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
             _reloadTimer = 0;
             _reloadWeapon = null;
             _jumpRequested = false;
+            _jumpRequestRemaining73 = 0;
             ResetSourceScope69();
             Velocity = new Vector3(0, Velocity.Y, 0);
             MoveAndSlide();
@@ -158,6 +163,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
         }
 
         TickAdrenaline(delta);
+        _jumpRequestRemaining73 = Math.Max(0, _jumpRequestRemaining73 - delta);
+        if (_jumpRequestRemaining73 <= 0) _jumpRequested = false;
 
         var x = (Input.IsKeyPressed(Key.D) ? 1f : 0f) - (Input.IsKeyPressed(Key.A) ? 1f : 0f);
         var z = (Input.IsKeyPressed(Key.S) ? 1f : 0f) - (Input.IsKeyPressed(Key.W) ? 1f : 0f);
@@ -182,6 +189,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         {
             velocity.Y = JumpVelocity;
             _jumpRequested = false;
+            _jumpRequestRemaining73 = 0;
         }
 
         Velocity = velocity;
@@ -218,7 +226,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         if (@event is InputEventKey key && key.Pressed && !key.Echo)
         {
-            if (key.Keycode == Key.Space) _jumpRequested = true;
+            if (key.Keycode == Key.Space)
+            {
+                _jumpRequested = true;
+                _jumpRequestRemaining73 = JumpBufferSeconds73;
+            }
             else if (key.Keycode == Key.R) BeginReload();
             else if (key.Keycode == Key.Key1) Equip(_primaryWeapon);
             else if (key.Keycode == Key.Key2) Equip(_secondaryWeapon);

@@ -13,6 +13,7 @@ public partial class GameplayRoot : Node3D
 
     private GameplayHud _hud = null!;
     private Pass25SourceNavigationRuntime? _sourceNavigator;
+    private Pass73GroundNavigationRuntime? _groundNavigation73;
     private Pass34ClientWallsRuntime? _originalClientWalls;
     private Pass35InfectedWallsRuntime? _originalInfectedWalls;
     private Pass36SourceFragmentsRuntime? _sourceFragments;
@@ -67,6 +68,9 @@ public partial class GameplayRoot : Node3D
     public int ActiveInfectedCount => _infected.Count(agent => GodotObject.IsInstanceValid(agent));
     public int ActivePickupCount => _pickups.Count(actor => GodotObject.IsInstanceValid(actor));
     public string WaveStage => StageName();
+    public bool Pass73FallbackNavReady => _groundNavigation73?.IsGraphReady == true;
+    public int Pass73FallbackNavNodes => _groundNavigation73?.PointCount ?? 0;
+    public int Pass73FallbackNavEdges => _groundNavigation73?.EdgeCount ?? 0;
     public int OriginalClientWallCount => _originalClientWalls?.WallCount ?? 0;
     public bool OriginalClientWallsEnabled => _originalClientWalls?.Enabled ?? false;
     public int OriginalInfectedWallCount => _originalInfectedWalls?.WallCount ?? 0;
@@ -173,7 +177,9 @@ public partial class GameplayRoot : Node3D
         _mapDefinition = MapCatalogRuntime.Get(MapName);
         // Prefer original loaded-map geometry from each of the ten privately
         // held Roblox place snapshots; retain blockouts as pack-free fallbacks.
-        _mapLayout = LaboratorySourceLoader.TryBuild(this, MapName, out var recovered)
+        var originalWorldAvailable =
+            LaboratorySourceLoader.TryBuild(this, MapName, out var recovered);
+        _mapLayout = originalWorldAvailable
             ? recovered
             : MapBlockoutBuilder.Build(this, _mapDefinition);
 
@@ -198,6 +204,13 @@ public partial class GameplayRoot : Node3D
         _labFloorplan = Pass39LaboratoryFloorplan.TryBuild(this, MapName);
         _sourceLighting = Pass37SourceLightingRuntime.TryBuild(this, MapName);
         _sourceNavigator = Pass25SourceNavigationRuntime.TryBuild(this, MapName);
+        // Pass73 constructs an independent PHYSICS-SAMPLED route graph only
+        // on approximate fallback scenes; never overwrite recovered original
+        // Laboratory navigation or Expressway's pre-existing road graph.
+        if (!originalWorldAvailable && _sourceNavigator is null &&
+            MapName != "Expressway")
+            _groundNavigation73 = Pass73GroundNavigationRuntime.Attach(
+                this, MapName, _mapLayout);
 
         _audio = new OfflineAudioRuntime { Name = "OfflineAudio" };
         AddChild(_audio);
@@ -886,6 +899,7 @@ public partial class GameplayRoot : Node3D
             Target = _player,
             Runtime = Runtime,
             SourceNavigator = _sourceNavigator,
+            GroundNavigator73 = _groundNavigation73,
             HighwayNavigator = GetNodeOrNull<ExpresswayNavigationRuntime>(
                 "ExpresswayReconstruction/HighwayNavigation"),
             InfectedType = definition.Name,

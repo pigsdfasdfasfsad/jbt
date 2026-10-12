@@ -8,6 +8,7 @@ public partial class InfectedAgent : CharacterBody3D
     public LocalSessionNode? Runtime { get; set; }
     public ExpresswayNavigationRuntime? HighwayNavigator { get; set; }
     public Pass25SourceNavigationRuntime? SourceNavigator { get; set; }
+    public Pass73GroundNavigationRuntime? GroundNavigator73 { get; set; }
     public string InfectedType { get; set; } = "Civilian";
     public bool SourceInfectedKitActive => _visual?.UsingSourceBlueprint == true;
     public bool SourceInfectedKitVerified =>
@@ -169,14 +170,19 @@ public partial class InfectedAgent : CharacterBody3D
                 GodotObject.IsInstanceValid(HighwayNavigator);
             var sourceReady = SourceNavigator is not null &&
                 GodotObject.IsInstanceValid(SourceNavigator);
-            if (highwayReady || sourceReady)
+            var fallbackReady = GroundNavigator73 is not null &&
+                GodotObject.IsInstanceValid(GroundNavigator73) &&
+                GroundNavigator73.IsGraphReady;
+            if (highwayReady || sourceReady || fallbackReady)
             {
                 _navigationRefresh -= delta;
                 if (_navigationRefresh <= 0)
                 {
                     _navigationRoute = highwayReady
                         ? HighwayNavigator!.GetRoute(GlobalPosition, Target.GlobalPosition)
-                        : SourceNavigator!.GetRoute(GlobalPosition, Target.GlobalPosition);
+                        : sourceReady
+                            ? SourceNavigator!.GetRoute(GlobalPosition, Target.GlobalPosition)
+                            : GroundNavigator73!.GetRoute(GlobalPosition, Target.GlobalPosition);
                     _nextNavigationPoint = 0;
                     _jumpIntoNavigationPoint = new bool[_navigationRoute.Length];
                     if (!highwayReady && sourceReady &&

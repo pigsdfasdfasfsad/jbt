@@ -85,6 +85,9 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"FPS: {Engine.GetFramesPerSecond()}  Load: {Game?.MapLoadMilliseconds ?? 0} ms\n" +
             $"Infected: {Game?.ActiveInfectedCount ?? 0}  Pickups: {Game?.ActivePickupCount ?? 0}\n" +
             $"Original nav nodes: {Navigation?.PointCount ?? 0}  P40 graph: {(Game?.Pass40GroundedNavigationVerified == true ? "YES" : "NO")}\n" +
+            $"P73 fallback ground nav: {Game?.Pass73FallbackNavNodes ?? 0} nodes / " +
+            $"{Game?.Pass73FallbackNavEdges ?? 0} edges " +
+            $"(READY: {Game?.Pass73FallbackNavReady ?? false}; fallback-only)\n" +
             $"Pass41 bridges: {Game?.Pass41NativeBridgeCount ?? 0}  components: {Game?.Pass41RemainingNavigationComponents ?? 0}\n" +
             $"Pass42 jump links: {Game?.Pass42JumpLinkCount ?? 0} ({(Game?.Pass42JumpGraphVerified == true ? "VERIFIED" : "UNVERIFIED")})\n" +
             $"Jump outcome (match): {Game?.Pass43TotalJumpAttempts ?? 0} launched / " +

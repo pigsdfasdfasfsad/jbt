@@ -39,7 +39,7 @@ public partial class PickupActor : Node3D
 
     public override void _Process(double delta)
     {
-        if (Player is null || Runtime?.Player is null)
+        if (Player is null || Runtime?.Player?.IsAlive != true)
             return;
 
         var down = Input.IsKeyPressed(Key.E);
@@ -58,7 +58,7 @@ public partial class PickupActor : Node3D
 
     private bool TryCollect()
     {
-        if (Player is null || Runtime?.Player is null)
+        if (Player is null || Runtime?.Player?.IsAlive != true)
             return false;
 
         var state = Runtime.Player;
