@@ -10,6 +10,13 @@ public partial class ObjectiveRuntime : Node3D
     public bool UseFallbackEscortNavigation89 { get; set; }
     // Only assigned to the approximate, source-pack-free Manor upper decks.
     public bool UseManorElevatedEscort94 { get; set; }
+    // On source-absent fallback maps only, ground Load/Repair materials
+    // onto player-sized supported floors with line-of-sight to the depot.
+    public bool UseFallbackMaterialGrounding96 { get; set; }
+    public bool Pass96GroundedMaterialLayout { get; private set; }
+    public int Pass96RejectedMaterialCandidates { get; private set; }
+    public int Pass96OverlappingMaterialFallbacks { get; private set; }
+    public IReadOnlyList<Vector3> Pass96MaterialFeet => _materialFeet96;
     public Pass73GroundNavigationRuntime? EscortGroundNavigator89 { get; set; }
     public int EscortSafeRoutePlans89 { get; private set; }
     public int EscortBlockedRoutePlans89 { get; private set; }
@@ -37,6 +44,7 @@ public partial class ObjectiveRuntime : Node3D
     public Action<string>? StatusChanged { get; set; }
 
     private readonly List<Node3D> _items = [];
+    private readonly List<Vector3> _materialFeet96 = [];
     private readonly RandomNumberGenerator _rng = new();
     private CharacterBody3D? _escort;
     private DamageObjectiveTarget? _damageTarget;
@@ -476,13 +484,49 @@ public partial class ObjectiveRuntime : Node3D
     private void BuildFillItems(string[] names)
     {
         _required = names.Length;
-        AddChild(MakeBox("DepositTarget", new Vector3(0, 0.75f, 0), new Vector3(2.4f, 1.5f, 2.4f), new Color(0.18f, 0.48f, 0.22f)));
-
-        for (var i = 0; i < names.Length; i++)
+        Vector3[]? supportedFeet=null;
+        if(UseFallbackMaterialGrounding96 && Player is not null)
         {
-            var angle = Mathf.Tau * i / names.Length;
-            var radius = 6f + (i % 3) * 1.25f;
-            var item = MakeBox(names[i], new Vector3(Mathf.Cos(angle) * radius, 0.35f, Mathf.Sin(angle) * radius), new Vector3(0.55f, 0.7f, 0.55f), new Color(0.74f, 0.58f, 0.18f));
+            var layout=Pass96GroundedMaterials.TryPlan(
+                GetWorld3D(),GlobalPosition,Player.GetRid(),names.Length);
+            Pass96RejectedMaterialCandidates=layout.RejectedCandidates;
+            Pass96OverlappingMaterialFallbacks=layout.OverlapFallbacks;
+            Pass96GroundedMaterialLayout=layout.IsComplete(names.Length);
+            if(Pass96GroundedMaterialLayout)
+            {
+                // Translate only approximate fallback objective anchors;
+                // owner-authored original map and gameplay remain unchanged.
+                GlobalPosition=layout.DepositFeet!.Value;
+                supportedFeet=layout.ItemFeet;
+            }
+        }
+
+        AddChild(MakeBox("DepositTarget",
+            new Vector3(0,.75f,0),
+            new Vector3(2.4f,1.5f,2.4f),
+            new Color(.18f,.48f,.22f)));
+
+        for(var i=0;i<names.Length;i++)
+        {
+            Vector3 local;
+            if(supportedFeet is not null)
+            {
+                _materialFeet96.Add(supportedFeet[i]);
+                local=supportedFeet[i]-GlobalPosition+Vector3.Up*.35f;
+            }
+            else
+            {
+                // Keep legacy behavior when real owner geometry cannot
+                // substantiate a safe placement; never label it verified.
+                var angle=Mathf.Tau*i/names.Length;
+                var radius=6f+(i%3)*1.25f;
+                local=new Vector3(
+                    Mathf.Cos(angle)*radius,.35f,
+                    Mathf.Sin(angle)*radius);
+            }
+            var item=MakeBox(names[i],local,
+                new Vector3(.55f,.7f,.55f),
+                new Color(.74f,.58f,.18f));
             _items.Add(item);
             AddChild(item);
         }
