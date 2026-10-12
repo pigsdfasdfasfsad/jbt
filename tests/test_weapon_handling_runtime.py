@@ -26,7 +26,7 @@ def test_player_ads_recoil_and_equip_timing_use_catalog_values():
     assert "ApplyRecoil(spec)" in s
     assert "spec.VerticalRecoil" in s and "spec.HorizontalRecoil" in s
     assert "spec.EquipSeconds/equipSpeed" in s
-    assert "AimCF depends on dynamic Roblox assemblies" in s
+    assert "The dynamic original" in s
 
 def test_marksman_speed_perks_scale_speed_not_duration_subtraction():
     s=read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
