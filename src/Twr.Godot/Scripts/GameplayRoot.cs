@@ -659,14 +659,25 @@ public partial class GameplayRoot : Node3D
             var expresswayEscort92 = family == "Escort" &&
                 _isFallbackScene86 && MapName == "Expressway" &&
                 _expresswayEscortNavigation92 is not null;
-            if (groundEscort91 || expresswayEscort92)
+            // Pass94: physical upper-floor Manor markers are NOT ground-floor
+            // locations. Verify them against the actual 3m deck collider.
+            var manorUpperEscort94 = family == "Escort" &&
+                _isFallbackScene86 && MapName == "Manor" &&
+                _groundNavigation73 is not null &&
+                _mapLayout.ApproximateStairs77.Count == 3 &&
+                position.Y >= 2.3f;
+            if (groundEscort91 || expresswayEscort92 || manorUpperEscort94)
             {
                 // Only adjust invented fallback Escort locations. The
                 // recovered original source packs must keep their own
                 // authored destination/spawn transforms unchanged.
-                var supported = Pass91EscortSpawnSafety.TryFind(
-                    GetWorld3D(),position,_player.GlobalPosition,
-                    _player.GetRid());
+                var supported = manorUpperEscort94
+                    ? Pass94ManorEscortRoute.TryGroundUpperSpawn(
+                        GetWorld3D(),position,_player.GlobalPosition,
+                        _player.GetRid())
+                    : Pass91EscortSpawnSafety.TryFind(
+                        GetWorld3D(),position,_player.GlobalPosition,
+                        _player.GetRid());
                 if(supported.HasValue)
                 {
                     VerifiedFallbackEscortStarts91++;
@@ -692,13 +703,14 @@ public partial class GameplayRoot : Node3D
                 // Manor uses the tighter same-floor security ring.
                 RequireSameFloorSecure84 = MapName == "Manor" &&
                     _mapLayout.ApproximateStairs77.Count == 3,
-                // Pass89: real collision-grounded escort navigation is
-                // available only where Pass73 actually sampled fallback
-                // terrain. Expressway, original owner packs and elevated
-                // Manor still retain their existing actor behavior.
+                // Pass94: never use the older unchecked direct-movement
+                // path for reconstructed Manor upper-floor Escorts.
+                // Source-owner scenes remain untouched.
                 UseFallbackEscortNavigation89 =
                     (_groundNavigation73 is not null || expresswayEscort92) &&
-                    (MapName != "Manor" || ObjectivePosition(i).Y < 2.3f),
+                    (MapName != "Manor" ||
+                     ObjectivePosition(i).Y < 2.3f || manorUpperEscort94),
+                UseManorElevatedEscort94 = manorUpperEscort94,
                 EscortGroundNavigator89 = _groundNavigation73,
                 Player = _player,
                 Runtime = Runtime,
