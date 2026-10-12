@@ -1,3 +1,23 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 69
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass69-source-optical-reticles`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38196014637
+
+- **583 Python regression tests passed** with one inherited Pass34 XML FutureWarning; **Godot/.NET Windows export: zero errors**, one inherited Pass36 CS0108 warning.
+- Pass69 uses the exact surviving inert original `ScopeDiameter`, `ScopeRadius` and `FOV` stats to restore eight source-sized scoped/reflex weapon profiles: **AUG (0.106 stud diameter, FOV 40°), Barrett M82A1 (0.205, 10°), CBJ-MS (0.0555 stud radius = 0.111 diameter, FOV 60°), M110 SASS (0.188, 10°), M14 (0.179, 10°), SVD (0.210, 10°), VSS (0.210, 10°), and Winchester Model 70 (0.184, 10°)**.
+- A new Godot `Pass69SourceScopeOptics` screen-space Control overlays six **procedurally reconstructed** reticle style families. The user-supplied, privately retained original `*-ADS.png` stills provided visual references: the **AUG/CBJ-MS angular optic bezel**, Barrett circular ring, and M110/M70 lower markings were inspected and approximated with primitive drawing. Original reticle textures/bitmap pixels **were neither recovered nor published**.
+- Screen-space lens scale uses source aperture size × `RobloxUnits.MetersPerStud`, current camera FOV, screen resolution and bounded eye-relief depth. Existing Pass67/68 owner-verified `AimPart` can supply sight depth; unavailable owner geometry uses a clearly **approximated 0.43m default**. Invalid float/FOV/depth data and unscoped weapons do not trigger misleading overlays.
+- `FirstPersonPlayer` drives visual scope blend from existing aim-permission/reload/equip/FOV timings. Overlay resets on death, weapon switches, throwables and mounted/hammer modes. `GameplayHud` hides only its generic "+" while a scope is actually drawn. **No damage, shot-ray, recoil, FOV authority, ammunition, zombie logic, perk, map or economy systems changed.**
+- Native exported Windows `TWR_SMOKE_PASS69_SOURCE_OPTICS_OK` verified eight profile fields, meaningful projected lens sizes, reflex and magnified modes, valid fallback eye relief, correct visibility and crosshair transitions, plus unchanged Pass68 source-backed Winchester sight centering. Earlier Pass59–68 Windows-native weapon regression smokes passed. `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` remains a **scripted domain test, not player-controlled full survival matches**.
+- Temporary fake owner-style SourceWeaponModels/hierarchy packs were removed, and CI's **private-asset exclusion check passed**. No original owner archive or public downloadable Windows executable was uploaded.
+
+**Still required for a full offline 1:1 game:** original scope bitmap/mesh and optical postprocessing, exact Roblox avatar and equipped weapon Motor6D/camera rig, original external MeshPart triangles/UVs, a completed physics/visual reconstruction of all ten maps, screenshot- and interaction-level reference matching, actual 15-wave playthrough validation on every map, and an owner-authorized privately packaged Windows game. **Pass69 is verified, but the remake as a whole is not complete.**
+
+[Pass69 source-optic sizes, reconstructed reticle styles, screenshot-guided geometry and verified native Windows acceptance](PASS69_SOURCE_SCOPE_OPTICS.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 68
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass68-original-aimcf`.
