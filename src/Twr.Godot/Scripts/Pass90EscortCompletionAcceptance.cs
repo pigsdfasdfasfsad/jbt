@@ -97,38 +97,44 @@ public partial class Pass90EscortCompletionAcceptance : Node
         var completions=0;
         objective.Completed+=_=>completions++;
         var starting=survivor.GlobalPosition;
+        var lastSurvivor=starting;
+        var groundedGoal=marker;
         var grounded=false;
         for(var i=0;i<1800;i++)
         {
             await Frames(1);
-            if(objective.EscortGroundedDestinations90>0)
+            if(completions>0)break; // Completed objective nodes are QueueFree.
+            if(GodotObject.IsInstanceValid(survivor))
+                lastSurvivor=survivor.GlobalPosition;
+            if(objective.EscortGroundedDestinations90>0 &&
+               GodotObject.IsInstanceValid(destination))
             {
                 grounded=true;
-                if(Math.Abs(destination.GlobalPosition.Y)>.48f)
+                groundedGoal=destination.GlobalPosition;
+                if(Math.Abs(groundedGoal.Y)>.48f)
                     throw new InvalidOperationException(
-                        "Pass90 destination not feet-grounded "+destination.GlobalPosition);
+                        "Pass90 destination not feet-grounded "+groundedGoal);
             }
-            if(completions>0)break;
         }
         if(!grounded)
             throw new InvalidOperationException(
                 "Pass90 no grounded goal marker="+marker+
                 " rejects="+objective.EscortRejectedDestinations90);
         GD.Print("TWR_PASS90_GROUNDED_GOAL_OK"+
-            " original_y="+marker.Y+" grounded_y="+destination.GlobalPosition.Y);
+            " original_y="+marker.Y+" grounded_y="+groundedGoal.Y);
 
         if(completions!=1 || !objective.EscortGroundedCompletion90 ||
            !Runtime.Match.CompletedObjectives.Contains(id) ||
-           survivor.GlobalPosition.DistanceTo(starting)<10f)
+           lastSurvivor.DistanceTo(starting)<10f)
             throw new InvalidOperationException(
                 "Pass90 Escort failed complete after physical movement"+
                 " callbacks="+completions+
                 " steps="+objective.EscortSafeSteps89+
-                " survivor="+survivor.GlobalPosition+
-                " goal="+destination.GlobalPosition);
+                " survivor="+lastSurvivor+
+                " goal="+groundedGoal);
         GD.Print("TWR_PASS90_ESCORT_FINISH_OK"+
             " physics_steps="+objective.EscortSafeSteps89+
-            " actor_movement="+survivor.GlobalPosition.DistanceTo(starting).ToString("F2"));
+            " actor_movement="+lastSurvivor.DistanceTo(starting).ToString("F2"));
 
         if(Runtime.Player.Credits-initialCredits!=4000 ||
            Runtime.Player.Xp-initialXp!=3500)
