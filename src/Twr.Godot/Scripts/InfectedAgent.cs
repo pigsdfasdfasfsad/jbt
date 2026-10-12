@@ -171,7 +171,15 @@ public partial class InfectedAgent : CharacterBody3D
         var velocity = Velocity;
         if (!IsOnFloor()) velocity.Y -= 22f * (float)delta;
 
-        if (distance > 1.55f || Math.Abs(deltaToPlayer.Y) > 1.6f)
+        // Pass77: feet-level separation matters on the reconstructed
+        // Manor stairs. The old flat melee range allowed an infected to
+        // stop on the ramp below an upper-floor player merely because its
+        // BODY centre was near the player's FEET coordinates.
+        var belowUpperTarget77 = GroundNavigator73 is not null &&
+            GroundNavigator73.StairLinkCount77 == 3 &&
+            Target.GlobalPosition.Y - (GlobalPosition.Y - .8f) > .08f;
+        if (distance > 1.55f || Math.Abs(deltaToPlayer.Y) > 1.6f ||
+            belowUpperTarget77)
         {
             var desired = flat.LengthSquared() > 0.001f ? flat.Normalized() : Vector3.Zero;
             // Shared Expressway road graph handles large static obstructions.

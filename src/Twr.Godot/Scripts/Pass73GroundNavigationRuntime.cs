@@ -234,7 +234,8 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         // player is above a ground-floor infected. It never overwrites the
         // owner-recovered Laboratory graph or invents retail stair routes.
         if (MapName == "Manor" && StairLinkCount77 == 3 &&
-            playerCentre.Y - infectedCentre.Y > 1.45f)
+            playerCentre.Y >= 2.2f &&
+            infectedCentre.Y - .8f < playerCentre.Y - .01f)
         {
             if (TryGetVerifiedManorAscent77(
                     infectedCentre,playerCentre,out var ascending))
@@ -294,12 +295,15 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         var playerFeet = playerCentre;
         // Keep only the supported up-ramp transition. Downstairs chase and
         // stair routes between disconnected wings are NOT yet verified.
-        if (infectedFeet.Y > 1.5f || playerFeet.Y < 2.2f ||
+        if (infectedFeet.Y > playerFeet.Y + .1f ||
+            playerFeet.Y < 2.2f ||
             Layout.ApproximateStairs77.Count != 3)
             return false;
 
         Pass77StairLink? selected = null;
         Vector3[] approach = [];
+        var startSegment = 1;
+        var alreadyOnRamp = false;
         var smallest = float.MaxValue;
         foreach (var stair in Layout.ApproximateStairs77)
         {
@@ -315,8 +319,29 @@ public partial class Pass73GroundNavigationRuntime : Node3D
                 !VerifiedPhysicalStair77(stair))
                 continue;
 
+            // Never send an infected BACK DOWN its ramp every time the
+            // 0.75s route timer refreshes. Project its physically grounded
+            // current position onto this same collision-audited stair and
+            // resume at the next uphill sample, if it is truly on the ramp.
+            var ramp = stair.UpperFeet - stair.LowerFeet;
+            var progress = Mathf.Clamp(
+                (infectedFeet - stair.LowerFeet).Dot(ramp) /
+                    ramp.LengthSquared(), 0f, 1f);
+            var expectedOnRamp = stair.LowerFeet.Lerp(
+                stair.UpperFeet, progress);
+            var onRamp = progress > .04f && progress < 1f &&
+                Math.Abs(infectedFeet.X - expectedOnRamp.X) <= 1.5f &&
+                Math.Abs(infectedFeet.Z - expectedOnRamp.Z) <= .65f &&
+                Math.Abs(infectedFeet.Y - expectedOnRamp.Y) <= .52f;
+
             Vector3[] groundPath;
-            if (groundDistance <= 4f &&
+            var begin = 1;
+            if (onRamp)
+            {
+                groundPath = [];
+                begin = Math.Clamp((int)Math.Floor(progress*12f)+1,1,12);
+            }
+            else if (groundDistance <= 4f &&
                 CorridorClear(infectedFeet, stair.LowerFeet))
                 groundPath = [];
             else
@@ -335,11 +360,14 @@ public partial class Pass73GroundNavigationRuntime : Node3D
                     continue;
             }
 
-            var score = groundDistance + upperDistance;
+            var score = (onRamp ? (1f-progress)*6f : groundDistance) +
+                upperDistance;
             if (score >= smallest) continue;
             smallest = score;
             selected = stair;
             approach = groundPath;
+            startSegment = begin;
+            alreadyOnRamp = onRamp;
         }
 
         if (selected is null) return false;
@@ -348,8 +376,8 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         // ramp, not from an enemy position teleport or a phantom jump.
         var points = new List<Vector3>(approach.Length + 14);
         points.AddRange(approach);
-        points.Add(selected.LowerFeet);
-        for (var i = 1; i <= 12; i++)
+        if (!alreadyOnRamp) points.Add(selected.LowerFeet);
+        for (var i = startSegment; i <= 12; i++)
             points.Add(selected.LowerFeet.Lerp(selected.UpperFeet, i/12f));
         points.Add(playerFeet);
         result = points.ToArray();

@@ -28,6 +28,11 @@ def test_elevated_ai_path_requires_real_ramp_collider_and_ground_graph():
     graph=read("src/Twr.Godot/Scripts/Pass73GroundNavigationRuntime.cs")
     game=read("src/Twr.Godot/Scripts/GameplayRoot.cs")
     assert 'MapName == "Manor" && StairLinkCount77 == 3' in graph
+    assert "infectedCentre.Y - .8f < playerCentre.Y - .01f" in graph
+    assert "var onRamp = progress > .04f" in graph
+    assert "if (!alreadyOnRamp) points.Add(selected.LowerFeet);" in graph
+    assert "startSegment = begin;" in graph
+    assert "belowUpperTarget77" in read("src/Twr.Godot/Scripts/InfectedAgent.cs")
     assert "playerCentre.Y - infectedCentre.Y > 1.45f" in graph
     assert "TryGetVerifiedManorAscent77(" in graph
     assert "VerifiedPhysicalStair77(stair)" in graph
