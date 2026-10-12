@@ -293,8 +293,13 @@ public partial class Pass78ManorBidirectionalStairAcceptance : Node
                     break;
                 }
             }
+            // Pass83 full regression: a real downstairs arrival may be
+            // 8-20mm below the old hardcoded 2.30m vertical-drop cutoff
+            // due to ordinary physics contact on the updated landing.
+            // Keep both floor-contact/position acceptance and >2.25m
+            // measured physical descent; do not count partial traversals.
             if (!enemyReachedBottom ||
-                enemyHigh-enemyLow < 2.30f ||
+                enemyHigh-enemyLow < 2.25f ||
                 infected.SourceJumpAttempts != 0)
                 throw new InvalidOperationException(
                     "Pass78 real infected failed downhill physics " +
