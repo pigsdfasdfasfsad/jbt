@@ -630,8 +630,10 @@ public partial class Bootstrap : Node
             Transform3D.Identity);
         var t45=new Transform3D(Basis.Identity,
             new Vector3(0,0,-.45f)*RobloxUnits.MetersPerStud);
+        // Lua's T(-0.6):toObjectSpace(X) applies inverse T(+0.6)
+        // in Roblox coordinates, which is Godot camera-local -Z.
         var tMinus6=new Transform3D(Basis.Identity,
-            new Vector3(0,0,.6f)*RobloxUnits.MetersPerStud);
+            new Vector3(0,0,-.6f)*RobloxUnits.MetersPerStud);
         var tMinus2=new Transform3D(Basis.Identity,
             new Vector3(0,0,.2f)*RobloxUnits.MetersPerStud);
         var canonical=invA*handle*inv*baseOffset;
