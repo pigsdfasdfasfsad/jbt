@@ -6,7 +6,10 @@ def test_enhanced_electronics_applies_exact_40_percent_to_clap_bomb_radius():
     actor=read("src/Twr.Godot/Scripts/FortificationActor.cs")
     controller=read("src/Twr.Godot/Scripts/FortificationController.cs")
     assert "RangeMultiplier" in actor
-    assert "Definition.Radius!.Value * RangeMultiplier" in actor
+    assert "RobloxUnits.Distance(Definition.Radius!.Value)" in actor
+    assert "RangeMultiplier;" in actor
+    # Source radii are authored in Roblox studs, not Godot metres. The
+    # original +40% perk must apply to the correctly scaled radius.
     assert 'HasPerk("Enhanced Electronics")' in controller
     assert "return 1.4f" in controller
     assert "STRONGLY INFERRED" in actor
