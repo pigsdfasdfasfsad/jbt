@@ -300,6 +300,22 @@ public partial class Pass69SourceScopeOptics : Control
                 center+direction*extent,ink,
                 style==Style.Duplex?2.4f:1.6f,true);
         }
+        if(style==Style.Duplex)
+        {
+            // M110/M70 original ADS reference stills show small
+            // horizontal subtension bars below the center, not just
+            // an unbroken generic plus sign. Reconstruct those marks
+            // from primitives; no original bitmap is embedded.
+            for(var index=1;index<=4;index++)
+            {
+                var y=center.Y+radius*.11f*index;
+                var halfWidth=Math.Max(3f,radius*.027f+
+                    index*radius*.006f);
+                DrawLine(new Vector2(center.X-halfWidth,y),
+                    new Vector2(center.X+halfWidth,y),
+                    ink,1.8f,true);
+            }
+        }
         if(style==Style.CircleCross)
             DrawArc(center,radius*.14f,0f,Mathf.Tau,64,
                 ink,2f,true);
@@ -331,10 +347,10 @@ public partial class Pass69SourceScopeOptics : Control
             (optic.Magnified ? .91f : .44f)*alpha);
         var edge=new Color(.13f,.14f,.16f,
             (optic.Magnified ? .67f : .40f)*alpha);
-        if(optic.Magnified)
-            DrawScopeRim(center,radius,rim,edge);
-        else DrawArc(center,radius,0f,Mathf.Tau,64,
-            edge,Math.Max(1.3f,radius*.027f),true);
+        // The original AUG and CBJ-MS ADS stills both have angular
+        // short-optic housings, while the rifle scopes use a cropped
+        // larger circular window with angular surrounding blackout.
+        DrawScopeRim(center,radius,rim,edge);
         DrawReticle(center,radius,optic.Reticle,alpha);
     }
 }
