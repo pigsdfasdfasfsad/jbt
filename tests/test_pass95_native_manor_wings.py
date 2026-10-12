@@ -32,6 +32,9 @@ def test_real_manor_west_east_escort_and_authoritative_reward_once():
     assert "Runtime.Match.Wave=" not in s
     assert "Runtime.Player.Credits=" not in s
     assert "Runtime.Player.Xp=" not in s
+    assert 'var finalGoalY=GodotObject.IsInstanceValid(target)' in s
+    assert 'finalGoalY<2.2f && (!reachedRamp || minY>1.1f)' in s
+    assert 'goalY="+finalGoalY.ToString("F2")' in s
 
 
 def test_native_windows_ci_uses_isolated_profile_before_regressions():
