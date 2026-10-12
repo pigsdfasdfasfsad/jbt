@@ -85,7 +85,7 @@ def test_owner_sha_gated_scope_lens_names_and_first_person_wiring():
         assert marker in source_reader
     assert "SourceBarrelFacesBackwards(parts)" in source_reader
     assert "if(!Pass69SourceScope.TryGet(weaponName" in source_reader
-    assert "if(!synthetic &&" in source_reader
+    assert "if (!synthetic &&" in source_reader
     assert "OriginalPackSha" in source_reader
     assert "TryGetSourceScopeLensWorld69(out Vector3 worldLens)" in view
     assert "OwnerSourceScopeLensVerified69" in view
