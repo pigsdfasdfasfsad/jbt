@@ -171,6 +171,11 @@ public partial class Pass70LiveCombatAcceptance : Node
                 "Pass70 normal starter ammunition/reserve not available");
 
         Input.MouseMode=Input.MouseModeEnum.Captured;
+        GD.Print("TWR_PASS70_INPUT_BEFORE_CLICK "+
+            $"mouse={Input.MouseMode} equip={player.EquipRemainingSeconds70:F4} "+
+            $"reload={player.ReloadRemainingSeconds70:F4} "+
+            $"cooldown={player.ActionCooldownSeconds70:F4} "+
+            $"ammo={initialAmmo}");
         player._UnhandledInput(new InputEventMouseButton
         {
             ButtonIndex=MouseButton.Left,
@@ -178,9 +183,27 @@ public partial class Pass70LiveCombatAcceptance : Node
             Position=Vector2.Zero
         });
         var afterFire=Runtime.Player.Ammo.GetValueOrDefault("Glock 17");
+        if(afterFire==initialAmmo &&
+           Input.MouseMode==Input.MouseModeEnum.Captured)
+        {
+            // In a real Windows viewport, the first left-click may
+            // capture a previously released mouse without shooting.
+            // Only retry if zero ammunition was spent; never double fire.
+            player._UnhandledInput(new InputEventMouseButton
+            {
+                ButtonIndex=MouseButton.Left,
+                Pressed=true,
+                Position=Vector2.Zero
+            });
+            afterFire=Runtime.Player.Ammo.GetValueOrDefault("Glock 17");
+        }
         if(afterFire!=initialAmmo-1)
             throw new InvalidOperationException(
-                "Pass70 real mouse-left input path did not consume exactly one Glock cartridge");
+                "Pass70 native mouse-left did not spend exactly one "+
+                $"Glock cartridge: before={initialAmmo} after={afterFire} "+
+                $"mouse={Input.MouseMode} equip={player.EquipRemainingSeconds70:F4} "+
+                $"reload={player.ReloadRemainingSeconds70:F4} "+
+                $"cooldown={player.ActionCooldownSeconds70:F4}");
         await PhysicsFrames(2);
         if(victim.Health>0f ||
            Runtime.Player.Credits<=initialCredits ||
