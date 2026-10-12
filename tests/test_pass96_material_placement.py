@@ -33,10 +33,7 @@ def test_every_supported_material_is_same_floor_swept_capsule_accessible():
         "source-owner-authored scene",
         "Rid playerRid,int itemCount",
     ):
-        if token == "source-owner-authored scene":
-            assert "source-owner-authored scene" not in code
-        else:
-            assert token in code
+        assert token in code
     assert "CollisionMask=0" not in code
     assert "GetVerifiedEscortRoute89" not in code
     assert "actor.GlobalPosition=" not in code
