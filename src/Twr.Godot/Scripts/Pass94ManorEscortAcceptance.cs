@@ -218,6 +218,7 @@ public partial class Pass94ManorEscortAcceptance : Node
         };
         var groundedGoal=Pass94ManorEscortRoute.TryGroundGoal(
             game.GetWorld3D(),goal.GlobalPosition,routeExclude);
+        var sideLane=stair.UpperFeet+Vector3.Left*3.35f;
         var lowerPath=groundedGoal.HasValue
             ? nav.GetVerifiedEscortRoute89(stair.LowerFeet,
                 groundedGoal.Value,actor.GetRid()) : [];
@@ -234,6 +235,10 @@ public partial class Pass94ManorEscortAcceptance : Node
             " centreToStairReason="+ExplainBlockedLeg94(
                 game.GetWorld3D(),bridgeCentre,stair.UpperFeet,
                 routeExclude)+
+            " sideEntryToLane="+Pass89EscortSurfaceSafety.CanTravel(
+                game.GetWorld3D(),initial,sideLane,routeExclude)+
+            " laneToStair="+Pass89EscortSurfaceSafety.CanTravel(
+                game.GetWorld3D(),sideLane,stair.UpperFeet,routeExclude)+
             " stairFirstStep="+Pass89EscortSurfaceSafety.CanTravel(
                 game.GetWorld3D(),stair.UpperFeet,
                 stair.LowerFeet.Lerp(stair.UpperFeet,11f/12f),
