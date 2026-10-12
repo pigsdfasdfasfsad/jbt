@@ -127,24 +127,36 @@ public partial class Pass77ManorStairAcceptance : Node
                 "Pass77 player was not physically grounded at stair entrance");
 
         var highest = start.Y;
+        var reachedLanding = false;
         SetKey(Key.W,true);
-        for (var frame=0;frame<122;frame++)
+        for (var frame=0;frame<230;frame++)
         {
             await Frames(1);
             highest = Math.Max(highest,player.GlobalPosition.Y);
+            if (player.GlobalPosition.Y >= front.UpperFeet.Y-.10f &&
+                player.GlobalPosition.Z <= front.UpperFeet.Z+.55f &&
+                player.IsOnFloor())
+            {
+                reachedLanding = true;
+                break;
+            }
         }
         SetKey(Key.W,false);
-        await Frames(10);
+        await Frames(8);
         var final = player.GlobalPosition;
-        if (highest-start.Y < 2.0f ||
-            final.Z > front.UpperFeet.Z + 1.8f ||
+        if (!reachedLanding || highest-start.Y < 2.55f ||
+            final.Y < front.UpperFeet.Y-.15f ||
+            final.Z > front.UpperFeet.Z + .60f ||
             !player.IsOnFloor())
             throw new InvalidOperationException(
-                "Pass77 keyboard ascent did not climb physical ramp " +
-                "start=" + start + " maxY=" + highest +
+                "Pass77 keyboard ascent did not reach PHYSICAL upper landing " +
+                "reached=" + reachedLanding +
+                " start=" + start + " maxY=" + highest +
+                " upper=" + front.UpperFeet +
                 " end=" + final + " floor=" + player.IsOnFloor());
         GD.Print("TWR_PASS77_REAL_PLAYER_STAIRS_OK " +
             "rise=" + (highest-start.Y).ToString("F2") +
+            " upper_landing_reached=true" +
             " end=" + final + " grounded=true flights=3");
 
         player.GlobalPosition = front.UpperFeet +
@@ -189,22 +201,34 @@ public partial class Pass77ManorStairAcceptance : Node
         game.AddChild(infected);
         var infectedStartY = infected.GlobalPosition.Y;
         var infectedMaxY = infectedStartY;
-        for (var frame=0;frame<235;frame++)
+        var infectedReachedLanding = false;
+        for (var frame=0;frame<430;frame++)
         {
             await Frames(1);
             infectedMaxY = Math.Max(infectedMaxY, infected.GlobalPosition.Y);
+            if (infected.GlobalPosition.Y >= front.UpperFeet.Y+.68f &&
+                infected.GlobalPosition.Z <= front.UpperFeet.Z+.70f &&
+                infected.IsOnFloor())
+            {
+                infectedReachedLanding = true;
+                break;
+            }
         }
-        if (infectedMaxY - infectedStartY < 1.65f ||
+        if (!infectedReachedLanding ||
+            infectedMaxY - infectedStartY < 2.35f ||
             infected.SourceJumpAttempts != 0)
             throw new InvalidOperationException(
-                "Pass77 infected failed real slope-physics ascent " +
-                "start=" + infectedStartY +
+                "Pass77 infected never reached an ACTUAL upper landing " +
+                "reached=" + infectedReachedLanding +
+                " start=" + infectedStartY +
                 " max=" + infectedMaxY +
+                " landing=" + front.UpperFeet +
                 " location=" + infected.GlobalPosition +
                 " jumpAttempts=" + infected.SourceJumpAttempts);
         GD.Print("TWR_PASS77_REAL_INFECTED_STAIRS_OK " +
             "route_points=" + route.Length +
             " actual_rise=" + (infectedMaxY-infectedStartY).ToString("F2") +
+            " upper_landing_reached=true" +
             " source_jump_attempts=0");
 
         Runtime.FailMatch("Pass77 test-only Manor floor traversal");

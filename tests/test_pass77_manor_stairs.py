@@ -55,11 +55,14 @@ def test_native_real_player_keyboard_and_infected_physics_ascent():
     assert "nav.StairLinkCount77 != 3" in acceptance
     assert "SetKey(Key.W,true)" in acceptance
     assert "SetKey(Key.W,false)" in acceptance
-    assert "highest-start.Y < 2.0f" in acceptance
+    assert "highest-start.Y < 2.55f" in acceptance
+    assert "upper_landing_reached=true" in acceptance
+    assert "!reachedLanding" in acceptance
+    assert "!infectedReachedLanding" in acceptance
     assert "nav.GetRoute(below, player.GlobalPosition)" in acceptance
     assert "new InfectedAgent" in acceptance
     assert "GroundNavigator73 = nav" in acceptance
-    assert "infectedMaxY - infectedStartY < 1.65f" in acceptance
+    assert "infectedMaxY - infectedStartY < 2.35f" in acceptance
     assert "infected.SourceJumpAttempts != 0" in acceptance
     assert "Runtime.Player.Health =" not in acceptance
     assert "Runtime.Player.Credits =" not in acceptance
