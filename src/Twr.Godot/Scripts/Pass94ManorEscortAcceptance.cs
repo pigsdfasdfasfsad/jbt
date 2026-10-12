@@ -40,6 +40,91 @@ public partial class Pass94ManorEscortAcceptance : Node
             await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);
     }
 
+    // Test-only explanation of a failed full-capsule route leg.
+    // It NEVER authorizes movement or weakens Pass89's production checks.
+    private static string ExplainBlockedLeg94(
+        World3D world,Vector3 from,Vector3 to,
+        global::Godot.Collections.Array<Rid> exclude)
+    {
+        var space=world.DirectSpaceState;
+        using var capsule=new CapsuleShape3D
+        {
+            Radius=.42f,Height=1.8f
+        };
+        using var query=new PhysicsShapeQueryParameters3D
+        {
+            Shape=capsule,
+            Transform=new Transform3D(
+                Basis.Identity,from+Vector3.Up*.99f),
+            Motion=to-from,
+            CollideWithBodies=true,
+            CollisionMask=1u,
+            Exclude=exclude
+        };
+        var cast=space.CastMotion(query);
+        var safeFraction=cast.Length>0 ? cast[0] : -1f;
+        var wallMessage="NONE";
+        foreach(var height in new[]{.48f,.96f})
+        {
+            using var wall=PhysicsRayQueryParameters3D.Create(
+                from+Vector3.Up*height,
+                to+Vector3.Up*height);
+            wall.CollisionMask=1u;
+            wall.Exclude=exclude;
+            var wallHit=space.IntersectRay(wall);
+            if(wallHit.Count>0)
+            {
+                wallMessage="height="+height+
+                    " hit="+((Vector3)wallHit["position"])+
+                    " normal="+((Vector3)wallHit["normal"]);
+                break;
+            }
+        }
+        var firstFloorFailure="NONE";
+        var planar=to-from;
+        planar.Y=0f;
+        var side=planar.LengthSquared()>.0001f
+            ? new Vector3(-planar.Z,0,planar.X).Normalized()
+            : Vector3.Right;
+        // 50mm samples reveal even sub-cell floor gaps and verify
+        // the actual capsule footprint, not just the centreline.
+        for(var i=0;i<=28;i++)
+        {
+            var expected=from.Lerp(to,i/28f);
+            foreach(var offset in new[]{0f,-.22f,.22f})
+            {
+                var at=expected+side*offset;
+                using var ray=PhysicsRayQueryParameters3D.Create(
+                    at+Vector3.Up*.68f,
+                    at+Vector3.Down*.84f);
+                ray.CollisionMask=1u;
+                ray.Exclude=exclude;
+                var hit=space.IntersectRay(ray);
+                if(hit.Count==0)
+                {
+                    firstFloorFailure="missing t="+(i/28f).ToString("F3")+
+                        " at="+at;
+                    break;
+                }
+                var floor=(Vector3)hit["position"];
+                var normal=(Vector3)hit["normal"];
+                if(normal.Y<.72f ||
+                   Math.Abs(floor.Y-expected.Y)>.47f)
+                {
+                    firstFloorFailure="mismatch t="+
+                        (i/28f).ToString("F3")+
+                        " expected="+expected+
+                        " floor="+floor+" normal="+normal;
+                    break;
+                }
+            }
+            if(firstFloorFailure!="NONE")break;
+        }
+        return "capsuleCastSafe="+safeFraction.ToString("F4")+
+            " torsoWall="+wallMessage+
+            " fineFloor="+firstFloorFailure;
+    }
+
     private async Task VerifyManorEscort()
     {
         if(Runtime.Match?.Phase!=MatchPhase.Lobby || Runtime.Session is null)
@@ -146,6 +231,9 @@ public partial class Pass94ManorEscortAcceptance : Node
                 game.GetWorld3D(),bridgeEntrance,bridgeCentre,routeExclude)+
             " centreToStair="+Pass89EscortSurfaceSafety.CanTravel(
                 game.GetWorld3D(),bridgeCentre,stair.UpperFeet,routeExclude)+
+            " centreToStairReason="+ExplainBlockedLeg94(
+                game.GetWorld3D(),bridgeCentre,stair.UpperFeet,
+                routeExclude)+
             " stairFirstStep="+Pass89EscortSurfaceSafety.CanTravel(
                 game.GetWorld3D(),stair.UpperFeet,
                 stair.LowerFeet.Lerp(stair.UpperFeet,11f/12f),
