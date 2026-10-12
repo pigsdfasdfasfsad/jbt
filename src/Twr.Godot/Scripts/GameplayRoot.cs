@@ -653,6 +653,20 @@ public partial class GameplayRoot : Node3D
         {
             var family = families[(wave - 1 + i * 2) % families.Length];
             var position = ObjectivePosition(i);
+            // Pass95: source-absent fallback Manor upper Escort rotates
+            // through the three physically existing Pass82 wings. This
+            // leaves every owner-original marker, objective family and
+            // all other maps untouched. Wave5 stays in the front hall,
+            // as verified by Pass94; Wave10/15 visit west/east.
+            if(family == "Escort" && _isFallbackScene86 &&
+               MapName == "Manor" && position.Y >= 2.3f &&
+               _mapLayout.ApproximateUpperObjectives82.Count ==
+                   Pass95ManorEscortRotation.UpperWingCount)
+            {
+                var wing=Pass95ManorEscortRotation.UpperWingForWave(wave);
+                if(wing>=0)
+                    position=_mapLayout.ApproximateUpperObjectives82[wing];
+            }
             var groundEscort91 = family == "Escort" &&
                 _isFallbackScene86 && _groundNavigation73 is not null &&
                 (MapName != "Manor" || position.Y < 2.3f);
