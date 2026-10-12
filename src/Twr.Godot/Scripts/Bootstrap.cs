@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass68",StringComparer.Ordinal))
+        {
+            RunPass68Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass67",StringComparer.Ordinal))
         {
             RunPass67Smoke();
@@ -565,6 +570,171 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass68Smoke()
+    {
+        if(Pass68OriginalAimFormulas.FormulaCount!=73 ||
+           !Pass68OriginalAimFormulas.TryGet("Glock 17",out var glockProfile) ||
+           glockProfile is null ||
+           glockProfile.Kind!=Pass68OriginalAimFormulas.Family.InverseSight ||
+           !Pass68OriginalAimFormulas.TryGet("M4A1",out var m4Profile) ||
+           m4Profile is null ||
+           m4Profile.Kind!=Pass68OriginalAimFormulas.Family.SightHandleBaseInside ||
+           !Pass68OriginalAimFormulas.TryGet("Mossberg 500",out var mossProfile) ||
+           mossProfile is null ||
+           mossProfile.Kind!=Pass68OriginalAimFormulas.Family.SightHandleThenBase ||
+           !Pass68OriginalAimFormulas.TryGet("SPAS-12",out var spasProfile) ||
+           spasProfile is null || spasProfile.SpecialZStuds!=-0.6f ||
+           !Pass68OriginalAimFormulas.TryGet("MP7",out var mp7Profile) ||
+           mp7Profile is null || mp7Profile.SightPreZStuds!=.45f ||
+           !Pass68OriginalAimFormulas.TryGet("Winchester Model 70",out var winProfile) ||
+           winProfile is null || winProfile.PostZStuds!=-.2f ||
+           !Pass68OriginalAimFormulas.TryGet("Obrez Mosin",out var obrezProfile) ||
+           obrezProfile is null || obrezProfile.PostZStuds!=-.1f ||
+           !Pass68OriginalAimFormulas.TryGet("Flamethrower",out var flameProfile) ||
+           flameProfile is null ||
+           flameProfile.Kind!=Pass68OriginalAimFormulas.Family.NumericLiteral)
+            throw new InvalidOperationException(
+                "Pass68 source-surviving original 73 AimCF formula families unavailable");
+
+        // Independently specify the source algebra with non-commuting
+        // rotations. This catches incorrect multiplication ordering
+        // even when most original Tool markers are axis aligned.
+        var handle=new Transform3D(new Basis(Vector3.Up,.25f),
+            new Vector3(.02f,-.03f,.04f));
+        var aim=new Transform3D(new Basis(Vector3.Right,-.15f),
+            new Vector3(.07f,.18f,-.30f));
+        var grip=new Transform3D(new Basis(Vector3.Back,.12f),
+            new Vector3(.14f,-.23f,.18f));
+        var baseOffset=new Transform3D(Basis.Identity,
+            new Vector3(.25000000000000006f,-.0669872981077807f,0f)*
+                RobloxUnits.MetersPerStud);
+        var inv=grip.AffineInverse();
+        var invA=aim.AffineInverse();
+        var noShift=new Pass68OriginalAimFormulas.Formula(
+            Pass68OriginalAimFormulas.Family.InverseSight,0,0,0,grip);
+        var withBase=new Pass68OriginalAimFormulas.Formula(
+            Pass68OriginalAimFormulas.Family.SightHandleBaseInside,0,0,0,grip);
+        var outside=new Pass68OriginalAimFormulas.Formula(
+            Pass68OriginalAimFormulas.Family.SightHandleThenBase,0,0,0,grip);
+        var spas=new Pass68OriginalAimFormulas.Formula(
+            Pass68OriginalAimFormulas.Family.SpasSpecial,0,0,-.6f,grip);
+        var mp7=new Pass68OriginalAimFormulas.Formula(
+            Pass68OriginalAimFormulas.Family.InverseSight,.45f,0,0,grip);
+        var win=new Pass68OriginalAimFormulas.Formula(
+            Pass68OriginalAimFormulas.Family.SightHandleBaseInside,0,-.2f,0,grip);
+        var literal=new Pass68OriginalAimFormulas.Formula(
+            Pass68OriginalAimFormulas.Family.NumericLiteral,0,0,0,
+            Transform3D.Identity);
+        var t45=new Transform3D(Basis.Identity,
+            new Vector3(0,0,-.45f)*RobloxUnits.MetersPerStud);
+        var tMinus6=new Transform3D(Basis.Identity,
+            new Vector3(0,0,.6f)*RobloxUnits.MetersPerStud);
+        var tMinus2=new Transform3D(Basis.Identity,
+            new Vector3(0,0,.2f)*RobloxUnits.MetersPerStud);
+        var canonical=invA*handle*inv*baseOffset;
+        var originalInverse=inv*
+            (handle.AffineInverse()*aim).AffineInverse()*baseOffset;
+        var originalSpas=aim*tMinus6*handle*inv*baseOffset;
+        var originalMp7=inv*
+            (handle.AffineInverse()*(aim*t45)).AffineInverse()*baseOffset;
+        var originalWin=canonical*tMinus2;
+        static bool Near(Transform3D a,Transform3D b) =>
+            a.Origin.DistanceTo(b.Origin)<.0002f &&
+            a.Basis.GetRotationQuaternion()
+             .AngleTo(b.Basis.GetRotationQuaternion())<.001f;
+        if(!Pass68OriginalAimFormulas.TryCompute(
+                noShift,handle,aim,out var actualInverse) ||
+           !Near(actualInverse,originalInverse) ||
+           !Pass68OriginalAimFormulas.TryCompute(
+                withBase,handle,aim,out var actualInside) ||
+           !Near(actualInside,canonical) ||
+           !Pass68OriginalAimFormulas.TryCompute(
+                outside,handle,aim,out var actualOutside) ||
+           !Near(actualOutside,canonical) ||
+           !Pass68OriginalAimFormulas.TryCompute(
+                spas,handle,aim,out var actualSpas) ||
+           !Near(actualSpas,originalSpas) ||
+           !Pass68OriginalAimFormulas.TryCompute(
+                mp7,handle,aim,out var actualMp7) ||
+           !Near(actualMp7,originalMp7) ||
+           !Pass68OriginalAimFormulas.TryCompute(
+                win,handle,aim,out var actualWin) ||
+           !Near(actualWin,originalWin) ||
+           !Pass68OriginalAimFormulas.TryCompute(
+                literal,handle,aim,out var actualLiteral) ||
+           actualLiteral.Origin.DistanceTo(
+                new Vector3(-.25f,.25f,0f)*
+                    RobloxUnits.MetersPerStud)>.0001f ||
+           Pass68OriginalAimFormulas.TryCompute(noShift,
+                new Transform3D(Basis.Identity,
+                    new Vector3(float.NaN,0,0)),aim,out _) ||
+           Pass68OriginalAimFormulas.TryCompute(noShift,
+                Transform3D.Identity,
+                new Transform3D(Basis.Identity,
+                    new Vector3(99,0,0)),out _))
+            throw new InvalidOperationException(
+                "Pass68 source AimCF matrix order, offsets, literal or finite guard incorrect");
+
+        if(OriginalWeaponSourceRuntime.OwnerSourcePackVerified ||
+           Pass62SourceWeaponHierarchy.OwnerHierarchyVerified)
+            throw new InvalidOperationException(
+                "Pass68 cannot claim any fabricated weapon geometry is owner-original");
+        foreach(var (name,expected) in new[]{
+            ("Glock 17","InverseSight"),
+            ("Mossberg 500","SightHandleThenBase"),
+            ("MP7","InverseSight"),
+            ("SPAS-12","SpasSpecial"),
+            ("Winchester Model 70","SightHandleBaseInside")})
+        {
+            if(!OriginalWeaponSourceRuntime.TryGetSourceFormulaFrames(
+                    name,out var sourceAim,out var sourceHandle) ||
+               !Pass68OriginalAimFormulas.TryGet(name,out var formula) ||
+               !Pass68OriginalAimFormulas.TryCompute(
+                    formula,sourceHandle,sourceAim,out var actualSourceCf))
+                throw new InvalidOperationException(
+                    "Pass68 owner-style source AimPart/Handle/GripCF unavailable for "+name);
+            var model=new WeaponViewModelRuntime{Name="Pass68_"+name.Replace(' ','_')};
+            AddChild(model);
+            model.SetWeapon(RuntimeWeaponCatalog.Get(name));
+            if(!model.UsingOriginalToolAssembly ||
+               !model.SourceAimPartAvailable ||
+               !model.SourceExactAimCFAvailable68 ||
+               model.SourceOriginalAimFamily68!=expected ||
+               !model.TryGetOriginalAimCF68(out var importedCf) ||
+               !Near(importedCf,actualSourceCf) ||
+               !model.TryGetSourceAimRoot(out var sightRoot))
+                throw new InvalidOperationException(
+                    "Pass68 source reconstructed AimCF not bound to weapon "+name);
+            model.Transform=sightRoot;
+            model._Process(.016f);
+            if(model.SourceAimReticleLateralError>.001f ||
+               model.SourceAimGeometryOwnerVerified)
+                throw new InvalidOperationException(
+                    "Pass68 original formula adjustment lost reticle/owner privacy "+name);
+        }
+        if(!Pass68OriginalAimFormulas.TryGet("Mosin Nagant",out _) ||
+           OriginalWeaponSourceRuntime.TryGetSourceFormulaFrames(
+                "Mosin Nagant",out _,out _))
+            throw new InvalidOperationException(
+                "Pass68 missing original sight must stay on Pass67 approximate fallback");
+
+        GD.Print("TWR_SMOKE_PASS68_ORIGINAL_AIMCF_OK "+
+            "original_source_formula_count=73 "+
+            "noncommuting_matrix_order_verified=true "+
+            "original_inverse_sight_formula=true "+
+            "original_inside_and_outside_base_variants=true "+
+            "source_spas_minus_06_literal_semantics=true "+
+            "source_mp7_plus_045_sight_offset=true "+
+            "source_winchester_minus_02_post_offset=true "+
+            "source_flamethrower_literal_formula=true "+
+            "source_five_weapon_sights_centered=true "+
+            "source_original_aimcf_exposed_without_luau=true "+
+            "missing_source_sight_fallback=true "+
+            "original_owner_pack_never_published=true "+
+            "shooting_and_scope_authority_unchanged=true");
         GetTree().Quit(0);
     }
 
