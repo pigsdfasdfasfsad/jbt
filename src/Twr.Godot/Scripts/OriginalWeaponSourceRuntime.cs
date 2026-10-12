@@ -229,6 +229,47 @@ public static class OriginalWeaponSourceRuntime
         return true;
     }
 
+    /// <summary>
+    /// Pass68 original Tool-space AimPart and PRIMARY Handle transforms,
+    /// without the renderer's model-forward adjustment. The main Handle is
+    /// the invisible Tool root at origin (distinct from nested Handles
+    /// attached to Mag/Pump/Bolt). All results retain Roblox source
+    /// multiplication ordering, reflected into Godot axes in metres.
+    /// </summary>
+    public static bool TryGetSourceFormulaFrames(string weaponName,
+        out Transform3D originalAim,out Transform3D originalHandle)
+    {
+        originalAim=Transform3D.Identity;
+        originalHandle=Transform3D.Identity;
+        if(!TryGetSourceSightLocal(weaponName,out _) ||
+           !LoadDocument() ||
+           !_document!.RootElement.GetProperty("models")
+               .TryGetProperty(weaponName,out var model))
+            return false;
+        var parts=model.GetProperty("parts").EnumerateArray().ToArray();
+        var aim=parts.FirstOrDefault(p=>
+            p.GetProperty("name").GetString()=="AimPart");
+        if(aim.ValueKind==JsonValueKind.Undefined)return false;
+        var handles=parts.Where(p=>
+            p.GetProperty("name").GetString()=="Handle" &&
+            SourcePosition(p).LengthSquared()<.00001f).ToArray();
+        if(handles.Length is <1 or >4)return false;
+        var root=handles[0];
+        var basis=SourceRotation(root);
+        if(handles.Any(h=>
+                SourceRotation(h).GetRotationQuaternion()
+                    .AngleTo(basis.GetRotationQuaternion())>.05f))
+            return false;
+        originalAim=new Transform3D(
+            SourceRotation(aim).Orthonormalized(),SourcePosition(aim));
+        originalHandle=new Transform3D(
+            basis.Orthonormalized(),SourcePosition(root));
+        var da=originalAim.Basis.Determinant();
+        var dh=originalHandle.Basis.Determinant();
+        return float.IsFinite(da) && float.IsFinite(dh) &&
+            Math.Abs(da-1f)<.035f && Math.Abs(dh-1f)<.035f;
+    }
+
     public static Vector3? EstimatedMuzzle(string weaponName)
     {
         if (!LoadDocument() ||
@@ -305,7 +346,7 @@ public static class OriginalWeaponSourceRuntime
             var synthetic = root.TryGetProperty("synthetic",out var fixture) &&
                 fixture.ValueKind == JsonValueKind.True;
             var testMode = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58" or "--smoke-pass62" or "--smoke-pass63" or "--smoke-pass64" or "--smoke-pass65" or "--smoke-pass66" or "--smoke-pass67");
+                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58" or "--smoke-pass62" or "--smoke-pass63" or "--smoke-pass64" or "--smoke-pass65" or "--smoke-pass66" or "--smoke-pass67" or "--smoke-pass68");
             // A synthetic fixture may never silently impersonate an original
             // tool pack during ordinary play.
             if (synthetic && !testMode)
