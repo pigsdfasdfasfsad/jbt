@@ -600,7 +600,7 @@ public partial class Bootstrap : Node
                Math.Abs(optic.DiameterStuds-spec.diameter)>.00001f ||
                optic.ReduceSensitivity!=spec.reduce ||
                Math.Abs(Pass69SourceScope.SensitivityScale(
-                   optic,30f)-(spec.reduce?.5f:1f))>.0001f ||
+                   optic,30f)-(spec.reduce ? .5f : 1f))>.0001f ||
                Math.Abs(Pass69SourceScope.SensitivityScale(
                    optic,60f)-1f)>.0001f)
                 throw new InvalidOperationException(
