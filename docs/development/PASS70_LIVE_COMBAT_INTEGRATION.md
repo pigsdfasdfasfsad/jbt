@@ -101,8 +101,41 @@ testing, performance, accessibility, objective variants,
 error recovery, reload interruption, AI combat timings
 and screenshot parity remain to be completed.
 
-## Verification status
+## Verified exported Windows checkpoint — October 11, 2026 (US Central)
 
-**Implementation committed; native Windows CI acceptance pending.**
-Do not mark Pass70 as verified until the specific complete
-Windows workflow reports success on the tested revision.
+**Successful native Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38198146639
+
+**Tested implementation code SHA:** `ef4fb0dc79d93d1e45d8a78a12c9c56e6bf6ed33`.
+
+- **588 Python regression tests passed**, with one inherited Pass34
+  XML FutureWarning. Godot/.NET exported Windows build succeeded
+  with **0 errors** and one inherited Pass36 `CS0108` compiler warning.
+- `TWR_SMOKE_PASS70_LIVE_COMBAT_OK` passed in the **exported Windows
+  executable**, proving a real loaded Laboratory scene, first-person
+  camera and physics capsule, HUD, real wave-spawned infected capsule,
+  physics ray intersection, virtual mouse-event shot into
+  `TryUseWeapon`, exactly one cartridge consumed, the source ammo
+  command bus, `InfectedAgent.ApplyDamage` death handling, subsequent
+  **XP and credit awards**, `R`-key reload after the actual physics
+  timer, ammunition/reserve conservation and **actual Wave 2 infected
+  spawning** after accelerated game-stage timers.
+- The original Windows headless driver cannot hold a captured mouse.
+  The test therefore requires an **exact `--smoke-pass70` CLI-only
+  guard** at the existing mouse-capture prerequisite. Ordinary game
+  input capture, shots, cooldowns and hit-authority logic are
+  unchanged. No test code directly assigns domain `Health`,
+  `Credits`, `Xp` or `Wave`; the earlier authority regression
+  remains green.
+- Previous Pass59–69 exported Windows weapon and optics native tests
+  passed. Domain-only `TWR_SMOKE_COMPLETE_OK maps=10 waves=150`
+  also passed; **neither test represents ten human-played 15-wave
+  survival matches**.
+- The synthetic Glock/weapon asset fixture was removed before
+  the final owner-private asset exclusion check, which passed.
+  **No user-original map/weapon data or public Windows executable
+  was published.**
+
+**Next gap:** automated multi-map real-player spawn/navigation/damage
+acceptance and robust operator-controlled Windows distribution.
+Long-haul real manual gameplay and 1:1 visual/physics fidelity
+remain incomplete.
