@@ -64,6 +64,9 @@ public partial class Pass73GroundNavigationRuntime : Node3D
     public long RejectedDescendingRoutes78 { get; private set; }
     public long VerifiedUpperDirectRoutes79 { get; private set; }
     public long RejectedUpperDirectRoutes79 { get; private set; }
+    public long VerifiedUpperCrossingRoutes80 { get; private set; }
+    public long RejectedUpperCrossingRoutes80 { get; private set; }
+    public int CrossingCount80 => Layout?.ApproximateCrossings80.Count ?? 0;
     public int StairLinkCount77 => Layout?.ApproximateStairs77.Count ?? 0;
 
     public static Pass73GroundNavigationRuntime Attach(
@@ -242,8 +245,17 @@ public partial class Pass73GroundNavigationRuntime : Node3D
                     infectedCentre - Vector3.Up * .8f, playerCentre))
                 VerifiedUpperDirectRoutes79++;
             else
+            {
                 RejectedUpperDirectRoutes79++;
-            return []; // Pass80 adds audited alternative cross-deck routes.
+                if (TryGetVerifiedUpperCrossing80(
+                        infectedCentre,playerCentre,out var crossing))
+                {
+                    VerifiedUpperCrossingRoutes80++;
+                    return crossing;
+                }
+                RejectedUpperCrossingRoutes80++;
+            }
+            return []; // An unsafe unsupported target receives no shortcut.
         }
 
         // Pass77 supplements ONLY the approximate Manor blockout when a
@@ -523,6 +535,45 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         var feet = infectedCentre - Vector3.Up * .8f;
         return UpperCorridorSupported79(
             feet, feet + direction.Normalized() * .55f);
+    }
+
+
+    /// <summary>
+    /// Pass80: only a verified actual fallback crossing may connect the
+    /// left and right balcony halves. Every foot-level section is independently
+    /// checked against Godot static collision, including the full bridge.
+    /// </summary>
+    private bool TryGetVerifiedUpperCrossing80(
+        Vector3 infectedCentre, Vector3 playerFeet, out Vector3[] result)
+    {
+        result = [];
+        var from = infectedCentre - Vector3.Up*.8f;
+        foreach (var bridge in Layout.ApproximateCrossings80)
+        {
+            var mid=bridge.CentreFeet;
+            if (Math.Abs(from.X-mid.X)>13.8f ||
+                Math.Abs(playerFeet.X-mid.X)>13.8f ||
+                Math.Abs(from.Z-mid.Z)>38f ||
+                Math.Abs(playerFeet.Z-mid.Z)>38f ||
+                Math.Abs(from.Y-mid.Y)>.45f ||
+                Math.Abs(playerFeet.Y-mid.Y)>.45f)
+                continue;
+            var firstSide=Math.Sign(from.X-mid.X);
+            var lastSide=Math.Sign(playerFeet.X-mid.X);
+            if (firstSide == 0 || lastSide == 0 ||
+                firstSide == lastSide)
+                continue;
+            var incoming=firstSide<0 ? bridge.LeftFeet : bridge.RightFeet;
+            var outgoing=lastSide<0 ? bridge.LeftFeet : bridge.RightFeet;
+            if (!UpperCorridorSupported79(from,incoming) ||
+                !UpperCorridorSupported79(incoming,mid) ||
+                !UpperCorridorSupported79(mid,outgoing) ||
+                !UpperCorridorSupported79(outgoing,playerFeet))
+                continue;
+            result = [incoming,mid,outgoing,playerFeet];
+            return true;
+        }
+        return false;
     }
 
     private bool VerifiedPhysicalStair77(Pass77StairLink stair)

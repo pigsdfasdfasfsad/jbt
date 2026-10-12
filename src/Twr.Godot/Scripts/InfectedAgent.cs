@@ -286,7 +286,16 @@ public partial class InfectedAgent : CharacterBody3D
                     // climb merely because it is within generic flat
                     // pursuit range. The real CharacterBody still must
                     // physically traverse the surface to advance.
-                    if (manorUphill77 &&
+                    if (manorSameUpper79 &&
+                        _navigationRoute.Length > 0)
+                    {
+                        // A 1.58m generic skip would cut across the void
+                        // before reaching the new narrow bridge entry.
+                        if (offset.LengthSquared() > .1225f ||
+                            Math.Abs(waypoint.Y + .8f - GlobalPosition.Y) > .25f)
+                            break;
+                    }
+                    else if (manorUphill77 &&
                         waypoint.Y + .8f - GlobalPosition.Y > .10f)
                     {
                         if (offset.LengthSquared() > .1225f ||

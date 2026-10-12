@@ -10,6 +10,11 @@ namespace Twr.Godot;
 public sealed record Pass77StairLink(
     string Name, Vector3 LowerFeet, Vector3 UpperFeet);
 
+// Pass80 is a clearly labelled NEW fallback walkable crossing, never
+// claimed to be a surveyed stair or bridge from the source game.
+public sealed record Pass80UpperCrossing(
+    string StairName, Vector3 CentreFeet, Vector3 LeftFeet, Vector3 RightFeet);
+
 public sealed record RuntimeMapLayout(
     Vector3 PlayerSpawn,
     IReadOnlyList<Vector3> InfectedSpawns,
@@ -21,6 +26,7 @@ public sealed record RuntimeMapLayout(
     public bool UseExactInfectedSpawns { get; init; }
     public IReadOnlyList<Vector3> FortificationPoints { get; init; } = [];
     public IReadOnlyList<Pass77StairLink> ApproximateStairs77 { get; init; } = [];
+    public IReadOnlyList<Pass80UpperCrossing> ApproximateCrossings80 { get; init; } = [];
 }
 
 public static class MapBlockoutBuilder
@@ -174,8 +180,8 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildManor(Node3D root)
     {
         BaseArena(root, 78, 90, new Color(0.12f, 0.13f, 0.12f));
-        InteriorShell(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
-        InteriorShell(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f));
+        InteriorShell(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f), 1.15f, 9.55f);
+        InteriorShell(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f), -23.45f, -15.15f);
         InteriorShell(root, "FrontHall", new Vector3(0, 2.7f, 31), new Vector3(28, 5.4f, 11), new Color(0.25f, 0.22f, 0.19f));
         // RECOVERED topology: Manor has usable rooms on both floors and a front
         // staircase plus a west staircase. Exact dimensions remain APPROXIMATED.
@@ -192,8 +198,21 @@ public static class MapBlockoutBuilder
             Points((-7,18),(7,18),(-7,4),(7,4),(-7,-14),(7,-14)),
             Points((0,-8),(10,12))) with
         {
-            ApproximateStairs77 = [westStair77, eastStair77, frontStair77]
+            ApproximateStairs77 = [westStair77, eastStair77, frontStair77],
+            ApproximateCrossings80 = [
+                MakeUpperCrossing80(westStair77),
+                MakeUpperCrossing80(eastStair77),
+                MakeUpperCrossing80(frontStair77)]
         };
+    }
+
+    private static Pass80UpperCrossing MakeUpperCrossing80(Pass77StairLink stair)
+    {
+        var sign = Math.Sign(stair.UpperFeet.Z-stair.LowerFeet.Z);
+        var center = stair.UpperFeet +
+            new Vector3(0f, -.035f, sign*.70f);
+        return new Pass80UpperCrossing(stair.Name, center,
+            center+Vector3.Left*3.50f, center+Vector3.Right*3.50f);
     }
 
     private static RuntimeMapLayout Layout(Vector3 player, IReadOnlyList<Vector3> infected, IReadOnlyList<Vector3> pickups, IReadOnlyList<Vector3> objectives) =>
@@ -340,9 +359,18 @@ public static class MapBlockoutBuilder
                 surface+Vector3.Up*.035f,
                 new Vector3(3.12f,.025f,.24f),color.Lightened(.03f));
         }
+        // Pass80: a solid crosswalk JUST PAST the walkable ramp. The
+        // upper surface is 3.5cm below the side decks, avoiding a raised
+        // collision lip while connecting both reconstructed balcony halves.
+        // It does not pretend to replace retail Manor collision meshes.
+        var crossingZ=upper.Z+zDir*.70f;
+        StaticBox(root,name+"_UpperCrossing80",
+            new Vector3(center.X,upper.Y-.115f,crossingZ),
+            new Vector3(9.0f,.16f,1.20f),color.Lightened(.065f));
         return new Pass77StairLink(name,lower,upper);
     }
-    private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color)
+    private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color,
+        float openingMinZ80=float.NaN,float openingMaxZ80=float.NaN)
     {
         // APPROXIMATED reconstruction: exact wall/door transforms are not recovered.
         // Unlike the earlier solid placeholder, this shell is intentionally traversable.
@@ -378,12 +406,46 @@ public static class MapBlockoutBuilder
             var gap=3.2f;
             var depthSegment=(size.Z-gap)*0.5f;
             var zOffset=gap*0.5f+depthSegment*0.5f;
-            StaticBox(root,name+"_DividerN",new Vector3(center.X,wallY,center.Z-zOffset),
-                new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
-            StaticBox(root,name+"_DividerS",new Vector3(center.X,wallY,center.Z+zOffset),
-                new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
+            // Normal scenes retain their original approximate divider.
+            // Pass80 carves a documented, fallback-Manor-only stair slot
+            // through the obstruction, preserving both wall segments.
+            if (float.IsNaN(openingMinZ80) || float.IsNaN(openingMaxZ80))
+            {
+                StaticBox(root,name+"_DividerN",new Vector3(center.X,wallY,center.Z-zOffset),
+                    new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
+                StaticBox(root,name+"_DividerS",new Vector3(center.X,wallY,center.Z+zOffset),
+                    new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
+            }
+            else
+            {
+                AddDividedManorWall80(root,name+"_DividerN",
+                    center.X,wallY,center.Z-size.Z*.5f,center.Z-gap*.5f,
+                    openingMinZ80,openingMaxZ80,thickness,size.Y,color);
+                AddDividedManorWall80(root,name+"_DividerS",
+                    center.X,wallY,center.Z+gap*.5f,center.Z+size.Z*.5f,
+                    openingMinZ80,openingMaxZ80,thickness,size.Y,color);
+            }
         }
     }
+    private static void AddDividedManorWall80(Node3D root,string name,
+        float x,float wallY,float firstZ,float lastZ,
+        float gapFirst,float gapLast,float width,float height,Color color)
+    {
+        // Each piece remains a real static wall collider; the empty slot
+        // is physically open from ground level to the top of the shell.
+        // This corrected fallback wall must never modify original maps.
+        var leftEnd=Math.Min(lastZ,gapFirst);
+        var rightStart=Math.Max(firstZ,gapLast);
+        if(leftEnd-firstZ >= .5f)
+            StaticBox(root,name+"_Before80",
+                new Vector3(x,wallY,(firstZ+leftEnd)*.5f),
+                new Vector3(width,height,leftEnd-firstZ),color.Lightened(.04f));
+        if(lastZ-rightStart >= .5f)
+            StaticBox(root,name+"_After80",
+                new Vector3(x,wallY,(rightStart+lastZ)*.5f),
+                new Vector3(width,height,lastZ-rightStart),color.Lightened(.04f));
+    }
+
     private static void StaticBox(Node3D root, string name, Vector3 position, Vector3 size, Color color)
     {
         var body = new StaticBody3D { Name = name, Position = position };
