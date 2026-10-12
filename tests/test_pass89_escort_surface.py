@@ -16,7 +16,8 @@ def test_escort_uses_fallback_world_graph_not_wall_clipping():
     assert "Pass89EscortSurfaceSafety.CanTravel(" in obj
     assert "actor.MoveAndSlide()" in obj
     assert "StopEscortHorizontal89(delta)" in obj
-    assert "var newRoute=nav.GetVerifiedEscortRoute89(" in obj
+    assert "var newRoute=UseManorElevatedEscort94" in obj
+    assert "nav.GetVerifiedEscortRoute89(" in obj
     assert "if (_escortRouteIndex89 >= _escortRoute89.Length)" in obj
     assert "EscortBlockedSteps89++" in obj
     assert "EscortSafeSteps89++" in obj
