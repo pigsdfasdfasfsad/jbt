@@ -90,7 +90,11 @@ public sealed class LocalSession
         switch (command)
         {
             case StartMatchCommand x:
+                // Guarded _match.Start throws on an in-progress match.
+                // Only after its successful transition may prior run
+                // wave receipts be cleared for replayable Regular mode.
                 _match.Start(State.Match, x.MapName, now);
+                _waveRewards.ResetForNewMatch();
                 _starterLoadout.ResetForMatch(State.Player);
                 if(Profile.EquippedPerks.Contains("Juggernaut"))
                 {
@@ -142,6 +146,13 @@ public sealed class LocalSession
                 _killRewards.Award(State.Player, x.InfectedType, x.Credits, x.Xp, now);
                 break;
             case AwardWaveSurvivalCommand x:
+                // Disallow early/future-wave claims, replay claims from
+                // the lobby/results and awards to already-dead players.
+                // The ledger separately enforces at-most-once PER wave.
+                if(State.Match.Phase!=MatchPhase.Wave ||
+                   State.Match.Wave!=x.Wave ||
+                   !State.Player.IsAlive)
+                    break;
                 if (_waveRewards.Award(State.Player, State.Match.MapName, x.Wave, x.CompletedObjectives, x.PlayerCount, now))
                     PersistProfile($"Wave{x.Wave}Survival", now);
                 break;
