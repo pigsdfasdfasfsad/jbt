@@ -70,6 +70,9 @@ public partial class GameplayRoot : Node3D
     public int RejectedFallbackSpawns85 { get; private set; }
     public int VerifiedFallbackNaturalPickups86 { get; private set; }
     public int RejectedFallbackNaturalPickups86 { get; private set; }
+    public int VerifiedFallbackEscortStarts91 { get; private set; }
+    public int RejectedFallbackEscortStarts91 { get; private set; }
+    public int AdjustedFallbackEscortStarts91 { get; private set; }
     private bool _isFallbackScene86;
     public int ActivePickupCount => _pickups.Count(actor => GodotObject.IsInstanceValid(actor));
     public string WaveStage => StageName();
@@ -630,6 +633,34 @@ public partial class GameplayRoot : Node3D
         for (var i = 0; i < count; i++)
         {
             var family = families[(wave - 1 + i * 2) % families.Length];
+            var position = ObjectivePosition(i);
+            var groundEscort91 = family == "Escort" &&
+                _isFallbackScene86 && _groundNavigation73 is not null &&
+                (MapName != "Manor" || position.Y < 2.3f);
+            if (groundEscort91)
+            {
+                // Only adjust invented fallback Escort locations. The
+                // recovered original source packs must keep their own
+                // authored destination/spawn transforms unchanged.
+                var supported = Pass91EscortSpawnSafety.TryFind(
+                    GetWorld3D(),position,_player.GlobalPosition,
+                    _player.GetRid());
+                if(supported.HasValue)
+                {
+                    VerifiedFallbackEscortStarts91++;
+                    if(position.DistanceTo(supported.Value)>.25f)
+                        AdjustedFallbackEscortStarts91++;
+                    position=supported.Value;
+                }
+                else
+                {
+                    RejectedFallbackEscortStarts91++;
+                    // Defer to existing actor behavior rather than
+                    // falsely claim a verified source position. The
+                    // native acceptance fails if such a fallback cannot
+                    // navigate/complete; do not silently pay rewards.
+                }
+            }
             var objective = new ObjectiveRuntime
             {
                 Name = $"Objective_{wave}_{family}_{i}",
@@ -649,7 +680,7 @@ public partial class GameplayRoot : Node3D
                 EscortGroundNavigator89 = _groundNavigation73,
                 Player = _player,
                 Runtime = Runtime,
-                Position = ObjectivePosition(i)
+                Position = position
             };
             objective.StatusChanged = status => _hud.SetObjective(status);
             objective.Completed = OnObjectiveCompleted;
