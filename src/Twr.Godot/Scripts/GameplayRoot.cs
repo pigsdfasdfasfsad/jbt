@@ -142,6 +142,11 @@ public partial class GameplayRoot : Node3D
 
     public bool Pass47OriginalWeaponModelActive => _player?.SourceWeaponModelActive ?? false;
     public bool Pass47OwnerWeaponPackVerified => _player?.SourceWeaponPackVerified ?? false;
+    // Reconstructed-only Manor stair endpoints; empty when owner-original
+    // Laboratory scene or other maps take their normal loading paths.
+    public IReadOnlyList<Pass77StairLink> Pass77ApproximateStairs =>
+        _mapLayout?.ApproximateStairs77 ?? [];
+
     public int Pass47WeaponSourceVisibleParts => _player?.SourceWeaponVisibleParts ?? 0;
     public int Pass47MissingMeshProxies => _player?.SourceWeaponMissingMeshProxies ?? 0;
 

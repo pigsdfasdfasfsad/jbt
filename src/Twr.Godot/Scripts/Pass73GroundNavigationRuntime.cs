@@ -58,6 +58,9 @@ public partial class Pass73GroundNavigationRuntime : Node3D
     public long RouteRequests { get; private set; }
     public long CacheHits { get; private set; }
     public long FallbackPathSearches { get; private set; }
+    public long VerifiedElevatedRoutes77 { get; private set; }
+    public long RejectedElevatedRoutes77 { get; private set; }
+    public int StairLinkCount77 => Layout?.ApproximateStairs77.Count ?? 0;
 
     public static Pass73GroundNavigationRuntime Attach(
         Node3D owner, string mapName, RuntimeMapLayout layout)
@@ -227,6 +230,21 @@ public partial class Pass73GroundNavigationRuntime : Node3D
             !IsFinite(infectedCentre) || !IsFinite(playerCentre))
             return [];
 
+        // Pass77 supplements ONLY the approximate Manor blockout when a
+        // player is above a ground-floor infected. It never overwrites the
+        // owner-recovered Laboratory graph or invents retail stair routes.
+        if (MapName == "Manor" && StairLinkCount77 == 3 &&
+            playerCentre.Y - infectedCentre.Y > 1.45f)
+        {
+            if (TryGetVerifiedManorAscent77(
+                    infectedCentre,playerCentre,out var ascending))
+            {
+                VerifiedElevatedRoutes77++;
+                return ascending;
+            }
+            RejectedElevatedRoutes77++;
+        }
+
         // Do not force agents through grid cells if ordinary direct pursuit
         // has a clear corridor; source enemy movement retains priority.
         if (Math.Abs(infectedCentre.Y - playerCentre.Y) <= 1.2f &&
@@ -263,6 +281,99 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         _routes.Add(key, path);
         _routeInsertionOrder.Enqueue(key);
         return path;
+    }
+
+    private bool TryGetVerifiedManorAscent77(
+        Vector3 infectedCentre, Vector3 playerCentre, out Vector3[] result)
+    {
+        result = [];
+        var infectedFeet = infectedCentre - Vector3.Up * .8f;
+        var playerFeet = playerCentre - Vector3.Up * .8f;
+        // Keep only the supported up-ramp transition. Downstairs chase and
+        // stair routes between disconnected wings are NOT yet verified.
+        if (infectedFeet.Y > 1.5f || playerFeet.Y < 2.2f ||
+            Layout.ApproximateStairs77.Count != 3)
+            return false;
+
+        Pass77StairLink? selected = null;
+        Vector3[] approach = [];
+        var smallest = float.MaxValue;
+        foreach (var stair in Layout.ApproximateStairs77)
+        {
+            var groundDistance = new Vector2(
+                infectedFeet.X - stair.LowerFeet.X,
+                infectedFeet.Z - stair.LowerFeet.Z).Length();
+            var upperDistance = new Vector2(
+                playerFeet.X - stair.UpperFeet.X,
+                playerFeet.Z - stair.UpperFeet.Z).Length();
+            if (upperDistance > 11f ||
+                Math.Abs(playerFeet.Y - stair.UpperFeet.Y) > .90f ||
+                !CorridorClear(stair.UpperFeet, playerFeet) ||
+                !VerifiedPhysicalStair77(stair))
+                continue;
+
+            Vector3[] groundPath;
+            if (groundDistance <= 4f &&
+                CorridorClear(infectedFeet, stair.LowerFeet))
+                groundPath = [];
+            else
+            {
+                var start = _graph.GetClosestPoint(infectedCentre);
+                var end = _graph.GetClosestPoint(
+                    stair.LowerFeet + Vector3.Up * .8f);
+                if (start < 0 || end < 0 ||
+                    !AnchorMatches(infectedCentre,_graph.GetPointPosition(start)) ||
+                    !AnchorMatches(stair.LowerFeet + Vector3.Up * .8f,
+                        _graph.GetPointPosition(end)))
+                    continue;
+                groundPath = _graph.GetPointPath(start,end);
+                if (groundPath.Length < 2 ||
+                    !CorridorClear(groundPath[^1],stair.LowerFeet))
+                    continue;
+            }
+
+            var score = groundDistance + upperDistance;
+            if (score >= smallest) continue;
+            smallest = score;
+            selected = stair;
+            approach = groundPath;
+        }
+
+        if (selected is null) return false;
+        // ≤0.75m planar samples from the real sloped collider. Each
+        // waypoint height is taken from the actual reconstructed collision
+        // ramp, not from an enemy position teleport or a phantom jump.
+        var points = new List<Vector3>(approach.Length + 14);
+        points.AddRange(approach);
+        points.Add(selected.LowerFeet);
+        for (var i = 1; i <= 12; i++)
+            points.Add(selected.LowerFeet.Lerp(selected.UpperFeet, i/12f));
+        points.Add(playerFeet);
+        result = points.ToArray();
+        return true;
+    }
+
+    private bool VerifiedPhysicalStair77(Pass77StairLink stair)
+    {
+        // Bounded (7-ray) physical support audit before issuing a raised
+        // route. If a roof, player collider or other wall blocks the ramp,
+        // the original ground steering remains authoritative instead.
+        var space = GetWorld3D().DirectSpaceState;
+        for (var i = 0; i <= 6; i++)
+        {
+            var expected = stair.LowerFeet.Lerp(stair.UpperFeet, i/6f);
+            var ray = PhysicsRayQueryParameters3D.Create(
+                expected + Vector3.Up*.85f,
+                expected + Vector3.Down*.70f);
+            ray.CollisionMask = WorldCollisionMask;
+            ray.Exclude = _exclude;
+            var hit = space.IntersectRay(ray);
+            if (hit.Count == 0 ||
+                ((Vector3)hit["normal"]).Y < .74f ||
+                Math.Abs(((Vector3)hit["position"]).Y - expected.Y) > .24f)
+                return false;
+        }
+        return CorridorClear(stair.LowerFeet, stair.UpperFeet);
     }
 
     private static bool AnchorMatches(Vector3 body, Vector3 feet)
