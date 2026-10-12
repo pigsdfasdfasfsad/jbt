@@ -79,6 +79,24 @@ jobs:
         run: |
           if (!(Test-Path 'build/output/ThoseWhoRemainOffline.exe')) { throw 'Missing Windows executable' }
 
+      - name: Preflight Manor upper Escort route physics and bounded diagnostics
+        if: success() && github.ref_name == 'twr-pass94-manor-stair-escort'
+        shell: pwsh
+        run: |
+          $stdout = Join-Path $env:RUNNER_TEMP 'pass94-preflight.stdout.txt'
+          $stderr = Join-Path $env:RUNNER_TEMP 'pass94-preflight.stderr.txt'
+          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','6000','--','--smoke-pass94') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          $output = @()
+          if(Test-Path $stdout){$output += Get-Content $stdout}
+          if(Test-Path $stderr){$output += Get-Content $stderr}
+          # Keep the measured physics evidence and failure on the job log.
+          $output | ForEach-Object {Write-Host $_}
+          if($run.ExitCode -ne 0 -or
+             -not ($output | Where-Object {"$_" -match 'TWR_SMOKE_PASS94_MANOR_STAIR_ESCORT_OK'})){
+            throw "Manor Escort physics preflight blocked; see TWR_PASS94_ROUTE_DIAGNOSTIC. Exit $($run.ExitCode)"
+          }
+
       - name: Smoke test Pass 29 contracts in the exported executable
         shell: pwsh
         run: |
