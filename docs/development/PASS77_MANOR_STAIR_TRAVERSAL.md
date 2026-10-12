@@ -15,6 +15,17 @@ The uploaded TestPlace place snapshots and connected project recovery artifacts 
 3. **Audited upward infected pursuit.** Only on the reconstructed Manor, an infected below a player on a physically connected upper floor can use a cautious uphill route. Every stair link must pass seven vertical normal/height collision samples and three swept corridor rays, plus a physically bounded ground-graph approach and upstairs corridor verification. The resulting 12-segment slope route retains feet-level waypoints for the existing physics-based `InfectedAgent`; there is no warping, collision bypass, fabricated jump edge, or replacement of recovery data. Stair descent and unconnected upper wings remain intentionally unimplemented.
 4. **Exported Windows acceptance.** The new `--smoke-pass77` uses an isolated `user://pass77-manor-stair-smoke-profile.json` and creates a real Manor `GameplayRoot`, testing all three reconstructed ramp/landing colliders, actual W-key first-person ascent along FrontHall, an audited lower-to-upper AI waypoint route and a real infected CharacterBody climbing without custom teleportation. All other source-map content remains excluded from public CI.
 
-**Native acceptance is being strengthened from mere 2m slope ascent to a confirmed contact with the physical upper landing by both player and infected.** The initial exported-Windows run passed 627 Python tests and measured 2.28m of real player climbing and 1.98m of infected climbing; those earlier measurements alone are not sufficient to certify complete upstairs arrival.
+## Final exported Windows verification
 
-**Final native exported Windows verification pending.** The latest run verified full player ascent, but the pursuer halted at exactly the player collision-capsule stand-off distance on the last ramp step. The acceptance player is now stationed on the existing right-side upper balcony, 4.25m from the landing centre, so the infected has physical space to reach the landing rather than contacting a blocking player. This scenario validates full upstairs approach, not a player teleport exploit. Python contracts, C# export, player climb, infected route and private-asset exclusion must all pass before this can be called verified.
+**Successful:** [Windows CI run 38212138620](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38212138620), testing gameplay commit `61c8d24ad49ef83f116ea0b9b6b82d5af079a24a`.
+
+- **627 Python regressions passed**, with one inherited XML parsing FutureWarning.
+- Godot/.NET Windows standalone export finished with **0 compiler errors**.
+- Real production Manor Front Hall W-key player ascent: `TWR_PASS77_REAL_PLAYER_STAIRS_OK rise=2.68 upper_landing_reached=true`.
+- Production `InfectedAgent` moved through actual CharacterBody collision and reached the same upper landing: `TWR_PASS77_REAL_INFECTED_STAIRS_OK actual_rise=2.62 upper_landing_reached=true source_jump_attempts=0`.
+- Final `TWR_SMOKE_PASS77_MANOR_STAIRS_OK` and owner-private assets exclusion passed.
+- Existing `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` is **domain simulation**, not 150 physically survived waves.
+
+The prior native failures were substantive: flat-landings blocked the player, the short second connector made a contact seam, and the flat-ground waypoint acceptance condition let an infected skip the last uphill segment before reaching the deck. The last defect was fixed by requiring 0.35m planar / 0.15m vertical arrival on ascending fallback Manor waypoints.
+
+**Fidelity boundary:** The original Manor stair meshes/transforms are not recovered or authenticated in this public source branch. The native traversal proves only the reconstructed **Front Hall** route. Other two flights, downward traversal, different infected types, human-played full 15 waves, source-authentic visuals and a privately assembled downloadable .exe remain unfinished.

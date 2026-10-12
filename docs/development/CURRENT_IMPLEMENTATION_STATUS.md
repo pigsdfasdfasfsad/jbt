@@ -1,4 +1,4 @@
-# PASS 77 — MANOR PHYSICAL UPPER-STORY TRAVERSAL (WINDOWS VALIDATION PENDING)
+# PASS 77 — VERIFIED WINDOWS MANOR FRONT-HALL PHYSICAL UPPER-STORY ASCENT
 
 **Development branch:** `twr-pass77-manor-stair-traversal` based on verified [Pass76 Windows gameplay CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38208475688).
 
@@ -9,7 +9,11 @@ This pass corrects a concrete remaining environmental gap: the reconstructed Man
 - A conservative Pass73 graph supplement can issue **uphill** waypoints along one of three existing Manor ramps only after sampling real walkable Godot colliders along the ramp, verifying collision-free corridor travel and actual upper-floor target alignment. Stair down-routes, remote upstairs wings and all owner-original retail map nav parity are deliberately unsupported/unverified.
 - A dedicated exported Windows native smoke starts real reconstructed Manor gameplay, validates three ramp colliders and upper landings, uses actual W keyboard input to physically climb the front stair without teleporting, computes a real collision-audited lower-to-upper zombie route, and exercises a genuine infected physics body climbing after the player.
 
-**Verification pending:** Python regression suite, Windows Godot/.NET export, native player/infected ascent acceptance and owner-private asset exclusion. The private Roblox originals, original meshes and user save data are not committed.
+**Verified:** [GitHub Actions Windows run 38212138620](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38212138620) from gameplay commit `61c8d24ad49ef83f116ea0b9b6b82d5af079a24a`: **627 Python regressions passed**, Godot/.NET standalone Windows export compiled with **zero errors**, native real-player `TWR_PASS77_REAL_PLAYER_STAIRS_OK` and real-infected `TWR_PASS77_REAL_INFECTED_STAIRS_OK` markers passed, completion `TWR_SMOKE_PASS77_MANOR_STAIRS_OK` passed, and owner-private content exclusion succeeded.
+
+**Observed real physics:** First-person W-key player climb: **2.68m**, grounded upper landing; infected Body3D climb **2.62m**, confirmed upper landing, zero source jump attempts. No instant position updates were applied during either climb. The original 1.58m flat-route waypoint acceptance threshold was corrected specifically for verified uphill Manor routes so infected do not skip their final rise and turn into the side balcony.
+
+**Remaining:** Only the Front Hall flight had full player/enemy ascent acceptance. West/East flights are instantiated and collider-checked but not yet walked end-to-end. Descent, authentic owner original Manor geometry, source match topology and completed player-driven 15-wave survival remain unverified. The private Roblox originals, original meshes and user save data are not committed.
 
 [Pass77 technical record](PASS77_MANOR_STAIR_TRAVERSAL.md)
 

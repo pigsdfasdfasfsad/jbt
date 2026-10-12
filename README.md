@@ -2,7 +2,20 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 76 — Objective, Pickup, Supply and Fortification Physics
+## Latest verified branch: Pass 77 — Manor stair and balcony physical traversal
+
+[Pass 77 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass77-manor-stair-traversal) ·
+[Successful Windows CI: 627 Python tests and full native Front Hall ascent](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38212138620) ·
+[Pass 77 engineering record](docs/development/PASS77_MANOR_STAIR_TRAVERSAL.md)
+
+- Three **approximate fallback** Manor stair flights now have continuous sloped Godot collision ramps, eight decorative (noncolliding) treads each, and widened upper-deck connectors. All three staircase collider assemblies were created in a production `GameplayRoot`, but the physical traversal test specifically drove the **Front Hall** route.
+- First-person player reached Front Hall's actual upstairs collision landing using real W-key movement and normal physics; Windows acceptance logged **2.68m vertical ascent** and a grounded upper landing without teleporting.
+- The real `InfectedAgent` followed collision-audited uphill waypoints and reached the upper landing with **2.62m vertical ascent**, without jump attempts, physics bypass, or position assignment during motion.
+- Native debugging caught several real collision and AI bugs: a flat landing lip, a coplanar overlapping connector seam, early route reset and overly permissive 1.58m flat-ground waypoint acceptance. The verified route now requires close **0.35m horizontal / 0.15m vertical** arrival before switching to balcony pursuit.
+- **627 Python regressions passed; zero Godot/.NET compiler errors; native player/infected upper-landing markers and owner-private asset exclusion passed**. The ten-map 150-wave domain-only smoke also remains green, but is not a human-played 15-wave survival run.
+- **Fidelity boundary:** These are reconstructed fallback collision surfaces, not recovered retail Manor stair meshes. West/East stair full player/enemy traversal, upstairs descent, authentic UV/artwork, original collision layouts, 15-wave manual survival and final private offline EXE packaging remain unverified.
+
+## Historical verified branch: Pass 76 — Objective, Pickup, Supply and Fortification Physics
 
 [Pass 76 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass76-interaction-objective-fortification) ·
 [Successful Windows export, 622 regressions and two native interaction smokes](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38208475688) ·
