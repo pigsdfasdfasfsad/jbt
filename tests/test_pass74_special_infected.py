@@ -76,4 +76,5 @@ def test_ci_native_flag_isolated_save_and_excluded_private_assets():
     assert ci.index("Smoke Pass 73") < ci.index("Smoke Pass 74")
     assert ci.index("Smoke Pass 74") < ci.index(
         "Verify no private map scenes entered the CI export")
-    assert "github.ref_name == 'twr-pass74-special-infected-safety')" in ci
+    assert "if: success() && github.ref_name == 'twr-pass74-special-infected-safety'" in ci
+    # The private-owner exclusion gate extends to each later pass branch.

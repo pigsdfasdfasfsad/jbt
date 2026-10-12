@@ -1,3 +1,17 @@
+# PASS 75 — ROCKET/FRAG OCCLUSION AND CROSSHAIR-FIRST COMBAT (WINDOWS CI PENDING)
+
+**Source branch:** `twr-pass75-blast-line-of-sight` based on [verified Pass74 Windows native gameplay](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38205313363).
+
+Pass75 fixes three concrete gameplay issues: **rocket swept collision rays did not include live infected layer 2**, **rocket and Frag splash ignored occluding world walls**, and **recoil was applied before a trigger pull's bullet/launcher direction was resolved**. Godot now raycasts launcher projectiles against world + infected + optional source-server collision, applies blast damage only where solid-world visibility permits (including damage objectives), and resolves each first shot against the pre-recoil crosshair. Ammo, source weapon statistics, kill rewards, explosive falloff and other combat authority remain unchanged.
+
+The dedicated native Windows smoke creates production Laboratory and Manor gameplay roots with actual wave-spawned infected, a clearly synthetic raised arena floor and temporary wall, real rocket sweep/impact and 3-second Frag fuse physics, and native damage-objective actors. It tests blocked/unblocked infected and tanker splash, out-of-radius preservation, and authoritative kill credits. The standalone smoke uses an isolated local profile and never requires online services or publishes owner-original data.
+
+**Verification pending:** Python regression suite, Godot/.NET Windows export, two native smoke markers, and private-asset exclusion. These collision tests are not proof of all original weapon ballistics, 1:1 map geometry, manual fifteen-wave survival or distribution-ready EXE.
+
+[Pass75 engineering report](PASS75_WEAPON_BLAST_OCCLUSION.md)
+
+---
+
 # PASS 74 — VERIFIED EXPORTED WINDOWS SPECIAL INFECTED ATTACK SAFETY
 
 **Branch:** `twr-pass74-special-infected-safety` based on verified [Pass73 CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38202837479).
