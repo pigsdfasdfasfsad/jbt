@@ -40,7 +40,12 @@ code paths* used for regular single-player operation.
   lane, assigns minimal health and zero damage/speed.
 - Queries actual `Godot.PhysicsDirectSpaceState3D` first
   to verify the camera ray contacts that infected's native
-  collision capsule. Sends the *actual*
+  collision capsule. Godot's **headless** Windows DisplayServer
+  cannot capture a real mouse cursor (`Input.MouseMode` stays
+  `Visible`). An **exact `--smoke-pass70` CLI-only** guard
+  bypasses *only* the cursor-capture prerequisite; ordinary
+  playable controls still require capture. This lets the smoke
+  send the *actual*
   `FirstPersonPlayer._UnhandledInput` mouse-left event:
   the ordinary `TryUseWeapon` -> `SpendAmmo` ->
   `FireHitscan` -> `InfectedAgent.ApplyDamage` ->
