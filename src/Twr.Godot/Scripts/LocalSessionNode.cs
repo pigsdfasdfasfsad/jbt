@@ -43,6 +43,8 @@ public partial class LocalSessionNode : Node
             StringComparer.Ordinal);
         var smoke83=OS.GetCmdlineUserArgs().Contains("--smoke-pass83",
             StringComparer.Ordinal);
+        var smoke88=OS.GetCmdlineUserArgs().Contains("--smoke-pass88",
+            StringComparer.Ordinal);
         // Pass54-56 all use isolated test-only profile files.
         var save = ProjectSettings.GlobalizePath(smoke54
             ? "user://pass54-smoke-profile.json" :
@@ -59,6 +61,7 @@ public partial class LocalSessionNode : Node
             smoke77 ? "user://pass77-manor-stair-smoke-profile.json" :
             smoke78 ? "user://pass78-manor-bidirectional-smoke-profile.json" :
             smoke83 ? "user://pass83-manor-upper-gameplay-smoke-profile.json" :
+            smoke88 ? "user://pass88-physical-waves-smoke-profile.json" :
             "user://profile.json");
         var store = new JsonProfileStore(save);
         if(smoke70 || smoke71)
@@ -78,6 +81,8 @@ public partial class LocalSessionNode : Node
         else if(smoke78)
             store.Save(new Profile());
         else if(smoke83)
+            store.Save(new Profile());
+        else if(smoke88)
             store.Save(new Profile());
         if(smoke54 || smoke55 || smoke56 || smoke58)
         {
