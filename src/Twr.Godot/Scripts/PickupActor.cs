@@ -15,6 +15,7 @@ public partial class PickupActor : Node3D
 
     public override void _Ready()
     {
+        AddToGroup("twr-pickup");
         AddChild(new MeshInstance3D
         {
             Mesh = new BoxMesh
@@ -46,7 +47,9 @@ public partial class PickupActor : Node3D
         var pressed = down && !_interactWasDown;
         _interactWasDown = down;
 
-        if (!pressed || Player.GlobalPosition.DistanceTo(GlobalPosition) > 2.5f)
+        // Only the nearest UNOBSTRUCTED eligible pickup handles one
+        // E press; prevents collecting a whole overlapping supply pile.
+        if (!pressed || !Pass76InteractionSafety.IsNearestPickup(this))
             return;
 
         if (!TryCollect())

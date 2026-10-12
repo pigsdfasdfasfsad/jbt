@@ -780,7 +780,8 @@ public partial class GameplayRoot : Node3D
         {
             Name = $"SupplyDrop_{Runtime?.Match?.Wave ?? 0}",
             Position = destination + Vector3.Up * 15f,
-            GroundY = destination.Y
+            GroundY = destination.Y,
+            SourcePlayer = _player
         };
         pallet.Landed = position =>
         {

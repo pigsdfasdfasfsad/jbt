@@ -17,6 +17,8 @@ public partial class FortificationActor : Node3D
     private bool _interactWasDown;
     private bool _qWasDown;
     private bool _toggleAim;
+    public bool Mounted76 => _mounted;
+    public int ShotsFired76 { get; private set; }
 
     public override void _Ready()
     {
@@ -53,6 +55,12 @@ public partial class FortificationActor : Node3D
 
     public override void _Process(double delta)
     {
+        if (IsQueuedForDeletion()) return;
+        if (Runtime?.Player?.IsAlive != true)
+        {
+            if (_mounted) SetMounted(false);
+            return;
+        }
         _timer=Math.Max(0,_timer-delta);
 
         if(Definition.Name=="50 Cal")
@@ -74,7 +82,7 @@ public partial class FortificationActor : Node3D
 
     private void TickMounted50Cal()
     {
-        if(Player is null)return;
+        if(Player is null || Runtime?.Player?.IsAlive != true) return;
 
         var eDown=Input.IsKeyPressed(Key.E);
         var ePressed=eDown && !_interactWasDown;
@@ -83,7 +91,8 @@ public partial class FortificationActor : Node3D
         if(ePressed)
         {
             if(_mounted)SetMounted(false);
-            else if(Player.GlobalPosition.DistanceTo(GlobalPosition)<=2.8f)SetMounted(true);
+            else if(Pass76InteractionSafety.CanReach(
+                Player, GlobalPosition, 2.8f))SetMounted(true);
         }
 
         if(!_mounted)return;
@@ -114,9 +123,12 @@ public partial class FortificationActor : Node3D
 
     private void Fire50Cal()
     {
-        if(Player is null || Definition.Damage is null)return;
+        if(Player is null || Runtime?.Player?.IsAlive != true ||
+            Definition.Damage is null || !_mounted || _remainingShots <= 0)
+            return;
         _timer=0.225; // RECOVERED animation timeline: 0.075s + 0.15s.
         _remainingShots--;
+        ShotsFired76++;
 
         var origin=GlobalPosition+Vector3.Up*1.35f;
         var direction=Player.AimDirection.Normalized();
@@ -126,6 +138,11 @@ public partial class FortificationActor : Node3D
         for(var penetration=0;penetration<=Math.Max(0,Definition.MaxPen ?? 0);penetration++)
         {
             var query=PhysicsRayQueryParameters3D.Create(origin,origin+direction*remaining);
+            // Pass76: same world + infected + source-server layer mask as
+            // actual hand-held weapons. Default Godot layer 1 misses layer-2
+            // infected CharacterBody collision completely.
+            query.CollisionMask =
+                1u | 2u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
             query.Exclude=exclude;
             var hit=GetWorld3D().DirectSpaceState.IntersectRay(query);
             if(hit.Count<=0)return;
@@ -164,14 +181,20 @@ public partial class FortificationActor : Node3D
 
         // STRONGLY INFERRED: the Clap Bomb exposes Radius but no separate range stat.
         // Enhanced Electronics therefore applies its exact +40% to this radius.
-        var radius = Definition.Radius!.Value * RangeMultiplier;
+        // Recovered fortification radii are authored in Roblox STUDS.
+        // Previous code treated 25/35 studs as metres (3.57x too large).
+        var radius = RobloxUnits.Distance(Definition.Radius!.Value) *
+            RangeMultiplier;
         foreach (var infected in EnumerateInfected())
-            if (GlobalPosition.DistanceTo(infected.GlobalPosition) <= radius)
-                infected.ApplyDamage(Definition.Damage!.Value*DamageMultiplier, false, "Explosion");
+            if (Pass75BlastOcclusion.CanReachTarget(
+                    GetWorld3D(), GlobalPosition, infected, radius, Player))
+                infected.ApplyDamage(Definition.Damage!.Value*DamageMultiplier,
+                    false, "Explosion");
 
         foreach (var node in GetTree().GetNodesInGroup("damage_objective"))
             if (node is DamageObjectiveTarget tanker &&
-                GlobalPosition.DistanceTo(tanker.GlobalPosition) <= radius)
+                Pass75BlastOcclusion.CanReachTarget(
+                    GetWorld3D(), GlobalPosition, tanker, radius, Player))
                 tanker.ApplyDamage(Definition.Damage!.Value*DamageMultiplier, "Explosive");
 
         QueueFree();
@@ -184,7 +207,8 @@ public partial class FortificationActor : Node3D
         var touched = false;
         foreach (var infected in EnumerateInfected())
         {
-            if (GlobalPosition.DistanceTo(infected.GlobalPosition) > 2.5f)
+            if (!Pass75BlastOcclusion.CanReachTarget(
+                    GetWorld3D(), GlobalPosition, infected, 2.5f, Player))
                 continue;
 
             infected.ApplyDamage(15f, false, "BarbedWire"); // VERIFIED damage.
@@ -203,7 +227,11 @@ public partial class FortificationActor : Node3D
         foreach (var infected in EnumerateInfected())
         {
             var distance = GlobalPosition.DistanceTo(infected.GlobalPosition);
-            if (distance >= nearestDistance) continue;
+            if (distance >= nearestDistance ||
+                !Pass75BlastOcclusion.CanReachTarget(
+                    GetWorld3D(), GlobalPosition, infected,
+                    maxDistance, Player))
+                continue;
             nearest = infected;
             nearestDistance = distance;
         }
@@ -213,7 +241,9 @@ public partial class FortificationActor : Node3D
     private IEnumerable<InfectedAgent> EnumerateInfected()
     {
         foreach (var node in GetTree().GetNodesInGroup("infected"))
-            if (node is InfectedAgent infected && GodotObject.IsInstanceValid(infected))
+            if (node is InfectedAgent infected &&
+                GodotObject.IsInstanceValid(infected) && infected.Health > 0 &&
+                !infected.IsQueuedForDeletion())
                 yield return infected;
     }
 }

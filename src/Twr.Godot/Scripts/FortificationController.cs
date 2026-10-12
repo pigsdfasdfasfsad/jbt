@@ -14,6 +14,10 @@ public partial class FortificationController : Node
     private int _selectedIndex;
     private int _swingsCompleted;
     private double _swingCooldown;
+    public int DeployedCount76 =>
+        _deployed.Count(x => GodotObject.IsInstanceValid(x) &&
+            !x.IsQueuedForDeletion());
+    public bool HammerMode76 => _hammerMode;
 
     // APPROXIMATED: exact base hammer swing cadence is not recovered.
     private const double SwingSeconds = 0.35;
@@ -26,6 +30,16 @@ public partial class FortificationController : Node
 
     public override void _Process(double delta)
     {
+        if (Runtime?.Player?.IsAlive != true)
+        {
+            if (_hammerMode)
+            {
+                _hammerMode = false;
+                _swingsCompleted = 0;
+                Player?.SetHammerMode(false);
+            }
+            return;
+        }
         _swingCooldown = Math.Max(0, _swingCooldown - delta);
 
         if (!_hammerMode || !Input.IsMouseButtonPressed(MouseButton.Left))
@@ -36,6 +50,7 @@ public partial class FortificationController : Node
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        if (Runtime?.Player?.IsAlive != true) return;
         if(@event is InputEventKey switchKey && switchKey.Pressed && !switchKey.Echo &&
            _hammerMode && switchKey.Keycode is Key.Key1 or Key.Key2 or Key.Key3 or Key.Key5 or Key.Key6 or Key.Key7 or Key.G)
         {
@@ -73,7 +88,8 @@ public partial class FortificationController : Node
 
     private void TrySwing()
     {
-        if (_swingCooldown > 0 || Runtime?.Player is null || Player is null)
+        if (_swingCooldown > 0 || Runtime?.Player?.IsAlive != true ||
+            Player is null)
             return;
 
         var available = AvailableDefinitions();
@@ -99,14 +115,23 @@ public partial class FortificationController : Node
             return;
 
         _swingsCompleted = 0;
-        if (!Runtime.ConsumeItem(definition.Name))
-            return;
-
         var forward = Player.AimDirection;
         forward.Y = 0;
         if (forward.LengthSquared() < 0.001f)
             forward = -Player.GlobalTransform.Basis.Z;
         forward = forward.Normalized();
+        var proposedPosition = Player.GlobalPosition +
+            forward * 3.0f + Vector3.Down * 0.8f;
+        // Do not consume inventory on unsupported or wall-overlapping
+        // placement; a void placement was previously permanently lost.
+        if (!Pass76PlacementSafety.TryFindGround(Player,
+                proposedPosition, out var groundedPosition))
+        {
+            StatusChanged?.Invoke("HAMMER | INVALID PLACEMENT");
+            return;
+        }
+        if (!Runtime.ConsumeItem(definition.Name))
+            return;
 
         var actor = new FortificationActor
         {
@@ -116,7 +141,7 @@ public partial class FortificationController : Node
             RangeMultiplier = FortificationRangeMultiplier(definition),
             Player = Player,
             Runtime = Runtime,
-            GlobalPosition = Player.GlobalPosition + forward * 3.0f + Vector3.Down * 0.8f
+            GlobalPosition = groundedPosition
         };
         _deployed.Add(actor);
         AddChild(actor);

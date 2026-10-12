@@ -243,7 +243,8 @@ public partial class ObjectiveRuntime : Node3D
         if (Player is null)
             return;
 
-        if (_carrying && Player.GlobalPosition.DistanceTo(GlobalPosition) <= 3f)
+        if (_carrying &&
+            Pass76InteractionSafety.CanReach(Player, GlobalPosition, 3f))
         {
             _carrying = false;
             _deposited++;
@@ -270,7 +271,8 @@ public partial class ObjectiveRuntime : Node3D
             }
         }
 
-        if (nearest is not null && nearestDistance <= 2.5f)
+        if (nearest is not null && nearestDistance <= 2.5f &&
+            Pass76InteractionSafety.CanReach(Player, nearest.GlobalPosition, 2.5f))
         {
             _items.Remove(nearest);
             nearest.QueueFree();

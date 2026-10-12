@@ -6,6 +6,8 @@ public partial class SupplyDropRuntime : Node3D
 {
     public float GroundY { get; set; }
     public Action<Vector3>? Landed { get; set; }
+    public FirstPersonPlayer? SourcePlayer { get; set; }
+    public bool Landed76 => _landed;
 
     private bool _landed;
 
@@ -41,8 +43,35 @@ public partial class SupplyDropRuntime : Node3D
         if (_landed)
             return;
 
-        var position = GlobalPosition;
+        var previous = GlobalPosition;
+        var position = previous;
         position.Y -= DescentSpeed * (float)delta;
+
+        // Pass76: physically ground the pallet onto the first existing
+        // walkable world collider rather than always forcing Y=0.3.
+        // This fixes loot spawning beneath elevated floors or platforms.
+        var ray = PhysicsRayQueryParameters3D.Create(
+            previous + Vector3.Up * .10f,
+            position + Vector3.Down * .30f);
+        ray.CollisionMask =
+            1u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
+        if (SourcePlayer is not null &&
+            GodotObject.IsInstanceValid(SourcePlayer))
+            ray.Exclude = new global::Godot.Collections.Array<Rid>
+            {
+                SourcePlayer.GetRid()
+            };
+        var hit = GetWorld3D().DirectSpaceState.IntersectRay(ray);
+        if (hit.Count > 0 && ((Vector3)hit["normal"]).Y >= .70f)
+        {
+            position.Y = ((Vector3)hit["position"]).Y + .23f;
+            _landed = true;
+            GlobalPosition = position;
+            Landed?.Invoke(position);
+            QueueFree();
+            return;
+        }
+
         if (position.Y <= GroundY)
         {
             position.Y = GroundY;
