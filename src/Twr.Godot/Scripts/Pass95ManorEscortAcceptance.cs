@@ -241,11 +241,20 @@ public partial class Pass95ManorEscortAcceptance : Node
                 " remaining="+objective.EscortRemainingWaypoints91+
                 " safeSteps="+safeSteps+
                 " blockedSteps="+objective.EscortBlockedSteps89);
-        // The east objective's catalog destination is beyond the upper
-        // floor so it must physically descend; west remains on one deck.
-        if(wing==1 && (!reachedRamp || minY>1.1f))
+        // Reconstructed source-absent Manor only: Pass90 may select a
+        // physically reachable secondary goal when the approximate -24Z
+        // marker lies beyond missing owner-original floor geometry.
+        // A safe same-floor upper rescue is valid. If the accepted goal
+        // is downstairs, the real NPC must descend the physical ramp.
+        var finalGoalY=GodotObject.IsInstanceValid(target)
+            ? target.GlobalPosition.Y : float.NaN;
+        if(wing==1 &&
+           (float.IsNaN(finalGoalY) ||
+            (finalGoalY<2.2f && (!reachedRamp || minY>1.1f)) ||
+            (finalGoalY>=2.2f && finalGoalY<2.5f)))
             throw new InvalidOperationException(
-                "Pass95 EastWing survivor never physically descended stairs"+
+                "Pass95 EastWing completion was not physically supported"+
+                " goalY="+finalGoalY+
                 " minY="+minY+" ramp="+reachedRamp);
 
         if(Runtime.Player.Credits!=expectedCredits ||
@@ -270,6 +279,8 @@ public partial class Pass95ManorEscortAcceptance : Node
             " credits=4000 xp=3500 repeat_paid=false"+
             " real_travel="+maxTravel.ToString("F2")+
             " minimumY="+minY.ToString("F2")+
+            " goalY="+finalGoalY.ToString("F2")+
+            " used_stair="+reachedRamp+
             " collision_steps="+safeSteps);
         game.SetProcess(true);
     }
