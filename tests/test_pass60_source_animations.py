@@ -66,7 +66,7 @@ def test_pass59_legacy_contract_repaired_and_pass60_runtime_bound():
     assert "SourceSprintRotationAvailable" in view
     assert "poseMotion.Sprint.Basis.GetRotationQuaternion()" in player
     assert "poseMotion.Sprint.Origin" in player
-    assert "AimCF depends on dynamic Roblox assemblies" in player
+    assert "The dynamic original" in player
     assert player.count("_viewModel.Fire(_aiming);")==2
     assert "TWR_SMOKE_PASS59_SOURCE_MOTION_OK" in boot
     assert "TWR_SMOKE_PASS60_ANIMATION_OK" in boot
