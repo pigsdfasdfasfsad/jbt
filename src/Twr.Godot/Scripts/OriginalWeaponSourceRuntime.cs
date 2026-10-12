@@ -191,6 +191,44 @@ public static class OriginalWeaponSourceRuntime
         return true;
     }
 
+    /// <summary>
+    /// Read the original invisible AimPart's source-authored local CFrame
+    /// from the SHA-gated Pass47 owner pack. No original scripts are run.
+    /// Exact AimCF is a dynamic Luau formula and is NOT serialized here.
+    /// Reject absent/ambiguous sight markers instead of guessing a pivot.
+    /// </summary>
+    public static bool TryGetSourceSightLocal(string weaponName,
+        out Transform3D sight)
+    {
+        sight=Transform3D.Identity;
+        if(!LoadDocument() || weaponName.Length is <1 or >128 ||
+           !_document!.RootElement.GetProperty("models")
+               .TryGetProperty(weaponName,out var model))
+            return false;
+        var parts=model.GetProperty("parts").EnumerateArray().ToArray();
+        var indices=parts
+            .Where(p=>p.GetProperty("name").GetString()=="AimPart")
+            .ToArray();
+        // Includes the authored invisible AimPart; do not require it
+        // to have a visible/renderable MeshPart triangle resource.
+        if(indices.Length!=1 ||
+           !parts.Any(p=>p.GetProperty("name").GetString()=="Handle"))
+            return false;
+        var part=indices[0];
+        var alignment=SourceBarrelFacesBackwards(parts)
+            ? new Basis(Vector3.Up,Mathf.Pi) : Basis.Identity;
+        var origin=alignment*SourcePosition(part);
+        var rotation=alignment*SourceRotation(part);
+        var det=rotation.Determinant();
+        if(!float.IsFinite(origin.X) || !float.IsFinite(origin.Y) ||
+           !float.IsFinite(origin.Z) ||
+           origin.LengthSquared()>4f ||
+           !float.IsFinite(det) || Math.Abs(det-1f)>.035f)
+            return false;
+        sight=new Transform3D(rotation.Orthonormalized(),origin);
+        return true;
+    }
+
     public static Vector3? EstimatedMuzzle(string weaponName)
     {
         if (!LoadDocument() ||
@@ -267,7 +305,7 @@ public static class OriginalWeaponSourceRuntime
             var synthetic = root.TryGetProperty("synthetic",out var fixture) &&
                 fixture.ValueKind == JsonValueKind.True;
             var testMode = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58" or "--smoke-pass62" or "--smoke-pass63" or "--smoke-pass64" or "--smoke-pass65" or "--smoke-pass66");
+                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58" or "--smoke-pass62" or "--smoke-pass63" or "--smoke-pass64" or "--smoke-pass65" or "--smoke-pass66" or "--smoke-pass67");
             // A synthetic fixture may never silently impersonate an original
             // tool pack during ordinary play.
             if (synthetic && !testMode)
