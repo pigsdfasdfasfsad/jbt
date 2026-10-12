@@ -645,6 +645,32 @@ public partial class Bootstrap : Node
             a.Origin.DistanceTo(b.Origin)<.0002f &&
             a.Basis.GetRotationQuaternion()
              .AngleTo(b.Basis.GetRotationQuaternion())<.001f;
+        void TraceFormula(string label,
+            Pass68OriginalAimFormulas.Formula candidate,
+            Transform3D expected)
+        {
+            var found=Pass68OriginalAimFormulas.TryCompute(
+                candidate,handle,aim,out var received);
+            var positionError=found
+                ? received.Origin.DistanceTo(expected.Origin) : -1f;
+            var angleError=found
+                ? received.Basis.GetRotationQuaternion().AngleTo(
+                    expected.Basis.GetRotationQuaternion()) : -1f;
+            GD.Print("TWR_PASS68_FORMULA_TRACE "+
+                $"family={label} success={found} "+
+                $"translation_error={positionError:F7} "+
+                $"angle_error={angleError:F7} "+
+                $"expected={expected.Origin} actual={received.Origin}");
+        }
+        TraceFormula("inverse",noShift,originalInverse);
+        TraceFormula("inside",withBase,canonical);
+        TraceFormula("outside",outside,canonical);
+        TraceFormula("spas",spas,originalSpas);
+        TraceFormula("mp7",mp7,originalMp7);
+        TraceFormula("winchester",win,originalWin);
+        TraceFormula("literal",literal,new Transform3D(
+            Basis.Identity,new Vector3(-.25f,.25f,0f)*
+                RobloxUnits.MetersPerStud));
         if(!Pass68OriginalAimFormulas.TryCompute(
                 noShift,handle,aim,out var actualInverse) ||
            !Near(actualInverse,originalInverse) ||
