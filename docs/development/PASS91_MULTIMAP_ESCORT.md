@@ -26,7 +26,7 @@ accelerated stage timers only to reach each wave; the survivor body
 uses real 60Hz physical movement and normal domain reward commands.
 Original Roblox NPC animations and maps remain unverified.
 
-**Initial status:** pending native Windows validation.
+**Status: VERIFIED in exported Windows CI run 38295592996 for these eight defined scenarios.**
 
 ## Native feedback and door correction
 
@@ -41,3 +41,17 @@ Original Roblox NPC animations and maps remain unverified.
   approximate Prison cell blocks, leaving the other buildings unchanged.
 - Keep a real wall, full-sized Escort capsule and physics swept
   obstruction tests. Any future failure still fails the native CI.
+
+## Verified native Windows acceptance (2026-10-12)
+
+**Run:** [38295592996](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38295592996). Source SHA: `50e3c26e26269721d4fb816ef4192294c30b3056`.
+
+- **688 Python tests passed**, one inherited warning; compiled and exported Godot/.NET Windows with **0 errors**, one inherited compiler warning.
+- Previously verified native Pass78, Pass83, Pass88, Pass89, and Pass90 tests passed on the cumulative branch.
+- The actual Wave 5/6 `ObjectiveRuntime` Escort survivor physically completed on **all 8 maps**. Each run checked actual collision grounding, safe routing, objective completion, level-adjusted 4,000-credit / 3,500-XP authoritative reward and idempotent completion ID replay.
+- Physical NPC travel in native smoke: Ranch **22.52m**, Mill **18.55m**, Bypass **24.50m**, Cabin **18.94m**, Cargo **22.52m**, District **22.52m**, Prison **24.42m**, Laboratory **22.52m**.
+- Mill, Cabin, Prison required physically supported alternate *approximate* Escort destinations. No retail-original route/destination was invented or asserted.
+- Prison `CellBlockA`/ `CellBlockB` entrance correction removed 20cm unverified fallback doorway lips; this made the real survivor cross the doorway rather than clipping through collision.
+- The owner-private map/asset exclusion audit passed. Public executable artifact upload is still disabled.
+
+**Limits:** Eight public reconstructed maps in controlled native Wave5/6 objective scenarios are verified; this does not certify Expressway, upper Manor, exact original maps/animations/audio, or 15 real-time manual playthroughs.
