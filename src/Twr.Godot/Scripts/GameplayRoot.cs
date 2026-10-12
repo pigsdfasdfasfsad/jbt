@@ -221,7 +221,10 @@ public partial class GameplayRoot : Node3D
         GetNodeOrNull<Pass45FallbackProxyStreamer>("Recovered" + MapName +
             "/Pass45FallbackProxyStream")?.Track(_player);
 
-        _hud = new GameplayHud { Name = "HUD", Runtime = Runtime };
+        _hud = new GameplayHud
+        {
+            Name = "HUD", Runtime = Runtime, Player = _player
+        };
         AddChild(_hud);
         // Dictionary-backed inventory is shown read-only; grants are enforced
         // by the authoritative LocalSessionNode, never by the UI.
