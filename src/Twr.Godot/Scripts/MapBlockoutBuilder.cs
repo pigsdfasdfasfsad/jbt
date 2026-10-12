@@ -151,8 +151,15 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildPrison(Node3D root)
     {
         BaseArena(root, 106, 94, new Color(0.22f, 0.23f, 0.20f));
-        InteriorShell(root, "CellBlockA", new Vector3(-25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f));
-        InteriorShell(root, "CellBlockB", new Vector3(25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f));
+        // Pass91 native Prison Escort reached the real CellBlockA south
+        // door (X=-23.32 Z=-24.59) but was unable to step over the
+        // approximate 20cm entrance lip into its goal room. Reuse the
+        // collision-grounded flush doorway and partition clearances
+        // already tested on Bypass; this changes PUBLIC FALLBACKS ONLY.
+        InteriorShell(root, "CellBlockA", new Vector3(-25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f),
+            frontDoorRelief91:true);
+        InteriorShell(root, "CellBlockB", new Vector3(25, 4.0f, -5), new Vector3(24, 8, 38), new Color(0.30f, 0.31f, 0.31f),
+            frontDoorRelief91:true);
         InteriorShell(root, "Isolation", new Vector3(0, 4.5f, -35), new Vector3(28, 9, 14), new Color(0.24f, 0.25f, 0.25f));
         InteriorShell(root, "MessHall", new Vector3(-28, 2.7f, 32), new Vector3(28, 5.4f, 18), new Color(0.34f, 0.32f, 0.27f));
         InteriorShell(root, "Warehouse", new Vector3(30, 2.7f, 33), new Vector3(24, 5.4f, 17), new Color(0.28f, 0.29f, 0.27f));

@@ -27,3 +27,17 @@ uses real 60Hz physical movement and normal domain reward commands.
 Original Roblox NPC animations and maps remain unverified.
 
 **Initial status:** pending native Windows validation.
+
+## Native feedback and door correction
+
+- Windows run [38294806561](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38294806561)
+  passed Ranch, Mill, Bypass, Cabin, Cargo and District Escort completion,
+  then observed the real Prison NPC at X=-23.32, Z=-24.59, 0.59m outside
+  the south end of CellBlockA. The next nav target was at X=-24, Z=-24.
+- The original fallback InteriorShell adds a 0.20m raised floor lip
+  *directly behind* the doorway. This boundary is not authenticated
+  retail collision. Pass91 already corrected the same defect in Bypass
+  using `frontDoorRelief91`; apply this collision relief to **both**
+  approximate Prison cell blocks, leaving the other buildings unchanged.
+- Keep a real wall, full-sized Escort capsule and physics swept
+  obstruction tests. Any future failure still fails the native CI.

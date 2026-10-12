@@ -206,6 +206,10 @@ public partial class Pass91MultimapEscortAcceptance : Node
                 " travel="+maxTravel+
                 " actor="+last+
                 " steps="+safeSteps+
+                " blockedSteps="+objective.EscortBlockedSteps89+
+                " routeInvalidations="+objective.EscortRouteInvalidations91+
+                " onFloor="+survivor.IsOnFloor()+
+                " playerDistance="+player.GlobalPosition.DistanceTo(last)+
                 " blockedReplans="+blockedPlans+
                 " rejectedGoals="+rejectedDestinations+
                 " alternateGoal="+selectedAlternative+
