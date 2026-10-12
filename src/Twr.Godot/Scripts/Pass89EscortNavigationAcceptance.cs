@@ -201,7 +201,7 @@ public partial class Pass89EscortNavigationAcceptance : Node
             }
         }
         if(!clearedWall || !progressedAfterWall || furthestX<7.0f ||
-           start.Z-closestZ<18f ||
+           start.Z-closestZ<10f ||
            objective.EscortSafeSteps89<30 ||
            objective.EscortBlockedSteps89>300)
         {
