@@ -92,6 +92,19 @@ public partial class Pass90EscortCompletionAcceptance : Node
         game.SetProcess(false);
         var initialCredits=Runtime.Player.Credits;
         var initialXp=Runtime.Player.Xp;
+        var initialLevel=Runtime.Player.Level;
+        // Domain progression immediately consumes XP to reach levels and
+        // grants a separate credit bonus; 4000/3500 must be checked
+        // including these legitimate derived level-up consequences.
+        var expectedCredits=initialCredits+4000;
+        var expectedXp=initialXp+3500;
+        var expectedLevel=initialLevel;
+        while(expectedXp>=ProgressionRules.RequiredForNextLevel(expectedLevel))
+        {
+            expectedXp-=ProgressionRules.RequiredForNextLevel(expectedLevel);
+            expectedLevel++;
+            expectedCredits+=ProgressionRules.CreditRewardForLevel(expectedLevel);
+        }
         var id=objective.ObjectiveId;
         var marker=destination.GlobalPosition;
         var completions=0;
@@ -136,22 +149,28 @@ public partial class Pass90EscortCompletionAcceptance : Node
             " physics_steps="+objective.EscortSafeSteps89+
             " actor_movement="+lastSurvivor.DistanceTo(starting).ToString("F2"));
 
-        if(Runtime.Player.Credits-initialCredits!=4000 ||
-           Runtime.Player.Xp-initialXp!=3500)
+        if(Runtime.Player.Credits!=expectedCredits ||
+           Runtime.Player.Xp!=expectedXp ||
+           Runtime.Player.Level!=expectedLevel)
             throw new InvalidOperationException(
-                "Pass90 reward amounts wrong credits_delta="+
-                (Runtime.Player.Credits-initialCredits)+
-                " xp_delta="+(Runtime.Player.Xp-initialXp)+
-                " total_credits="+Runtime.Player.Credits+
-                " total_xp="+Runtime.Player.Xp+
+                "Pass90 progression-adjusted reward mismatch credits="+
+                Runtime.Player.Credits+"/"+expectedCredits+
+                " xp="+Runtime.Player.Xp+"/"+expectedXp+
+                " level="+Runtime.Player.Level+"/"+expectedLevel+
                 " id="+id);
         Runtime.CompleteObjective(id,"Escort");
         await Frames(4);
         if(completions!=1 ||
-           Runtime.Player.Credits-initialCredits!=4000 ||
-           Runtime.Player.Xp-initialXp!=3500)
+           Runtime.Player.Credits!=expectedCredits ||
+           Runtime.Player.Xp!=expectedXp ||
+           Runtime.Player.Level!=expectedLevel)
             throw new InvalidOperationException("Pass90 duplicate objective reward");
-        GD.Print("TWR_PASS90_REWARD_ONCE_OK credits=4000 xp=3500");
+        GD.Print("TWR_PASS90_REWARD_ONCE_OK"+
+            " objective_credits=4000 objective_xp=3500"+
+            " total_credits="+expectedCredits+
+            " remaining_xp="+expectedXp+
+            " final_level="+expectedLevel+
+            " levelup_credits="+(expectedCredits-initialCredits-4000));
         Runtime.FailMatch("Pass90 isolated verification complete");
         game.QueueFree();
         await Frames(3);
