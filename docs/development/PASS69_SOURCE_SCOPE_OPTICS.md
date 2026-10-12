@@ -99,7 +99,38 @@ outstanding.
 **Pass69 is a visual fidelity increment, not proof that the complete
 game is a 1:1 offline recreation.**
 
-## Verification status
+## Verified exported Windows checkpoint — October 11, 2026 (US Central)
 
-Implementation and CI wiring committed. Mark the pass **verified**
-only after the entire exported Windows run completes successfully.
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38196014637
+
+**Code revision tested:** `59858af6532657289be92d9efe456942feb1715d`.
+
+- **583 Python regression tests passed**, with one inherited Pass34
+  XML FutureWarning; pinned Godot/.NET Windows export succeeded with
+  **0 errors** and one inherited Pass36 `CS0108` warning.
+- Native `TWR_SMOKE_PASS69_SOURCE_OPTICS_OK` verifies all eight
+  original authored `ScopeDiameter`/`ScopeRadius` and FOV
+  profiles, source-sized lens projection, reflex-versus-magnified
+  mode, 0.43m fallback versus source-marker eye-relief,
+  invalid/NaN input suppression, safe scope transitions,
+  original-style HUD crosshair suppression and restoration,
+  and original Source AimPart / Pass68 AimCF alignment
+  through a wholly fabricated Winchester original-shaped model.
+- The final tested revision also includes procedural octagonal
+  **AUG / CBJ-MS** scope housings and **M110 / Winchester**
+  lower reticle subtension markings drawn after inspecting
+  original-game ADS stills. The new Python checks directly
+  regression-protect these authored primitive drawing paths.
+- All prior Pass59–68 Windows-native weapon smoke tests passed,
+  alongside `TWR_SMOKE_COMPLETE_OK maps=10 waves=150`.
+  That remains a **scripted domain simulation**, not
+  a 15-wave interactive playthrough in each original map.
+- Fabricated original-shaped source weapon/model fixtures
+  were cleaned before the final private-asset exclusion check,
+  which passed. **Public CI does not upload a playable EXE or
+  any owner-original private model/script/screenshot files.**
+
+This verifies the **first-person optic rendering logic and safety
+conditions**, not pixel-level optical fidelity to the original
+Roblox screenshot, original scope texture data or private release
+packaging.
