@@ -14,6 +14,10 @@ public partial class GameplayRoot : Node3D
     private GameplayHud _hud = null!;
     private Pass25SourceNavigationRuntime? _sourceNavigator;
     private Pass73GroundNavigationRuntime? _groundNavigation73;
+    // Pass92: independent real-collision Escort graph on reconstructed
+    // Expressway. Existing HighwayNavigation remains authoritative for
+    // infected; owner-original map imports never use this extra graph.
+    private Pass73GroundNavigationRuntime? _expresswayEscortNavigation92;
     private Pass34ClientWallsRuntime? _originalClientWalls;
     private Pass35InfectedWallsRuntime? _originalInfectedWalls;
     private Pass36SourceFragmentsRuntime? _sourceFragments;
@@ -77,6 +81,10 @@ public partial class GameplayRoot : Node3D
     public int ActivePickupCount => _pickups.Count(actor => GodotObject.IsInstanceValid(actor));
     public string WaveStage => StageName();
     public bool Pass73FallbackNavReady => _groundNavigation73?.IsGraphReady == true;
+    public bool Pass92ExpresswayEscortNavReady =>
+        _expresswayEscortNavigation92?.IsGraphReady == true;
+    public int Pass92ExpresswayEscortNavNodes =>
+        _expresswayEscortNavigation92?.PointCount ?? 0;
     public int Pass73FallbackNavNodes => _groundNavigation73?.PointCount ?? 0;
     public int Pass73FallbackNavEdges => _groundNavigation73?.EdgeCount ?? 0;
     public int OriginalClientWallCount => _originalClientWalls?.WallCount ?? 0;
@@ -231,6 +239,17 @@ public partial class GameplayRoot : Node3D
             MapName != "Expressway")
             _groundNavigation73 = Pass73GroundNavigationRuntime.Attach(
                 this, MapName, _mapLayout);
+        else if (!originalWorldAvailable && _sourceNavigator is null &&
+                 MapName == "Expressway")
+        {
+            // Preserve the old ExpresswayNavigationRuntime for every
+            // infected; sample a separate physics ground graph ONLY for
+            // the reconstructed Escort NPC's full capsule clearance.
+            _expresswayEscortNavigation92 =
+                Pass73GroundNavigationRuntime.Attach(this, MapName, _mapLayout);
+            _expresswayEscortNavigation92.Name =
+                "Pass92ExpresswayEscortGroundNavigation";
+        }
 
         _audio = new OfflineAudioRuntime { Name = "OfflineAudio" };
         AddChild(_audio);
@@ -637,7 +656,10 @@ public partial class GameplayRoot : Node3D
             var groundEscort91 = family == "Escort" &&
                 _isFallbackScene86 && _groundNavigation73 is not null &&
                 (MapName != "Manor" || position.Y < 2.3f);
-            if (groundEscort91)
+            var expresswayEscort92 = family == "Escort" &&
+                _isFallbackScene86 && MapName == "Expressway" &&
+                _expresswayEscortNavigation92 is not null;
+            if (groundEscort91 || expresswayEscort92)
             {
                 // Only adjust invented fallback Escort locations. The
                 // recovered original source packs must keep their own
@@ -675,13 +697,16 @@ public partial class GameplayRoot : Node3D
                 // terrain. Expressway, original owner packs and elevated
                 // Manor still retain their existing actor behavior.
                 UseFallbackEscortNavigation89 =
-                    _groundNavigation73 is not null &&
+                    (_groundNavigation73 is not null || expresswayEscort92) &&
                     (MapName != "Manor" || ObjectivePosition(i).Y < 2.3f),
                 EscortGroundNavigator89 = _groundNavigation73,
                 Player = _player,
                 Runtime = Runtime,
                 Position = position
             };
+            if (expresswayEscort92)
+                objective.EscortGroundNavigator89 =
+                    _expresswayEscortNavigation92;
             objective.StatusChanged = status => _hud.SetObjective(status);
             objective.Completed = OnObjectiveCompleted;
             _objectives.Add(objective);
