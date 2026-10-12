@@ -11,8 +11,8 @@ def test_native_pass90_requires_grounded_completion_and_domain_reward():
         'x.Family=="Escort"',"EscortGroundedCompletion90",
         "Runtime.Match.CompletedObjectives.Contains(id)",
         'Runtime.CompleteObjective(id,"Escort")',
-        "Runtime.Player.Credits-initialCredits!=4000",
-        "Runtime.Player.Xp-initialXp!=3500"):
+        "expectedCredits=initialCredits+4000",
+        "expectedXp=initialXp+3500"):
         assert token in c
     assert "survivor.GlobalPosition=" not in c
     assert "Runtime.Player.Credits=" not in c
