@@ -627,6 +627,10 @@ public partial class GameplayRoot : Node3D
                 Name = $"Objective_{wave}_{family}_{i}",
                 ObjectiveId = $"{MapName}:Wave{wave}:{family}:{i}",
                 Family = family,
+                // Pass84: only the PUBLIC-SAFE, reconstructed two-level
+                // Manor uses the tighter same-floor security ring.
+                RequireSameFloorSecure84 = MapName == "Manor" &&
+                    _mapLayout.ApproximateStairs77.Count == 3,
                 Player = _player,
                 Runtime = Runtime,
                 Position = ObjectivePosition(i)

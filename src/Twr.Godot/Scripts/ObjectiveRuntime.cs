@@ -6,6 +6,7 @@ public partial class ObjectiveRuntime : Node3D
 {
     public string ObjectiveId { get; set; } = "";
     public string Family { get; set; } = "Radio";
+    public bool RequireSameFloorSecure84 { get; set; }
     public FirstPersonPlayer? Player { get; set; }
     public LocalSessionNode? Runtime { get; set; }
     public Action<ObjectiveRuntime>? Completed { get; set; }
@@ -229,7 +230,10 @@ public partial class ObjectiveRuntime : Node3D
 
         var d=Player.GlobalPosition-GlobalPosition;
         var horizontal=new Vector2(d.X,d.Z).Length();
-        if (Math.Abs(d.Y) < SecureYBand && horizontal <= SecureRadius)
+        if (Math.Abs(d.Y) < SecureYBand && horizontal <= SecureRadius &&
+            (!RequireSameFloorSecure84 ||
+             Pass84SecureZoneFloorSafety.CanAccumulate(
+                 Player.GlobalPosition, GlobalPosition)))
         {
             _secureProgress = Math.Min(1.0, _secureProgress + delta / SecureSeconds);
             PublishStatus();
