@@ -138,7 +138,13 @@ public partial class Pass90EscortCompletionAcceptance : Node
 
         if(Runtime.Player.Credits-initialCredits!=4000 ||
            Runtime.Player.Xp-initialXp!=3500)
-            throw new InvalidOperationException("Pass90 reward amounts wrong");
+            throw new InvalidOperationException(
+                "Pass90 reward amounts wrong credits_delta="+
+                (Runtime.Player.Credits-initialCredits)+
+                " xp_delta="+(Runtime.Player.Xp-initialXp)+
+                " total_credits="+Runtime.Player.Credits+
+                " total_xp="+Runtime.Player.Xp+
+                " id="+id);
         Runtime.CompleteObjective(id,"Escort");
         await Frames(4);
         if(completions!=1 ||
