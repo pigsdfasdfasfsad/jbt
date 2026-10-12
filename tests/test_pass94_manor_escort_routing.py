@@ -22,6 +22,16 @@ def test_only_reconstructed_upper_manor_gets_own_floor_route():
     assert 'nav.Layout.ApproximateCrossings80.Count!=3' in planner
 
 
+def test_upper_crosswalk_overlaps_real_ramp_without_step_lip():
+    m=src("src/Twr.Godot/Scripts/MapBlockoutBuilder.cs")
+    assert 'name+"_UpperStairConnector94"' in m
+    assert 'upper.Z+zDir*.75f' in m
+    assert 'new Vector3(3.2f,.20f,1.60f)' in m
+    assert 'upper.Y-.13f' in m
+    assert 'name+"_UpperCrossing80"' in m
+    assert 'new Vector3(9.0f,.16f,1.20f)' in m
+
+
 def test_stairs_and_catwalk_reject_unsupported_capsule_paths():
     planner=src("src/Twr.Godot/Scripts/Pass94ManorEscortRoute.cs")
     objective=src("src/Twr.Godot/Scripts/ObjectiveRuntime.cs")
