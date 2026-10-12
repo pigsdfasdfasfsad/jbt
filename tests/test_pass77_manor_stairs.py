@@ -105,4 +105,5 @@ def test_window_export_isolated_profile_owner_exclusion():
     assert "twr-pass77-manor-stair-traversal" in ci
     assert ci.index("Smoke Pass 76") < ci.index("Smoke Pass 77")
     assert ci.index("Smoke Pass 77") < ci.index("Verify no private map scenes")
-    assert "github.ref_name == 'twr-pass77-manor-stair-traversal')" in ci
+    assert "if: success() && github.ref_name == 'twr-pass77-manor-stair-traversal'" in ci
+    # Pass78 extends the shared owner-private exclusion to the next branch.
