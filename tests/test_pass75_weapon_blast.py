@@ -31,6 +31,10 @@ def test_frag_fuse_and_world_occlusion_preserve_source_damage():
     assert "private const double FragFuse=3.0;" in frag
     assert "RobloxUnits.Distance(FragRadius)" in frag
     assert "Pass36SourceFragmentsRuntime.SourceServerCollisionLayer" in frag
+    assert "RestingOnGround75" in frag
+    assert "_restingOnGround=true;" in frag
+    assert "if (_restingOnGround)" in frag
+    assert "GlobalPosition=hit[\"position\"].AsVector3()+normal*.04f;" in frag
     assert frag.count("Pass75BlastOcclusion.CanReachTarget(") == 2
     assert 'infected.ApplyDamage(FragDamage*factor,false,"Explosion")' in frag
     assert 'tanker.ApplyDamage(FragDamage,"Explosive")' in frag
@@ -59,6 +63,9 @@ def test_exported_native_two_map_damage_and_isolated_profile_gate():
     assert "GetChildren().OfType<InfectedAgent>()" in test
     assert "new ExplosiveProjectileRuntime" in test
     assert "new ThrowableProjectileRuntime" in test
+    assert "blockedGrenade.RestingOnGround75" in test
+    assert "openGrenade.RestingOnGround75" in test
+    assert "did not finish genuine three-second fuse" in test
     assert "new DamageObjectiveTarget" in test
     assert "Runtime.Player.Credits <= credits" in test
     assert "Runtime.Player.Health =" not in test

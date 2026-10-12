@@ -266,8 +266,17 @@ public partial class Pass75WeaponBlastAcceptance : Node
         var remoteHp = farTanker.Health;
         var credits = Runtime.Player!.Credits;
 
-        Frag(game, player);
-        await Frames(205);
+        var blockedGrenade = Frag(game, player);
+        await Frames(100);
+        if (!GodotObject.IsInstanceValid(blockedGrenade) ||
+            !blockedGrenade.RestingOnGround75 ||
+            Math.Abs(blockedGrenade.GlobalPosition.Y - (FloorY + .39f)) > .25f)
+            throw new InvalidOperationException(
+                "Pass75 first Frag fell through ground or did not settle");
+        await Frames(105);
+        if (GodotObject.IsInstanceValid(blockedGrenade))
+            throw new InvalidOperationException(
+                "Pass75 blocked Frag did not finish genuine three-second fuse");
         if (!GodotObject.IsInstanceValid(enemy) ||
             Math.Abs(enemy.Health - enemyHealth) > .001f ||
             Math.Abs(tanker.Health - hp) > .001f ||
@@ -278,8 +287,17 @@ public partial class Pass75WeaponBlastAcceptance : Node
 
         wall.QueueFree();
         await Frames(3);
-        Frag(game, player);
-        await Frames(205);
+        var openGrenade = Frag(game, player);
+        await Frames(100);
+        if (!GodotObject.IsInstanceValid(openGrenade) ||
+            !openGrenade.RestingOnGround75 ||
+            Math.Abs(openGrenade.GlobalPosition.Y - (FloorY + .39f)) > .25f)
+            throw new InvalidOperationException(
+                "Pass75 unblocked Frag fell through ground or failed to settle");
+        await Frames(105);
+        if (GodotObject.IsInstanceValid(openGrenade))
+            throw new InvalidOperationException(
+                "Pass75 open Frag did not complete genuine three-second fuse");
         var enemyHit = !GodotObject.IsInstanceValid(enemy) ||
             enemy.Health < enemyHealth;
         if (!enemyHit || tanker.Health >= hp ||
