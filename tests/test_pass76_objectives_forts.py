@@ -60,6 +60,9 @@ def test_source_stud_bomb_radius_wall_occlusion_and_50cal_infected_layer():
     assert "query.CollisionMask =" in fort
     assert "1u | 2u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer" in fort
     assert "ShotsFired76++" in fort
+    assert "public override void _UnhandledInput(InputEvent @event)" in fort
+    assert "click.ButtonIndex != MouseButton.Left" in fort
+    assert "_timer > 0" in fort
     assert "if (_mounted) SetMounted(false);" in fort
     assert "Mounted76 => _mounted" in fort
     assert 'infected.ApplyDamage(15f, false, "BarbedWire")' in fort

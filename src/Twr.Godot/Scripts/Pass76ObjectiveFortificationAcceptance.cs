@@ -420,9 +420,12 @@ public partial class Pass76ObjectiveFortificationAcceptance : Node
             throw new InvalidOperationException(
                 "Pass76 native E press failed to mount turret");
         var credits = Runtime.Player!.Credits;
-        MouseInput(true);
-        turret._Process(.25);
-        MouseInput(false);
+        turret._UnhandledInput(new InputEventMouseButton
+        {
+            ButtonIndex = MouseButton.Left,
+            Pressed = true,
+            Position = Vector2.Zero
+        });
         await Frames(3);
         if (turret.ShotsFired76 != 1 ||
             (GodotObject.IsInstanceValid(enemy) && enemy.Health > 0) ||
@@ -430,7 +433,11 @@ public partial class Pass76ObjectiveFortificationAcceptance : Node
             throw new InvalidOperationException(
                 "Pass76 turret layer-2 ray missed infected or failed domain reward " +
                 "shots=" + turret.ShotsFired76 +
-                " health=" + (GodotObject.IsInstanceValid(enemy) ? enemy.Health : -1));
+                " health=" + (GodotObject.IsInstanceValid(enemy) ? enemy.Health : -1) +
+                " turret=" + turret.GlobalPosition +
+                " enemy=" + (GodotObject.IsInstanceValid(enemy) ? enemy.GlobalPosition : Vector3.Zero) +
+                " aim=" + player.AimDirection +
+                " mounted=" + turret.Mounted76);
 
         // Actual physically elevated ground contact, NOT the unreliable
         // configured 0.3 metre fallback for original source maps.

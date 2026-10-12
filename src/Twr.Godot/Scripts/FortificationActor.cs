@@ -80,6 +80,18 @@ public partial class FortificationActor : Node3D
         if(_mounted)Player?.SetMountedMode(false);
     }
 
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        // The first actual left click must fire immediately. Holding LMB
+        // still uses the existing 0.225-second automatic _Process cadence;
+        // the common firing cooldown prevents a double shot in one frame.
+        if (!_mounted || Runtime?.Player?.IsAlive != true ||
+            @event is not InputEventMouseButton click ||
+            !click.Pressed || click.ButtonIndex != MouseButton.Left)
+            return;
+        Fire50Cal();
+    }
+
     private void TickMounted50Cal()
     {
         if(Player is null || Runtime?.Player?.IsAlive != true) return;
@@ -124,7 +136,8 @@ public partial class FortificationActor : Node3D
     private void Fire50Cal()
     {
         if(Player is null || Runtime?.Player?.IsAlive != true ||
-            Definition.Damage is null || !_mounted || _remainingShots <= 0)
+            Definition.Damage is null || !_mounted || _remainingShots <= 0 ||
+            _timer > 0)
             return;
         _timer=0.225; // RECOVERED animation timeline: 0.075s + 0.15s.
         _remainingShots--;
