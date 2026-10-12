@@ -7,7 +7,7 @@ def source(path):
 def test_pass80_crossing_is_static_walking_collision_and_not_original():
     map_source=source("src/Twr.Godot/Scripts/MapBlockoutBuilder.cs")
     assert 'name+"_UpperCrossing80"' in map_source
-    assert "new Vector3(9.0f,.16f,1.20f)" in map_source
+    assert "new Vector3(9.0f,.16f,1.60f)" in map_source
     assert "MakeUpperCrossing80(westStair77)" in map_source
     assert "MakeUpperCrossing80(eastStair77)" in map_source
     assert "MakeUpperCrossing80(frontStair77)" in map_source
