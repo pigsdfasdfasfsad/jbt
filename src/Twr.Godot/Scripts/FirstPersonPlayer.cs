@@ -461,17 +461,22 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _viewModel.Fire(_aiming);
         Audio?.Play(spec.IsLauncher ? "launcher" :
             spec.IsShotgun ? "shotgun" : "gunshot");
-        ApplyRecoil(spec);
-
+        // Pass75: resolve this shot against the pre-recoil crosshair/camera
+        // direction. Previously ApplyRecoil rotated the camera BEFORE the
+        // hit ray (or launcher/shotgun direction) was calculated, causing
+        // visible first-shot aim displacement. Recoil still applies to
+        // subsequent shots and to the same-frame presentation.
         if (spec.IsLauncher)
         {
             FireLauncher(spec);
+            ApplyRecoil(spec);
             return;
         }
 
         if (spec.IsFlamethrower)
         {
             FireHitscan(spec, -_camera.GlobalTransform.Basis.Z, spec.Range, spec.Damage, "Fire", false);
+            ApplyRecoil(spec);
             return;
         }
 
@@ -479,10 +484,12 @@ public partial class FirstPersonPlayer : CharacterBody3D
         {
             for (var i = 0; i < FittedShotgunPellets; i++)
                 FireHitscan(spec, SpreadDirection(spec.Spread), spec.Range, spec.Damage, "Bullet", true);
+            ApplyRecoil(spec);
             return;
         }
 
         FireHitscan(spec, -_camera.GlobalTransform.Basis.Z, spec.Range, spec.Damage, "Bullet", true);
+        ApplyRecoil(spec);
     }
 
 

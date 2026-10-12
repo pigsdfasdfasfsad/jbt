@@ -53,7 +53,9 @@ public partial class ThrowableProjectileRuntime : Node3D
         var start=GlobalPosition;
         var end=start+_velocity*(float)delta;
         var query=PhysicsRayQueryParameters3D.Create(start,end);
-        if(SourcePlayer is not null)
+        query.CollisionMask =
+            1u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
+        if(SourcePlayer is not null && GodotObject.IsInstanceValid(SourcePlayer))
             query.Exclude=new global::Godot.Collections.Array<Rid>{SourcePlayer.GetRid()};
         var hit=GetWorld3D().DirectSpaceState.IntersectRay(query);
 
@@ -102,7 +104,9 @@ public partial class ThrowableProjectileRuntime : Node3D
         {
             if(node is not InfectedAgent infected || !GodotObject.IsInstanceValid(infected))continue;
             var distance=infected.GlobalPosition.DistanceTo(GlobalPosition);
-            if(distance>FragRadiusMeters)continue;
+            if(!Pass75BlastOcclusion.CanReachTarget(
+                    GetWorld3D(), GlobalPosition, infected,
+                    FragRadiusMeters, SourcePlayer)) continue;
             // APPROXIMATED falloff equation; source confirms falloff but not curve.
             var factor=Mathf.Lerp(1f,0.35f,Math.Clamp(distance/FragRadiusMeters,0f,1f));
             infected.ApplyDamage(FragDamage*factor,false,"Explosion");
@@ -110,7 +114,9 @@ public partial class ThrowableProjectileRuntime : Node3D
 
         foreach(var node in GetTree().GetNodesInGroup("damage_objective"))
             if(node is DamageObjectiveTarget tanker &&
-               tanker.GlobalPosition.DistanceTo(GlobalPosition)<=FragRadiusMeters)
+               Pass75BlastOcclusion.CanReachTarget(
+                   GetWorld3D(), GlobalPosition, tanker,
+                   FragRadiusMeters, SourcePlayer))
                 tanker.ApplyDamage(FragDamage,"Explosive");
 
         QueueFree();

@@ -35,19 +35,29 @@ public partial class ExplosiveProjectileRuntime : Node3D
         });
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         _life -= delta;
         var start = GlobalPosition;
         var end = start + Direction * Speed * (float)delta;
         var query = PhysicsRayQueryParameters3D.Create(start, end);
-        if (SourcePlayer is not null)
-            query.Exclude = new global::Godot.Collections.Array<Rid> { SourcePlayer.GetRid() };
+        // Pass75: a default Godot physics ray sees only layer 1. Live
+        // infected character bodies occupy layer 2, so old launcher
+        // projectiles passed straight through zombies.
+        query.CollisionMask =
+            1u | 2u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
+        if (SourcePlayer is not null && GodotObject.IsInstanceValid(SourcePlayer))
+            query.Exclude = new global::Godot.Collections.Array<Rid> {
+                SourcePlayer.GetRid()
+            };
 
         var hit = GetWorld3D().DirectSpaceState.IntersectRay(query);
         if (hit.Count > 0)
         {
-            Detonate(hit["position"].AsVector3());
+            // Physical contact occurs on a collider's surface. Offset
+            // slightly outward to avoid starting a splash ray inside it.
+            Detonate(hit["position"].AsVector3() +
+                hit["normal"].AsVector3() * .08f);
             return;
         }
 
@@ -63,7 +73,9 @@ public partial class ExplosiveProjectileRuntime : Node3D
             if (node is not InfectedAgent infected || !GodotObject.IsInstanceValid(infected))
                 continue;
             var distance = infected.GlobalPosition.DistanceTo(position);
-            if (distance > BlastRadius) continue;
+            if (!Pass75BlastOcclusion.CanReachTarget(
+                    GetWorld3D(), position, infected, BlastRadius, SourcePlayer))
+                continue;
 
             // APPROXIMATED linear falloff curve; RPG documentation confirms
             // distance-dependent explosion damage but gives no equation.
@@ -75,7 +87,8 @@ public partial class ExplosiveProjectileRuntime : Node3D
         {
             if (node is not DamageObjectiveTarget tanker) continue;
             var distance = tanker.GlobalPosition.DistanceTo(position);
-            if (distance <= BlastRadius)
+            if (Pass75BlastOcclusion.CanReachTarget(
+                    GetWorld3D(), position, tanker, BlastRadius, SourcePlayer))
                 tanker.ApplyDamage(Damage, "Explosive");
         }
 
