@@ -103,7 +103,30 @@ public partial class ObjectiveRuntime : Node3D
         remaining.Y = 0;
         if (remaining.Length() <= 1.5f)
         {
-            Complete();
+            // Pass93: approximate Manor upper-floor Escort uses legacy direct
+            // steering, not the Pass73 ground-only verified route. Never
+            // reward a survivor solely for sharing the goal's X/Z location
+            // when a wall, floor discontinuity, or different height separates
+            // the actual physics bodies. Leave original owner-authored Escort
+            // behavior unchanged until its retail navmesh is recovered.
+            if (RequireSameFloorSecure84)
+            {
+                var exclude93=new global::Godot.Collections.Array<Rid>
+                {
+                    _escort.GetRid(),Player.GetRid()
+                };
+                if (Pass90EscortArrivalSafety.CanComplete(
+                        GetWorld3D(),_escort.GlobalPosition,
+                        _escortDestination.GlobalPosition,
+                        _escort.IsOnFloor(),
+                        Player.GlobalPosition.DistanceTo(_escort.GlobalPosition)
+                            <= EscortProximity,
+                        exclude93))
+                    Complete();
+                else
+                    StopEscortHorizontal89(delta);
+            }
+            else Complete();
             return;
         }
 
