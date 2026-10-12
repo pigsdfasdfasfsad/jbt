@@ -55,6 +55,7 @@ public partial class PickupActor : Node3D
         if (!TryCollect())
             return;
 
+        Pass76InteractionSafety.ClaimPickupPress(Player);
         Collected?.Invoke(this);
         QueueFree();
     }

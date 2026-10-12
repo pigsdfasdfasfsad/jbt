@@ -127,6 +127,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        // Reset the one-pickup-per-press budget even when the final nearby
+        // pickup has already been freed and no PickupActor remains alive.
+        Pass76InteractionSafety.ObservePickupKey(
+            this, Input.IsKeyPressed(Key.E));
         _actionCooldown = Math.Max(0, _actionCooldown - delta);
         _equipTimer = Math.Max(0, _equipTimer - delta);
 
@@ -201,6 +205,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
             Input.MouseMode == Input.MouseModeEnum.Captured &&
             Input.IsMouseButtonPressed(MouseButton.Left))
             TryUseWeapon();
+    }
+
+    public override void _ExitTree()
+    {
+        Pass76InteractionSafety.ForgetPlayer(this);
     }
 
     public override void _UnhandledInput(InputEvent @event)

@@ -14,6 +14,10 @@ def test_nearest_single_pickup_is_occluded_and_collects_once():
     assert "candidate.GetTree().GetNodesInGroup" in safe
     assert "other.GetInstanceId() < candidate.GetInstanceId()" in safe
     assert "candidateDistance" in safe
+    assert "ClaimedPickupPresses.Contains(player.GetInstanceId())" in safe
+    assert "ClaimPickupPress(Player)" in actor
+    assert "ObservePickupKey(" in read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
+    assert "ForgetPlayer(this)" in read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
     assert "Pass36SourceFragmentsRuntime.SourceServerCollisionLayer" in safe
     assert "player.GetWorld3D().DirectSpaceState.IntersectRay(ray).Count == 0" in safe
     assert "Runtime?.Player?.IsAlive != true" in actor

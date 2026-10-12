@@ -15,6 +15,27 @@ public static class Pass76InteractionSafety
     private const uint WorldMask =
         1u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
 
+    // An earlier pickup may QueueFree during this same physics/render frame.
+    // Candidate-order checks alone would let the NEXT pickup claim the
+    // SAME held E key. Keep one authoritative local press budget per player.
+    private static readonly System.Collections.Generic.HashSet<ulong>
+        ClaimedPickupPresses = [];
+
+    public static void ObservePickupKey(FirstPersonPlayer player, bool down)
+    {
+        if (!down) ClaimedPickupPresses.Remove(player.GetInstanceId());
+    }
+
+    public static void ClaimPickupPress(FirstPersonPlayer player)
+    {
+        ClaimedPickupPresses.Add(player.GetInstanceId());
+    }
+
+    public static void ForgetPlayer(FirstPersonPlayer player)
+    {
+        ClaimedPickupPresses.Remove(player.GetInstanceId());
+    }
+
     public static bool CanReach(FirstPersonPlayer player, Vector3 target,
         float radius)
     {
@@ -42,6 +63,7 @@ public static class Pass76InteractionSafety
         var player = candidate.Player;
         if (player is null ||
             candidate.Runtime?.Player?.IsAlive != true ||
+            ClaimedPickupPresses.Contains(player.GetInstanceId()) ||
             !CanReach(player, candidate.GlobalPosition, 2.5f))
             return false;
 
