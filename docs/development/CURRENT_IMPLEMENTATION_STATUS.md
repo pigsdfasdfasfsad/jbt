@@ -1,12 +1,14 @@
-# PASS 73 — GROUND-ROUTE FALLBACK + FULL-MAP INTERACTION ACCEPTANCE (WINDOWS CI PENDING)
+# PASS 73 — VERIFIED NATIVE GROUND-ROUTE FALLBACK + FULL-MAP INTERACTIONS
 
 **Branch:** `twr-pass73-fullmap-ground-navigation`. Builds on [verified Pass72 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201737219), which passed 596 Python regressions and ten actual Godot map scene/Wave 2 tests.
 
 Pass73 adds incremental Godot physics-sampled A* floor navigation for approximate fallback maps (nine release maps, excluding Expressway), with explicit floor/height/collision checks, short-corridor direct chase, shared bounded route cache and no modification of recovered Laboratory source graph. The game now tracks fallback navigation nodes/edges in F10 diagnostics.
 
-The new Windows-native smoke will check grounded actual scene entry on all ten maps, public Godot input-based walking, sprinting and jumping, a real enemy body moving around a clearly fabricated wall on Ranch, actual Medkit and Radio domain interactions, and preventing item/objective grants after death. Short jump-buffer expiry also prevents old airborne Space presses from causing unexpected later auto-jumps.
+The successful Windows-native smoke checked grounded actual scene entry on all ten maps, public Godot input-based walking, sprinting and jumping, a real enemy body moving around a clearly fabricated wall on Ranch, actual Medkit and Radio domain interactions, and preventing item/objective grants after death. Short jump-buffer expiry also prevents old airborne Space presses from causing unexpected later auto-jumps.
 
-**Verification is pending.** Fallback navigation is not a recovered original Roblox navmesh, is ground-floor only, and does not establish all ten source-map visual/navigation fidelity, long-haul human-controlled 15-wave completion or final Windows distribution.
+**Verified exported Windows CI:** [Run 38202837479](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38202837479) — **601 Python tests passed, Godot/.NET Windows export succeeded with 0 errors, all ten native per-map navigation checks passed, Ranch movement/obstacle/pickup/objective/death checks passed, and owner-private asset exclusion passed**. On the fabricated Ranch wall test, genuine Godot input produced 1.35m walking and 1.82m sprinting; the infected body detoured 7.75m sideways and gained 8.90m toward its target.
+
+**Limitations:** This is ground-floor-only, collision-sampled reconstruction navigation, not the original Roblox navmesh. Ten retail-quality original maps, multi-floor behavior, extended human-controlled 15-wave playthroughs and a packaged private Windows distribution remain unfinished.
 
 [Pass73 engineering record](PASS73_FALLBACK_GROUND_NAVIGATION.md)
 

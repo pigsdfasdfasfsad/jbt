@@ -2,7 +2,19 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified source branch: Pass 58 — Source-guided weapon silhouettes
+## Latest verified branch: Pass 73 — Collision-sampled fallback navigation and real-gameplay smoke
+
+[Pass 73 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass73-fullmap-ground-navigation) ·
+[Successful exported Windows build, 601 regressions and native acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38202837479) ·
+[Pass 73 engineering record](docs/development/PASS73_FALLBACK_GROUND_NAVIGATION.md)
+
+- Nine **approximate** maps now construct bounded, physics-sampled **ground-floor AStar3D paths** during real Godot gameplay. Source-recovered Laboratory navigation and Expressway's existing road graph remain authoritative where available; fallback maps do **not** gain recovered Roblox-original navigation or higher-floor stairs.
+- Native Windows verified 799 reachable Ranch graph nodes / 2,718 edges. An actual infected **walked around a synthetic 12m-wide blocking wall** (7.75m lateral detour, 8.90m net pursuit gain), rather than teleporting or ignoring solid collision.
+- The same exported Windows game accepted **real simulated Godot W/Shift/Space/E input**: 1.35m walking, 1.82m sprinting in equal test intervals, physical jump/landing, Medkit healing and Radio objective rewards through the authoritative local domain. Dead-player item and objective grants were prevented.
+- **All ten maps** passed their native per-map readiness checks. Nine fallback maps produced 595–1,075 collision-backed ground nodes; Expressway retained 204 road-graph nodes. **601 Python regressions passed**, Godot/.NET Windows export succeeded with **0 errors**, and the private-asset exclusion gate passed.
+- No owner-original source packs, private profiles, custom mesh/texture bytes or publicly downloadable Windows executable were included. This is **not** ten 1:1 retail maps, a source-authentic navmesh, full multi-floor navigation or manually survived 15-wave matches.
+
+## Historical verified checkpoint: Pass 58 — Source-guided weapon silhouettes
 
 [Pass 58 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass58-original-weapon-silhouettes) ·
 [Successful Windows build and native gun silhouette test](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38117871532) ·
