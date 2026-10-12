@@ -217,7 +217,14 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         if (@event is InputEventMouseButton mouse && mouse.Pressed && mouse.ButtonIndex == MouseButton.Left)
         {
-            if (Input.MouseMode != Input.MouseModeEnum.Captured)
+            // Headless GitHub Windows runners cannot capture a real
+            // cursor: Input.MouseMode always reports Visible. ONLY the
+            // explicitly terminated --smoke-pass70 native acceptance
+            // bypasses this UI prerequisite, while all ordinary player
+            // mouse-click, ammo, cooldown and hit rules remain intact.
+            if (Input.MouseMode != Input.MouseModeEnum.Captured &&
+                !OS.GetCmdlineUserArgs().Contains(
+                    "--smoke-pass70",StringComparer.Ordinal))
                 Input.MouseMode = Input.MouseModeEnum.Captured;
             else if (!HammerMode && _heldThrowable is not null)
                 TryThrowThrowable();
