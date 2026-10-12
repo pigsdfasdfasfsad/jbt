@@ -66,6 +66,8 @@ public partial class GameplayRoot : Node3D
     private PauseOverlayRuntime? _pauseOverlay;
     public ulong MapLoadMilliseconds { get; private set; }
     public int ActiveInfectedCount => _infected.Count(agent => GodotObject.IsInstanceValid(agent));
+    public int VerifiedFallbackSpawns85 { get; private set; }
+    public int RejectedFallbackSpawns85 { get; private set; }
     public int ActivePickupCount => _pickups.Count(actor => GodotObject.IsInstanceValid(actor));
     public string WaveStage => StageName();
     public bool Pass73FallbackNavReady => _groundNavigation73?.IsGraphReady == true;
@@ -900,6 +902,26 @@ public partial class GameplayRoot : Node3D
         var speedScale = (float)RegularWaveRules.InfectedWalkSpeedScale(wave);
 
         var spawn = RandomSpawnPoint();
+        if (!_mapLayout.UseExactInfectedSpawns)
+        {
+            // Pass85: random offsets in the ten approximated maps can
+            // otherwise intersect solid walls or fall beyond the arena.
+            // Test only a bounded number of genuinely collision-supported
+            // candidates, never silently move an owner-original marker.
+            var candidates = new List<Vector3> { spawn };
+            for(var attempt=1;attempt<24;attempt++)
+                candidates.Add(RandomSpawnPoint());
+            var supported=Pass85FallbackInfectedSpawn.TryFind(
+                GetWorld3D(),candidates,_player.GlobalPosition,
+                _player.GetRid());
+            if (!supported.HasValue)
+            {
+                RejectedFallbackSpawns85++;
+                return; // no embedded, unsupported or near-player zombie
+            }
+            spawn=supported.Value;
+            VerifiedFallbackSpawns85++;
+        }
         if (AssistedInfectedSpawnsEnabled && _sourceNavigator?.IsBridgePackActive == true)
         {
             var placement = Pass40AdaptiveEntry.TryFind(
