@@ -106,7 +106,7 @@ public partial class Pass89EscortNavigationAcceptance : Node
             player.GetRid()
         };
         if(Pass89EscortSurfaceSafety.CanTravel(
-                GetWorld3D(),from,goal,excludes))
+                game.GetWorld3D(),from,goal,excludes))
             throw new InvalidOperationException(
                 "Pass89 synthetic solid wall did not obstruct direct route");
         var valid=nav.GetVerifiedEscortRoute89(from,goal,new Rid());
