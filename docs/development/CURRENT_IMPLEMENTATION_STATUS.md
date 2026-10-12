@@ -1,4 +1,4 @@
-# PASS 74 — SPECIAL INFECTED ATTACK SAFETY (NATIVE WINDOWS VALIDATION PENDING)
+# PASS 74 — VERIFIED EXPORTED WINDOWS SPECIAL INFECTED ATTACK SAFETY
 
 **Branch:** `twr-pass74-special-infected-safety` based on verified [Pass73 CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38202837479).
 
@@ -6,7 +6,9 @@ Pass74 fixes two concrete gameplay problems: **Burster's instant detonation coul
 
 The Windows-native smoke uses real Godot gameplay roots on Ranch and Manor, a clearly synthetic raised collision lane, the genuine wave-spawned infected actor, source-type smoke/melee/fire multipliers for all eight variants, Bolter launch/contact behavior, Burster wall-occluded and unblocked damage, gas mask immunity, Bloater line-of-sight gate, and solid-world spore projectile collision. Native test actions use an isolated profile and never publish owner-original packs.
 
-**Pending:** Windows compile, Python contracts, native acceptance markers and private-asset exclusion. This is **not** proof of exact original creature models/behavior, ten map fidelity, or a human 15-wave survival run.
+**Verified:** [successful Pass74 exported Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38205313363) — **607 Python tests passed**, native Godot/.NET Windows export completed with **zero compiler errors**, all Pass74 Bolter/resistance and Burster/Bloater/hazard markers passed, existing ten-map scripted domain completion passed, and the owner-private asset exclusion succeeded. The live Bolter contact inflicted **15.00 HP**; unblocked Burster blast inflicted **27.50 HP**; intact walls prevented the direct Burster blast and blocked projectile splash; gas mask blocked lingering clouds.
+
+**Limitations:** These are isolated synthetic-wall combat tests, **not** proof of exact original infected creature models/animations, ten-map source geometry, all-map advanced navigation, or a human 15-wave survival run.
 
 [Pass74 engineering record](PASS74_SPECIAL_INFECTED_SAFETY.md)
 

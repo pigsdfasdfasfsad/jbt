@@ -2,7 +2,19 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 73 — Collision-sampled fallback navigation and real-gameplay smoke
+## Latest verified branch: Pass 74 — Special-infected collision safety and real native combat
+
+[Pass 74 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass74-special-infected-safety) ·
+[Successful Windows export, 607 Python tests and native ability smoke](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38205313363) ·
+[Pass 74 engineering record](docs/development/PASS74_SPECIAL_INFECTED_SAFETY.md)
+
+- **Burster** instant detonation now respects solid-wall collision rather than dealing 27.5 damage through walls. Its original 20-stud radius stays converted to Godot metres; gas masks protect against the **spore cloud**, not the direct blast.
+- **Bolter** leap attempts now require actual physical floor support at the target. Its approximate 28m/s leap retains original-style fixed direction and recovery, with travel duration bounded to 0.24–0.55s by target distance rather than overshooting close players.
+- Native exported Windows **Ranch** verified one real Bolter contact inflicting **15.00 damage**, wall-blocked launch and ground-supported landing, plus **all eight infected types' smoke multipliers**, Riot melee resilience, and Bloater fire vulnerability. Real **Manor** projectiles and hazards verified a wall blocked Burster's initial blast, gas mask prevented cloud ticks, a clear blast inflicted **27.50 damage**, and Bloater couldn't fire through a wall but could fire a real damaging projectile in clear line of sight.
+- **607 Python regressions passed**, Windows Godot/.NET compiled with **zero errors**, both native special-attack markers passed, scripted domain ten-map completion remained passing, and owner-private data exclusion passed. CI does **not** publish private original assets or an executable.
+- This is safety/fidelity improvement to **reconstructed** specials and **synthetic test walls**, not original enemy animation/mesh parity, exact original map pathfinding, or a human-controlled 15-wave completion.
+
+## Historical verified branch: Pass 73 — Collision-sampled fallback navigation and real-gameplay smoke
 
 [Pass 73 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass73-fullmap-ground-navigation) ·
 [Successful exported Windows build, 601 regressions and native acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38202837479) ·

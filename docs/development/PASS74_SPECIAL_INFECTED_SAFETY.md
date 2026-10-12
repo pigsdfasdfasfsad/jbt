@@ -15,4 +15,22 @@
 
 These are **reconstruction safety corrections**, not proof of the original game's exact attack trajectories or timing. The synthetic test floor/walls are not playable original Manor/Ranch geometry. The eight variant multipliers are supported by recovered source metadata; reconstructed creature models/rigging, special animations, retail all-map navigation, multiplayer and complete 15-wave manual runs remain unfinished.
 
-**Current status:** implemented; Python and exported Windows Godot validation pending.
+**Verified exported Windows source checkpoint:** [Pass74 GitHub Actions CI run 38205313363](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38205313363) built commit `5e4a33963ebd01745ceec44709fc7fda1d387bf7`, passing **607 Python tests** (one inherited XML FutureWarning), **0 C# compiler errors**, native Ranch and Manor special-infected ability tests, and owner-private asset exclusion. The optional domain-only simulated completion marker `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` also passed, but it does **not** represent actual human survival.
+
+### Observed native physics and damage
+
+| Acceptance | Native result |
+| --- | --- |
+| Ranch real Bolter leap contact | 15.00 damage, blocked by intact wall |
+| Bolter landing support | Real ground accepted; lifted target rejected |
+| Source-type resistance | All 8 infected variants tested |
+| Riot melee resistance | Applied |
+| Bloater fire vulnerability | Applied |
+| Manor unoccluded Burster explosion | 27.50 direct damage |
+| Solid wall against Burster | Immediate blast and cloud prevented |
+| Gas mask against cloud | Damage prevented |
+| Bloater with intact wall | Volley blocked |
+| Real projectile against wall | Splash occluded |
+| Bloater with clear line of sight | Projectile attack and damage verified |
+
+The acceptance uses temporary synthetic raised physics lanes on production `GameplayRoot` scenes. It does not provide an original game map, creature rig or downloadable EXE.
