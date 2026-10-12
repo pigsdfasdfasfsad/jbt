@@ -80,4 +80,5 @@ def test_exported_native_two_map_damage_and_isolated_profile_gate():
     assert "twr-pass75-blast-line-of-sight" in ci
     assert ci.index("Smoke Pass 74") < ci.index("Smoke Pass 75")
     assert ci.index("Smoke Pass 75") < ci.index("Verify no private map scenes")
-    assert "github.ref_name == 'twr-pass75-blast-line-of-sight')" in ci
+    assert "if: success() && github.ref_name == 'twr-pass75-blast-line-of-sight'" in ci
+    # The separate owner-private exclusion condition covers later passes.

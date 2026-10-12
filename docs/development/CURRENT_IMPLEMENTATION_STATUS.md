@@ -1,3 +1,24 @@
+# PASS 76 — OBJECTIVE, PICKUP, SUPPLY AND FORTIFICATION INTEGRATION (WINDOWS CI PENDING)
+
+**Development branch:** `twr-pass76-interaction-objective-fortification`. Parent: [verified Pass75 exported Windows acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38206918852) (613 Python tests, zero compiler errors, native launcher + grounded Frag smoke).
+
+Pass76 makes actionable gameplay corrections instead of only increasing test coverage:
+
+- **Single-item E-key pickup arbitration:** When several pickup actors overlap, only the nearest visible pickup handles one key press; a solid wall occludes item collection. A subsequent E press can collect the next item.
+- **Load/Repair objective visibility:** Carrying materials and depositing into the objective target now require a physical unobstructed E-key path. Source-original objective payloads, 10/12-item variants and domain rewards remain unchanged.
+- **Hammer fortifications:** Dead players cannot build. Placement now requires a walkable Godot floor and free collision footprint; invalid placement does NOT consume inventory. Build swings, perk timing and authoritative consumption are retained.
+- **Mounted .50 Cal:** Swept hitscan collision includes real infected layer 2 and optional source-server wall colliders. Mounted guns stop functioning and dismount immediately when the player dies.
+- **Clap Bomb and Jack:** Recovered original 25/35-stud radii are now correctly converted to Godot metres and obstacle-occluded like RPG/Frag. Barbed Wire can no longer damage an infected through a solid wall.
+- **Supply helicopter pallet:** The descending pallet uses an actual walkable Godot collision contact where present, rather than always forcing Y=0.3; a source-player collider is excluded from the landing ray. Its configured Y fallback is preserved when geometry is missing.
+
+New native Windows acceptance exercises E-key pickup contention, blocked/unblocked Load items, hammer invalid/valid placement, Clap Bomb wall/radius damage and rewards, mounted 50 Cal real infected damage, and landing a supply pallet on an elevated floor. The test uses Ranch/Manor production gameplay roots with clearly synthetic floors/walls and an isolated profile. It does not prove full original retail interiors, exact objective cinematic presentation or 15 wave human completion.
+
+**Verification pending:** Windows CI Python contracts, C# compilation, native gameplay smoke and owner-private content exclusion.
+
+[Pass76 engineering report](PASS76_INTERACTION_OBJECTIVES_FORTIFICATIONS.md)
+
+---
+
 # PASS 75 — VERIFIED EXPORTED WINDOWS ROCKET, FRAG AND RECOIL COMBAT
 
 **Source branch:** `twr-pass75-blast-line-of-sight` based on [verified Pass74 Windows native gameplay](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38205313363).
