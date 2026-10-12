@@ -1,0 +1,280 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Godot;
+
+namespace Twr.Godot;
+
+/// <summary>
+/// Pass73: bounded, collision-sampled ground-floor routes for APPROXIMATE
+/// fallback maps only. Never substitutes for private original Laboratory
+/// source geometry/navigation or the Expressway's existing road graph.
+/// Rigid-body physics decides which cells and edges are walkable; a shared
+/// AStar3D graph avoids each infected building its own navigation topology.
+/// Upper floors, stairs, temporary fortifications and missing retail mesh
+/// triangles still require dedicated fidelity work.
+/// </summary>
+public partial class Pass73GroundNavigationRuntime : Node3D
+{
+    public RuntimeMapLayout Layout { get; set; } = null!;
+    public string MapName { get; set; } = "";
+    public const float CellSizeMetres = 3f;
+    private const float MaxGroundStep = .62f;
+    private const float MinimumWalkableNormal = .71f;
+    private const float MaximumAnchorHorizontal = 6.0f;
+    private const float MaximumAnchorVertical = 2.0f;
+    private const int SampleBudgetPerPhysicsFrame = 120;
+    private const int LinkBudgetPerPhysicsFrame = 90;
+    private const int MaximumGridCells = 2_800;
+    private const int MaximumRouteCache = 192;
+    private const uint WorldCollisionMask = 1u;
+
+    private static readonly (int Col, int Row)[] Neighbors =
+        [(1,0), (0,1), (1,1), (-1,1)];
+
+    private readonly AStar3D _graph = new();
+    private readonly CapsuleShape3D _standingCapsule =
+        new() { Radius = .30f, Height = 1.60f };
+    private readonly global::Godot.Collections.Array<Rid> _exclude = new();
+    private readonly Dictionary<(long From, long To), Vector3[]> _routes = new();
+    private readonly Queue<(long From, long To)> _routeInsertionOrder = new();
+
+    private float _firstX;
+    private float _firstZ;
+    private float _spacing = CellSizeMetres;
+    private int _columns;
+    private int _rows;
+    private int _nextSample;
+    private int _nextLink;
+    private bool _connected;
+    private bool _ready;
+    private int _edges;
+
+    public int PointCount => (int)_graph.GetPointCount();
+    public int EdgeCount => _edges;
+    public int CandidateCount => _columns * _rows;
+    public bool IsGraphReady => _ready && PointCount >= 20;
+    public int RouteCacheCount => _routes.Count;
+    public long RouteRequests { get; private set; }
+    public long CacheHits { get; private set; }
+    public long FallbackPathSearches { get; private set; }
+
+    public static Pass73GroundNavigationRuntime Attach(
+        Node3D owner, string mapName, RuntimeMapLayout layout)
+    {
+        ArgumentNullException.ThrowIfNull(owner);
+        ArgumentNullException.ThrowIfNull(layout);
+        var nav = new Pass73GroundNavigationRuntime
+        {
+            Name = "Pass73GroundNavigation",
+            MapName = mapName,
+            Layout = layout
+        };
+        owner.AddChild(nav);
+        return nav;
+    }
+
+    public override void _Ready()
+    {
+        var points = new[] { Layout.PlayerSpawn }
+            .Concat(Layout.InfectedSpawns)
+            .Concat(Layout.PickupPoints)
+            .Concat(Layout.ObjectivePoints)
+            .ToArray();
+        if (points.Length == 0)
+        {
+            SetPhysicsProcess(false);
+            return;
+        }
+
+        var minX = points.Min(p => p.X) - 4f;
+        var maxX = points.Max(p => p.X) + 4f;
+        var minZ = points.Min(p => p.Z) - 4f;
+        var maxZ = points.Max(p => p.Z) + 4f;
+        do
+        {
+            _firstX = Mathf.Floor(minX / _spacing) * _spacing;
+            _firstZ = Mathf.Floor(minZ / _spacing) * _spacing;
+            _columns = (int)Mathf.Ceil((maxX - _firstX) / _spacing) + 1;
+            _rows = (int)Mathf.Ceil((maxZ - _firstZ) / _spacing) + 1;
+            if ((long)_columns * _rows <= MaximumGridCells) break;
+            _spacing += .5f;
+        } while (_spacing <= 8f);
+
+        if ((long)_columns * _rows > MaximumGridCells)
+            throw new InvalidOperationException(
+                "Pass73 bounded ground navigation grid budget exceeded");
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        if (_ready) return;
+        // Build in bounded slices to avoid a one-frame hitch whenever a map
+        // starts. Existing first-wave countdown gives the graph ample time.
+        if (_exclude.Count == 0)
+        {
+            var player = GetParent()?.GetNodeOrNull<FirstPersonPlayer>("Player");
+            if (player is not null)
+                _exclude.Add(player.GetRid());
+        }
+
+        var total = CandidateCount;
+        var end = Math.Min(total, _nextSample + SampleBudgetPerPhysicsFrame);
+        for (; _nextSample < end; _nextSample++)
+        {
+            var column = _nextSample % _columns;
+            var row = _nextSample / _columns;
+            var x = _firstX + column * _spacing;
+            var z = _firstZ + row * _spacing;
+            if (TryFindGround(x, z, out var ground))
+                _graph.AddPoint(_nextSample, ground);
+        }
+        if (_nextSample < total) return;
+
+        var linkEnd = Math.Min(total, _nextLink + LinkBudgetPerPhysicsFrame);
+        for (; _nextLink < linkEnd; _nextLink++)
+        {
+            if (!_graph.HasPoint(_nextLink)) continue;
+            var from = _graph.GetPointPosition(_nextLink);
+            var col = _nextLink % _columns;
+            var row = _nextLink / _columns;
+            foreach (var (dc, dr) in Neighbors)
+            {
+                var otherCol = col + dc;
+                var otherRow = row + dr;
+                if (otherCol < 0 || otherCol >= _columns ||
+                    otherRow < 0 || otherRow >= _rows)
+                    continue;
+                var id = otherRow * _columns + otherCol;
+                if (!_graph.HasPoint(id)) continue;
+                var to = _graph.GetPointPosition(id);
+                if (Math.Abs(to.Y - from.Y) > MaxGroundStep ||
+                    !CorridorClear(from, to))
+                    continue;
+                _graph.ConnectPoints(_nextLink, id);
+                _edges++;
+            }
+        }
+        if (_nextLink < total) return;
+        _connected = _edges > 0;
+        _ready = true;
+        SetPhysicsProcess(false);
+        GD.Print($"TWR_PASS73_GROUND_NAV_READY map={MapName} " +
+            $"nodes={PointCount} edges={EdgeCount} samples={CandidateCount} " +
+            $"spacing={_spacing:F1} active={IsGraphReady && _connected}");
+    }
+
+    private bool TryFindGround(float x, float z, out Vector3 feet)
+    {
+        feet = Vector3.Zero;
+        // Fallback map primary floors are at 0m; elevated docks are below
+        // 2.4m. Start BELOW Manor's upper deck, deliberately excluding it
+        // rather than incorrectly connecting the two floors across walls.
+        var ray = PhysicsRayQueryParameters3D.Create(
+            new Vector3(x, 2.4f, z), new Vector3(x, -1.4f, z));
+        ray.CollisionMask = WorldCollisionMask;
+        ray.Exclude = _exclude;
+        var space = GetWorld3D().DirectSpaceState;
+        var groundHit = space.IntersectRay(ray);
+        if (groundHit.Count == 0 ||
+            ((Vector3)groundHit["normal"]).Y < MinimumWalkableNormal)
+            return false;
+
+        var floor = (Vector3)groundHit["position"];
+        var stand = new Vector3(floor.X, floor.Y + .86f, floor.Z);
+        var capsuleQuery = new PhysicsShapeQueryParameters3D
+        {
+            Shape = _standingCapsule,
+            Transform = new Transform3D(Basis.Identity, stand),
+            CollisionMask = WorldCollisionMask,
+            CollideWithBodies = true,
+            Exclude = _exclude
+        };
+        if (space.IntersectShape(capsuleQuery, 1).Count != 0)
+            return false;
+        feet = floor;
+        return true;
+    }
+
+    private bool CorridorClear(Vector3 aFeet, Vector3 bFeet)
+    {
+        var d = bFeet - aFeet;
+        d.Y = 0;
+        if (d.LengthSquared() <= .01f) return true;
+        var side = new Vector3(-d.Z, 0, d.X).Normalized();
+        foreach (var offset in new[] { 0f, -.23f, .23f })
+        {
+            var shift = side * offset + Vector3.Up * .82f;
+            var ray = PhysicsRayQueryParameters3D.Create(
+                aFeet + shift, bFeet + shift);
+            ray.CollisionMask = WorldCollisionMask;
+            ray.Exclude = _exclude;
+            if (GetWorld3D().DirectSpaceState.IntersectRay(ray).Count > 0)
+                return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Returns feet-level graph waypoints, matching the existing infected
+    /// waypoint +0.8m body-centre convention. Empty means local steering;
+    /// this never teleports a zombie or changes physics collision authority.
+    /// </summary>
+    public Vector3[] GetRoute(Vector3 infectedCentre, Vector3 playerCentre)
+    {
+        RouteRequests++;
+        if (!IsGraphReady || !_connected ||
+            !IsFinite(infectedCentre) || !IsFinite(playerCentre))
+            return [];
+
+        // Do not force agents through grid cells if ordinary direct pursuit
+        // has a clear corridor; source enemy movement retains priority.
+        if (Math.Abs(infectedCentre.Y - playerCentre.Y) <= 1.2f &&
+            CorridorClear(infectedCentre - Vector3.Up * .8f,
+                playerCentre - Vector3.Up * .8f))
+            return [];
+
+        var start = _graph.GetClosestPoint(infectedCentre);
+        var end = _graph.GetClosestPoint(playerCentre);
+        if (start < 0 || end < 0)
+            return [];
+        var a = _graph.GetPointPosition(start);
+        var b = _graph.GetPointPosition(end);
+        if (!AnchorMatches(infectedCentre, a) ||
+            !AnchorMatches(playerCentre, b))
+            return [];
+
+        var key = (start, end);
+        if (_routes.TryGetValue(key, out var cached))
+        {
+            CacheHits++;
+            return cached;
+        }
+        FallbackPathSearches++;
+        var path = _graph.GetPointPath(start, end);
+        if (path.Length <= 1) return [];
+
+        // Bounded FIFO cache; no map-specific original source data enters it.
+        if (_routes.Count >= MaximumRouteCache)
+        {
+            var expired = _routeInsertionOrder.Dequeue();
+            _routes.Remove(expired);
+        }
+        _routes.Add(key, path);
+        _routeInsertionOrder.Enqueue(key);
+        return path;
+    }
+
+    private static bool AnchorMatches(Vector3 body, Vector3 feet)
+    {
+        var dx = body.X - feet.X;
+        var dz = body.Z - feet.Z;
+        return dx * dx + dz * dz <=
+            MaximumAnchorHorizontal * MaximumAnchorHorizontal &&
+            Math.Abs(body.Y - (feet.Y + .8f)) <= MaximumAnchorVertical;
+    }
+
+    private static bool IsFinite(Vector3 x) =>
+        float.IsFinite(x.X) && float.IsFinite(x.Y) &&
+        float.IsFinite(x.Z);
+}
