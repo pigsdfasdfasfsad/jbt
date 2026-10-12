@@ -334,7 +334,11 @@ public partial class ObjectiveRuntime : Node3D
             desired.Y=0;
             // Elevated ramps need tighter waypoint contact. A 0.60m
             // planar skip can hop over an entire sloped stair section.
-            var waypointRadius=UseManorElevatedEscort94 ? .32f : .60f;
+            // Pass94 native 38302733926: .32m allowed a survivor at
+            // (-.27,3.00,28.75) to skip the exact ramp crest and
+            // collide diagonally into the first descending face.
+            // Full capsule must reach the crest before a sloped step.
+            var waypointRadius=UseManorElevatedEscort94 ? .10f : .60f;
             if(desired.LengthSquared() > waypointRadius*waypointRadius)
                 break;
             _escortRouteIndex89++;
@@ -352,14 +356,18 @@ public partial class ObjectiveRuntime : Node3D
         {
             actor.GetRid(),Player.GetRid()
         };
-        var probeFeet=from+direction*.55f;
+        // The existing other-map 0.55m probe is preserved. On Manor
+        // upper ramps, a full 0.55m cast can cross and collide with
+        // MULTIPLE close-spaced stair sections in one attempted frame.
+        // Test a short 0.14m capsule movement along only the NEXT leg,
+        // never past the current physical waypoint.
+        var probeDistance=UseManorElevatedEscort94
+            ? Math.Min(.14f,desired.Length()) : .55f;
+        var probeFeet=from+direction*probeDistance;
         if(UseManorElevatedEscort94)
         {
-            // Descending motion must be swept ALONG the real ramp's slope,
-            // not as a flat-height collider sweep through the stair face.
             var following=_escortRoute89[_escortRouteIndex89];
-            var fraction=Math.Min(1f,.55f/
-                Math.Max(.01f,desired.Length()));
+            var fraction=probeDistance/Math.Max(.01f,desired.Length());
             probeFeet.Y=from.Y+(following.Y-from.Y)*fraction;
         }
         if (!Pass89EscortSurfaceSafety.CanTravel(
