@@ -33,6 +33,9 @@ def test_native_manor_completion_is_real_npc_motion_and_one_reward():
     assert "Runtime.Match.Wave=" not in game
     assert "Runtime.Player.Credits=" not in game
     assert "Runtime.Player.Xp=" not in game
+    assert "TWR_PASS94_MOTION_PROGRESS" in game
+    assert "framesWithoutProgress>300" in game
+    assert "Pass94 physics survivor motion stalled" in game
 
 
 def test_windows_export_replays_prior_escort_and_privacy_guards():
@@ -43,6 +46,8 @@ def test_windows_export_replays_prior_escort_and_privacy_guards():
     assert "new Pass94ManorEscortAcceptance" in boot
     assert "pass94-manor-stair-escort-smoke-profile.json" in node
     assert "TWR_SMOKE_PASS94_MANOR_STAIR_ESCORT_OK" in ci
+    assert "'--quit-after','180000','--','--smoke-pass94'" in ci
+    assert "Preflight Manor upper Escort route physics" in ci
     assert ci.index("Smoke Pass 91")<ci.index("Smoke Pass 92")<ci.index("Smoke Pass 94")
     assert ci.index("Smoke Pass 94")<ci.index("Verify no private map scenes")
     assert ci.count("uses: actions/upload-artifact@v4")==ci.count(
