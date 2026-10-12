@@ -26,7 +26,7 @@ def test_escort_uses_fallback_world_graph_not_wall_clipping():
     assert "GetVerifiedEscortRoute89(" in nav
     assert "Pass89EscortSurfaceSafety.CanTravel(" in nav
     assert "private static bool EscortAnchorMatches89" in nav
-    assert 'MapName != "Manor" || ObjectivePosition(i).Y < 2.3f' in game
+    assert 'ObjectivePosition(i).Y < 2.3f || manorUpperEscort94' in game
     assert "_groundNavigation73 is not null" in game
     assert "EscortGroundNavigator89 = _groundNavigation73" in game
 
