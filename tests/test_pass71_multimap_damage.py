@@ -57,4 +57,6 @@ def test_isolated_profile_export_ci_and_private_asset_gate():
     assert "TWR_SMOKE_PASS71_MULTIMAP_DAMAGE_OK" in workflow
     assert workflow.index("Smoke Pass 70") < workflow.index("Smoke Pass 71")
     assert workflow.index("Smoke Pass 71") < workflow.index("Verify no private map scenes")
-    assert "github.ref_name == 'twr-pass71-native-multimap-damage')" in workflow
+    assert "if: success() && github.ref_name == 'twr-pass71-native-multimap-damage'" in workflow
+    # The shared owner-privacy gate now includes later verified test branches,
+    # so do not require Pass71 to be its final disjunct.
