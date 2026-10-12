@@ -110,4 +110,5 @@ def test_real_windows_map_actor_harness_is_isolated_and_comprehensive():
     assert "TWR_SMOKE_PASS76_OBJECTIVE_FORTIFICATION_OK" in ci
     assert ci.index("Smoke Pass 75") < ci.index("Smoke Pass 76")
     assert ci.index("Smoke Pass 76") < ci.index("Verify no private map scenes")
-    assert "github.ref_name == 'twr-pass76-interaction-objective-fortification')" in ci
+    assert "if: success() && github.ref_name == 'twr-pass76-interaction-objective-fortification'" in ci
+    # Privacy exclusions intentionally remain shared across future branches.

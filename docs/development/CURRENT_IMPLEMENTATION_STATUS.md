@@ -1,3 +1,20 @@
+# PASS 77 — MANOR PHYSICAL UPPER-STORY TRAVERSAL (WINDOWS VALIDATION PENDING)
+
+**Development branch:** `twr-pass77-manor-stair-traversal` based on verified [Pass76 Windows gameplay CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38208475688).
+
+This pass corrects a concrete remaining environmental gap: the reconstructed Manor's three eight-tread stair flights previously used separate, roughly 32cm-high collision boxes without a reliable climbing surface. Godot's ordinary CharacterBody movement cannot ascend those as a continuous staircase without jumping, and the split balcony decks had an approximately four-metre-wide centre gap without a connecting landing.
+
+- All three **approximate fallback Manor stair flights** now use an actual angled `StaticBody3D` collision ramp, eight visible decorative treads (no duplicate tread collision) and an upper cross-landing that overlaps both side platforms. The slope is bounded below 35°; the original part recovery claims remain explicitly approximate.
+- `RuntimeMapLayout.ApproximateStairs77` records bottom/top collision-foot coordinates only for the reconstructed Manor fallback. The original Lab loaded-source and source-nav paths, nine other maps, and the Expressway road graph are unchanged.
+- A conservative Pass73 graph supplement can issue **uphill** waypoints along one of three existing Manor ramps only after sampling real walkable Godot colliders along the ramp, verifying collision-free corridor travel and actual upper-floor target alignment. Stair down-routes, remote upstairs wings and all owner-original retail map nav parity are deliberately unsupported/unverified.
+- A dedicated exported Windows native smoke starts real reconstructed Manor gameplay, validates three ramp colliders and upper landings, uses actual W keyboard input to physically climb the front stair without teleporting, computes a real collision-audited lower-to-upper zombie route, and exercises a genuine infected physics body climbing after the player.
+
+**Verification pending:** Python regression suite, Windows Godot/.NET export, native player/infected ascent acceptance and owner-private asset exclusion. The private Roblox originals, original meshes and user save data are not committed.
+
+[Pass77 technical record](PASS77_MANOR_STAIR_TRAVERSAL.md)
+
+---
+
 # PASS 76 — VERIFIED EXPORTED WINDOWS OBJECTIVE, PICKUP, SUPPLY AND FORTIFICATION INTEGRATION
 
 **Development branch:** `twr-pass76-interaction-objective-fortification`. Parent: [verified Pass75 exported Windows acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38206918852) (613 Python tests, zero compiler errors, native launcher + grounded Frag smoke).
