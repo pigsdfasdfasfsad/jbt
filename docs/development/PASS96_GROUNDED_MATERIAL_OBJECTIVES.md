@@ -25,3 +25,11 @@ The Windows `--smoke-pass96` smoke enters ten actual reconstructed maps, creates
 ## Distribution
 
 Public CI intentionally does not upload owner-private source packs or Windows binaries. The owner-only Windows packaging path remains separate; a green CI workflow is not itself a public download link.
+
+## First native regression and provenance repair
+
+The first Pass96 Windows run [38321854869](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38321854869) **passed the actual ten-map material accessibility preflight**, then failed Pass88's existing strict marker-rotation assertion on Ranch Wave1. Pass88 had previously assumed every objective's world transform must exactly equal its chosen Pass87 marker. Pass96 deliberately moves only material-family fallback objectives to a verified nearby floor, which invalidates that transform-equality assumption without changing the selected marker.
+
+The fix records `Pass96AuthoredMaterialAnchor` **before** physically grounding the depot. Pass88 now requires exact equality between that original scheduled marker and the computed Pass87 rotation, while independently requiring the relocated material objective's complete supported layout and a bounded 7.5m physical relocation. This strengthens the original rotation contract rather than disabling the test or allowing arbitrary objective teleports.
+
+**Status:** regression correction committed; Pass96 needs a fresh all-green exported Windows run before it is verified.
