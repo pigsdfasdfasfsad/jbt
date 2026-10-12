@@ -120,6 +120,42 @@ public partial class Pass94ManorEscortAcceptance : Node
             throw new InvalidOperationException(
                 "Pass94 Wave5 Escort not anchored to front landing");
 
+        // One bounded diagnostic of the unmodified runtime physics map:
+        // identifies the *exact* unsupported segment if route generation
+        // fails. No collider or NPC position is changed by these probes.
+        var bridgeCentre=stair.UpperFeet+
+            new Vector3(0f,0f,
+                Math.Sign(stair.UpperFeet.Z-stair.LowerFeet.Z)*1.4f);
+        var bridgeEntrance=bridgeCentre+Vector3.Left*4.25f;
+        var routeExclude=new global::Godot.Collections.Array<Rid>
+        {
+            actor.GetRid(),player.GetRid()
+        };
+        var groundedGoal=Pass94ManorEscortRoute.TryGroundGoal(
+            game.GetWorld3D(),goal.GlobalPosition,routeExclude);
+        var lowerPath=groundedGoal.HasValue
+            ? nav.GetVerifiedEscortRoute89(stair.LowerFeet,
+                groundedGoal.Value,actor.GetRid()) : [];
+        GD.Print("TWR_PASS94_ROUTE_DIAGNOSTIC"+
+            " authoredGoal="+goal.GlobalPosition+
+            " groundedGoal="+(groundedGoal.HasValue
+                ? groundedGoal.Value.ToString():"NONE")+
+            " upperToEntrance="+Pass89EscortSurfaceSafety.CanTravel(
+                game.GetWorld3D(),initial,bridgeEntrance,routeExclude)+
+            " entranceToCentre="+Pass89EscortSurfaceSafety.CanTravel(
+                game.GetWorld3D(),bridgeEntrance,bridgeCentre,routeExclude)+
+            " centreToStair="+Pass89EscortSurfaceSafety.CanTravel(
+                game.GetWorld3D(),bridgeCentre,stair.UpperFeet,routeExclude)+
+            " stairFirstStep="+Pass89EscortSurfaceSafety.CanTravel(
+                game.GetWorld3D(),stair.UpperFeet,
+                stair.LowerFeet.Lerp(stair.UpperFeet,11f/12f),
+                routeExclude)+
+            " groundRoutePoints="+lowerPath.Length+
+            " plannedRoutePoints="+(groundedGoal.HasValue
+                ? Pass94ManorEscortRoute.GetVerifiedRoute(
+                    nav,initial,groundedGoal.Value,
+                    actor.GetRid(),player.GetRid()).Length : 0));
+
         var creditsBefore=Runtime.Player!.Credits;
         var xpBefore=Runtime.Player.Xp;
         var levelBefore=Runtime.Player.Level;
@@ -148,6 +184,15 @@ public partial class Pass94ManorEscortAcceptance : Node
         {
             await Frames(1);
             if(callbacks>0)break;
+            if(frame==240 && maxTravel<.10f &&
+               objective.EscortSafeRoutePlans89==0)
+                throw new InvalidOperationException(
+                    "Pass94 no viable physical Manor upper route"+
+                    " rejectedGoals="+objective.EscortRejectedDestinations90+
+                    " blockedPlans="+objective.EscortBlockedRoutePlans89+
+                    " actor="+actor.GlobalPosition+
+                    " upperRamp="+stair.UpperFeet+
+                    " lowerRamp="+stair.LowerFeet);
             if(!GodotObject.IsInstanceValid(actor))
                 throw new InvalidOperationException(
                     "Pass94 NPC deleted before real objective completion");
