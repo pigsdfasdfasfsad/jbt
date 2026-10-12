@@ -385,18 +385,14 @@ public static class MapBlockoutBuilder
         // an obstructing internal vertical seam at the balcony edge.
         // It does not pretend to replace retail Manor collision meshes.
         var crossingZ=upper.Z+zDir*1.40f;
-        // Pass94: the older 1.20m-long crossing ended 10cm short
-        // of the existing sloped landing, causing a full-size survivor
-        // to reject the entire Manor Escort route. Extend only this
-        // established horizontal crosswalk to 1.60m in Z, overlapping
-        // the landing by 10cm. Do NOT add a new raised physical plank
-        // over the top of the ramp: native Pass78 showed that its exposed
-        // downhill collision face blocks genuine player stair ascent.
-        // The longer crossing stops 60cm BEFORE the ramp's upper end,
-        // clear of the player's capsule while it finishes climbing.
+        // Pass94: the full-size Escort now approaches the stair
+        // laterally from an existing side deck, not through the pitched
+        // landing's steep front collision face. Restore the unchanged,
+        // Pass78/83-verified source-approximate upper crosswalk geometry.
+        // The real capsule sweep must still audit every side approach.
         StaticBox(root,name+"_UpperCrossing80",
             new Vector3(center.X,upper.Y-.08f,crossingZ),
-            new Vector3(9.0f,.16f,1.60f),color.Lightened(.065f));
+            new Vector3(9.0f,.16f,1.20f),color.Lightened(.065f));
         return new Pass77StairLink(name,lower,upper);
     }
     private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color,
