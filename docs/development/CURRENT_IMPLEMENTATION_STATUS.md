@@ -1,4 +1,4 @@
-# PASS 76 — OBJECTIVE, PICKUP, SUPPLY AND FORTIFICATION INTEGRATION (WINDOWS CI PENDING)
+# PASS 76 — VERIFIED EXPORTED WINDOWS OBJECTIVE, PICKUP, SUPPLY AND FORTIFICATION INTEGRATION
 
 **Development branch:** `twr-pass76-interaction-objective-fortification`. Parent: [verified Pass75 exported Windows acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38206918852) (613 Python tests, zero compiler errors, native launcher + grounded Frag smoke).
 
@@ -13,7 +13,11 @@ Pass76 makes actionable gameplay corrections instead of only increasing test cov
 
 New native Windows acceptance exercises E-key pickup contention, blocked/unblocked Load items, hammer invalid/valid placement, Clap Bomb wall/radius damage and rewards, mounted 50 Cal real infected damage, and landing a supply pallet on an elevated floor. The test uses Ranch/Manor production gameplay roots with clearly synthetic floors/walls and an isolated profile. It does not prove full original retail interiors, exact objective cinematic presentation or 15 wave human completion.
 
-**Verification pending:** Windows CI Python contracts, C# compilation, native gameplay smoke and owner-private content exclusion.
+**Verified exported Windows CI:** [run 38208475688](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38208475688) from source commit `4c0ef8223a581bd91156a235edfd18c760d23ff8` — **622 Python tests passed**, one pre-existing XML FutureWarning, Godot/.NET Windows build succeeded with **0 compiler errors**, both real-gameplay `TWR_PASS76_RANCH_INTERACTIONS_OK` and `TWR_PASS76_MANOR_EQUIPMENT_OK` markers passed, and owner-private asset exclusion passed. The previous scripted domain-only ten-map, 150-wave completion marker also passed but is **not** a genuine human playthrough.
+
+**Additional production input fixes from native testing:** A per-player E-press budget prevents additional pickups disappearing in the same held-key frame; first LMB sends an immediate hammer swing and mounted .50 Cal fire event, with the existing repeat cooldown retained.
+
+**Remaining work:** Original map source geometry, authentic item/fortification visual models, complete all-map objective route validation, human-played 15-wave survival, and final user-ready private Windows packaging.
 
 [Pass76 engineering report](PASS76_INTERACTION_OBJECTIVES_FORTIFICATIONS.md)
 

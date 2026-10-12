@@ -2,7 +2,21 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 75 — Collision-safe weapon blasts and crosshair-first firing
+## Latest verified branch: Pass 76 — Objective, Pickup, Supply and Fortification Physics
+
+[Pass 76 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass76-interaction-objective-fortification) ·
+[Successful Windows export, 622 regressions and two native interaction smokes](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38208475688) ·
+[Pass 76 engineering record](docs/development/PASS76_INTERACTION_OBJECTIVES_FORTIFICATIONS.md)
+
+- **E-key pickups** are now collision-occluded and resolve to one nearest visible item per held E press, including when the first pickup is queued for deletion in the same frame. This fixes multi-looting of clustered helicopter/supply drops and wall-through pickup exploits.
+- **Load/Repair materials** require a world-visible grab/deposit path. The native Ranch test collected materials and deposited exactly **1/10 items**, while a wall prevented collection.
+- **Hammer placement** requires a real walkable floor and free placement footprint; a blocked attempt does not consume inventory. Direct LMB begins the first swing without waiting for held-input polling, and the original hammer cooldown still prevents double swings.
+- **Clap Bomb/Jack** radius is scaled from recovered **25/35 Roblox studs** to Godot metres and filtered by world collision; Barbed Wire does not hit through walls. A native Ranch Clap Bomb killed a visible infected and granted real credits while preserving an occluded zombie and tanker beyond the 25-stud radius.
+- **Mounted 50 Cal** now directly hits layer-2 infected bodies with a first-click input handler plus the existing automatic firing cadence; it grants kill credits and dismounts on death. **Supply pallet** landing samples actual walkable geometry and keeps a single landing callback, confirmed on a 54m-high synthetic test floor.
+- **622 Python regressions passed, zero Godot/.NET compiler errors**, both Ranch/Manor exported Windows acceptance markers passed, ten-map domain-only `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed, and owner-private content exclusion passed.
+- **Fidelity boundary:** All native scenario obstacles/floors are synthetic; this does **not** establish source-authentic map collision, complete multi-floor traversal, original item/fortification art, a human-played 15-wave session, or a private complete EXE release.
+
+## Historical verified branch: Pass 75 — Collision-safe weapon blasts and crosshair-first firing
 
 [Pass 75 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass75-blast-line-of-sight) ·
 [Successful Windows export, 613 tests and native rocket/Frag acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38206918852) ·
