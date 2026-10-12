@@ -626,7 +626,14 @@ public partial class Bootstrap : Node
            !gun.SourceArmRigAvailable)
             throw new InvalidOperationException(
                 "Pass67 source sight did not bind to existing source weapon and arm rig");
-        var hip=gun.Transform;
+        // Recreate the normal player hip offset; Bootstrap's headless
+        // test root otherwise starts at identity, already centered in X/Y
+        // and cannot meaningfully demonstrate lateral sight convergence.
+        var hip=new Transform3D(
+            Basis.FromEuler(new Vector3(-.07f,.07f,0f)),
+            new Vector3(.28f,-.22f,-.70f));
+        gun.Transform=hip;
+        gun._Process(.016f);
         var arm=gun.GetNodeOrNull<Node3D>("ArmRig66");
         var shoulder=arm?.GetNodeOrNull<MeshInstance3D>("LeftShoulder66");
         if(arm is null || shoulder is null)
