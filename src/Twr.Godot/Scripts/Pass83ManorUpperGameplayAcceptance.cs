@@ -340,7 +340,7 @@ public partial class Pass83ManorUpperGameplayAcceptance : Node
         var mid=stair.UpperFeet+
             new Vector3(0,0f,sign*.70f);
         return new Pass80UpperCrossing(stair.Name,mid,
-            mid+Vector3.Left*3.50f,
-            mid+Vector3.Right*3.50f);
+            mid+Vector3.Left*4.25f,
+            mid+Vector3.Right*4.25f);
     }
 }

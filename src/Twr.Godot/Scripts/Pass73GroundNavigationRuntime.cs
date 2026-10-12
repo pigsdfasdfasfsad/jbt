@@ -577,7 +577,7 @@ public partial class Pass73GroundNavigationRuntime : Node3D
             // Pass83 prevents the agent from returning to the *entrance*
             // gate on every 0.75s replan after it has already reached the
             // actual walkable catwalk.
-            var onBridge=Math.Abs(from.Z-mid.Z)<.72f &&
+            var onBridge=Math.Abs(from.Z-mid.Z)<.28f &&
                 Math.Abs(from.X-mid.X)<4.45f &&
                 UpperCorridorSupported79(from,mid);
             if (onBridge)
@@ -590,12 +590,25 @@ public partial class Pass73GroundNavigationRuntime : Node3D
                     : [mid,outgoing,playerFeet];
                 return true;
             }
-            if (!UpperCorridorSupported79(from,incoming) ||
-                !UpperCorridorSupported79(incoming,mid) ||
+            var entranceSupported=UpperCorridorSupported79(from,incoming);
+            if (!UpperCorridorSupported79(incoming,mid) ||
                 !UpperCorridorSupported79(mid,outgoing) ||
                 !UpperCorridorSupported79(outgoing,playerFeet))
                 continue;
-            result = [incoming,mid,outgoing,playerFeet];
+            if (entranceSupported)
+            {
+                result = [incoming,mid,outgoing,playerFeet];
+                return true;
+            }
+            // Pass83 recovery: if the agent wandered near a side-deck
+            // edge, first retreat on continuous solid balcony geometry.
+            // No unsupported shortcut, jump or position teleport occurs.
+            var retreat = new Vector3(
+                mid.X+firstSide*5.2f,from.Y,from.Z);
+            if (!UpperCorridorSupported79(from,retreat) ||
+                !UpperCorridorSupported79(retreat,incoming))
+                continue;
+            result = [retreat,incoming,mid,outgoing,playerFeet];
             return true;
         }
         return false;

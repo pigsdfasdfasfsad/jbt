@@ -226,7 +226,7 @@ public static class MapBlockoutBuilder
         var center = stair.UpperFeet +
             new Vector3(0f, 0f, sign*.70f);
         return new Pass80UpperCrossing(stair.Name, center,
-            center+Vector3.Left*3.50f, center+Vector3.Right*3.50f);
+            center+Vector3.Left*4.25f, center+Vector3.Right*4.25f);
     }
 
     private static RuntimeMapLayout Layout(Vector3 player, IReadOnlyList<Vector3> infected, IReadOnlyList<Vector3> pickups, IReadOnlyList<Vector3> objectives) =>
