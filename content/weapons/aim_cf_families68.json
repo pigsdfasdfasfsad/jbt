@@ -1,0 +1,231 @@
+{
+  "format": "twr-inert-source-aim-formula-families-v1",
+  "source": "Distilled family classification from user-supplied original ModuleScript files; contains no executable Roblox source",
+  "weapon_count": 73,
+  "profiles": {
+    "AK-47": {
+      "family": "sight_handle_with_base"
+    },
+    "AR-57": {
+      "family": "sight_handle_with_base"
+    },
+    "AS VAL": {
+      "family": "sight_handle_with_base"
+    },
+    "ASh-12": {
+      "family": "sight_handle_with_base"
+    },
+    "AUG": {
+      "family": "sight_handle_with_base"
+    },
+    "CBJ-MS": {
+      "family": "sight_handle_with_base"
+    },
+    "CMMG Mk47 Mutant": {
+      "family": "sight_handle_with_base"
+    },
+    "Colt Python": {
+      "family": "sight_handle_with_base"
+    },
+    "CZ Scorpion EVO Micro K": {
+      "family": "sight_handle_with_base"
+    },
+    "Festive RPG-7": {
+      "family": "sight_handle_with_base"
+    },
+    "Gepard PDW": {
+      "family": "sight_handle_with_base"
+    },
+    "HK P30L": {
+      "family": "sight_handle_with_base"
+    },
+    "KAC PDW": {
+      "family": "sight_handle_with_base"
+    },
+    "LWRC IC-PSD": {
+      "family": "sight_handle_with_base"
+    },
+    "M16A1": {
+      "family": "sight_handle_with_base"
+    },
+    "M320": {
+      "family": "sight_handle_with_base"
+    },
+    "M4A1": {
+      "family": "sight_handle_with_base"
+    },
+    "Makarov": {
+      "family": "sight_handle_with_base"
+    },
+    "Maxim 9": {
+      "family": "sight_handle_with_base"
+    },
+    "MK18": {
+      "family": "sight_handle_with_base"
+    },
+    "MP5A2": {
+      "family": "sight_handle_with_base"
+    },
+    "OTs-14 Groza": {
+      "family": "sight_handle_with_base"
+    },
+    "P90": {
+      "family": "sight_handle_with_base"
+    },
+    "PB 6P9": {
+      "family": "sight_handle_with_base"
+    },
+    "PP-91 Kedr": {
+      "family": "sight_handle_with_base"
+    },
+    "RPG-7": {
+      "family": "sight_handle_with_base"
+    },
+    "RPK": {
+      "family": "sight_handle_with_base"
+    },
+    "Sawn Off Shotgun": {
+      "family": "sight_handle_with_base"
+    },
+    "SVD": {
+      "family": "sight_handle_with_base"
+    },
+    "Taurus Judge": {
+      "family": "sight_handle_with_base"
+    },
+    "Taurus Model 66": {
+      "family": "sight_handle_with_base"
+    },
+    "TEC-9": {
+      "family": "sight_handle_with_base"
+    },
+    "UMP-45": {
+      "family": "sight_handle_with_base"
+    },
+    "VSS": {
+      "family": "sight_handle_with_base"
+    },
+    "Winchester Model 1892": {
+      "family": "sight_handle_with_base"
+    },
+    "Aero Survival Rifle": {
+      "family": "sight_handle_then_base"
+    },
+    "Desert Eagle": {
+      "family": "sight_handle_then_base"
+    },
+    "Kriss Vector": {
+      "family": "sight_handle_then_base"
+    },
+    "M60": {
+      "family": "sight_handle_then_base"
+    },
+    "MG 42": {
+      "family": "sight_handle_then_base"
+    },
+    "Mossberg 500": {
+      "family": "sight_handle_then_base"
+    },
+    "Ruger 10-22": {
+      "family": "sight_handle_then_base"
+    },
+    "SAP-6": {
+      "family": "sight_handle_then_base"
+    },
+    "Serbu Super Shorty": {
+      "family": "sight_handle_then_base"
+    },
+    "AA-12": {
+      "family": "inverse_sight"
+    },
+    "Barrett M82A1": {
+      "family": "inverse_sight"
+    },
+    "Benelli M4": {
+      "family": "inverse_sight"
+    },
+    "FN FAL": {
+      "family": "inverse_sight"
+    },
+    "G36C": {
+      "family": "inverse_sight"
+    },
+    "Glock 17": {
+      "family": "inverse_sight"
+    },
+    "Ingram MAC-10": {
+      "family": "inverse_sight"
+    },
+    "LH9 MKII": {
+      "family": "inverse_sight"
+    },
+    "M1 Garand": {
+      "family": "inverse_sight"
+    },
+    "M110 SASS": {
+      "family": "inverse_sight"
+    },
+    "M14": {
+      "family": "inverse_sight"
+    },
+    "M1911A1": {
+      "family": "inverse_sight"
+    },
+    "MP-443 Grach": {
+      "family": "inverse_sight"
+    },
+    "P320": {
+      "family": "inverse_sight"
+    },
+    "PPSh-41": {
+      "family": "inverse_sight"
+    },
+    "SCAR-H": {
+      "family": "inverse_sight"
+    },
+    "SKO Shorty": {
+      "family": "inverse_sight"
+    },
+    "Sten Mk V": {
+      "family": "inverse_sight"
+    },
+    "Thompson M1": {
+      "family": "inverse_sight"
+    },
+    "TP9SFx": {
+      "family": "inverse_sight"
+    },
+    "Uzi": {
+      "family": "inverse_sight"
+    },
+    "Walther P38": {
+      "family": "inverse_sight"
+    },
+    "XD-9": {
+      "family": "inverse_sight"
+    },
+    "SPAS-12": {
+      "family": "spas_special",
+      "special_z_studs": -0.6
+    },
+    "Flamethrower": {
+      "family": "literal"
+    },
+    "MP7": {
+      "family": "inverse_sight",
+      "sight_pre_z_studs": 0.45
+    },
+    "Obrez Mosin": {
+      "family": "sight_handle_with_base",
+      "post_z_studs": -0.1
+    },
+    "Mosin Nagant": {
+      "family": "sight_handle_with_base",
+      "post_z_studs": -0.2
+    },
+    "Winchester Model 70": {
+      "family": "sight_handle_with_base",
+      "post_z_studs": -0.2
+    }
+  }
+}
