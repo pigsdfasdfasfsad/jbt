@@ -1,3 +1,17 @@
+# PASS 78 — THREE MANOR STAIR FLIGHTS AND DOWNSTAIRS INFECTED NAVIGATION (WINDOWS CI PENDING)
+
+**Branch:** `twr-pass78-manor-bidirectional-stairs`; based on [verified Pass77 exported Windows native gameplay](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38212138620).
+
+Pass78 extends the approximate fallback Manor collision and route functionality rather than importing or inventing original Roblox stair meshes. It introduces physical **upstairs-to-downstairs** paths only when a living player is on the lower floor and a stair-accessible infected is above them. The Pass73 graph checks all seven physical ramp support samples before descending, checks solid-world visibility to the lower target and from any top-floor approach, and resumes at the nearest downhill segment when the enemy is already on the slope. Native `InfectedAgent` respects strict downhill waypoint height/position acceptance, never treats a lower-floor player as in melee range while remaining upstairs, and uses ordinary `MoveAndSlide` body collision with no teleportation.
+
+A new exported Windows `--smoke-pass78` scenario iterates the reconstructed **FrontHallUpper, WestWingUpper, and EastWingUpper** ramps. It requires 12 distinct native acceptance markers: first-person W-key ascent, first-person S-key descent, infected body ascent to the top, and the **same infected** descending under authentic physics to the lower target for each of the three. No per-frame enemy position assignment or original asset pack is involved. The test uses isolated `user://pass78-manor-bidirectional-smoke-profile.json`, all target/player placements occur only before a traverse, and the usual owner-private asset exclusion remains required.
+
+**Verification pending:** Python suite, Godot/.NET Windows export, native physical traversal of all 3 staircases in both directions, privacy gate. Pass78 does not imply original retail geometry, fully navigable all-map interiors, 15-wave human completion or public downloadable private-asset EXE.
+
+[Pass78 engineering record](PASS78_MANOR_BIDIRECTIONAL_STAIRS.md)
+
+---
+
 # PASS 77 — VERIFIED WINDOWS MANOR FRONT-HALL PHYSICAL UPPER-STORY ASCENT
 
 **Development branch:** `twr-pass77-manor-stair-traversal` based on verified [Pass76 Windows gameplay CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38208475688).
