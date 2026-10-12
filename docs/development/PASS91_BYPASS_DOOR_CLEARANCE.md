@@ -22,3 +22,18 @@ CharacterBody3D movement and completion reward gate.
 
 Verify with the Pass91 native eight-map Windows test and all earlier
 native smoke suites. Results must be recorded only after CI success.
+
+## Pass91 entrance slab level
+
+The same Bypass setback also has a second unverified step: the
+reconstructed InteriorShell floor was centered at Y=+0.10m with a 0.20m
+thickness, meaning its top was **0.20m above the outdoor Ground plane**.
+Godot `CharacterBody3D.MoveAndSlide` does not automatically step UP
+a vertical 20cm slab; a non-jumping Escort could reach the doorway and
+remain physically blocked even if its route was clear of walls.
+
+For the two Bypass plaza blockouts only, the slab top now aligns with
+the existing arena Ground at Y=0. Other interiors, original owner map
+packs and the source-recorded topology are unchanged. This does not
+teleport NPCs or allow wall clipping; it removes an invented vertical
+threshold from an invented doorway.

@@ -394,7 +394,15 @@ public static class MapBlockoutBuilder
         var wallY=bottom+size.Y*0.5f;
         var door=Math.Min(4.0f,Math.Max(2.8f,size.X*0.25f));
 
-        StaticBox(root,name+"_Floor",new Vector3(center.X,bottom+0.10f,center.Z),
+        // Pass91 Bypass: a 0.20m raised floor lip directly behind the
+        // two exterior door openings previously stopped non-jumping
+        // CharacterBody3D survivors at Z=-17.41. Match the verified
+        // fallback arena ground level instead of requiring an impossible
+        // step-up. The original-map loader never uses this blockout.
+        var floorCenterY91=frontDoorRelief91
+            ? bottom-.10f  // 0.20m slab ends flush at Y=bottom
+            : bottom+.10f; // untouched other reconstructed interiors
+        StaticBox(root,name+"_Floor",new Vector3(center.X,floorCenterY91,center.Z),
             new Vector3(size.X,0.20f,size.Z),color.Darkened(0.18f));
         StaticBox(root,name+"_Roof",new Vector3(center.X,bottom+size.Y-0.10f,center.Z),
             new Vector3(size.X,0.20f,size.Z),color.Darkened(0.08f));

@@ -26,3 +26,13 @@ def test_npc_route_debugging_preserves_real_physics_movement():
     assert "physicsVelocity=" in acceptance
     assert "escortGraphEdges=" in acceptance
     assert "survivor.GlobalPosition=" not in acceptance
+
+
+def test_bypass_entrances_are_flush_not_impossible_vertical_steps():
+    source=read("src/Twr.Godot/Scripts/MapBlockoutBuilder.cs")
+    assert "var floorCenterY91=frontDoorRelief91" in source
+    assert "? bottom-.10f" in source
+    assert ": bottom+.10f" in source
+    assert 'new Vector3(center.X,floorCenterY91,center.Z)' in source
+    # The reconstructed arena Ground collider surface is Y=0.
+    assert 'new Vector3(0,-0.5f,0), new Vector3(width,1,depth)' in source
