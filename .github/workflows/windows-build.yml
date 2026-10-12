@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer, twr-pass56-source-wiki-gallery, twr-pass57-offline-source-weapon-geometry, twr-pass58-original-weapon-silhouettes, twr-pass59-source-weapon-motion, twr-pass60-source-weapon-animations, twr-pass61-source-weapon-cycling, twr-pass62-source-subassembly-hierarchy, twr-pass63-source-magazine-reload, twr-pass64-source-shell-and-bolt, twr-pass65-source-hand-grips, twr-pass66-articulated-source-arms]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer, twr-pass56-source-wiki-gallery, twr-pass57-offline-source-weapon-geometry, twr-pass58-original-weapon-silhouettes, twr-pass59-source-weapon-motion, twr-pass60-source-weapon-animations, twr-pass61-source-weapon-cycling, twr-pass62-source-subassembly-hierarchy, twr-pass63-source-magazine-reload, twr-pass64-source-shell-and-bolt, twr-pass65-source-hand-grips, twr-pass66-articulated-source-arms, twr-pass67-source-sight-alignment]
     paths:
       - 'src/**'
       - 'content/**'
@@ -966,7 +966,7 @@ jobs:
           }
 
       - name: Smoke Pass 59 source-normalized first-person firing motions
-        if: success() && (github.ref_name == 'twr-pass59-source-weapon-motion' || github.ref_name == 'twr-pass60-source-weapon-animations' || github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms')
+        if: success() && (github.ref_name == 'twr-pass59-source-weapon-motion' || github.ref_name == 'twr-pass60-source-weapon-animations' || github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass59.stdout.txt'
@@ -982,7 +982,7 @@ jobs:
           }
 
       - name: Smoke Pass 60 source weapon animation poses in exported Windows game
-        if: success() && (github.ref_name == 'twr-pass60-source-weapon-animations' || github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms')
+        if: success() && (github.ref_name == 'twr-pass60-source-weapon-animations' || github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass60.stdout.txt'
@@ -998,7 +998,7 @@ jobs:
           }
 
       - name: Smoke Pass 61 original source equip, pistol slide and shotgun pump in Windows game
-        if: success() && (github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms')
+        if: success() && (github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass61.stdout.txt'
@@ -1014,7 +1014,7 @@ jobs:
           }
 
       - name: Smoke Pass 62 source-indexed nested moving tool groups in exported Windows game
-        if: success() && (github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms')
+        if: success() && (github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $source = 'build/output/Content/Weapons/SourceWeaponModels.json.gz'
@@ -1039,7 +1039,7 @@ jobs:
           }
 
       - name: Smoke Pass 63 original magazine removal and reinsertion in exported Windows game
-        if: success() && (github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms')
+        if: success() && (github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $source = 'build/output/Content/Weapons/SourceWeaponModels.json.gz'
@@ -1064,7 +1064,7 @@ jobs:
           }
 
       - name: Smoke Pass 64 source bolt and shell handling in exported Windows game
-        if: success() && (github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms')
+        if: success() && (github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $source = 'build/output/Content/Weapons/SourceWeaponModels.json.gz'
@@ -1089,7 +1089,7 @@ jobs:
           }
 
       - name: Smoke Pass 65 source left/right weapon-hand grips in exported Windows game
-        if: success() && (github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms')
+        if: success() && (github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $source = 'build/output/Content/Weapons/SourceWeaponModels.json.gz'
@@ -1114,7 +1114,7 @@ jobs:
           }
 
       - name: Smoke Pass 66 camera-anchored articulated first-person arms in exported Windows game
-        if: success() && github.ref_name == 'twr-pass66-articulated-source-arms'
+        if: success() && (github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $source = 'build/output/Content/Weapons/SourceWeaponModels.json.gz'
@@ -1138,8 +1138,33 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Pass66 synthetic owner source pack cleanup failed' }
           }
 
+      - name: Smoke Pass 67 SHA-bound original AimPart sight alignment in exported Windows game
+        if: success() && github.ref_name == 'twr-pass67-source-sight-alignment'
+        shell: pwsh
+        run: |
+          $source = 'build/output/Content/Weapons/SourceWeaponModels.json.gz'
+          $hierarchy = 'build/output/Content/Weapons/SourceWeaponMotorHierarchy62.json.gz'
+          python tools/maps/make_pass64_bolt_shell_fixture.py --source $source --hierarchy $hierarchy --create
+          if ($LASTEXITCODE -ne 0) { throw 'Pass67 synthetic AimPart source fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass67.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass67.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','360','--','--smoke-pass67') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if (Test-Path $stdout) { $output += Get-Content $stdout }
+            if (Test-Path $stderr) { $output += Get-Content $stderr }
+            $output | ForEach-Object { Write-Host $_ }
+            if ($run.ExitCode -ne 0 -or -not ($output | Where-Object { "$_" -match 'TWR_SMOKE_PASS67_SOURCE_SIGHT_OK' })) {
+              throw "Pass67 source AimPart ADS native smoke failed. Exit: $($run.ExitCode)"
+            }
+          } finally {
+            python tools/maps/make_pass64_bolt_shell_fixture.py --source $source --hierarchy $hierarchy --clean
+            if ($LASTEXITCODE -ne 0) { throw 'Pass67 synthetic owner sight source cleanup failed' }
+          }
+
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview' || github.ref_name == 'twr-pass52-source-loadout-and-shop' || github.ref_name == 'twr-pass53-offline-skin-cases' || github.ref_name == 'twr-pass54-original-skin-materials' || github.ref_name == 'twr-pass55-source-skin-textures-and-shimmer' || github.ref_name == 'twr-pass56-source-wiki-gallery' || github.ref_name == 'twr-pass57-offline-source-weapon-geometry' || github.ref_name == 'twr-pass58-original-weapon-silhouettes' || github.ref_name == 'twr-pass59-source-weapon-motion' || github.ref_name == 'twr-pass60-source-weapon-animations' || github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview' || github.ref_name == 'twr-pass52-source-loadout-and-shop' || github.ref_name == 'twr-pass53-offline-skin-cases' || github.ref_name == 'twr-pass54-original-skin-materials' || github.ref_name == 'twr-pass55-source-skin-textures-and-shimmer' || github.ref_name == 'twr-pass56-source-wiki-gallery' || github.ref_name == 'twr-pass57-offline-source-weapon-geometry' || github.ref_name == 'twr-pass58-original-weapon-silhouettes' || github.ref_name == 'twr-pass59-source-weapon-motion' || github.ref_name == 'twr-pass60-source-weapon-animations' || github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment')
         shell: pwsh
         run: |
           $privateMotorGroups62 = @(Get-ChildItem -Path build/output -Filter 'SourceWeaponMotorHierarchy62.json.gz' -File -Recurse -ErrorAction SilentlyContinue)
