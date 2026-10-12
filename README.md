@@ -2,7 +2,18 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 89 — Collision-safe Escort survivor navigation
+## Latest verified branch: Pass 90 — Real Escort arrival and reward verification
+
+[Pass90 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass90-escort-completion-rewards) ·
+[Successful native Windows build (38281900340)](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38281900340) ·
+[Pass90 engineering report](docs/development/PASS90_ESCORT_COMPLETION_REWARDS.md)
+
+- Fixes an Escort destination-height mismatch: approximate objective visual markers previously sat 1.1m above the grounded character's feet, making Pass89 physics navigation unable to validate the final destination.
+- Five collision-floor probes and a survivor-capsule clearance query now ground candidate goals; final completion requires correct level, floor contact, nearby player and safe collision-supported arrival.
+- **673 Python tests passed; zero Windows compiler errors; native Pass78/83/88/89/90 tests all passed.** The actual Ranch Wave5 Escort survivor traveled **22.69m (136 real physics steps)** and completed its objective. It awarded **4,000 credits and 3,500 XP**, with a separate **2,700-credit level-up bonus**, and a duplicate completion ID produced no second payout.
+- Original source-map loading and the explicit no-public-artifact-release policy remain unchanged. Exact Roblox map meshes, authentic Escort animations, full-map Escort coverage and 15 real-time player-survived waves are not proven.
+
+## Historical verified branch: Pass 89 — Collision-safe Escort survivor navigation
 
 [Pass 89 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass89-escort-ground-navigation) ·
 [Verified Windows CI run 38237636678](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38237636678) ·
