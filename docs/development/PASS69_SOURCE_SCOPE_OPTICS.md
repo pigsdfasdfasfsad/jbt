@@ -116,5 +116,31 @@ reconstruction, genuine end-to-end playable match tests, reference
 screenshots of every weapon's optic, and final owner-private
 offline Windows EXE packaging.
 
-**Status:** committed; native Windows acceptance must succeed before
-this pass is marked verified. No 1:1 completion claim.
+## Verified Windows checkpoint — October 11, 2026 (US Central)
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38199278090
+
+**Code revision actually tested:** `9d532d16b7e11ed75745c378d4f4ec331258b5a0`.
+
+- **582 Python regression tests passed** with one inherited Pass34
+  XML FutureWarning.
+- Godot/.NET Windows export succeeded: **zero compilation errors**,
+  one inherited Pass36 `CS0108` warning.
+- Exported Windows `TWR_SMOKE_PASS69_SOURCE_SCOPE_OK` passed:
+  all seven original source scope diameter values, exactly six
+  source-scoped sensitivity reductions, AUG exception, FOV-proportional
+  reduction driven by live FOV, perspective scope mask size as distance
+  and FOV change, all seven owner-style synthetic lens-name classes,
+  camera projection near the optical axis, bounded visible scope mask,
+  safe unscoped fallback, and rejection of invalid lens geometry.
+- All Pass59–68 exported-game native weapon smoke tests passed.
+  The domain `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` also passed
+  as **scripted state simulation**, not ten full manually played matches.
+- The owner-style synthetic scope fixture was deleted; final
+  private weapon/map/sound/geometry asset exclusion checks passed.
+  Public GitHub EXE and owner-pack uploads remain disabled.
+
+**Important limit:** Windows acceptance verifies the implemented UI
+math and synthetic-source engine behavior, not a frame-accurate
+retail scope image or manual player-controlled aiming verification.
+The original full game remains incomplete.
