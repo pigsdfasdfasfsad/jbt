@@ -6,6 +6,11 @@ namespace Twr.Domain.Services;
 
 public sealed class WaveRewardService(ReceiptLedger receipts, EventStream events)
 {
+    // Pass96: release only prior MATCH wave claims when a fresh match
+    // starts. Profile unlocks, skin/achievement receipts, and saved
+    // credits/XP are not reset.
+    public void ResetForNewMatch()=>receipts.ClearForNewMatch();
+
     public bool Award(PlayerState player,string mapName,int wave,int completedObjectives,int playerCount,DateTimeOffset now)
     {
         if (wave < 1 || wave > ReleaseRules.MaxWaves) throw new ArgumentOutOfRangeException(nameof(wave));
