@@ -213,6 +213,19 @@ public partial class InfectedAgent : CharacterBody3D
                     }
                     _navigationRefresh = 0.75 + (GetInstanceId() % 11UL) * 0.04;
                 }
+                // The ground-graph's 1.58m waypoint acceptance radius
+                // is inappropriate near a 2.96m Manor upper landing. It
+                // skipped the FINAL uphill waypoint when the infected was
+                // still 0.30m below the deck, then steered SIDEWAYS into
+                // the balcony's vertical side instead of finishing ascent.
+                // Use tighter 0.35m horizontal / 0.15m height tolerances
+                // ONLY while climbing an upward fallback Manor route.
+                var manorUphill77 = fallbackReady &&
+                    GroundNavigator73!.MapName == "Manor" &&
+                    GroundNavigator73.StairLinkCount77 == 3 &&
+                    Target.GlobalPosition.Y >= 2.2f &&
+                    Target.GlobalPosition.Y -
+                        (GlobalPosition.Y - .8f) > .05f;
                 while (_nextNavigationPoint < _navigationRoute.Length)
                 {
                     var waypoint = _navigationRoute[_nextNavigationPoint];
@@ -246,7 +259,19 @@ public partial class InfectedAgent : CharacterBody3D
                     // Pathfinding heights are at feet level; the infected
                     // body origin is around +0.8m. Never skip waypoint floors
                     // that are metres above or below the current enemy.
-                    if (offset.LengthSquared() > 2.5f ||
+                    // When the target is still higher and a stair-path
+                    // waypoint is uphill, do not skip the last 0.3m of
+                    // climb merely because it is within generic flat
+                    // pursuit range. The real CharacterBody still must
+                    // physically traverse the surface to advance.
+                    if (manorUphill77 &&
+                        waypoint.Y + .8f - GlobalPosition.Y > .10f)
+                    {
+                        if (offset.LengthSquared() > .1225f ||
+                            waypoint.Y + .8f - GlobalPosition.Y > .15f)
+                            break;
+                    }
+                    else if (offset.LengthSquared() > 2.5f ||
                         Math.Abs(waypoint.Y + .8f - GlobalPosition.Y) > 1.15f)
                         break;
                     _nextNavigationPoint++;

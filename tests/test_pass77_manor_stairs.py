@@ -38,7 +38,14 @@ def test_elevated_ai_path_requires_real_ramp_collider_and_ground_graph():
     assert "var onRamp = progress > .04f" in graph
     assert "if (!alreadyOnRamp) points.Add(selected.LowerFeet);" in graph
     assert "startSegment = begin;" in graph
-    assert "belowUpperTarget77" in read("src/Twr.Godot/Scripts/InfectedAgent.cs")
+    infected=read("src/Twr.Godot/Scripts/InfectedAgent.cs")
+    assert "belowUpperTarget77" in infected
+    assert 'GroundNavigator73!.MapName == "Manor"' in infected
+    assert "waypoint.Y + .8f - GlobalPosition.Y > .10f" in infected
+    assert "offset.LengthSquared() > .1225f" in infected
+    assert "waypoint.Y + .8f - GlobalPosition.Y > .15f" in infected
+    assert infected.index("if (manorUphill77 &&") < infected.index(
+        "else if (offset.LengthSquared() > 2.5f")
     assert "playerCentre.Y >= 2.2f" in graph
     # Continue following the actual stair while the infected's FEET remain
     # below the target's upper-floor feet, not only on the first replan.
