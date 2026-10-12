@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
+using Twr.Domain.Model;
 using Twr.Domain.Services;
 
 namespace Twr.Godot;
