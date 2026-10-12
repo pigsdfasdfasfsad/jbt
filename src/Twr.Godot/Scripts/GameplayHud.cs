@@ -7,6 +7,8 @@ namespace Twr.Godot;
 public partial class GameplayHud : CanvasLayer
 {
     public LocalSessionNode? Runtime {get;set;}
+    public FirstPersonPlayer? Player {get;set;}
+    private Label _crosshair = null!;
     private Label _top = null!;
     private Label _health = null!;
     private Label _ammo = null!;
@@ -186,18 +188,18 @@ public partial class GameplayHud : CanvasLayer
         };
         AddChild(_damageFlash);
 
-        var crosshair = MakeLabel(0,0,34,34,24);
-        crosshair.AnchorLeft = .5f;
-        crosshair.AnchorRight = .5f;
-        crosshair.AnchorTop = .5f;
-        crosshair.AnchorBottom = .5f;
-        crosshair.OffsetLeft = -17;
-        crosshair.OffsetRight = 17;
-        crosshair.OffsetTop = -17;
-        crosshair.OffsetBottom = 17;
-        crosshair.Text = "+";
-        crosshair.HorizontalAlignment = HorizontalAlignment.Center;
-        crosshair.AddThemeColorOverride("font_color",
+        _crosshair = MakeLabel(0,0,34,34,24);
+        _crosshair.AnchorLeft = .5f;
+        _crosshair.AnchorRight = .5f;
+        _crosshair.AnchorTop = .5f;
+        _crosshair.AnchorBottom = .5f;
+        _crosshair.OffsetLeft = -17;
+        _crosshair.OffsetRight = 17;
+        _crosshair.OffsetTop = -17;
+        _crosshair.OffsetBottom = 17;
+        _crosshair.Text = "+";
+        _crosshair.HorizontalAlignment = HorizontalAlignment.Center;
+        _crosshair.AddThemeColorOverride("font_color",
             new Color(.84f,.87f,.84f,.85f));
     }
 
@@ -280,6 +282,11 @@ public partial class GameplayHud : CanvasLayer
 
     public override void _Process(double delta)
     {
+        // The ordinary hipfire '+' is hidden only while the
+        // procedural optic reticle is actually visible.
+        if(_crosshair is not null)
+            _crosshair.Visible=
+                Player?.SourceScopeMaskAlpha69 is not >.15f;
         if(_damageFlashSeconds<=0)
         {
             _damageFlash.Color=new Color(0.72f,0.03f,0.02f,0f);
