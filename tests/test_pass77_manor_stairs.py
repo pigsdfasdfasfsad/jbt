@@ -73,6 +73,8 @@ def test_native_real_player_keyboard_and_infected_physics_ascent():
     assert "!reachedLanding" in acceptance
     assert "!infectedReachedLanding" in acceptance
     assert "nav.GetRoute(below, player.GlobalPosition)" in acceptance
+    assert "Vector3.Right*4.25f" in acceptance
+    assert "if (!player.IsOnFloor())" in acceptance
     assert "new InfectedAgent" in acceptance
     assert "GroundNavigator73 = nav" in acceptance
     assert "infectedMaxY - infectedStartY < 2.35f" in acceptance

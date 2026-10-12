@@ -159,8 +159,13 @@ public partial class Pass77ManorStairAcceptance : Node
             " upper_landing_reached=true" +
             " end=" + final + " grounded=true flights=3");
 
+        // Place the player on the connected RIGHT balcony instead of
+        // directly in the stair exit. An actual infected must occupy
+        // the upper landing; the player's solid capsule must not act
+        // as a 0.6m collision barricade across that last step.
+        // X=4.25m is inside the existing right-side upper-floor deck.
         player.GlobalPosition = front.UpperFeet +
-            Vector3.Up*.03f + Vector3.Back*.15f;
+            Vector3.Up*.03f + Vector3.Right*4.25f;
         await Frames(6);
         if (!player.IsOnFloor())
             throw new InvalidOperationException(
