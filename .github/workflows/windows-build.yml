@@ -1380,7 +1380,7 @@ jobs:
           }
 
       - name: Smoke Pass 78 native three Manor stair flights with player and infected ascent and descent
-        if: success() && github.ref_name == 'twr-pass78-manor-bidirectional-stairs'
+        if: success() && (github.ref_name == 'twr-pass78-manor-bidirectional-stairs' || github.ref_name == 'twr-pass83-manor-upper-gameplay')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass78.stdout.txt'
