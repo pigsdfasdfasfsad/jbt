@@ -8,6 +8,8 @@ public partial class ObjectiveRuntime : Node3D
     public string Family { get; set; } = "Radio";
     public bool RequireSameFloorSecure84 { get; set; }
     public bool UseFallbackEscortNavigation89 { get; set; }
+    // Only assigned to the approximate, source-pack-free Manor upper decks.
+    public bool UseManorElevatedEscort94 { get; set; }
     public Pass73GroundNavigationRuntime? EscortGroundNavigator89 { get; set; }
     public int EscortSafeRoutePlans89 { get; private set; }
     public int EscortBlockedRoutePlans89 { get; private set; }
@@ -199,16 +201,23 @@ public partial class ObjectiveRuntime : Node3D
             };
             foreach(var option in options)
             {
-                var grounded=Pass90EscortArrivalSafety.TryGroundDestination(
-                    GetWorld3D(),option,exclusion90);
+                var grounded=UseManorElevatedEscort94
+                    ? Pass94ManorEscortRoute.TryGroundGoal(
+                        GetWorld3D(),option,exclusion90)
+                    : Pass90EscortArrivalSafety.TryGroundDestination(
+                        GetWorld3D(),option,exclusion90);
                 if (!grounded.HasValue)
                 {
                     EscortRejectedDestinations90++;
                     continue;
                 }
                 var destinationFeet=grounded.Value;
-                var candidate=nav.GetVerifiedEscortRoute89(
-                    from,destinationFeet,actor.GetRid());
+                var candidate=UseManorElevatedEscort94
+                    ? Pass94ManorEscortRoute.GetVerifiedRoute(
+                        nav,from,destinationFeet,
+                        actor.GetRid(),Player.GetRid())
+                    : nav.GetVerifiedEscortRoute89(
+                        from,destinationFeet,actor.GetRid());
                 if(candidate.Length == 0)
                 {
                     EscortRejectedDestinations90++;
@@ -275,8 +284,11 @@ public partial class ObjectiveRuntime : Node3D
         if (_escortRouteInvalidated91 ||
             _escortRouteIndex89 >= _escortRoute89.Length)
         {
-            var newRoute=nav.GetVerifiedEscortRoute89(
-                from,target,actor.GetRid());
+            var newRoute=UseManorElevatedEscort94
+                ? Pass94ManorEscortRoute.GetVerifiedRoute(
+                    nav,from,target,actor.GetRid(),Player.GetRid())
+                : nav.GetVerifiedEscortRoute89(
+                    from,target,actor.GetRid());
             _escortRepathSeconds89=.80;
             if (newRoute.Length != 0)
             {
@@ -306,7 +318,11 @@ public partial class ObjectiveRuntime : Node3D
         {
             desired=_escortRoute89[_escortRouteIndex89]-from;
             desired.Y=0;
-            if(desired.LengthSquared() > .60f*.60f) break;
+            // Elevated ramps need tighter waypoint contact. A 0.60m
+            // planar skip can hop over an entire sloped stair section.
+            var waypointRadius=UseManorElevatedEscort94 ? .32f : .60f;
+            if(desired.LengthSquared() > waypointRadius*waypointRadius)
+                break;
             _escortRouteIndex89++;
         }
         if(_escortRouteIndex89 >= _escortRoute89.Length)
@@ -322,8 +338,18 @@ public partial class ObjectiveRuntime : Node3D
         {
             actor.GetRid(),Player.GetRid()
         };
+        var probeFeet=from+direction*.55f;
+        if(UseManorElevatedEscort94)
+        {
+            // Descending motion must be swept ALONG the real ramp's slope,
+            // not as a flat-height collider sweep through the stair face.
+            var following=_escortRoute89[_escortRouteIndex89];
+            var fraction=Math.Min(1f,.55f/
+                Math.Max(.01f,desired.Length()));
+            probeFeet.Y=from.Y+(following.Y-from.Y)*fraction;
+        }
         if (!Pass89EscortSurfaceSafety.CanTravel(
-                GetWorld3D(),from,from+direction*.55f,exclude))
+                GetWorld3D(),from,probeFeet,exclude))
         {
             EscortBlockedSteps89++;
             EscortRouteInvalidations91++;
