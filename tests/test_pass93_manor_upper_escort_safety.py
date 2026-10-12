@@ -11,7 +11,8 @@ def test_manor_upper_escort_requires_real_physics_before_rewards():
     assert 'StopEscortHorizontal89(delta)' in objective
     assert 'Player.GlobalPosition.DistanceTo(_escort.GlobalPosition)' in objective
     assert 'RequireSameFloorSecure84 = MapName == "Manor"' in game
-    assert 'EscortGroundNavigator89 = escortNavigator92' in game
+    assert 'objective.EscortGroundNavigator89 =' in game
+    assert '_expresswayEscortNavigation92;' in game
     # Only reconstructed Manor upper rooms take this legacy safety path.
     assert '(MapName != "Manor" || ObjectivePosition(i).Y < 2.3f)' in game
 
