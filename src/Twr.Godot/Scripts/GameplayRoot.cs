@@ -717,6 +717,29 @@ public partial class GameplayRoot : Node3D
 
     private void SpawnNaturalPickups()
     {
+        // Owner-authored map markers preserve their pre-Pass86 exact policy,
+        // including the four item and two fortification selections.
+        if (!_isFallbackScene86)
+        {
+            foreach (var position in ChooseUniqueMarkers(_mapLayout.PickupPoints, 4))
+                SpawnNaturalAt(position, "Item");
+            if (_mapLayout.FortificationPoints.Count > 0)
+            {
+                foreach (var position in ChooseUniqueMarkers(_mapLayout.FortificationPoints, 2))
+                    SpawnNaturalAt(position, "Fortification");
+            }
+            else
+            {
+                var fortCount=Math.Min(2,_mapLayout.PickupPoints.Count);
+                for(var i=0;i<fortCount;i++)
+                {
+                    var basePoint=_mapLayout.PickupPoints[i];
+                    var offset=new Vector3(i%2==0 ? 1.8f : -1.8f,0,(i%3-1)*1.2f);
+                    SpawnNaturalAt(basePoint+offset,"Fortification");
+                }
+            }
+            return;
+        }
         // The recovered Laboratory pack supplies distinct original item and
         // fortification marker pools. Keep only a small opening selection,
         // without repeating a marker in the same spawn batch.
