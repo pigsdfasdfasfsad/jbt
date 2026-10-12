@@ -155,6 +155,8 @@ public partial class GameplayRoot : Node3D
         _mapLayout?.ApproximateUpperPickups82 ?? [];
     public IReadOnlyList<Vector3> Pass82UpperObjectiveMarkers =>
         _mapLayout?.ApproximateUpperObjectives82 ?? [];
+    public IReadOnlyList<Vector3> Pass87FallbackObjectiveMarkers =>
+        _isFallbackScene86 ? _mapLayout?.ObjectivePoints ?? [] : [];
 
     public int Pass47WeaponSourceVisibleParts => _player?.SourceWeaponVisibleParts ?? 0;
     public int Pass47MissingMeshProxies => _player?.SourceWeaponMissingMeshProxies ?? 0;
@@ -659,6 +661,14 @@ public partial class GameplayRoot : Node3D
             Runtime?.Match?.Wave is int wave && wave >= 3)
             return _mapLayout.ObjectivePoints[
                 (wave-1+index) % _mapLayout.ObjectivePoints.Count];
+        // Pass87: rotate stale, repeatedly reused fallback objective anchors
+        // on the OTHER approximate maps, without guessing or rewriting the
+        // source-verified owner map objective positions.
+        if (_isFallbackScene86 && MapName != "Manor")
+            return _mapLayout.ObjectivePoints[
+                Pass87FallbackObjectiveRotation.GetIndex(
+                    _mapLayout.ObjectivePoints.Count,
+                    Runtime?.Match?.Wave ?? 1, index)];
         return _mapLayout.ObjectivePoints[index % _mapLayout.ObjectivePoints.Count];
     }
 
