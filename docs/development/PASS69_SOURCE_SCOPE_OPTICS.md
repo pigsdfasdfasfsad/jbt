@@ -33,8 +33,13 @@ pixel or original texture is copied into the public GitHub build.
    reconstructed reticle styles: compact cross, reflex red dot,
    circle cross, duplex, mil-dot and eastern post.
    The profile/style associations are approximations guided by the
-   supplied ADS screenshots. They are not actual recovered original
-   Roblox scope textures or scope glass simulation.
+   supplied ADS screenshots. Inspection of the eight original
+   `*-ADS.png` stills confirmed compact octagonal AUG and CBJ-MS
+   optic housings, a Barrett center-ring crosshair, the M14 scale
+   markings, and lower subtension marks on M110/Winchester optics.
+   Those visible shapes are reconstructed with Godot primitives.
+   They are not original recovered Roblox scope textures or
+   scope glass simulation.
 2. The projected circular lens radius is computed from the **original
    aperture diameter in studs**, `RobloxUnits.MetersPerStud`,
    current camera FOV, viewport dimensions, and geometric eye relief.
