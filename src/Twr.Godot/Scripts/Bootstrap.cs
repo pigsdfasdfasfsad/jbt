@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass69",StringComparer.Ordinal))
+        {
+            RunPass69Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass68",StringComparer.Ordinal))
         {
             RunPass68Smoke();
@@ -570,6 +575,155 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass69Smoke()
+    {
+        if(Pass69SourceScopeOptics.ProfileCount!=8 ||
+           !Pass69SourceScopeOptics.TryGet("AUG",out var aug) ||
+           aug is null || Math.Abs(aug.DiameterStuds-.106f)>.0001f ||
+           aug.SourceFov!=40f ||
+           aug.Reticle!=Pass69SourceScopeOptics.Style.CompactCross ||
+           !Pass69SourceScopeOptics.TryGet("CBJ-MS",out var cbj) ||
+           cbj is null || Math.Abs(cbj.DiameterStuds-.111f)>.0001f ||
+           cbj.Magnified ||
+           cbj.Reticle!=Pass69SourceScopeOptics.Style.ReflexDot ||
+           !Pass69SourceScopeOptics.TryGet("Barrett M82A1",out var m82) ||
+           m82 is null || Math.Abs(m82.DiameterStuds-.205f)>.0001f ||
+           !Pass69SourceScopeOptics.TryGet("M110 SASS",out var m110) ||
+           m110 is null || Math.Abs(m110.DiameterStuds-.188f)>.0001f ||
+           !Pass69SourceScopeOptics.TryGet("M14",out var m14) ||
+           m14 is null || Math.Abs(m14.DiameterStuds-.179f)>.0001f ||
+           !Pass69SourceScopeOptics.TryGet("SVD",out var svd) ||
+           svd is null || Math.Abs(svd.DiameterStuds-.21f)>.0001f ||
+           !Pass69SourceScopeOptics.TryGet("VSS",out var vss) ||
+           vss is null || Math.Abs(vss.DiameterStuds-.21f)>.0001f ||
+           !Pass69SourceScopeOptics.TryGet("Winchester Model 70",out var win) ||
+           win is null || Math.Abs(win.DiameterStuds-.184f)>.0001f ||
+           Pass69SourceScopeOptics.TryGet("Glock 17",out _))
+            throw new InvalidOperationException(
+                "Pass69 original ScopeDiameter/ScopeRadius and FOV inventory incorrect");
+
+        var full=new Vector2(1280f,720f);
+        var p1=Pass69SourceScopeOptics.ProjectRadius(
+            aug,full,aug.SourceFov,.43f);
+        var p2=Pass69SourceScopeOptics.ProjectRadius(
+            cbj,full,cbj.SourceFov,.43f);
+        var p3=Pass69SourceScopeOptics.ProjectRadius(
+            m14,full,m14.SourceFov,.43f);
+        if(p1<20f || p2<12f || p3<p1*1.5f ||
+           p3>full.Y*.4251f ||
+           Pass69SourceScopeOptics.ProjectRadius(
+               m14,full,float.NaN,.43f)!=0f ||
+           Pass69SourceScopeOptics.ProjectRadius(
+               m14,full,10f,float.NaN)!=0f ||
+           Pass69SourceScopeOptics.ProjectRadius(
+               m14,new Vector2(0f,0f),10f,.43f)!=0f ||
+           Pass69SourceScopeOptics.ProjectRadius(
+               m14,full,4f,.43f)!=0f ||
+           Pass69SourceScopeOptics.ProjectRadius(
+               m14,full,10f,0f)!=0f)
+            throw new InvalidOperationException(
+                "Pass69 source scope physical projection or safety clamps invalid");
+
+        var overlay=new Pass69SourceScopeOptics
+        {
+            Name="Pass69NativeOptics",Size=full,
+            AnchorRight=0f,AnchorBottom=0f
+        };
+        AddChild(overlay);
+        overlay.SetAimState("M14",.9f,10f,true);
+        if(!overlay.OpticVisible || !overlay.Visible ||
+           overlay.SourceWeaponName!="M14" ||
+           overlay.ReticleStyle!=Pass69SourceScopeOptics.Style.MilDot ||
+           overlay.ProjectedRadiusPixels<90f ||
+           overlay.SourceReferenceStill!="M14-ADS.png")
+            throw new InvalidOperationException(
+                "Pass69 authored optical sight proxy cannot render source-sized lens");
+        overlay.SetAimState("CBJ-MS",.75f,60f,true);
+        if(!overlay.OpticVisible || overlay.ReticleStyle!=
+               Pass69SourceScopeOptics.Style.ReflexDot ||
+           overlay.ProjectedRadiusPixels>=p3)
+            throw new InvalidOperationException(
+                "Pass69 original CBJ-MS ScopeRadius was not treated as reflex aperture");
+        overlay.SetAimState("M110 SASS",1f,10f,false);
+        if(overlay.OpticVisible || overlay.Visible)
+            throw new InvalidOperationException(
+                "Pass69 scope persisted after player lost aim permission");
+        overlay.SetAimState("Glock 17",1f,10f,true);
+        if(overlay.HasSourceProfile || overlay.OpticVisible ||
+           overlay.Visible || overlay.ProjectedRadiusPixels!=0f)
+            throw new InvalidOperationException(
+                "Pass69 unsupported unscoped pistol must never show fake scope");
+        overlay.SetAimState("Winchester Model 70",1f,10f,true);
+        var estimated=overlay.ProjectedRadiusPixels;
+        overlay.SetAimState("Winchester Model 70",1f,10f,true,
+            true,.70f);
+        var ownerDepth=overlay.ProjectedRadiusPixels;
+        if(!overlay.OpticVisible || ownerDepth>=estimated)
+            throw new InvalidOperationException(
+                "Pass69 verified source AimPart eye-relief depth not projected into optics");
+        overlay.SetAimState("Winchester Model 70",float.NaN,10f,true);
+        if(overlay.OpticVisible || overlay.CurrentBlend!=0f)
+            throw new InvalidOperationException(
+                "Pass69 NaN aim blending failed fail-closed safety");
+        overlay.SetAimState("M14",1f,10f,true,
+            true,.04f);
+        if(Math.Abs(overlay.ProjectedRadiusPixels-p3)>.0002f)
+            throw new InvalidOperationException(
+                "Pass69 invalid source geometry should use known 0.43m fallback eye relief");
+
+        var hud=new GameplayHud{Name="Pass69HudTest"};
+        AddChild(hud);
+        var plus=hud.GetChildren().OfType<Label>()
+            .FirstOrDefault(x=>x.Text=="+");
+        if(plus is null || !plus.Visible)throw new InvalidOperationException(
+            "Pass69 pre-existing crosshair missing before scoped ADS");
+        hud.SetScopeCrosshairSuppressed(true);
+        if(!hud.ScopeCrosshairSuppressed || plus.Visible)
+            throw new InvalidOperationException(
+                "Pass69 general HUD crosshair remains over the scoped reticle");
+        hud.SetScopeCrosshairSuppressed(false);
+        if(hud.ScopeCrosshairSuppressed || !plus.Visible)
+            throw new InvalidOperationException(
+                "Pass69 standard HUD crosshair failed to return after leaving scope");
+
+        if(OriginalWeaponSourceRuntime.OwnerSourcePackVerified ||
+           Pass62SourceWeaponHierarchy.OwnerHierarchyVerified ||
+           !OriginalWeaponSourceRuntime.TryGetSourceSightLocal(
+               "Winchester Model 70",out _) )
+            throw new InvalidOperationException(
+                "Pass69 fixture must have only fabricated original-style scoped weapon");
+        var scopedGun=new WeaponViewModelRuntime{Name="Pass69Winchester"};
+        AddChild(scopedGun);
+        scopedGun.SetWeapon(RuntimeWeaponCatalog.Get("Winchester Model 70"));
+        if(!scopedGun.SourceAimPartAvailable ||
+           !scopedGun.SourceExactAimCFAvailable68 ||
+           !scopedGun.TryGetSourceAimRoot(out var root) ||
+           scopedGun.SourceAimGeometryOwnerVerified)
+            throw new InvalidOperationException(
+                "Pass69 optic projection lost source AimPart/Pass68 AimCF compatibility");
+        scopedGun.Transform=root;
+        scopedGun._Process(.016f);
+        if(scopedGun.SourceAimReticleLateralError>.001f)
+            throw new InvalidOperationException(
+                "Pass69 scoped source marker no longer centers on camera reticle");
+
+        GD.Print("TWR_SMOKE_PASS69_SOURCE_OPTICS_OK "+
+            "original_source_optic_profiles=8 "+
+            "source_scope_diameter_and_radius=true "+
+            "original_fov_viewport_projection=true "+
+            "source_reflex_vs_magnified_modes=true "+
+            "reference_guided_procedural_reticles=true "+
+            "invalid_fov_depth_and_nan_inputs_rejected=true "+
+            "source_winchester_aimpart_eye_relief=true "+
+            "scope_disappears_without_aim_permission=true "+
+            "original_game_hud_plus_suppressed_and_restored=true "+
+            "source_pass68_aimcf_reticle_center_unchanged=true "+
+            "no_ads_screenshot_assets_embedded=true "+
+            "no_luau_and_no_weapon_damage_changes=true "+
+            "synthetic_owner_pack_cleanup_required=true");
         GetTree().Quit(0);
     }
 
