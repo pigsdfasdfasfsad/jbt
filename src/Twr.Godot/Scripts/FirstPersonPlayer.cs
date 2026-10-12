@@ -25,9 +25,20 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _viewModel?.SourceAimPartAvailable == true;
     public float SourceAimReticleError67 =>
         _viewModel?.SourceAimReticleLateralError ?? -1f;
+    public bool SourceScopeMaskVisible69 =>
+        _scopeMask69?.Visible==true;
+    public float SourceScopeMaskAlpha69 =>
+        _scopeMask69?.MaskOpacity ?? 0f;
+    public float SourceScopeSensitivityScale69 =>
+        _scopeSensitivityScale69;
+    public bool SourceScopeLensOwnerVerified69 =>
+        _viewModel?.OwnerSourceScopeLensVerified69 == true;
 
     private Camera3D _camera = null!;
     private WeaponViewModelRuntime _viewModel = null!;
+    private CanvasLayer? _scopeLayer69;
+    private Pass69ScopeMask? _scopeMask69;
+    private float _scopeSensitivityScale69=1f;
     private readonly RandomNumberGenerator _rng = new();
     private float _pitch;
     private bool _jumpRequested;
@@ -83,6 +94,19 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         _viewModel = new WeaponViewModelRuntime { Name = "WeaponViewModel" };
         _camera.AddChild(_viewModel);
+        _scopeLayer69=new CanvasLayer
+        {
+            Name="ScopeLayer69",Layer=9
+        };
+        AddChild(_scopeLayer69);
+        _scopeMask69=new Pass69ScopeMask
+        {
+            Name="SourceScopeMask69",
+            AnchorRight=1f,AnchorBottom=1f,
+            MouseFilter=Control.MouseFilterEnum.Ignore,
+            Visible=false
+        };
+        _scopeLayer69.AddChild(_scopeMask69);
 
         LoadProfileWeapons();
         PrepareWeaponAmmo(_primaryWeapon);
@@ -153,6 +177,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
         UpdateAim(delta,spec);
+        UpdateSourceScope69(spec);
         if (!HammerMode && _heldThrowable is null && spec.IsAutomatic &&
             Input.MouseMode == Input.MouseModeEnum.Captured &&
             Input.IsMouseButtonPressed(MouseButton.Left))
@@ -163,8 +188,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
     {
         if (@event is InputEventMouseMotion motion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
-            RotateY(-motion.Relative.X * MouseSensitivity);
-            _pitch = Mathf.Clamp(_pitch - motion.Relative.Y * MouseSensitivity, -1.45f, 1.45f);
+            var look=MouseSensitivity*_scopeSensitivityScale69;
+            RotateY(-motion.Relative.X * look);
+            _pitch = Mathf.Clamp(_pitch - motion.Relative.Y * look, -1.45f, 1.45f);
             _camera.Rotation = new Vector3(_pitch, 0, 0);
             return;
         }
@@ -222,6 +248,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
         HammerMode = enabled;
         if(enabled)_heldThrowable=null;
         if(enabled)ResetSourceAimVisual67();
+        if(enabled)
+        {
+            _scopeSensitivityScale69=1f;
+            _scopeMask69?.SetScope(Vector2.Zero,0f,0f,false);
+        }
         _viewModel.Visible = !enabled;
         _reloadTimer = 0;
         _reloadWeapon = null;
@@ -258,6 +289,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _aiming=false;
         ResetSourceAimVisual67();
         _camera.Fov=60;
+        _scopeSensitivityScale69=1f;
+        _scopeMask69?.SetScope(Vector2.Zero,0f,0f,false);
         var spec=RuntimeWeaponCatalog.Get(weapon);
         var equipSpeed=Runtime?.HasPerk("Dexterous")==true ? 1.3 : 1.0;
         _equipTimer=Math.Max(0.01,spec.EquipSeconds/equipSpeed);
@@ -454,6 +487,58 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var amount=Math.Min(1f,35f-Runtime.Player.Health);
         if(amount>0)Runtime.HealPlayer(amount);
         _adrenalineTick=1.0;
+    }
+
+    private void UpdateSourceScope69(RuntimeWeaponDefinition spec)
+    {
+        if(_scopeMask69 is null)return;
+        if(MountedMode || HammerMode || _heldThrowable is not null ||
+           spec.IsMelee || !_viewModel.Visible ||
+           !Pass69SourceScope.TryGet(spec.Name,out var optic) ||
+           optic is null)
+        {
+            _scopeSensitivityScale69=1f;
+            _scopeMask69.SetScope(Vector2.Zero,0f,0f,false);
+            return;
+        }
+
+        // Original ReduceSensitivity applies to six of seven original
+        // scoped weapons. It uses LIVE camera FOV, not target FOV:
+        // no snap on right click and no change to shot/recoil authority.
+        _scopeSensitivityScale69=
+            Pass69SourceScope.SensitivityScale(optic,_camera.Fov,60f);
+        var aimedFov=Math.Clamp(spec.AimFov,5f,60f);
+        var zoom=Math.Clamp((60f-_camera.Fov)/
+            Math.Max(1f,60f-aimedFov),0f,1f);
+        // Keep a little fade during UnAim, but never show the scope at
+        // normal hip FOV or while using items/other gameplay modes.
+        var opacity=Math.Clamp((zoom-.10f)/.90f,0f,1f);
+        if(opacity<=.005f)
+        {
+            _scopeMask69.SetScope(Vector2.Zero,0f,0f,false);
+            return;
+        }
+        var screen=_camera.GetViewport().GetVisibleRect().Size;
+        if(screen.X<64 || screen.Y<64)
+        {
+            _scopeMask69.SetScope(Vector2.Zero,0f,0f,false);
+            return;
+        }
+        Vector2 center=new(screen.X*.5f,screen.Y*.5f);
+        var diameter=Pass69SourceScope.ProjectedDiameterPx(
+            optic.DiameterStuds,
+            Pass67SourceAimAlignment.SourceSightCameraDepth,
+            _camera.Fov,screen.Y);
+        var usedOriginalLens=false;
+        if(_viewModel.TryGetSourceScopeLensWorld69(out var worldLens) &&
+           Pass69SourceScope.TryProjectLens(_camera,worldLens,
+               optic.DiameterStuds,out var projected,out var pixels))
+        {
+            center=projected;
+            diameter=pixels;
+            usedOriginalLens=true;
+        }
+        _scopeMask69.SetScope(center,diameter,opacity,usedOriginalLens);
     }
 
     private void ResetSourceAimVisual67()
