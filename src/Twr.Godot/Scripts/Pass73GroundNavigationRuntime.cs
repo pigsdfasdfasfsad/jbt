@@ -574,6 +574,22 @@ public partial class Pass73GroundNavigationRuntime : Node3D
                 continue;
             var incoming=firstSide<0 ? bridge.LeftFeet : bridge.RightFeet;
             var outgoing=lastSide<0 ? bridge.LeftFeet : bridge.RightFeet;
+            // Pass83 prevents the agent from returning to the *entrance*
+            // gate on every 0.75s replan after it has already reached the
+            // actual walkable catwalk.
+            var onBridge=Math.Abs(from.Z-mid.Z)<.72f &&
+                Math.Abs(from.X-mid.X)<3.65f &&
+                UpperCorridorSupported79(from,mid);
+            if (onBridge)
+            {
+                if (!UpperCorridorSupported79(mid,outgoing) ||
+                    !UpperCorridorSupported79(outgoing,playerFeet))
+                    continue;
+                result = Math.Abs(from.X-mid.X)<.28f
+                    ? [outgoing,playerFeet]
+                    : [mid,outgoing,playerFeet];
+                return true;
+            }
             if (!UpperCorridorSupported79(from,incoming) ||
                 !UpperCorridorSupported79(incoming,mid) ||
                 !UpperCorridorSupported79(mid,outgoing) ||
