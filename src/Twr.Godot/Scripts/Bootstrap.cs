@@ -35,6 +35,15 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass96",StringComparer.Ordinal))
+        {
+            AddChild(new Pass96GroundedMaterialsAcceptance
+            {
+                Name="Pass96GroundedMaterialsAcceptance",
+                Runtime=_runtime
+            });
+            return;
+        }
         if(args.Contains("--smoke-pass95",StringComparer.Ordinal))
         {
             AddChild(new Pass95ManorEscortAcceptance
