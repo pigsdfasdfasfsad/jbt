@@ -14,7 +14,7 @@ def test_expressway_escort_follows_collision_graph_without_replacing_zombie_rout
     assert "else if (!originalWorldAvailable && _sourceNavigator is null &&" in g
     assert 'MapName == "Expressway"' in g
     assert "var expresswayEscort92 = family == \"Escort\"" in g
-    assert "if (groundEscort91 || expresswayEscort92)" in g
+    assert "if (groundEscort91 || expresswayEscort92 || manorUpperEscort94)" in g
     assert "Pass91EscortSpawnSafety.TryFind(" in g
     assert "(_groundNavigation73 is not null || expresswayEscort92)" in g
     assert "objective.EscortGroundNavigator89 =" in g
