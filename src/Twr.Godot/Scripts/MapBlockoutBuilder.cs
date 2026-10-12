@@ -86,8 +86,8 @@ public static class MapBlockoutBuilder
     {
         BaseArena(root, 116, 86, new Color(0.25f, 0.25f, 0.23f));
         InteriorShell(root, "Tunnel", new Vector3(-48, 3, 0), new Vector3(14, 6, 22), new Color(0.14f, 0.15f, 0.16f));
-        InteriorShell(root, "PlazaNorth", new Vector3(4, 2.7f, -25), new Vector3(42, 5.4f, 14), new Color(0.38f, 0.34f, 0.28f));
-        InteriorShell(root, "PlazaSouth", new Vector3(6, 2.7f, 25), new Vector3(42, 5.4f, 14), new Color(0.34f, 0.32f, 0.28f));
+        InteriorShell(root, "PlazaNorth", new Vector3(4, 2.7f, -25), new Vector3(42, 5.4f, 14), new Color(0.38f, 0.34f, 0.28f), frontDoorRelief91:true);
+        InteriorShell(root, "PlazaSouth", new Vector3(6, 2.7f, 25), new Vector3(42, 5.4f, 14), new Color(0.34f, 0.32f, 0.28f), frontDoorRelief91:true);
         InteriorShell(root, "CivilianBarracks", new Vector3(36, 2.4f, 8), new Vector3(20, 4.8f, 16), new Color(0.27f, 0.31f, 0.24f));
         DecorativeBox(root, "ArchBridge", new Vector3(30, 1.2f, -9), new Vector3(40, 2.4f, 6), new Color(0.28f, 0.29f, 0.30f));
         return Layout(new Vector3(0, 1, 0),
@@ -384,7 +384,8 @@ public static class MapBlockoutBuilder
         return new Pass77StairLink(name,lower,upper);
     }
     private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color,
-        float openingMinZ80=float.NaN,float openingMaxZ80=float.NaN)
+        float openingMinZ80=float.NaN,float openingMaxZ80=float.NaN,
+        bool frontDoorRelief91=false)
     {
         // APPROXIMATED reconstruction: exact wall/door transforms are not recovered.
         // Unlike the earlier solid placeholder, this shell is intentionally traversable.
@@ -425,10 +426,32 @@ public static class MapBlockoutBuilder
             // through the obstruction, preserving both wall segments.
             if (float.IsNaN(openingMinZ80) || float.IsNaN(openingMaxZ80))
             {
-                StaticBox(root,name+"_DividerN",new Vector3(center.X,wallY,center.Z-zOffset),
-                    new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
-                StaticBox(root,name+"_DividerS",new Vector3(center.X,wallY,center.Z+zOffset),
-                    new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
+                if (frontDoorRelief91)
+                {
+                    // Pass91: the blockout's Bypass plaza center divider
+                    // previously met BOTH exterior doors without a turning
+                    // pocket. A .42m-radius Escort body reached X=3.58,
+                    // Z=-17.41 and could not follow the graph into the
+                    // North plaza. Keep the central partition but recess
+                    // each end 2.70m from the doorway, on BOTH plazas.
+                    // Geometry is explicitly approximation-only.
+                    const float clearance91=2.70f;
+                    AddRecessedDivider91(root,name+"_DividerN",center.X,wallY,
+                        center.Z-zOffset-depthSegment*.5f,
+                        center.Z-zOffset+depthSegment*.5f,
+                        clearance91,0f,thickness,size.Y,color);
+                    AddRecessedDivider91(root,name+"_DividerS",center.X,wallY,
+                        center.Z+zOffset-depthSegment*.5f,
+                        center.Z+zOffset+depthSegment*.5f,
+                        0f,clearance91,thickness,size.Y,color);
+                }
+                else
+                {
+                    StaticBox(root,name+"_DividerN",new Vector3(center.X,wallY,center.Z-zOffset),
+                        new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
+                    StaticBox(root,name+"_DividerS",new Vector3(center.X,wallY,center.Z+zOffset),
+                        new Vector3(thickness,size.Y,depthSegment),color.Lightened(0.04f));
+                }
             }
             else
             {
@@ -441,6 +464,24 @@ public static class MapBlockoutBuilder
             }
         }
     }
+    /// <summary>
+    /// Recess approximate interior partition ends without shifting any
+    /// source-recovered building collision. Actual static wall still exists,
+    /// but leaves a door-throat turning pocket for larger NPC capsules.
+    /// </summary>
+    private static void AddRecessedDivider91(Node3D root,string name,
+        float x,float y,float beginZ,float endZ,float trimBegin,float trimEnd,
+        float width,float height,Color color)
+    {
+        var begin=beginZ+trimBegin;
+        var end=endZ-trimEnd;
+        if(end-begin<.50f)return;
+        StaticBox(root,name,
+            new Vector3(x,y,(begin+end)*.5f),
+            new Vector3(width,height,end-begin),
+            color.Lightened(.04f));
+    }
+
     private static void AddDividedManorWall80(Node3D root,string name,
         float x,float wallY,float firstZ,float lastZ,
         float gapFirst,float gapLast,float width,float height,Color color)

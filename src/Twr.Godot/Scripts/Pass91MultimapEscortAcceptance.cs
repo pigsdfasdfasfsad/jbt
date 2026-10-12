@@ -198,7 +198,13 @@ public partial class Pass91MultimapEscortAcceptance : Node
                 " steps="+safeSteps+
                 " blockedReplans="+blockedPlans+
                 " rejectedGoals="+rejectedDestinations+
-                " alternateGoal="+selectedAlternative);
+                " alternateGoal="+selectedAlternative+
+                " goal="+(GodotObject.IsInstanceValid(destination)
+                    ? destination.GlobalPosition.ToString() : "freed")+
+                " npcNextWaypoint="+objective.EscortNextWaypoint91+
+                " remainingWaypoints="+objective.EscortRemainingWaypoints91+
+                " physicsVelocity="+survivor.Velocity+
+                " escortGraphEdges="+nav.EscortSafeEdgeCount91);
         if(Runtime.Player.Credits!=expectedCredits ||
            Runtime.Player.Xp!=expectedXp ||
            Runtime.Player.Level!=expectedLevel)

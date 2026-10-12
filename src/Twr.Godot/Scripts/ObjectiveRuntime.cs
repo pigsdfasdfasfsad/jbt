@@ -17,6 +17,8 @@ public partial class ObjectiveRuntime : Node3D
     public int EscortGroundedDestinations90 { get; private set; }
     public int EscortRejectedDestinations90 { get; private set; }
     public int EscortRouteInvalidations91 { get; private set; }
+    public Vector3 EscortNextWaypoint91 { get; private set; }
+    public int EscortRemainingWaypoints91 { get; private set; }
     private bool _escortRouteInvalidated91;
     public bool EscortGroundedCompletion90 { get; private set; }
     private Vector3[] _escortRoute89 = [];
@@ -290,6 +292,8 @@ public partial class ObjectiveRuntime : Node3D
             return;
         }
 
+        EscortNextWaypoint91=_escortRoute89[_escortRouteIndex89];
+        EscortRemainingWaypoints91=_escortRoute89.Length-_escortRouteIndex89;
         var direction=desired.Normalized();
         var exclude=new global::Godot.Collections.Array<Rid>
         {
