@@ -20,7 +20,7 @@ Pass96 adds `Pass96GroundedMaterials.TryPlan` as a **source-absent fallback-only
 
 The Windows `--smoke-pass96` smoke enters ten actual reconstructed maps, creates real Load and Repair objective actors (200+ live material locations), and verifies every material is physically on the deposit's story and has a direct, fully collision-audited approach to its deposit. On Ranch it additionally uses actual key events for one E pickup and one E deposit. It uses an isolated profile, preserves the previous Pass78–95 native smoke tests, and keeps the public CI privacy exclusion checks.
 
-**Status:** candidate pending native Windows verification. This is practical gameplay reconstruction, **not** recovered retail item coordinates, original prop meshes, NPC AI or evidence of a fully manual fifteen-wave playthrough.
+**Status:** Pass96 production and native Windows regressions **verified green** in [run 38322263440](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38322263440). The physically tested twenty Load/Repair objectives placed 204 material meshes across ten reconstructed maps, with **zero stacked fallbacks**. This is practical gameplay reconstruction, **not** recovered retail item coordinates, original prop meshes, NPC AI or evidence of a fully manual fifteen-wave playthrough.
 
 ## Distribution
 
@@ -33,3 +33,7 @@ The first Pass96 Windows run [38321854869](https://github.com/pigsdfasdfasfsad/j
 The fix records `Pass96AuthoredMaterialAnchor` **before** physically grounding the depot. Pass88 now requires exact equality between that original scheduled marker and the computed Pass87 rotation, while independently requiring the relocated material objective's complete supported layout and a bounded 7.5m physical relocation. This strengthens the original rotation contract rather than disabling the test or allowing arbitrary objective teleports.
 
 **Status:** regression correction committed; Pass96 needs a fresh all-green exported Windows run before it is verified.
+
+## Verified regression checkpoint
+
+The fixed Pass88 test retained exact Pass87 objective-selection assertions and verified the separately stored authored marker for material families. Windows CI run [38322263440](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38322263440) passed: the new ten-map material/native E-key test, the prior map objective and stair suite (Pass78/83/88), the physical escort sequence (Pass89/90/91/92/94/95), and the owner-private asset exclusion audit. No binaries were published by the public workflow. The next work should prioritize higher-fidelity original geometry/item meshes and human-controlled 15-wave gameplay testing.
