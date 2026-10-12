@@ -178,8 +178,17 @@ public partial class InfectedAgent : CharacterBody3D
         var belowUpperTarget77 = GroundNavigator73 is not null &&
             GroundNavigator73.StairLinkCount77 == 3 &&
             Target.GlobalPosition.Y - (GlobalPosition.Y - .8f) > .08f;
+        // In the opposite direction, a grounded target beneath a Manor
+        // upper-floor infected is NOT in melee reach. Stay in physical
+        // pursuit until the infected reaches the player's floor.
+        var aboveLowerTarget78 = GroundNavigator73 is not null &&
+            GroundNavigator73.MapName == "Manor" &&
+            GroundNavigator73.StairLinkCount77 == 3 &&
+            Target.GlobalPosition.Y <= 1.5f &&
+            (GlobalPosition.Y - .8f) -
+                Target.GlobalPosition.Y > .25f;
         if (distance > 1.55f || Math.Abs(deltaToPlayer.Y) > 1.6f ||
-            belowUpperTarget77)
+            belowUpperTarget77 || aboveLowerTarget78)
         {
             var desired = flat.LengthSquared() > 0.001f ? flat.Normalized() : Vector3.Zero;
             // Shared Expressway road graph handles large static obstructions.
@@ -226,6 +235,16 @@ public partial class InfectedAgent : CharacterBody3D
                     Target.GlobalPosition.Y >= 2.2f &&
                     Target.GlobalPosition.Y -
                         (GlobalPosition.Y - .8f) > .05f;
+                // Descending physics paths need the same close waypoint
+                // contact as Pass77 uphill routes. Flat-route skip radii
+                // would otherwise jump from an upper flight directly toward
+                // a player below the floor and strand the infected.
+                var manorDownhill78 = fallbackReady &&
+                    GroundNavigator73!.MapName == "Manor" &&
+                    GroundNavigator73.StairLinkCount77 == 3 &&
+                    Target.GlobalPosition.Y <= 1.5f &&
+                    (GlobalPosition.Y - .8f) -
+                        Target.GlobalPosition.Y > .25f;
                 while (_nextNavigationPoint < _navigationRoute.Length)
                 {
                     var waypoint = _navigationRoute[_nextNavigationPoint];
@@ -269,6 +288,13 @@ public partial class InfectedAgent : CharacterBody3D
                     {
                         if (offset.LengthSquared() > .1225f ||
                             waypoint.Y + .8f - GlobalPosition.Y > .15f)
+                            break;
+                    }
+                    else if (manorDownhill78 &&
+                        waypoint.Y + .8f - GlobalPosition.Y < -.10f)
+                    {
+                        if (offset.LengthSquared() > .1225f ||
+                            GlobalPosition.Y - (waypoint.Y + .8f) > .18f)
                             break;
                     }
                     else if (offset.LengthSquared() > 2.5f ||

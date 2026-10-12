@@ -60,6 +60,8 @@ public partial class Pass73GroundNavigationRuntime : Node3D
     public long FallbackPathSearches { get; private set; }
     public long VerifiedElevatedRoutes77 { get; private set; }
     public long RejectedElevatedRoutes77 { get; private set; }
+    public long VerifiedDescendingRoutes78 { get; private set; }
+    public long RejectedDescendingRoutes78 { get; private set; }
     public int StairLinkCount77 => Layout?.ApproximateStairs77.Count ?? 0;
 
     public static Pass73GroundNavigationRuntime Attach(
@@ -246,6 +248,22 @@ public partial class Pass73GroundNavigationRuntime : Node3D
             RejectedElevatedRoutes77++;
         }
 
+        // Pass78: conservative bidirectional traversal is restricted to
+        // the fallback Manor stair geometry. No source-original map graph,
+        // jump path, other map or downstairs animation is synthesized.
+        if (MapName == "Manor" && StairLinkCount77 == 3 &&
+            playerCentre.Y <= 1.5f &&
+            infectedCentre.Y - .8f > playerCentre.Y + .45f)
+        {
+            if (TryGetVerifiedManorDescent78(
+                    infectedCentre, playerCentre, out var descending))
+            {
+                VerifiedDescendingRoutes78++;
+                return descending;
+            }
+            RejectedDescendingRoutes78++;
+        }
+
         // Do not force agents through grid cells if ordinary direct pursuit
         // has a clear corridor; source enemy movement retains priority.
         if (Math.Abs(infectedCentre.Y - playerCentre.Y) <= 1.2f &&
@@ -379,6 +397,80 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         if (!alreadyOnRamp) points.Add(selected.LowerFeet);
         for (var i = startSegment; i <= 12; i++)
             points.Add(selected.LowerFeet.Lerp(selected.UpperFeet, i/12f));
+        points.Add(playerFeet);
+        result = points.ToArray();
+        return true;
+    }
+
+    /// <summary>
+    /// Pass78: downward traversal of already-verified, reconstructed
+    /// Manor stairs only. Returns feet-level physics waypoints descending
+    /// from a supported upstairs ramp/landing to a physically clear lower
+    /// floor target. No original source geometry or pathfinding is claimed.
+    /// </summary>
+    private bool TryGetVerifiedManorDescent78(
+        Vector3 infectedCentre, Vector3 playerCentre, out Vector3[] result)
+    {
+        result = [];
+        var infectedFeet = infectedCentre - Vector3.Up * .8f;
+        var playerFeet = playerCentre; // FirstPersonPlayer node is feet-level.
+        if (playerFeet.Y > 1.5f ||
+            infectedFeet.Y < playerFeet.Y + .25f ||
+            Layout.ApproximateStairs77.Count != 3)
+            return false;
+
+        Pass77StairLink? chosen = null;
+        var startSegment = 11;
+        var alreadyOnRamp = false;
+        var bestScore = float.MaxValue;
+        foreach (var stair in Layout.ApproximateStairs77)
+        {
+            var upperOffset = new Vector2(
+                infectedFeet.X - stair.UpperFeet.X,
+                infectedFeet.Z - stair.UpperFeet.Z).Length();
+            var lowerOffset = new Vector2(
+                playerFeet.X - stair.LowerFeet.X,
+                playerFeet.Z - stair.LowerFeet.Z).Length();
+            if (upperOffset > 6f || lowerOffset > 10f ||
+                Math.Abs(playerFeet.Y - stair.LowerFeet.Y) > .9f ||
+                !VerifiedPhysicalStair77(stair) ||
+                !CorridorClear(stair.LowerFeet, playerFeet))
+                continue;
+
+            var ramp = stair.UpperFeet - stair.LowerFeet;
+            var progress = Mathf.Clamp(
+                (infectedFeet - stair.LowerFeet).Dot(ramp) /
+                    ramp.LengthSquared(), 0f, 1f);
+            var expected = stair.LowerFeet.Lerp(stair.UpperFeet,progress);
+            var onRamp = progress > .02f && progress < .98f &&
+                Math.Abs(infectedFeet.X - expected.X) <= 1.5f &&
+                Math.Abs(infectedFeet.Z - expected.Z) <= .65f &&
+                Math.Abs(infectedFeet.Y - expected.Y) <= .52f;
+
+            // Upper corridor uses real wall visibility. Unlike arbitrary
+            // straight-line steering, it will not jump off a balcony edge.
+            if (!onRamp &&
+                (Math.Abs(infectedFeet.Y - stair.UpperFeet.Y) > .75f ||
+                 !CorridorClear(infectedFeet, stair.UpperFeet)))
+                continue;
+
+            var score = (onRamp ? progress*6f : upperOffset) + lowerOffset;
+            if (score >= bestScore) continue;
+            bestScore = score;
+            chosen = stair;
+            alreadyOnRamp = onRamp;
+            // Replanning DURING descent must not send an enemy back up the
+            // ramp. Start at the preceding downhill section instead.
+            startSegment = onRamp
+                ? Math.Clamp((int)Math.Ceiling(progress*12f)-1,0,11)
+                : 11;
+        }
+
+        if (chosen is null) return false;
+        var points = new List<Vector3>(16);
+        if (!alreadyOnRamp) points.Add(chosen.UpperFeet);
+        for (var i = startSegment; i >= 0; i--)
+            points.Add(chosen.LowerFeet.Lerp(chosen.UpperFeet,i/12f));
         points.Add(playerFeet);
         result = points.ToArray();
         return true;
