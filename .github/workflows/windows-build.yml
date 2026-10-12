@@ -1452,7 +1452,7 @@ jobs:
           }
 
       - name: Smoke Pass 89 native physically grounded Escort obstacle and live route invalidation
-        if: success() && github.ref_name == ('twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards')
+        if: success() && (github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass89.stdout.txt'
