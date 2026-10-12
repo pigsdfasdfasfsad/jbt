@@ -736,6 +736,19 @@ public partial class Bootstrap : Node
                !model.TryGetSourceAimRoot(out var sightRoot))
                 throw new InvalidOperationException(
                     "Pass68 source reconstructed AimCF not bound to weapon "+name);
+            if(!OriginalWeaponSourceRuntime.TryGetSourceSightLocal(
+                    name,out var renderedSight))
+                throw new InvalidOperationException(
+                    "Pass68 original-style rendered sight disappeared: "+name);
+            var eyeDepth=(sightRoot*renderedSight).Origin.Z;
+            if(name=="SPAS-12" && Math.Abs(eyeDepth+1.2f)>.015f)
+                throw new InvalidOperationException(
+                    "Pass68 SPAS-12 source AimCF eye-relief safety clamp did not activate: "+
+                    eyeDepth);
+            if(name=="MP7" && Math.Abs(eyeDepth+
+                    Pass67SourceAimAlignment.SourceSightCameraDepth)<.04f)
+                throw new InvalidOperationException(
+                    "Pass68 MP7 original 0.45-stud source offset was visually lost");
             model.Transform=sightRoot;
             model._Process(.016f);
             if(model.SourceAimReticleLateralError>.001f ||
@@ -759,6 +772,8 @@ public partial class Bootstrap : Node
             "source_winchester_minus_02_post_offset=true "+
             "source_flamethrower_literal_formula=true "+
             "source_five_weapon_sights_centered=true "+
+            "source_spas_eye_relief_bounded=true "+
+            "source_mp7_special_visual_offset=true "+
             "source_original_aimcf_exposed_without_luau=true "+
             "missing_source_sight_fallback=true "+
             "original_owner_pack_never_published=true "+
