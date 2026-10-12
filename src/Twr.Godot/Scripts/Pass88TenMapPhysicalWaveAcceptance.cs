@@ -240,10 +240,30 @@ public partial class Pass88TenMapPhysicalWaveAcceptance : Node
                 "Pass88 no fallback objective markers "+map);
         var expected=markers[Pass87FallbackObjectiveRotation.GetIndex(
             markers.Count,wave,0)];
-        if(expected.DistanceTo(objective.GlobalPosition)>.02f)
+        var materialFamily=objective.Family is "Load" or "Repair" &&
+            objective.UseFallbackMaterialGrounding96;
+        // Pass96 can move ONLY an approximate material depot to a proven
+        // nearby floor. Pass87's original rotating marker must still match
+        // EXACTLY, rather than weakening the rotation contract.
+        var scheduled=materialFamily
+            ? objective.Pass96AuthoredMaterialAnchor
+            : objective.GlobalPosition;
+        if(expected.DistanceTo(scheduled)>.02f)
             throw new InvalidOperationException(
                 "Pass88 objective did not rotate to physical marker "+
-                map+" wave="+wave);
+                map+" wave="+wave+
+                " authored="+scheduled+" expected="+expected);
+        if(materialFamily &&
+           (!objective.Pass96GroundedMaterialLayout ||
+            objective.Pass96MaterialFeet.Count<10 ||
+            expected.DistanceTo(objective.GlobalPosition)>7.5f))
+            throw new InvalidOperationException(
+                "Pass96 material depot relocation was not supported"+
+                " map="+map+" wave="+wave+
+                " count="+objective.Pass96MaterialFeet.Count+
+                " scheduled="+scheduled+
+                " actual="+objective.GlobalPosition+
+                " rejected="+objective.Pass96RejectedMaterialCandidates);
     }
 
     private async Task VerifyManorSecureFloor(
