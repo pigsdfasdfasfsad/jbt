@@ -2,7 +2,18 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 78 — Three Manor stair flights, physical ascent and descent
+## Latest verified branch: Pass 88 — Safer physical waves, loot and two-floor objectives
+
+[Pass 88 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass88-physical-wave-hardening) ·
+[Successful native Windows CI (run 38229534100)](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38229534100) ·
+[Detailed Pass 88 acceptance record](docs/development/PASS88_TEN_MAP_PHYSICAL_WAVES.md)
+
+- **Five cumulative passes (84–88)** harden reconstructed gameplay while preserving original owner-private source-pack geometry and marker loading. Pass84 prevents Manor upstairs Radio/Unpack secure progress from accumulating from the wrong floor. Pass85 requires collision-safe fallback infected spawns at least 11 metres from the player. Pass86 samples walkable surfaces and retries fallback natural loot markers. Pass87 cycles each other fallback map's objective positions over waves. Pass88 performs native ten-map Windows physics/wave acceptance.
+- **660 Python regressions passed**, Windows Godot/.NET export succeeded with **zero compiler errors** (one inherited Pass36 warning), and native Pass78, Pass83 and Pass88 gameplay checks all succeeded in [run 38229534100](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38229534100).
+- All ten **public reconstructed** maps instantiated an actual game scene, physically grounded player, six floor-supported natural pickups, and real infected on successive Wave 1/Wave 2 transitions. Manor Wave 3 Radio rejected downstairs progress and completed upstairs. These are controlled native smoke tests with accelerated wave clocks, not 15 human-played waves.
+- **Fidelity boundary:** original terrain, full map meshes/collisions, weapon and infected animations, original audio, identical spawn curves, all-objective completion and packaged owner-private Windows distribution are not authenticated by this checkpoint. This is not a full 1:1 release.
+
+## Historical verified branch: Pass 78 — Three Manor stair flights, physical ascent and descent
 
 [Pass 78 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass78-manor-bidirectional-stairs) ·
 [Verified Windows build and all 12 native stair movement checks](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38213401718) ·
