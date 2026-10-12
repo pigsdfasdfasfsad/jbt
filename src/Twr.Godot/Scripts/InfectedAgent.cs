@@ -19,6 +19,13 @@ public partial class InfectedAgent : CharacterBody3D
     public float Health { get; set; } = 65;
     public float Damage { get; set; } = 8;
     public float MoveSpeed { get; set; } = 15f * RobloxUnits.MetersPerStud;
+    // Pass74: counters for real Godot tests and F10 diagnostics; no gameplay
+    // authority is derived from these metrics.
+    public int BolterLeapStarts74 { get; private set; }
+    public int BolterLeapHits74 { get; private set; }
+    public int BolterUnsupportedLandingRejects74 { get; private set; }
+    public int BloaterVolleyCount74 { get; private set; }
+    public float EffectiveSlowFactor74 => _slowFactor;
     public Action<InfectedAgent, InfectedDeathContext>? Died { get; set; }
     public Action<InfectedAgent>? SpecialAttackRequested { get; set; }
 
@@ -128,7 +135,9 @@ public partial class InfectedAgent : CharacterBody3D
         _sourceJumpCooldown = Math.Max(0,_sourceJumpCooldown - delta);
         if (_slowTime <= 0) _slowFactor = 1f;
 
-        if (Target is null || Runtime?.Player is null || !Runtime.Player.IsAlive)
+        if (Health <= 0 || Target is null ||
+            !GodotObject.IsInstanceValid(Target) ||
+            Runtime?.Player is null || !Runtime.Player.IsAlive)
         {
             Velocity = new Vector3(0, Velocity.Y, 0);
             MoveAndSlide();
@@ -155,6 +164,7 @@ public partial class InfectedAgent : CharacterBody3D
             // APPROXIMATED throw cadence/range; source confirms ranged cluster
             // behavior and that it stops throwing near melee range.
             _specialCooldown = 4.0;
+            BloaterVolleyCount74++;
             SpecialAttackRequested?.Invoke(this);
         }
 
@@ -448,6 +458,7 @@ public partial class InfectedAgent : CharacterBody3D
                 HasClearAttackPath())
             {
                 _leapHit = true;
+                BolterLeapHits74++;
                 Runtime?.DamagePlayer(Math.Max(6f, Damage * 1.5f), "Bolter Leap");
             }
 
@@ -472,12 +483,27 @@ public partial class InfectedAgent : CharacterBody3D
             Math.Abs(Target.GlobalPosition.Y - GlobalPosition.Y) <= 2.1f &&
             HasClearAttackPath())
         {
-            // VERIFIED behavior: fixed-direction leap then temporary immobilization.
-            // APPROXIMATED launch speed, duration, and cooldown.
+            // Pass74: a visible target does not imply a solid landing pad.
+            // Reject a leap toward missing floor or an airborne player;
+            // chase with normal collision steering until a valid opportunity.
+            if (!Pass74SpecialInfectedSafety.HasSupportedLanding(
+                    GetWorld3D(), Target.GlobalPosition,
+                    GetRid(), Target.GetRid()))
+            {
+                BolterUnsupportedLandingRejects74++;
+                _specialCooldown = .60;
+                return false;
+            }
+
+            // VERIFIED: fixed-direction leap then temporary immobilization.
+            // APPROXIMATED launch speed, duration and cooldown. Duration is
+            // now range-bounded instead of always travelling 15.4 metres;
+            // that previously caused overshoot against close (5m) targets.
             var direction = flat.Normalized();
             _leapVelocity = direction * 28f + Vector3.Up * 5f;
-            _leapTime = 0.55;
+            _leapTime = Math.Clamp(distance / 28.0, .24, .55);
             _specialCooldown = 4.0;
+            BolterLeapStarts74++;
             _leapHit = false;
             LookAt(GlobalPosition + direction, Vector3.Up);
             return true;

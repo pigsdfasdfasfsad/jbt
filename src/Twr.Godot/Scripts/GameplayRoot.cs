@@ -1007,7 +1007,9 @@ public partial class GameplayRoot : Node3D
     {
         const float blastRadius = 20f; // Source Burster radius, Roblox studs.
         if (Runtime?.Player?.IsAlive == true &&
-            _player.GlobalPosition.DistanceTo(position) <= RobloxUnits.Distance(blastRadius))
+            Pass74SpecialInfectedSafety.CanHitPlayerWithBlast(
+                GetWorld3D(), position, _player,
+                RobloxUnits.Distance(blastRadius)))
             Runtime.DamagePlayer(27.5f, "Burster detonation");
 
         AddChild(new SporeCloudRuntime
