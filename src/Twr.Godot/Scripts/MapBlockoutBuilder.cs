@@ -388,6 +388,18 @@ public static class MapBlockoutBuilder
         StaticBox(root,name+"_UpperCrossing80",
             new Vector3(center.X,upper.Y-.08f,crossingZ),
             new Vector3(9.0f,.16f,1.20f),color.Lightened(.065f));
+        // Pass94 live full-capsule route diagnostics proved the 1.20m
+        // crosswalk ends 0.10m BEFORE the existing landing begins. A
+        // .42m-radius survivor must not plan across a missing floor sliver.
+        // Join these two PUBLIC FALLBACK collision decks with a short,
+        // recessed physical plank. The 20cm overlaps on both ends
+        // eliminate the gap without removing a wall or lifting the NPC.
+        // The connector top is 3cm below the existing deck top to avoid
+        // introducing a blocking upward interior seam at the landing.
+        StaticBox(root,name+"_UpperStairConnector94",
+            new Vector3(center.X,upper.Y-.13f,(upper.Z+crossingZ)*.5f),
+            new Vector3(3.2f,.20f,1.80f),
+            color.Lightened(.042f));
         return new Pass77StairLink(name,lower,upper);
     }
     private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color,
