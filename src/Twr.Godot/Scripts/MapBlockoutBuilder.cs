@@ -2,6 +2,14 @@ using Godot;
 
 namespace Twr.Godot;
 
+/// <summary>
+/// Pass77 fallback-only Manor stair endpoints, measured from the ACTUAL
+/// locally reconstructed collision surface. These do not identify owner
+/// source navigation waypoints or an original Roblox stair mesh.
+/// </summary>
+public sealed record Pass77StairLink(
+    string Name, Vector3 LowerFeet, Vector3 UpperFeet);
+
 public sealed record RuntimeMapLayout(
     Vector3 PlayerSpawn,
     IReadOnlyList<Vector3> InfectedSpawns,
@@ -12,6 +20,7 @@ public sealed record RuntimeMapLayout(
     // offsets that might intersect the original collision geometry.
     public bool UseExactInfectedSpawns { get; init; }
     public IReadOnlyList<Vector3> FortificationPoints { get; init; } = [];
+    public IReadOnlyList<Pass77StairLink> ApproximateStairs77 { get; init; } = [];
 }
 
 public static class MapBlockoutBuilder
@@ -170,9 +179,9 @@ public static class MapBlockoutBuilder
         InteriorShell(root, "FrontHall", new Vector3(0, 2.7f, 31), new Vector3(28, 5.4f, 11), new Color(0.25f, 0.22f, 0.19f));
         // RECOVERED topology: Manor has usable rooms on both floors and a front
         // staircase plus a west staircase. Exact dimensions remain APPROXIMATED.
-        AddUpperFloor(root,"WestWingUpper",new Vector3(-21,2.95f,-7),new Vector3(18.1f,0.22f,49.0f),new Color(0.20f,0.18f,0.16f),true);
-        AddUpperFloor(root,"EastWingUpper",new Vector3(21,2.95f,-7),new Vector3(18.1f,0.22f,49.0f),new Color(0.20f,0.18f,0.16f),false);
-        AddUpperFloor(root,"FrontHallUpper",new Vector3(0,2.85f,31),new Vector3(27.0f,0.22f,10.0f),new Color(0.22f,0.20f,0.17f),true);
+        var westStair77 = AddUpperFloor(root,"WestWingUpper",new Vector3(-21,2.95f,-7),new Vector3(18.1f,0.22f,49.0f),new Color(0.20f,0.18f,0.16f),true);
+        var eastStair77 = AddUpperFloor(root,"EastWingUpper",new Vector3(21,2.95f,-7),new Vector3(18.1f,0.22f,49.0f),new Color(0.20f,0.18f,0.16f),false);
+        var frontStair77 = AddUpperFloor(root,"FrontHallUpper",new Vector3(0,2.85f,31),new Vector3(27.0f,0.22f,10.0f),new Color(0.22f,0.20f,0.17f),true);
         for (var z = -25; z <= 18; z += 14)
         {
             DecorativeBox(root, "CourtyardCoverL" + z, new Vector3(-6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
@@ -181,7 +190,10 @@ public static class MapBlockoutBuilder
         return Layout(new Vector3(0, 1, 20),
             EdgeSpawns(36,42),
             Points((-7,18),(7,18),(-7,4),(7,4),(-7,-14),(7,-14)),
-            Points((0,-8),(10,12)));
+            Points((0,-8),(10,12))) with
+        {
+            ApproximateStairs77 = [westStair77, eastStair77, frontStair77]
+        };
     }
 
     private static RuntimeMapLayout Layout(Vector3 player, IReadOnlyList<Vector3> infected, IReadOnlyList<Vector3> pickups, IReadOnlyList<Vector3> objectives) =>
@@ -237,9 +249,15 @@ public static class MapBlockoutBuilder
         });
     }
 
-    private static void AddUpperFloor(Node3D root,string name,Vector3 center,Vector3 size,Color color,bool stairsFromSouth)
+    private static Pass77StairLink AddUpperFloor(Node3D root,string name,
+        Vector3 center,Vector3 size,Color color,bool stairsFromSouth)
     {
-        // Split deck leaves an opening beside the stair run.
+        // APPROXIMATED Manor geometry, not source-recovered retail meshes.
+        // The earlier eight independent 32cm-high box steps could not be
+        // walked by Godot CharacterBody3D without repeated jumping, and
+        // left a 4m-wide disconnected opening between both upper decks.
+        // Pass77 gives these same visible stair treads a separate continuous,
+        // walkable 25-degree collision ramp and a physical upper landing.
         var half=(size.X-4.0f)*0.5f;
         StaticBox(root,name+"_DeckL",new Vector3(center.X-(2.0f+half*0.5f),center.Y,center.Z),
             new Vector3(half,size.Y,size.Z),color);
@@ -249,13 +267,53 @@ public static class MapBlockoutBuilder
         var startZ=center.Z+(stairsFromSouth ? size.Z*0.30f : -size.Z*0.30f);
         var zDir=stairsFromSouth ? -1f : 1f;
         const int steps=8;
+        const float treadSpacing=.75f;
+        const float rampThickness=.16f;
+        var lower = new Vector3(center.X,.20f,
+            startZ-zDir*.60f);
+        var upper = new Vector3(center.X,center.Y+size.Y*.5f,
+            startZ+zDir*(steps-1)*treadSpacing);
+        var run = Math.Abs(upper.Z-lower.Z);
+        var rise = upper.Y-lower.Y;
+        var angle = Mathf.Atan2(rise,run) * (stairsFromSouth ? 1f : -1f);
+        var slopeLength = Mathf.Sqrt(run*run+rise*rise);
+        if (Math.Abs(angle) >= Mathf.DegToRad(35f))
+            throw new InvalidOperationException("Manor reconstructed stair slope unsafe");
+
+        var ramp = new StaticBody3D
+        {
+            Name = name+"_WalkableRamp77",
+            Position = (lower+upper)*.5f +
+                Vector3.Down*rampThickness*.5f*Mathf.Cos(angle),
+            Rotation = new Vector3(angle,0,0),
+            CollisionLayer=1,
+            CollisionMask=0
+        };
+        var rampSize = new Vector3(3.20f,rampThickness,slopeLength+.20f);
+        ramp.AddChild(new CollisionShape3D
+        {
+            Shape = new BoxShape3D { Size = rampSize }
+        });
+        ramp.AddChild(BoxMeshFor(rampSize,color.Darkened(.06f)));
+        root.AddChild(ramp);
+
+        // Bridge the actual split deck so the upper ramp exit reaches both
+        // left and right balcony platforms without a void/ledge jump.
+        StaticBox(root,name+"_Landing77",
+            new Vector3(center.X,center.Y,upper.Z),
+            new Vector3(5.6f,size.Y,1.65f),color);
+
+        // Keep the existing eight recognizable visual stair treads, but they
+        // are now meshes only: the continuous sloped ramp owns collision.
         for(var i=0;i<steps;i++)
         {
-            var y=0.25f+(center.Y-0.35f)*(i+1)/steps;
-            var z=startZ+zDir*i*0.75f;
-            StaticBox(root,name+"_Stair"+i,new Vector3(center.X,y,z),
-                new Vector3(3.2f,0.32f,0.9f),color.Lightened(0.03f));
+            var t=(i+.5f)/steps;
+            var surface=lower.Lerp(upper,t);
+            DecorativeBox(root,name+"_Stair"+i,
+                surface+Vector3.Up*.035f,
+                new Vector3(3.12f,.025f,.24f),color.Lightened(.03f));
         }
+        return new Pass77StairLink(name,lower,upper);
     }
     private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color)
     {
