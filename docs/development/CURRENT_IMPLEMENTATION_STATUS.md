@@ -1,3 +1,22 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 68
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass68-original-aimcf`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38192674647
+
+- **576 Python regressions passed** with one inherited Pass34 XML FutureWarning. **Godot/.NET Windows export: 0 errors**, one inherited Pass36 CS0108 warning.
+- All **73** surviving original `ModuleScript` AimCF formulas were classified from the owner-supplied `scripts.zip` as inert source-family metadata. Their original algebra was recovered without Lua execution: **38** AimPart-relative Handle formulas with base offset inside, **9** with the base offset outside, **24** inverted Handle/sight formulas with GripCF inverse first, **1** unusual SPAS-12 formula, and **1** numeric Flamethrower constant. Source-specific MP7 0.45-stud marker shift and Mosin/Winchester/Obrez post-depth terms are preserved. Raw source Lua is **not published**.
+- New `Pass68OriginalAimFormulas` evaluates these exact source-family transform orders with the original normalized per-weapon `GripCF`, SHA-gated original owner `AimPart` and **primary** Tool `Handle`. The full original AimCF transform is exposed separately from the approximate final Godot visual placement. No source Luau is executed.
+- Native exported Windows `TWR_SMOKE_PASS68_ORIGINAL_AIMCF_OK` validated noncommuting source matrix multiplication, original SPAS-12 `CFrame.new(0,0,-0.6):toObjectSpace(...)` operator precedence, MP7 0.45-stud marker offset, Winchester -0.2-stud post-offset, Flamethrower numeric CFrame, and five entirely synthetic gun models' aiming axis alignment. Source SPAS-12 can require excessive original-camera-independent eye relief; **only visual depth** is clamped to a bounded 0.12–1.20m interval, while the exact source formula result is retained unchanged.
+- Previous Pass59–67 exported-game weapon smokes passed, as did `TWR_SMOKE_COMPLETE_OK maps=10 waves=150`. The latter remains **scripted domain-state progression**, not ten real, player-controlled 15-wave matches.
+- All synthetic owner-style weapon packs were deleted before the private-asset exclusion check. **No owner-private original pack or Windows EXE was published publicly.**
+
+**Remaining 1:1 blockers:** the exact original Roblox avatar/weapon welds and character-camera attachments, native optics/scope/reticle meshes and texture layers, many missing original external MeshPart triangles/UVs, complete collision/decorated map reconstruction for all ten maps, true end-to-end manual survival playthroughs, screenshot parity, and authorized private Windows packaging. **The overall game is unfinished.**
+
+[Pass68 original source AimCF formula families, visual clamping and successful native Windows tests](PASS68_ORIGINAL_AIMCF_FORMULAS.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 67
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass67-source-sight-alignment`.
