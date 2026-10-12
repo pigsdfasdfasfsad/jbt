@@ -33,6 +33,10 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         [(1,0), (0,1), (1,1), (-1,1)];
 
     private readonly AStar3D _graph = new();
+    // Pass91: the original Pass73 graph samples a smaller zombie body.
+    // Escort survivors have a real .42m radius; their edges must be
+    // constructed with full-capsule clearance, without changing infected AI.
+    private readonly AStar3D _escortGraph91 = new();
     private readonly CapsuleShape3D _standingCapsule =
         new() { Radius = .30f, Height = 1.60f };
     private readonly global::Godot.Collections.Array<Rid> _exclude = new();
@@ -52,6 +56,7 @@ public partial class Pass73GroundNavigationRuntime : Node3D
 
     public int PointCount => (int)_graph.GetPointCount();
     public int EdgeCount => _edges;
+    public int EscortSafeEdgeCount91 { get; private set; }
     public int CandidateCount => _columns * _rows;
     public bool IsGraphReady => _ready && PointCount >= 20;
     public int RouteCacheCount => _routes.Count;
@@ -139,7 +144,10 @@ public partial class Pass73GroundNavigationRuntime : Node3D
             var x = _firstX + column * _spacing;
             var z = _firstZ + row * _spacing;
             if (TryFindGround(x, z, out var ground))
+            {
                 _graph.AddPoint(_nextSample, ground);
+                _escortGraph91.AddPoint(_nextSample, ground);
+            }
         }
         if (_nextSample < total) return;
 
@@ -165,6 +173,15 @@ public partial class Pass73GroundNavigationRuntime : Node3D
                     continue;
                 _graph.ConnectPoints(_nextLink, id);
                 _edges++;
+                // Pass91 separately audit the actual Escort collision
+                // capsule on each traversable physical A* connection.
+                // A thin zombie may fit where a .42m survivor cannot.
+                if(Pass89EscortSurfaceSafety.CanTravel(
+                    GetWorld3D(),from,to,_exclude))
+                {
+                    _escortGraph91.ConnectPoints(_nextLink,id);
+                    EscortSafeEdgeCount91++;
+                }
             }
         }
         if (_nextLink < total) return;
@@ -350,6 +367,7 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         Vector3 escortFeet, Vector3 destinationFeet, Rid escortRid)
     {
         if (!IsGraphReady || !_connected ||
+            EscortSafeEdgeCount91<10 ||
             !IsFinite(escortFeet) || !IsFinite(destinationFeet))
             return [];
         var exclude = new global::Godot.Collections.Array<Rid>();
@@ -365,17 +383,17 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         // balcony escort to a downstairs vertex and let it fall.
         if (escortFeet.Y > 2.2f || destinationFeet.Y > 2.2f)
             return [];
-        var fromId=_graph.GetClosestPoint(escortFeet);
-        var toId=_graph.GetClosestPoint(destinationFeet);
+        var fromId=_escortGraph91.GetClosestPoint(escortFeet);
+        var toId=_escortGraph91.GetClosestPoint(destinationFeet);
         if (fromId < 0 || toId < 0 || fromId == toId)
             return [];
-        var fromAnchor=_graph.GetPointPosition(fromId);
-        var toAnchor=_graph.GetPointPosition(toId);
+        var fromAnchor=_escortGraph91.GetPointPosition(fromId);
+        var toAnchor=_escortGraph91.GetPointPosition(toId);
         if (!EscortAnchorMatches89(escortFeet,fromAnchor) ||
             !EscortAnchorMatches89(destinationFeet,toAnchor))
             return [];
 
-        var path=_graph.GetPointPath(fromId,toId);
+        var path=_escortGraph91.GetPointPath(fromId,toId);
         if (path.Length < 2 || path.Length > 160) return [];
         var route=new List<Vector3>(path.Length+1);
         var last=escortFeet;
