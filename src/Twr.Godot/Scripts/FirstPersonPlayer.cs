@@ -8,6 +8,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public LocalSessionNode? Runtime { get; set; }
     public OfflineAudioRuntime? Audio { get; set; }
     public string EquippedWeaponName => _equippedWeapon;
+    // Read-only diagnostics for exported native player-input acceptance.
+    // Gameplay timers remain private and authoritative.
+    public double EquipRemainingSeconds70 => _equipTimer;
+    public double ReloadRemainingSeconds70 => _reloadTimer;
+    public double ActionCooldownSeconds70 => _actionCooldown;
     public bool SourceWeaponModelActive => _viewModel?.UsingOriginalToolAssembly == true;
     public bool SourceWeaponPackVerified => OriginalWeaponSourceRuntime.OwnerSourcePackVerified;
     public int SourceWeaponVisibleParts => _viewModel?.SourceVisibleParts ?? 0;
