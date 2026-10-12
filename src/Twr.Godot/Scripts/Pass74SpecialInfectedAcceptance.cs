@@ -175,7 +175,6 @@ public partial class Pass74SpecialInfectedAcceptance : Node
         var (game, player) = await BeginMap("Ranch");
         var actor = FindLiveWaveInfected(game);
         actor.InfectedType = "Bolter"; // synthetic choice; production AI untouched
-        actor.Health = 100f;
         actor.Damage = 10f;
         actor.MoveSpeed = 0f;
         actor.GlobalPosition = new Vector3(0, ArenaHeight + 1.15f, -8f);
@@ -272,7 +271,6 @@ public partial class Pass74SpecialInfectedAcceptance : Node
         burster.InfectedType = "Burster";
         burster.MoveSpeed = 0;
         burster.Damage = 0;
-        burster.Health = 100;
         burster.GlobalPosition = new Vector3(0, ArenaHeight + 1.15f, -3f);
         await PhysicsFrames(4);
         var blockedHp = Runtime.Player!.Health;
@@ -304,7 +302,6 @@ public partial class Pass74SpecialInfectedAcceptance : Node
         exposed.InfectedType = "Burster";
         exposed.MoveSpeed = 0;
         exposed.Damage = 0;
-        exposed.Health = 100;
         exposed.GlobalPosition = new Vector3(0, ArenaHeight + 1.15f, -2.5f);
         await PhysicsFrames(2);
         var clearHp = Runtime.Player.Health;
@@ -324,7 +321,6 @@ public partial class Pass74SpecialInfectedAcceptance : Node
         await SpawnNextWaveActor(game);
         var bloater = FindLiveWaveInfected(game);
         bloater.InfectedType = "Bloater";
-        bloater.Health = 488f;
         bloater.MoveSpeed = 0f;
         bloater.Damage = 0f;
         bloater.GlobalPosition = new Vector3(0, ArenaHeight + 1.15f, -8f);

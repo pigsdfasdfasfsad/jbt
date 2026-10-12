@@ -73,4 +73,5 @@ def test_native_windows_real_actor_keyboard_pursuit_and_rewards():
     assert "TWR_SMOKE_PASS73_FULLMAP_GAMEPLAY_OK maps=10" in ci
     assert ci.index("Smoke Pass 72") < ci.index("Smoke Pass 73")
     assert ci.index("Smoke Pass 73") < ci.index("Verify no private map scenes")
-    assert "github.ref_name == 'twr-pass73-fullmap-ground-navigation')" in ci
+    assert "if: success() && github.ref_name == 'twr-pass73-fullmap-ground-navigation'" in ci
+    # Shared owner-privacy exclusion also covers subsequent pass branches.
