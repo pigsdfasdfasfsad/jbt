@@ -327,15 +327,23 @@ public partial class InfectedAgent : CharacterBody3D
             var direction = SteerAroundObstacles(desired);
             if (manorSameUpper79)
             {
-                // Empty route is safe for DIRECT pursuit only if every
-                // sampled floor point is solid. A transparent/unsupported
-                // void may never become a movement instruction.
-                if ((_navigationRoute.Length == 0 &&
-                     !GroundNavigator73!.UpperCorridorSupported79(
-                         GlobalPosition - Vector3.Up * .8f,
-                         Target.GlobalPosition)) ||
-                    !GroundNavigator73!.SafeUpperMove79(
-                        GlobalPosition, direction))
+                // Pass83: a collision-audited UPSTAIRS waypoint must take
+                // priority over the flat-world 2.2m obstacle lookahead.
+                // The latter can rotate the actor *off* the narrow physical
+                // crossing when it sees a far divider, even though the
+                // next 0.55m is perfectly supported. The close collision
+                // ray and support probe still take precedence over motion.
+                var upper = GroundNavigator73!;
+                if (_navigationRoute.Length == 0 &&
+                    !upper.UpperCorridorSupported79(
+                        GlobalPosition - Vector3.Up * .8f,
+                        Target.GlobalPosition))
+                    direction = Vector3.Zero;
+                else if (_navigationRoute.Length > 0 &&
+                         upper.SafeUpperMove79(GlobalPosition, desired) &&
+                         !ObstacleAhead(desired, .76f))
+                    direction = desired;
+                else if (!upper.SafeUpperMove79(GlobalPosition, direction))
                     direction = Vector3.Zero;
             }
             velocity.X = direction.X * MoveSpeed * _slowFactor;
