@@ -1,3 +1,23 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 67
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass67-source-sight-alignment`.
+
+**Successful Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38191379736
+
+- **569 Python regression tests passed** with one inherited Pass34 FutureWarning; **Godot/.NET Windows export: 0 errors**, one inherited Pass36 CS0108 warning.
+- Pass67 now reads the original invisible `AimPart` CFrame directly from the separately SHA-verified owner-only Pass47 `SourceWeaponModels.json.gz` (exact original 100-model pack, of which 73 original/alias models have an unambiguous sight marker). It respects the existing original importer rotation/alignment and refuses missing/ambiguous/nonfinite source marker poses. Source packs are not committed or published.
+- The original weapon modules compute `module.Stats.AimCF` dynamically from `AimPart`, `Handle`, and `GripCF` (not a literal numeric serialized AimCF). The implementation **does not evaluate Luau** and does **not claim exact source AimCF geometry**. Instead, SHA-grounded sight parts are centered on the camera aiming axis at an explicitly approximate **0.43m eye relief**, with the original inert `Aim`/`UnAim` **0.50s/0.25s** timing and approximate `SlowDown2`/`SlowDown` easing.
+- `FirstPersonPlayer.UpdateAim` prefers original AimPart-guided ADS where owner pack/sight data is valid, keeps previous approximate ADS when unavailable, and leaves existing aim permission, perk/FOV timing, projectile ray direction, damage, ammo and recoil gameplay authority unchanged. Pass66 articulated camera-space shoulders now counter-transform whole-viewmodel ADS movement, retaining camera-anchored shoulders as original hands follow source welds.
+- Native `TWR_SMOKE_PASS67_SOURCE_SIGHT_OK` passed: synthetic source Glock 17 and Mossberg sights centered, original Glock timing and easing records interpreted, fallback demonstrated on synthetic Mosin lacking AimPart, camera-space shoulder location preserved, invalid poses refused, and no owner pack falsely verified.
+- Exported Windows Pass59–66 source animation regression smokes and scripted `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed. The latter is **domain simulation, not 10 complete playable 15-wave matches**.
+- Synthetic owner-style packs were cleaned before owner-private asset exclusion. **The original packs and Windows EXE remain unpublished by public GitHub CI**.
+
+**Unfinished:** exact per-weapon original dynamic AimCF formulas (at least two main expression families plus special SPAS-12 offset), real scope/reticle meshes and UV textures, original avatar/weapon Motor6D joints, missing external MeshPart triangle geometry, full interior/physics fidelity for all ten maps, screenshot-level comparisons, genuine manual survival tests and final owner-private offline Windows distribution. **The game is still not a complete 1:1 recreation.**
+
+[Pass67 source sight marker engineering report, native Windows acceptance and exact visual limitations](PASS67_SOURCE_SIGHT_ALIGNMENT.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 66
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass66-articulated-source-arms`.
