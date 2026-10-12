@@ -110,20 +110,56 @@ public static class Pass94ManorEscortRoute
             var previous=fromFeet;
             if(!onRamp)
             {
+                var reachedStairHead=false;
                 if (Math.Abs(fromFeet.X-stair.UpperFeet.X)>1.8f)
                 {
-                    // The upper landing is divided into side decks: the
-                    // real Pass80 crosswalk is the only approved connection.
-                    var entrance=fromFeet.X<stair.UpperFeet.X
-                        ? crossing.LeftFeet : crossing.RightFeet;
-                    if (!Append(world,route,ref previous,entrance,exclude) ||
-                        !Append(world,route,ref previous,crossing.CentreFeet,
-                            exclude))
+                    // Pass94 native capsule sweep saw the pitched
+                    // landing's leading end-face when approaching from
+                    // the CENTRAL crosswalk. The side decks already
+                    // overlap the main 5.6m ramp at its HEAD. Approach
+                    // laterally at the correct Z instead of driving
+                    // through the vertical collision nose.
+                    var sideSign=Math.Sign(
+                        fromFeet.X-stair.UpperFeet.X);
+                    var safeLaneX=stair.UpperFeet.X+sideSign*3.35f;
+                    var laneStart=new Vector3(
+                        safeLaneX,stair.UpperFeet.Y,fromFeet.Z);
+                    var laneAtHead=new Vector3(
+                        safeLaneX,stair.UpperFeet.Y,
+                        stair.UpperFeet.Z);
+                    var sideRoute=new List<Vector3>();
+                    var sidePrevious=fromFeet;
+                    if(Append(world,sideRoute,ref sidePrevious,
+                            laneStart,exclude) &&
+                       Append(world,sideRoute,ref sidePrevious,
+                            laneAtHead,exclude) &&
+                       Append(world,sideRoute,ref sidePrevious,
+                            stair.UpperFeet,exclude))
+                    {
+                        route.AddRange(sideRoute);
+                        previous=sidePrevious;
+                        reachedStairHead=true;
+                    }
+                }
+                if(!reachedStairHead)
+                {
+                    // For other upper starting locations, keep the old
+                    // explicitly audited Pass80 bridge pathway. Never
+                    // promote an unverified shortcut into a route.
+                    if(Math.Abs(fromFeet.X-stair.UpperFeet.X)>1.8f)
+                    {
+                        var entrance=fromFeet.X<stair.UpperFeet.X
+                            ? crossing.LeftFeet : crossing.RightFeet;
+                        if (!Append(world,route,ref previous,
+                                entrance,exclude) ||
+                            !Append(world,route,ref previous,
+                                crossing.CentreFeet,exclude))
+                            continue;
+                    }
+                    if (!Append(world,route,ref previous,
+                            stair.UpperFeet,exclude))
                         continue;
                 }
-                if (!Append(world,route,ref previous,
-                        stair.UpperFeet,exclude))
-                    continue;
             }
 
             // Descend 12 measured sloped-collider sections, never step
