@@ -235,8 +235,13 @@ public partial class Pass83ManorUpperGameplayAcceptance : Node
                         " safe="+nav.SafeUpperMove79(
                             enemy.GlobalPosition,towardCentre));
                 }
+                // Infected stop to attack within 1.55m of the living
+                // player. The target is 0.75m beyond the exit marker,
+                // so requiring the agent to reach marker+0.05m would
+                // reject a correct, grounded *melee-range* right-deck
+                // arrival. Retain >6.8m actual movement validation below.
                 if(enemy.IsOnFloor() &&
-                    enemy.GlobalPosition.X >= bridge.RightFeet.X+.05f &&
+                    enemy.GlobalPosition.X >= bridge.RightFeet.X-1.15f &&
                     Math.Abs(enemy.GlobalPosition.Y-
                         (stair.UpperFeet.Y+.8f)) < .40f)
                 {
