@@ -299,9 +299,15 @@ public static class MapBlockoutBuilder
 
         // Bridge the actual split deck so the upper ramp exit reaches both
         // left and right balcony platforms without a void/ledge jump.
+        // The upper landing must NOT extend half a metre downhill:
+        // its original 1.65m depth blocked the ramp at a ~0.4m vertical
+        // lip, confirmed by an actual Windows first-person ascent ending
+        // at Y=2.48 instead of the upper deck's Y=2.96.
+        // Move the 1.15m cross-bridge slightly past the ramp end, leaving
+        // only ~0.13m overlap and at most a 6cm contact-height difference.
         StaticBox(root,name+"_Landing77",
-            new Vector3(center.X,center.Y,upper.Z),
-            new Vector3(5.6f,size.Y,1.65f),color);
+            new Vector3(center.X,center.Y,upper.Z+zDir*.45f),
+            new Vector3(5.6f,size.Y,1.15f),color);
 
         // Keep the existing eight recognizable visual stair treads, but they
         // are now meshes only: the continuous sloped ramp owns collision.
