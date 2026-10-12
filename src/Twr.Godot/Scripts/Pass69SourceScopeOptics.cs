@@ -328,9 +328,9 @@ public partial class Pass69SourceScopeOptics : Control
         if(optic.Magnified)
             DrawDarkOutside(center,radius,alpha);
         var rim=new Color(.035f,.042f,.050f,
-            (optic.Magnified?.91f:.44f)*alpha);
+            (optic.Magnified ? .91f : .44f)*alpha);
         var edge=new Color(.13f,.14f,.16f,
-            (optic.Magnified?.67f:.40f)*alpha);
+            (optic.Magnified ? .67f : .40f)*alpha);
         if(optic.Magnified)
             DrawScopeRim(center,radius,rim,edge);
         else DrawArc(center,radius,0f,Mathf.Tau,64,
