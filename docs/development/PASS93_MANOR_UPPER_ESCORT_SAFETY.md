@@ -1,0 +1,7 @@
+# Pass93 — Reject unsupported Manor upper-floor Escort completion
+
+Based on the verified Pass92 checkpoint (nine physically completed fallback-map Escort missions), reconstructed Manor upper floors remain the only public-scaffold map without a verified NPC Escort graph. The legacy straight-line Escort actor could finish merely because the survivor and destination had nearly equal horizontal coordinates, even if an upper deck, door collider, or absent bridge separated them.
+
+Pass93 changes **only** fallback Manor objectives tagged with `RequireSameFloorSecure84`: when a legacy Escort survivor reaches the projected goal, the production completion callback is now guarded by the same Pass90 supported-floor, height-gap, final-segment capsule collision and nearby-player checks as the nine already verified map objectives. Failure means the survivor stops, instead of generating unearned credits/XP. Owner-original loaded scenes are deliberately not reclassified as source-authentic.
+
+This is a safety/correctness pass, **not** a completed Manor upper-floor Escort navigation graph. The survivor still lacks reliable staircase waypoints, so some Manor Escorts may stall instead of completing. The full physically traversed multi-story mission, authentic source markers, original mesh/animation fidelity and human-controlled 15-wave survival remain pending. Static Python contract tests alone do not prove native physics acceptance.
