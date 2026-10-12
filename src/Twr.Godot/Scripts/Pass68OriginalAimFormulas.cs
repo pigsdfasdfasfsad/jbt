@@ -38,7 +38,7 @@ public static class Pass68OriginalAimFormulas
     }
 
     private static Transform3D Translation(float x,float y,float z) =>
-        new(Basis.Identity,new Vector3(x,y,z)*
+        new(Basis.Identity,new Vector3(x,y,-z)*
             RobloxUnits.MetersPerStud);
     public static Transform3D Reflection(Transform3D source)
     {
