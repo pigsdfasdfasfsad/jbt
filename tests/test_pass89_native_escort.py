@@ -49,5 +49,7 @@ def test_pass89_ci_runs_previous_native_tests_and_private_exclusion_before_downl
     assert ci.index("Smoke Pass 83")<ci.index("Smoke Pass 88")
     assert ci.index("Smoke Pass 88")<ci.index("Smoke Pass 89")
     assert ci.index("Smoke Pass 89")<ci.index("Verify no private map scenes")
-    assert ci.index("Verify no private map scenes")<ci.index("Upload verified Pass89 public-fallback")
-    assert "ThoseWhoRemainOffline-Windows-x64" in ci
+    # The repository deliberately prohibits publishing artifacts publicly.
+    assert "Upload verified Pass89 public-fallback" not in ci
+    assert ci.count("uses: actions/upload-artifact@v4") == ci.count(
+        "if: false && success()")

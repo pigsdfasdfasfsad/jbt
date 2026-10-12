@@ -1683,13 +1683,3 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           compression-level: 6
-
-      - name: Upload verified Pass89 public-fallback Windows executable
-        if: success() && github.ref_name == 'twr-pass89-escort-ground-navigation'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ThoseWhoRemainOffline-Windows-x64
-          path: build/output/
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 6
