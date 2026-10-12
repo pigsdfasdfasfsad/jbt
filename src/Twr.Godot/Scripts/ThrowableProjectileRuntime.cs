@@ -11,6 +11,10 @@ public partial class ThrowableProjectileRuntime : Node3D
     private Vector3 _velocity;
     private int _contacts;
     private double _life;
+    // Pass75: a grenade cannot remain on the exact collision boundary and
+    // fall through its support after the second physics contact.
+    private bool _restingOnGround;
+    public bool RestingOnGround75 => _restingOnGround;
 
     private const float Gravity=20f;
     private const float ThrowSpeed=18f; // APPROXIMATED: source does not document throw force.
@@ -48,6 +52,14 @@ public partial class ThrowableProjectileRuntime : Node3D
     public override void _PhysicsProcess(double delta)
     {
         _life-=delta;
+        if (_restingOnGround)
+        {
+            // Continue the source 3-second Frag fuse while motionless.
+            // Physics ground support persists until the actual detonation.
+            if (ThrowableType=="Frag" && _life<=0)
+                DetonateFrag();
+            return;
+        }
         _velocity.Y-=Gravity*(float)delta;
 
         var start=GlobalPosition;
@@ -61,15 +73,26 @@ public partial class ThrowableProjectileRuntime : Node3D
 
         if(hit.Count>0)
         {
-            GlobalPosition=hit["position"].AsVector3();
+            var normal=hit["normal"].AsVector3();
+            // Advance outside the collision boundary; a ray starting
+            // exactly on a floor can miss its next downward crossing and
+            // tunnel through the ground before the Frag fuse expires.
+            GlobalPosition=hit["position"].AsVector3()+normal*.04f;
             _contacts++;
 
             if(ThrowableType=="Frag")
             {
                 // CONTESTED: recovered module says MaxBounces=math.huge while
                 // surviving gameplay documentation describes one useful bounce.
-                if(_contacts==1)Bounce(hit["normal"].AsVector3());
-                else _velocity=Vector3.Zero;
+                if(_contacts==1)Bounce(normal);
+                else if (normal.Y>=.60f)
+                {
+                    // At least two contacts, followed by a genuinely
+                    // upward-facing support; do not freeze on a vertical wall.
+                    _velocity=Vector3.Zero;
+                    _restingOnGround=true;
+                }
+                else Bounce(normal);
             }
             else if(_contacts>=2)
             {
