@@ -189,8 +189,17 @@ public partial class Pass89EscortNavigationAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass89 Escort clipped through real static wall"+
                     " position="+at);
-            if(at.Z<14.45f && survivor.IsOnFloor())
+            if(at.Z<14.65f &&
+                Pass89EscortSurfaceSafety.CanTravel(
+                    game.GetWorld3D(),at,at,
+                    new global::Godot.Collections.Array<Rid>
+                    {
+                        survivor.GetRid(), player.GetRid()
+                    }))
             {
+                // Godot's IsOnFloor() is a last-MoveAndSlide frame flag;
+                // test actual continuous support beneath the real NPC
+                // at the threshold instead of a one-frame contact state.
                 clearedWall=true;
                 break;
             }
