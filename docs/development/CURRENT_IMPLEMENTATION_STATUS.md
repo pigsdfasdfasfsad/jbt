@@ -1,3 +1,24 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 69
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass69-source-scope-optics`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38199278090
+
+- **582 Python regression tests passed** with one inherited Pass34 XML FutureWarning. Godot/.NET Windows export succeeded with **zero errors** and one inherited Pass36 CS0108 compiler warning.
+- Original owner-supplied weapon ModuleScripts retain exactly **seven** `Stats.ScopeDiameter` profiles: AUG 0.106; Barrett M82A1 0.205; M110 SASS 0.188; M14 0.179; SVD 0.21; VSS 0.21; Winchester Model 70 0.184 (all in Roblox studs). **Six** have original `ReduceSensitivity=true`; AUG does not. Pass69 consumes these inert original weapon records directly, with no Lua execution.
+- `Pass69SourceScope` now derives mouse sensitivity from the **interpolated live camera FOV / offline hip FOV**, using the original flag. Hip FOV is the local game's **60°**, which is different from the reference Roblox client's default 70° and is disclosed in the engineering notes. Aim permission, authoritative FOV timing, projectile path, hit/damage, reload and recoil remain unchanged.
+- An original scope lens marker center (`ReticleGlass`, `ScopeReticle`, or `ScopeGlass`) is recoverable from the **SHA-verified owner-only Pass47 weapon assembly** for every one of these seven original scope-model entries. Pass69 projects that lens into screen coordinates through the actual Godot camera and sizes the optical hole using the source `ScopeDiameter` rather than the original glass MeshPart's different physical size.
+- `Pass69ScopeMask` renders a **procedural approximate** dark circular aperture, rim and reticle; the retail 2D scope-mask shader, source reticle image and external MeshPart triangle/UV bytes have **not** been recovered. When the owner's pack is absent, a bounded virtual-lens fallback uses the previously reconstructed 0.43m eye relief. The standard hipfire `+` crosshair is suppressed only while scoped mask opacity is visible.
+- Native exported-Windows `TWR_SMOKE_PASS69_SOURCE_SCOPE_OK` passed: all seven original diameter values, six sensitivity flags and AUG exception, live-FOV scaling, projected original-style lens markers, mask draw controls, invalid input rejection, safe unscoped fallback and unchanged authoritative combat.
+- All Pass59–68 weapon smokes and `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed. That last result is **scripted domain state progression, not ten human-played 15-wave sessions**.
+- All temporary synthetic gun/lens fixtures were deleted. Private map, weapon, audio, navigation and collision assets passed exclusion checks. **No publicly downloadable Windows EXE or owner-private asset pack was published.**
+
+**Remaining to reach true 1:1:** original reticle images and scope shader, accurate weapon/character mesh triangles and textures, native Roblox camera/optic offsets and Motor6D attachment data, full ten-map reconstructed interiors and collision, manual rendered screenshot comparisons, genuine full 15-wave user-played acceptance runs on every map, and a final owner-private Windows playable distribution. **The full offline remake remains unfinished.**
+
+[Pass69 source optic profiles, mask implementation, original lens metadata, native Windows acceptance and known limitations](PASS69_SOURCE_SCOPE_OPTICS.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 68
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass68-original-aimcf`.
