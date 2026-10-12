@@ -100,6 +100,7 @@ def test_source_aimcf_matrix_implementation_is_bounded_and_ordered():
     assert "reflection*source.Basis*reflection" in lib
     assert "canonical.AffineInverse()" in lib
     assert "ReticleError(candidate," in lib
+    assert "Math.Clamp(settled.Z,-1.2f,-.12f)" in lib
     assert "source AimCF" in lib or "AimCF assignment" in lib
     assert "Process.Start" not in lib and "HttpClient" not in lib
     assert "SpendAmmo" not in lib and "AwardKill" not in lib
@@ -164,6 +165,8 @@ def test_exported_windows_smoke_preserves_all_native_previous_passes():
     assert "source_spas_minus_06_literal_semantics=true" in boot
     assert "source_mp7_plus_045_sight_offset=true" in boot
     assert "source_five_weapon_sights_centered=true" in boot
+    assert "source_spas_eye_relief_bounded=true" in boot
+    assert "source_mp7_special_visual_offset=true" in boot
     assert "original_owner_pack_never_published=true" in boot
     assert 'or "--smoke-pass68"' in reader
     assert 'or "--smoke-pass68"' in hierarchy
