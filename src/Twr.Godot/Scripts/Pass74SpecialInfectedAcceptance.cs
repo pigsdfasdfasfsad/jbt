@@ -188,10 +188,10 @@ public partial class Pass74SpecialInfectedAcceptance : Node
                 "Pass74 Bolter attacked through a solid world wall");
 
         if (!Pass74SpecialInfectedSafety.HasSupportedLanding(
-                GetWorld3D(), player.GlobalPosition,
+                game.GetWorld3D(), player.GlobalPosition,
                 actor.GetRid(), player.GetRid()) ||
             Pass74SpecialInfectedSafety.HasSupportedLanding(
-                GetWorld3D(), player.GlobalPosition + Vector3.Up * 7f,
+                game.GetWorld3D(), player.GlobalPosition + Vector3.Up * 7f,
                 actor.GetRid(), player.GetRid()))
             throw new InvalidOperationException(
                 "Pass74 physical landing check accepted airborne destination");
