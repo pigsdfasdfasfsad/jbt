@@ -175,6 +175,10 @@ public partial class Pass95ManorEscortAcceptance : Node
         var lastProgress=initial;
         var last=initial;
         var reachedRamp=false;
+        // Objective completion queues the real node for deletion.
+        // Capture its collision-grounded goal during physical travel,
+        // before OnObjectiveCompleted removes the marker.
+        var lastVerifiedGoalY=float.NaN;
         var stair=game.Pass77ApproximateStairs[wing];
         player.GlobalPosition=initial+new Vector3(2f,1.12f,7f);
 
@@ -189,6 +193,9 @@ public partial class Pass95ManorEscortAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass95 NPC/player invalid during "+label+" wave "+wave);
             last=actor.GlobalPosition;
+            if(objective.EscortGroundedDestinations90>0 &&
+               GodotObject.IsInstanceValid(target))
+                lastVerifiedGoalY=target.GlobalPosition.Y;
             minY=Math.Min(minY,last.Y);
             maxTravel=Math.Max(maxTravel,last.DistanceTo(initial));
             safeSteps=objective.EscortSafeSteps89;
@@ -246,8 +253,7 @@ public partial class Pass95ManorEscortAcceptance : Node
         // marker lies beyond missing owner-original floor geometry.
         // A safe same-floor upper rescue is valid. If the accepted goal
         // is downstairs, the real NPC must descend the physical ramp.
-        var finalGoalY=GodotObject.IsInstanceValid(target)
-            ? target.GlobalPosition.Y : float.NaN;
+        var finalGoalY=lastVerifiedGoalY;
         if(wing==1 &&
            (float.IsNaN(finalGoalY) ||
             (finalGoalY<2.2f && (!reachedRamp || minY>1.1f)) ||
