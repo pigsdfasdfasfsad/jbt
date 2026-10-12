@@ -31,6 +31,10 @@ def test_live_combat_uses_same_gameplay_player_hit_and_reward_pipeline():
     assert "IntersectRay(query)" in harness
     assert "player._UnhandledInput(new InputEventMouseButton" in harness
     assert "player._UnhandledInput(new InputEventKey" in harness
+    assert '"--smoke-pass70",StringComparer.Ordinal' in player
+    assert "Input.MouseMode != Input.MouseModeEnum.Captured" in player
+    assert "!OS.GetCmdlineUserArgs().Contains(" in player
+    assert "Headless GitHub Windows runners cannot capture" in player
     assert "Input.MouseMode=Input.MouseModeEnum.Captured" in harness
     assert 'Keycode=Key.R' in harness
     assert "SpendAmmo" in player
