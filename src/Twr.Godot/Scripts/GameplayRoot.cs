@@ -725,6 +725,8 @@ public partial class GameplayRoot : Node3D
                     (MapName != "Manor" ||
                      ObjectivePosition(i).Y < 2.3f || manorUpperEscort94),
                 UseManorElevatedEscort94 = manorUpperEscort94,
+                UseFallbackMaterialGrounding96 = _isFallbackScene86 &&
+                    (family == "Load" || family == "Repair"),
                 EscortGroundNavigator89 = _groundNavigation73,
                 Player = _player,
                 Runtime = Runtime,
