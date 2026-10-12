@@ -2,7 +2,18 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 91 — Eight-map collision-safe Escort completion
+## Latest verified branch: Pass 92 — Expressway physically supported Escort
+
+[Pass92 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass92-expressway-escort) ·
+[Successful Windows CI 38296791093](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38296791093) ·
+[Pass92 native verification report](docs/development/PASS92_EXPRESSWAY_ESCORT.md)
+
+- **692 Python tests passed, zero Windows compiler errors; all prior Pass78/83/88/89/90/91 native regressions passed**, plus the new Expressway Wave6 Escort scenario.
+- A separate real-collision Pass73 graph on the fallback **Expressway** enables its physical Escort survivor to navigate around authored road obstacles without replacing the existing infected `HighwayNavigation` graph. Windows measured **22.52m of NPC movement and 193 physical movement steps**, a single authoritative **4,000-credit/3,500-XP** objective reward and safe no-op replay.
+- This completes **nine public reconstructed map Escort scenarios** verified in native Windows: Ranch, Mill, Bypass, Cabin, Cargo, District, Prison, fallback Laboratory, and Expressway.
+- Owner-original scene packs remain private/unpublished. Exact Roblox meshes/collision/animation/audio, Manor multi-floor Escort, and real-time 15-wave manual survival are **not** claimed verified. Public Windows .exe artifact upload remains disabled by repository policy.
+
+## Historical verified branch: Pass 91 — Eight-map collision-safe Escort completion
 
 [Pass91 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass91-multimap-escort) ·
 [Successful native Windows CI (38295592996)](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38295592996) ·
