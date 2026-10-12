@@ -2,7 +2,18 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 90 — Real Escort arrival and reward verification
+## Latest verified branch: Pass 91 — Eight-map collision-safe Escort completion
+
+[Pass91 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass91-multimap-escort) ·
+[Successful native Windows CI (38295592996)](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38295592996) ·
+[Pass91 engineering report](docs/development/PASS91_MULTIMAP_ESCORT.md)
+
+- **688 Python tests passed; 0 Windows compiler errors.** Native gameplay acceptance for Pass78/83/88/89/90 and all eight Pass91 Escort map runs succeeded.
+- Wave5/6 **real physics Escort and exactly-once reward** verified on Ranch, Mill, Bypass, Cabin, Cargo, District, Prison and fallback Laboratory. Map-specific walk distances were 18.55–24.50m, without NPC teleporting.
+- Pass91 floor/capsule-safe Escort starts, independently capsule-audited AStar routes, obstacle-safe waypoint following and corrected unsupported fallback doorway lips. Prior zombie navigation and recovered owner map content remain separate.
+- **Not a retail 1:1 release:** Expressway and upper Manor still need physical Escort coverage; exact original map meshes, source NPC animation, original audio, 15-wave human survival, and bundled owner-private executable are not proven.
+
+## Historical verified branch: Pass 90 — Real Escort arrival and reward verification
 
 [Pass90 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass90-escort-completion-rewards) ·
 [Successful native Windows build (38281900340)](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38281900340) ·
