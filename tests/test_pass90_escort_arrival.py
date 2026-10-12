@@ -38,7 +38,7 @@ def test_only_existing_pass89_fallback_escort_uses_new_arrival_gate():
     assert "EscortGroundedDestinations90++" in obj
     assert "EscortRejectedDestinations90++" in obj
     assert "_groundNavigation73 is not null" in game
-    assert "MapName != \"Manor\" || ObjectivePosition(i).Y < 2.3f" in game
+    assert 'ObjectivePosition(i).Y < 2.3f || manorUpperEscort94' in game
     assert "Runtime?.CompleteObjective(ObjectiveId, Family);" in obj
 
 def test_reward_remains_idempotent_domain_authority():
