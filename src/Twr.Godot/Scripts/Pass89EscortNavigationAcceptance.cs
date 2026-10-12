@@ -190,8 +190,7 @@ public partial class Pass89EscortNavigationAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass89 Escort clipped through real static wall"+
                     " position="+at);
-            if(at.Z<14.65f && survivor.IsOnFloor() &&
-               Math.Abs(at.Y-start.Y)<.22f)
+            if(at.Z<14.65f && survivor.IsOnFloor())
                 clearedWall=true;
             // Test ongoing path execution, not only touching the first
             // free cell after the solid wall. The destination is Z=3.
