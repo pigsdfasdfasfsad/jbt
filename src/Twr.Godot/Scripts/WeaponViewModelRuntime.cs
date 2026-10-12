@@ -94,6 +94,25 @@ public partial class WeaponViewModelRuntime : Node3D
         _rightHandProxy?.Position ?? Vector3.Zero;
     public int SourceHandProxyMeshCount {get;private set;}
     public bool SourceHandAnimationActive {get;private set;}
+    public bool SourceAimPartAvailable => _sourceSight67.HasValue;
+    public bool SourceAimGeometryOwnerVerified =>
+        _sourceSight67.HasValue &&
+        OriginalWeaponSourceRuntime.OwnerSourcePackVerified;
+    public Vector3 SourceAimPartLocalPosition =>
+        _sourceSight67?.Origin ?? Vector3.Zero;
+    public float SourceAimReticleLateralError =>
+        _sourceSight67 is { } sight
+            ? Pass67SourceAimAlignment.ReticleError(Transform,sight)
+            : -1f;
+    private Transform3D? _sourceSight67;
+
+    public bool TryGetSourceAimRoot(out Transform3D target)
+    {
+        target=Transform3D.Identity;
+        return _sourceSight67 is { } sight &&
+            Pass67SourceAimAlignment.TryAimRoot(sight,out target);
+    }
+
     public bool SourceArmRigAvailable => _armRig66 is not null &&
         _leftUpperArm66 is not null && _rightUpperArm66 is not null;
     public int SourceArmProxyMeshCount {get;private set;}
@@ -392,6 +411,9 @@ public partial class WeaponViewModelRuntime : Node3D
             SourceDetailProfileProxies = OriginalWeaponSourceRuntime.LastDetailProfileProxies;
             SourceLensProxies = OriginalWeaponSourceRuntime.LastLensProxies;
             _sourceHierarchy=OriginalWeaponSourceRuntime.LastSubassemblyBinding;
+            if(OriginalWeaponSourceRuntime.TryGetSourceSightLocal(
+                spec.Name,out var aimPart67))
+                _sourceSight67=aimPart67;
             _flash.Position = OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)
                 ?? _flash.Position;
             TrackMechanicalParts();
@@ -834,8 +856,15 @@ public partial class WeaponViewModelRuntime : Node3D
         // Wrist anchor is inside the existing Pass65 hand cuff; do NOT
         // translate original weapon meshes or alter fire authority.
         var cuff=new Vector3(0f,0f,.067f);
-        var leftWrist=_rig.Transform*(_leftHandProxy.Transform*cuff);
-        var rightWrist=_rig.Transform*(_rightHandProxy.Transform*cuff);
+        // The first-person WeaponViewModel node itself moves for ADS.
+        // Compensate its parent transform so shoulder anchors stay
+        // camera-fixed rather than following the entire weapon to
+        // the sights; the wrists still track the source hand welds.
+        _armRig66.Transform=Transform.AffineInverse();
+        var leftWrist=Transform*
+            (_rig.Transform*(_leftHandProxy.Transform*cuff));
+        var rightWrist=Transform*
+            (_rig.Transform*(_rightHandProxy.Transform*cuff));
         var left=Pass66ArmKinematics.Solve(true,leftWrist);
         var right=Pass66ArmKinematics.Solve(false,rightWrist);
         PlaceArmSegment(_leftUpperArm66,left.Shoulder,left.Elbow);
@@ -969,6 +998,7 @@ public partial class WeaponViewModelRuntime : Node3D
         _shotActive=false;
         _shotRemaining=0f;
         _sourceMotion=null;
+        _sourceSight67=null;
         _poseMotion=null;
         _poseFire=null;
         _handling=null;
