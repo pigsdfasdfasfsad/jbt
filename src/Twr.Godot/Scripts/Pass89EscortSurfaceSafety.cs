@@ -35,6 +35,32 @@ public static class Pass89EscortSurfaceSafety
             : Vector3.Right;
         var space=world.DirectSpaceState;
 
+        // Pass91: torso rays test only the survivor's centreline.
+        // A real Escort body is a 0.42m-radius capsule: near building
+        // corners the centre can have perfect LOS while MoveAndSlide
+        // physically collides and makes no progress. Audit the swept
+        // footprint, not just the two narrow rays.
+        if(distance>.015f)
+        {
+            using var survivorCapsule=new CapsuleShape3D
+            {
+                Radius=.42f,Height=1.8f
+            };
+            var capsuleSweep=new PhysicsShapeQueryParameters3D
+            {
+                Shape=survivorCapsule,
+                Transform=new Transform3D(
+                    Basis.Identity,fromFeet+Vector3.Up*.99f),
+                Motion=toFeet-fromFeet,
+                CollideWithBodies=true,
+                CollisionMask=1u,
+                Exclude=exclude
+            };
+            var safeMotion=space.CastMotion(capsuleSweep);
+            if(safeMotion.Length<1 || safeMotion[0]<.985f)
+                return false;
+        }
+
         // Horizontal line-of-sight alone does not prove there's a floor.
         // Check the NPC torso and a lower body segment against real walls.
         foreach(var height in new[]{.48f,.96f})
