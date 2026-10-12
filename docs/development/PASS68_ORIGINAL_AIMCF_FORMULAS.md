@@ -71,7 +71,11 @@ rotated/noncommuting CFrames.
   the per-weapon exact AimCF and the common original formula,
   atop Pass67's camera-axis sight-marker centering. The final
   screen-space sight is recentered on the aiming axis and a
-  finite eye-relief range is enforced.
+  finite **0.12–1.20m** visual eye-relief range is enforced. On the
+  actual owner SPAS-12 model, the raw special-case formula would
+  otherwise exceed that range; only the **visible camera correction**
+  is clamped, while the independently inspectable original AimCF
+  matrix retains its exact source-derived result.
   This deliberate calibration is necessary because the actual
   Roblox player camera, avatar, Motor6D C0/C1, and weapon
   equipment joint frames are still missing; blindly using the
@@ -99,7 +103,9 @@ rotated/noncommuting CFrames.
   Glock/Mossberg/MP7/SPAS-12/Winchester guns supply
   invisible `AimPart`/primary `Handle` pairs, and the
   runtime must compute the original formula and produce
-  centered visual sights for each.
+  centered visual sights for each. The smoke independently confirms
+  **SPAS-12 bounded eye relief** and **MP7 source-specific sight
+  depth movement**, in addition to the full numeric source CFrame.
 - `tools/maps/make_pass68_aimcf_fixture.py` creates **only**
   fabricated assemblies and hierarchy metadata. It refuses
   to overwrite any original pack and refuses to delete
