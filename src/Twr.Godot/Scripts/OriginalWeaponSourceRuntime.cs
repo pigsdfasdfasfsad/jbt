@@ -230,6 +230,49 @@ public static class OriginalWeaponSourceRuntime
     }
 
     /// <summary>
+    /// Pass69: read original authored scope lens POSITION from the same
+    /// SHA-gated owner weapon model as AimPart, not an approximate mesh
+    /// center or downloaded Roblox MeshPart. The seven original scoped
+    /// weapons retain their separately source-recorded ScopeDiameter;
+    /// lens model Size.X is NOT silently substituted for that setting.
+    /// </summary>
+    public static bool TryGetScopeLensLocal(string weaponName,
+        out Vector3 lensPosition,out string sourcePartName)
+    {
+        lensPosition=Vector3.Zero;
+        sourcePartName="";
+        if(!Pass69SourceScope.TryGet(weaponName,out _) ||
+           !LoadDocument() ||
+           !_document!.RootElement.GetProperty("models")
+               .TryGetProperty(weaponName,out var model))
+            return false;
+        var parts=model.GetProperty("parts").EnumerateArray().ToArray();
+        if(!parts.Any(p=>p.GetProperty("name").GetString()=="AimPart"))
+            return false;
+        // The source models use different names for the front glass.
+        // Every priority class is matched only when unambiguous.
+        foreach(var candidate in new[]{
+            "ReticleGlass","ScopeGlass","ScopeReticle","ReflectiveGlass"})
+        {
+            var matches=parts.Where(p=>
+                p.GetProperty("name").GetString()==candidate).ToArray();
+            if(matches.Length==0)continue;
+            if(matches.Length!=1)return false;
+            var alignment=SourceBarrelFacesBackwards(parts)
+                ? new Basis(Vector3.Up,Mathf.Pi) : Basis.Identity;
+            var result=alignment*SourcePosition(matches[0]);
+            if(!float.IsFinite(result.X) ||
+               !float.IsFinite(result.Y) ||
+               !float.IsFinite(result.Z) ||
+               result.LengthSquared()>9f)return false;
+            lensPosition=result;
+            sourcePartName=candidate;
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
     /// Pass68 original Tool-space AimPart and PRIMARY Handle transforms,
     /// without the renderer's model-forward adjustment. The main Handle is
     /// the invisible Tool root at origin (distinct from nested Handles
@@ -346,7 +389,7 @@ public static class OriginalWeaponSourceRuntime
             var synthetic = root.TryGetProperty("synthetic",out var fixture) &&
                 fixture.ValueKind == JsonValueKind.True;
             var testMode = OS.GetCmdlineUserArgs().Any(arg =>
-                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58" or "--smoke-pass62" or "--smoke-pass63" or "--smoke-pass64" or "--smoke-pass65" or "--smoke-pass66" or "--smoke-pass67" or "--smoke-pass68");
+                arg is "--smoke-source-weapons" or "--smoke-pass47" or "--smoke-pass51" or "--smoke-pass52" or "--smoke-pass53" or "--smoke-pass54" or "--smoke-pass55" or "--smoke-pass56" or "--smoke-pass57" or "--smoke-pass58" or "--smoke-pass62" or "--smoke-pass63" or "--smoke-pass64" or "--smoke-pass65" or "--smoke-pass66" or "--smoke-pass67" or "--smoke-pass68" or "--smoke-pass69");
             // A synthetic fixture may never silently impersonate an original
             // tool pack during ordinary play.
             if (synthetic && !testMode)
