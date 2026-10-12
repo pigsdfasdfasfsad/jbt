@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer, twr-pass56-source-wiki-gallery, twr-pass57-offline-source-weapon-geometry, twr-pass58-original-weapon-silhouettes, twr-pass59-source-weapon-motion, twr-pass60-source-weapon-animations, twr-pass61-source-weapon-cycling, twr-pass62-source-subassembly-hierarchy, twr-pass63-source-magazine-reload, twr-pass64-source-shell-and-bolt, twr-pass65-source-hand-grips, twr-pass66-articulated-source-arms, twr-pass67-source-sight-alignment, twr-pass68-original-aimcf, twr-pass69-source-optical-reticles, twr-pass70-live-player-combat-loop, twr-pass71-native-multimap-damage, twr-pass72-native-ten-map-entry, twr-pass73-fullmap-ground-navigation, twr-pass74-special-infected-safety, twr-pass75-blast-line-of-sight, twr-pass76-interaction-objective-fortification, twr-pass77-manor-stair-traversal, twr-pass78-manor-bidirectional-stairs, twr-pass83-manor-upper-gameplay, twr-pass88-physical-wave-hardening, twr-pass89-escort-ground-navigation, twr-pass90-escort-completion-rewards, twr-pass91-multimap-escort, twr-pass92-expressway-escort, twr-pass93-escort-completion-safety, twr-pass94-manor-stair-escort, twr-pass95-manor-escort-rotation]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer, twr-pass56-source-wiki-gallery, twr-pass57-offline-source-weapon-geometry, twr-pass58-original-weapon-silhouettes, twr-pass59-source-weapon-motion, twr-pass60-source-weapon-animations, twr-pass61-source-weapon-cycling, twr-pass62-source-subassembly-hierarchy, twr-pass63-source-magazine-reload, twr-pass64-source-shell-and-bolt, twr-pass65-source-hand-grips, twr-pass66-articulated-source-arms, twr-pass67-source-sight-alignment, twr-pass68-original-aimcf, twr-pass69-source-optical-reticles, twr-pass70-live-player-combat-loop, twr-pass71-native-multimap-damage, twr-pass72-native-ten-map-entry, twr-pass73-fullmap-ground-navigation, twr-pass74-special-infected-safety, twr-pass75-blast-line-of-sight, twr-pass76-interaction-objective-fortification, twr-pass77-manor-stair-traversal, twr-pass78-manor-bidirectional-stairs, twr-pass83-manor-upper-gameplay, twr-pass88-physical-wave-hardening, twr-pass89-escort-ground-navigation, twr-pass90-escort-completion-rewards, twr-pass91-multimap-escort, twr-pass92-expressway-escort, twr-pass93-escort-completion-safety, twr-pass94-manor-stair-escort, twr-pass95-manor-escort-rotation, twr-pass96-wave-replay-persistence]
     paths:
       - 'src/**'
       - 'content/**'
@@ -98,7 +98,7 @@ jobs:
           }
 
       - name: Preflight Pass 95 real Manor West and East Escort rotation
-        if: success() && github.ref_name == 'twr-pass95-manor-escort-rotation'
+        if: success() && (github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass95-preflight.stdout.txt'
@@ -118,6 +118,28 @@ jobs:
              -not ($output | Where-Object {"$_" -match 'TWR_SMOKE_PASS95_MANOR_WINGS_OK'})){
             throw "Pass95 Manor upper-wing rotation did not physically complete. Exit $($run.ExitCode)"
           }
+
+      - name: Preflight Pass 96 full native fifteen-wave match and same-map payout replay
+        if: success() && github.ref_name == 'twr-pass96-wave-replay-persistence'
+        shell: pwsh
+        run: |
+          $stdout = Join-Path $env:RUNNER_TEMP 'pass96.stdout.txt'
+          $stderr = Join-Path $env:RUNNER_TEMP 'pass96.stderr.txt'
+          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','120000','--','--smoke-pass96') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          $output = @()
+          if(Test-Path $stdout){$output += Get-Content $stdout}
+          if(Test-Path $stderr){$output += Get-Content $stderr}
+          $output | ForEach-Object {Write-Host $_}
+          foreach($marker in @('TWR_PASS96_FIFTEEN_WAVES_OK','TWR_PASS96_REPLAY_WAVE1_OK','TWR_SMOKE_PASS96_FULL_MATCH_REPLAY_OK')){
+            if(-not ($output | Where-Object {"$_" -match "$marker"})){throw "Pass96 missing actual exported Windows marker: $marker"}
+          }
+          foreach($wave in 1..15){
+            if(-not ($output | Where-Object {"$_" -match "TWR_PASS96_WAVE_OK wave=$wave " })){
+              throw "Pass96 failed genuine gameplay Wave $wave"
+            }
+          }
+          if($run.ExitCode -ne 0){throw "Pass96 production 15-wave replay failed: $($run.ExitCode)"}
 
       - name: Smoke test Pass 29 contracts in the exported executable
         shell: pwsh
@@ -1420,7 +1442,7 @@ jobs:
           }
 
       - name: Smoke Pass 78 native three Manor stair flights with player and infected ascent and descent
-        if: success() && (github.ref_name == 'twr-pass78-manor-bidirectional-stairs' || github.ref_name == 'twr-pass83-manor-upper-gameplay' || github.ref_name == 'twr-pass88-physical-wave-hardening' || github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass78-manor-bidirectional-stairs' || github.ref_name == 'twr-pass83-manor-upper-gameplay' || github.ref_name == 'twr-pass88-physical-wave-hardening' || github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass78.stdout.txt'
@@ -1445,7 +1467,7 @@ jobs:
           }
 
       - name: Smoke Pass 83 native supported Manor upper crossings, infected pursuit and pickups
-        if: success() && (github.ref_name == 'twr-pass83-manor-upper-gameplay' || github.ref_name == 'twr-pass88-physical-wave-hardening' || github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass83-manor-upper-gameplay' || github.ref_name == 'twr-pass88-physical-wave-hardening' || github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass83.stdout.txt'
@@ -1469,7 +1491,7 @@ jobs:
           }
 
       - name: Smoke Pass 88 native ten-map verified spawn/loot and real Wave 3 Manor secure zones
-        if: success() && (github.ref_name == 'twr-pass88-physical-wave-hardening' || github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass88-physical-wave-hardening' || github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass88.stdout.txt'
@@ -1492,7 +1514,7 @@ jobs:
           }
 
       - name: Smoke Pass 89 native physically grounded Escort obstacle and live route invalidation
-        if: success() && (github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass89.stdout.txt'
@@ -1513,7 +1535,7 @@ jobs:
           }
 
       - name: Smoke Pass 90 real Wave5 Escort ground arrival and exactly-once reward
-        if: success() && (github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass90.stdout.txt'
@@ -1530,7 +1552,7 @@ jobs:
           if($run.ExitCode -ne 0){throw "Pass90 native Escort failed: $($run.ExitCode)"}
 
       - name: Smoke Pass 91 native eight-map physically validated Escort completion
-        if: success() && (github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass91.stdout.txt'
@@ -1552,7 +1574,7 @@ jobs:
           }
 
       - name: Smoke Pass 92 real Expressway Escort without replacing highway infected navigation
-        if: success() && (github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass92.stdout.txt'
@@ -1571,7 +1593,7 @@ jobs:
           if ($run.ExitCode -ne 0) {throw "Pass92 Expressway Escort failed: $($run.ExitCode)"}
 
       - name: Smoke Pass 94 real Manor upper-stair Escort and single authoritative reward
-        if: success() && (github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass94.stdout.txt'
@@ -1588,7 +1610,7 @@ jobs:
           if($run.ExitCode -ne 0){throw "Pass94 native Manor Escort failed: $($run.ExitCode)"}
 
       - name: Verify no private map scenes entered the CI export
-        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview' || github.ref_name == 'twr-pass52-source-loadout-and-shop' || github.ref_name == 'twr-pass53-offline-skin-cases' || github.ref_name == 'twr-pass54-original-skin-materials' || github.ref_name == 'twr-pass55-source-skin-textures-and-shimmer' || github.ref_name == 'twr-pass56-source-wiki-gallery' || github.ref_name == 'twr-pass57-offline-source-weapon-geometry' || github.ref_name == 'twr-pass58-original-weapon-silhouettes' || github.ref_name == 'twr-pass59-source-weapon-motion' || github.ref_name == 'twr-pass60-source-weapon-animations' || github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment' || github.ref_name == 'twr-pass68-original-aimcf' || github.ref_name == 'twr-pass69-source-optical-reticles' || github.ref_name == 'twr-pass70-live-player-combat-loop' || github.ref_name == 'twr-pass71-native-multimap-damage' || github.ref_name == 'twr-pass72-native-ten-map-entry' || github.ref_name == 'twr-pass73-fullmap-ground-navigation' || github.ref_name == 'twr-pass74-special-infected-safety' || github.ref_name == 'twr-pass75-blast-line-of-sight' || github.ref_name == 'twr-pass76-interaction-objective-fortification' || github.ref_name == 'twr-pass77-manor-stair-traversal' || (github.ref_name == 'twr-pass78-manor-bidirectional-stairs') || github.ref_name == 'twr-pass83-manor-upper-gameplay' || github.ref_name == 'twr-pass88-physical-wave-hardening' || github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation')
+        if: success() && (github.ref_name == 'twr-pass29-integration' || github.ref_name == 'twr-pass30-gameplay-validation' || github.ref_name == 'twr-pass31-navigation-repair' || github.ref_name == 'twr-pass32-grounded-navigation' || github.ref_name == 'twr-pass33-navigation-cache' || github.ref_name == 'twr-pass34-original-client-walls' || github.ref_name == 'twr-pass35-infected-walls' || github.ref_name == 'twr-pass36-source-map-fragments' || github.ref_name == 'twr-pass38-source-soundscapes' || github.ref_name == 'twr-pass39-original-laboratory' || github.ref_name == 'twr-pass40-grounded-lab-navigation' || github.ref_name == 'twr-pass41-source-native-bridges' || github.ref_name == 'twr-pass42-jump-navigation' || github.ref_name == 'twr-pass43-physical-jump-verification' || github.ref_name == 'twr-pass44-native-lab-streaming' || github.ref_name == 'twr-pass45-lab-proxy-visibility' ||  github.ref_name == 'twr-pass46-offline-original-art' || github.ref_name == 'twr-pass47-original-weapon-assemblies' ||  github.ref_name == 'twr-pass48-infected-source-asset-kit' || github.ref_name == 'twr-pass49-original-lobby-3d' || github.ref_name == 'twr-pass50-original-bulletin-board' || github.ref_name == 'twr-pass51-original-loadout-preview' || github.ref_name == 'twr-pass52-source-loadout-and-shop' || github.ref_name == 'twr-pass53-offline-skin-cases' || github.ref_name == 'twr-pass54-original-skin-materials' || github.ref_name == 'twr-pass55-source-skin-textures-and-shimmer' || github.ref_name == 'twr-pass56-source-wiki-gallery' || github.ref_name == 'twr-pass57-offline-source-weapon-geometry' || github.ref_name == 'twr-pass58-original-weapon-silhouettes' || github.ref_name == 'twr-pass59-source-weapon-motion' || github.ref_name == 'twr-pass60-source-weapon-animations' || github.ref_name == 'twr-pass61-source-weapon-cycling' || github.ref_name == 'twr-pass62-source-subassembly-hierarchy' || github.ref_name == 'twr-pass63-source-magazine-reload' || github.ref_name == 'twr-pass64-source-shell-and-bolt' || github.ref_name == 'twr-pass65-source-hand-grips' || github.ref_name == 'twr-pass66-articulated-source-arms' || github.ref_name == 'twr-pass67-source-sight-alignment' || github.ref_name == 'twr-pass68-original-aimcf' || github.ref_name == 'twr-pass69-source-optical-reticles' || github.ref_name == 'twr-pass70-live-player-combat-loop' || github.ref_name == 'twr-pass71-native-multimap-damage' || github.ref_name == 'twr-pass72-native-ten-map-entry' || github.ref_name == 'twr-pass73-fullmap-ground-navigation' || github.ref_name == 'twr-pass74-special-infected-safety' || github.ref_name == 'twr-pass75-blast-line-of-sight' || github.ref_name == 'twr-pass76-interaction-objective-fortification' || github.ref_name == 'twr-pass77-manor-stair-traversal' || (github.ref_name == 'twr-pass78-manor-bidirectional-stairs') || github.ref_name == 'twr-pass83-manor-upper-gameplay' || github.ref_name == 'twr-pass88-physical-wave-hardening' || github.ref_name == 'twr-pass89-escort-ground-navigation' || github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass96-wave-replay-persistence')
         shell: pwsh
         run: |
           $privateMotorGroups62 = @(Get-ChildItem -Path build/output -Filter 'SourceWeaponMotorHierarchy62.json.gz' -File -Recurse -ErrorAction SilentlyContinue)
