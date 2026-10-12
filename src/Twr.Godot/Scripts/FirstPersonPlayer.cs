@@ -126,23 +126,29 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _actionCooldown = Math.Max(0, _actionCooldown - delta);
         _equipTimer = Math.Max(0, _equipTimer - delta);
 
+        // A fatal hit must interrupt any unfinished reload before the
+        // authoritative ReloadWeapon command has a chance to execute.
+        // The Results screen can still receive its own restart/menu keys.
+        if (Runtime?.Player is null || !Runtime.Player.IsAlive)
+        {
+            _reloadTimer = 0;
+            _reloadWeapon = null;
+            _jumpRequested = false;
+            ResetSourceScope69();
+            Velocity = new Vector3(0, Velocity.Y, 0);
+            MoveAndSlide();
+            return;
+        }
+
         if (_reloadTimer > 0)
         {
             _reloadTimer -= delta;
             if (_reloadTimer <= 0 && _reloadWeapon is not null)
             {
                 var reloadSpec = RuntimeWeaponCatalog.Get(_reloadWeapon);
-                Runtime?.ReloadWeapon(_reloadWeapon, reloadSpec.Magazine);
+                Runtime.ReloadWeapon(_reloadWeapon, reloadSpec.Magazine);
                 _reloadWeapon = null;
             }
-        }
-
-        if (Runtime?.Player is null || !Runtime.Player.IsAlive)
-        {
-            ResetSourceScope69();
-            Velocity = new Vector3(0, Velocity.Y, 0);
-            MoveAndSlide();
-            return;
         }
 
         if(MountedMode)
@@ -191,6 +197,15 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        // Dead players cannot begin reloads, fire, throw items or queue jumps.
+        // GameplayRoot retains control of results-screen restart/menu actions.
+        if (Runtime?.Player is null || !Runtime.Player.IsAlive)
+        {
+            if (@event is InputEventKey exit && exit.Pressed &&
+                exit.Keycode == Key.Escape)
+                Input.MouseMode = Input.MouseModeEnum.Visible;
+            return;
+        }
         if (@event is InputEventMouseMotion motion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
             RotateY(-motion.Relative.X * MouseSensitivity);
