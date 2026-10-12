@@ -25,9 +25,18 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _viewModel?.SourceAimPartAvailable == true;
     public float SourceAimReticleError67 =>
         _viewModel?.SourceAimReticleLateralError ?? -1f;
+    public bool SourceScopeVisible69 =>
+        _scopeOverlay69?.OpticVisible == true;
+    public float SourceScopeBlend69 => _scopeBlend69;
+    public float SourceScopeRadiusPixels69 =>
+        _scopeOverlay69?.ProjectedRadiusPixels ?? 0f;
+    public string SourceScopeReferenceName69 =>
+        _scopeOverlay69?.SourceReferenceStill ?? "";
 
     private Camera3D _camera = null!;
     private WeaponViewModelRuntime _viewModel = null!;
+    private Pass69SourceScopeOptics? _scopeOverlay69;
+    private float _scopeBlend69;
     private readonly RandomNumberGenerator _rng = new();
     private float _pitch;
     private bool _jumpRequested;
@@ -84,6 +93,21 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _viewModel = new WeaponViewModelRuntime { Name = "WeaponViewModel" };
         _camera.AddChild(_viewModel);
 
+        // Optic drawings are screen-space, visual-only and never used
+        // for bullet-ray hit tests. GameplayHud remains lower-layer UI.
+        var opticCanvas=new CanvasLayer
+        {
+            Name="Pass69OpticsCanvas",Layer=9
+        };
+        AddChild(opticCanvas);
+        _scopeOverlay69=new Pass69SourceScopeOptics
+        {
+            Name="Pass69ScopeOverlay",
+            AnchorRight=1f,AnchorBottom=1f,
+            MouseFilter=Control.MouseFilterEnum.Ignore
+        };
+        opticCanvas.AddChild(_scopeOverlay69);
+
         LoadProfileWeapons();
         PrepareWeaponAmmo(_primaryWeapon);
         PrepareWeaponAmmo(_secondaryWeapon);
@@ -110,6 +134,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         if (Runtime?.Player is null || !Runtime.Player.IsAlive)
         {
+            ResetSourceScope69();
             Velocity = new Vector3(0, Velocity.Y, 0);
             MoveAndSlide();
             return;
@@ -199,6 +224,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public void SetMountedMode(bool enabled)
     {
         MountedMode=enabled;
+        if(enabled)ResetSourceScope69();
         HammerMode=false;
         _heldThrowable=null;
         _reloadTimer=0;
@@ -222,6 +248,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         HammerMode = enabled;
         if(enabled)_heldThrowable=null;
         if(enabled)ResetSourceAimVisual67();
+        if(enabled)ResetSourceScope69();
         _viewModel.Visible = !enabled;
         _reloadTimer = 0;
         _reloadWeapon = null;
@@ -257,6 +284,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _actionCooldown = 0;
         _aiming=false;
         ResetSourceAimVisual67();
+        ResetSourceScope69();
         _camera.Fov=60;
         var spec=RuntimeWeaponCatalog.Get(weapon);
         var equipSpeed=Runtime?.HasPerk("Dexterous")==true ? 1.3 : 1.0;
@@ -309,6 +337,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         HammerMode=false;
         _heldThrowable=type;
         ResetSourceAimVisual67();
+        ResetSourceScope69();
         _reloadTimer=0;
         _reloadWeapon=null;
         _actionCooldown=0;
@@ -456,6 +485,13 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _adrenalineTick=1.0;
     }
 
+    private void ResetSourceScope69()
+    {
+        _scopeBlend69=0f;
+        _scopeOverlay69?.SetAimState(
+            _equippedWeapon,0f,_camera.Fov,false);
+    }
+
     private void ResetSourceAimVisual67()
     {
         _sourceAimVisualBlend67=0f;
@@ -470,6 +506,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         {
             _aiming=false;
             ResetSourceAimVisual67();
+            ResetSourceScope69();
             _camera.Fov=Mathf.MoveToward(_camera.Fov,60f,(float)(120.0*delta));
             return;
         }
@@ -484,6 +521,18 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var desiredFov=_aiming ? Math.Clamp(spec.AimFov,5f,60f) : 60f;
         var fullTravel=Math.Max(1f,Math.Abs(60f-Math.Clamp(spec.AimFov,5f,60f)));
         _camera.Fov=Mathf.MoveToward(_camera.Fov,desiredFov,(float)(fullTravel/seconds*delta));
+
+        // Source ScopeDiameter/ScopeRadius and original FOV drive a
+        // reconstructed first-person optic overlay. It is explicitly
+        // render-only: no bullet direction or camera FOV authority.
+        _scopeBlend69=Mathf.MoveToward(_scopeBlend69,
+            _aiming?1f:0f,(float)(delta/seconds));
+        var sightAvailable=_viewModel.SourceAimPartAvailable;
+        var sightPoint=_viewModel.Transform*
+            _viewModel.SourceAimPartLocalPosition;
+        _scopeOverlay69?.SetAimState(spec.Name,_scopeBlend69,
+            _camera.Fov,_viewModel.Visible && !MountedMode,
+            sightAvailable,Math.Abs(sightPoint.Z));
 
         // Pass67 uses SHA-verified original AimPart geometry to center
         // actual source sights where possible. The dynamic original
