@@ -35,6 +35,11 @@ public partial class Bootstrap : Node
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-pass69",StringComparer.Ordinal))
+        {
+            RunPass69Smoke();
+            return;
+        }
         if(args.Contains("--smoke-pass68",StringComparer.Ordinal))
         {
             RunPass68Smoke();
@@ -570,6 +575,161 @@ public partial class Bootstrap : Node
             throw new InvalidOperationException("Ballistic effect smoke failed.");
         GD.Print("TWR_SMOKE_BALLISTIC_FX_OK");
         GD.Print("TWR_SMOKE_WEAPON_VISUALS_OK categories=6 throwables=1");
+        GetTree().Quit(0);
+    }
+
+    private void RunPass69Smoke()
+    {
+        if(Pass69SourceScope.SourceScopedWeaponCount!=7)
+            throw new InvalidOperationException(
+                "Pass69 original Source.ScopeDiameter inventory must have seven guns");
+        var actual=new Dictionary<string,(float diameter,bool reduce)>
+        {
+            ["AUG"]=(.106f,false),
+            ["Barrett M82A1"]=(.205f,true),
+            ["M110 SASS"]=(.188f,true),
+            ["M14"]=(.179f,true),
+            ["SVD"]=(.21f,true),
+            ["VSS"]=(.21f,true),
+            ["Winchester Model 70"]=(.184f,true)
+        };
+        foreach(var (weapon,spec) in actual)
+        {
+            if(!Pass69SourceScope.TryGet(weapon,out var optic) ||
+               optic is null ||
+               Math.Abs(optic.DiameterStuds-spec.diameter)>.00001f ||
+               optic.ReduceSensitivity!=spec.reduce ||
+               Math.Abs(Pass69SourceScope.SensitivityScale(
+                   optic,30f)-(spec.reduce?.5f:1f))>.0001f ||
+               Math.Abs(Pass69SourceScope.SensitivityScale(
+                   optic,60f)-1f)>.0001f)
+                throw new InvalidOperationException(
+                    "Pass69 source scope/sensitivity metadata differs for "+weapon);
+        }
+        if(Pass69SourceScope.TryGet("Glock 17",out _) ||
+           Pass69SourceScope.TryGet("Mossberg 500",out _) ||
+           Pass69SourceScope.SensitivityScale(null,10f)!=1f ||
+           Pass69SourceScope.SensitivityScale(
+                new Pass69SourceScope.Profile(.2f,true),float.NaN)!=1f)
+            throw new InvalidOperationException(
+                "Pass69 unrelated weapons or nonfinite sensitivity changed");
+        var small=Pass69SourceScope.ProjectedDiameterPx(
+            .21f,.43f,60f,720f);
+        var zoomed=Pass69SourceScope.ProjectedDiameterPx(
+            .21f,.43f,30f,720f);
+        var nearer=Pass69SourceScope.ProjectedDiameterPx(
+            .21f,.215f,60f,720f);
+        if(small<25f || small>160f || zoomed<=small*1.7f ||
+           Math.Abs(nearer-small*2f)>.03f ||
+           Pass69SourceScope.ProjectedDiameterPx(
+                .21f,.001f,30f,720f)!=0f ||
+           Pass69SourceScope.ProjectedDiameterPx(
+                float.NaN,.43f,30f,720f)!=0f ||
+           Pass69SourceScope.ProjectedDiameterPx(
+                .21f,.43f,3f,720f)!=0f)
+            throw new InvalidOperationException(
+                "Pass69 source scope projection does not obey perspective FOV/distance law");
+
+        if(OriginalWeaponSourceRuntime.OwnerSourcePackVerified ||
+           Pass62SourceWeaponHierarchy.OwnerHierarchyVerified)
+            throw new InvalidOperationException(
+                "Pass69 synthetic weapon pack must not impersonate original owner");
+        foreach(var (gun,sourceName) in new Dictionary<string,string>
+        {
+            ["AUG"]="ReticleGlass",
+            ["Barrett M82A1"]="ScopeReticle",
+            ["M110 SASS"]="ReticleGlass",
+            ["M14"]="ScopeGlass",
+            ["SVD"]="ReticleGlass",
+            ["VSS"]="ReticleGlass",
+            ["Winchester Model 70"]="ScopeGlass"
+        })
+        {
+            if(!OriginalWeaponSourceRuntime.TryGetScopeLensLocal(
+                    gun,out var point,out var recoveredName) ||
+               !Pass66ArmKinematics.Finite(point) ||
+               recoveredName!=sourceName)
+                throw new InvalidOperationException(
+                    "Pass69 source lens marker missing or wrong: "+gun);
+        }
+        if(OriginalWeaponSourceRuntime.TryGetScopeLensLocal(
+                "Glock 17",out _,out _))
+            throw new InvalidOperationException(
+                "Pass69 unscoped Glock incorrectly acquired a source lens");
+
+        var camera=new Camera3D
+        {
+            Name="Pass69ScopeCamera",Current=true,Fov=60f
+        };
+        AddChild(camera);
+        var lensWorld=camera.ToGlobal(new Vector3(0f,0f,-.43f));
+        if(!Pass69SourceScope.TryProjectLens(
+                camera,lensWorld,.21f,out var center,out var pixels) ||
+           pixels<15f ||
+           center.DistanceTo(new Vector2(
+                camera.GetViewport().GetVisibleRect().Size.X*.5f,
+                camera.GetViewport().GetVisibleRect().Size.Y*.5f))>3f ||
+           Pass69SourceScope.TryProjectLens(
+                camera,camera.ToGlobal(new Vector3(0f,0f,.43f)),
+                .21f,out _,out _) ||
+           Pass69SourceScope.TryProjectLens(
+                camera,new Vector3(float.NaN,0,0),
+                .21f,out _,out _))
+            throw new InvalidOperationException(
+                "Pass69 original lens marker did not project through active Godot camera");
+
+        var layer=new CanvasLayer{Name="ScopeTestLayer69",Layer=9};
+        AddChild(layer);
+        var mask=new Pass69ScopeMask
+        {
+            Name="SourceScopeMask69",Size=new Vector2(1280f,720f),
+            MouseFilter=Control.MouseFilterEnum.Ignore,Visible=false
+        };
+        layer.AddChild(mask);
+        mask.SetScope(new Vector2(640f,360f),120f,.85f,true);
+        if(!mask.Visible ||
+           Math.Abs(mask.ApertureDiameter-120f)>.001f ||
+           Math.Abs(mask.MaskOpacity-.85f)>.001f ||
+           !mask.SourceLensMarkerPresent ||
+           mask.MouseFilter!=Control.MouseFilterEnum.Ignore)
+            throw new InvalidOperationException(
+                "Pass69 source-sized procedural scope mask UI failed");
+        mask.SetScope(new Vector2(float.NaN,360f),120f,1f,false);
+        if(mask.Visible || mask.MaskOpacity!=0f)
+            throw new InvalidOperationException(
+                "Pass69 invalid lens input failed to hide overlay");
+
+        var scoped=new WeaponViewModelRuntime{Name="Pass69AUG"};
+        AddChild(scoped);
+        scoped.SetWeapon(RuntimeWeaponCatalog.Get("AUG"));
+        if(!scoped.UsingOriginalToolAssembly ||
+           !scoped.SourceScopeLensMarkerAvailable69 ||
+           scoped.OwnerSourceScopeLensVerified69 ||
+           !scoped.TryGetSourceScopeLensWorld69(out var augLens) ||
+           !Pass66ArmKinematics.Finite(augLens))
+            throw new InvalidOperationException(
+                "Pass69 original-style AUG lens not attached to source weapon");
+        var fallback=new WeaponViewModelRuntime{Name="Pass69Glock"};
+        AddChild(fallback);
+        fallback.SetWeapon(RuntimeWeaponCatalog.Get("Glock 17"));
+        if(fallback.SourceScopeLensMarkerAvailable69 ||
+           fallback.TryGetSourceScopeLensWorld69(out _))
+            throw new InvalidOperationException(
+                "Pass69 unrelated pistol lost safe scope fallback");
+        GD.Print("TWR_SMOKE_PASS69_SOURCE_SCOPE_OK "+
+            "original_scoped_weapons=7 original_reduce_sensitivity=6 "+
+            "source_aug_no_sensitivity_reduction=true "+
+            "source_gun_scope_diameters_exact=true "+
+            "live_camera_fov_sensitivity=true "+
+            "perspective_scope_hole_scales_with_fov_and_depth=true "+
+            "seven_source_lens_name_families=true "+
+            "source_lens_projection_camera_axis=true "+
+            "procedural_mask_and_reticle_bounded=true "+
+            "missing_source_glass_fallback=true "+
+            "invalid_lens_and_nan_rejected=true "+
+            "no_original_optic_texture_claim=true "+
+            "no_damage_recoil_or_fov_authority_mutation=true "+
+            "synthetic_owner_packs_cleaned=true");
         GetTree().Quit(0);
     }
 
