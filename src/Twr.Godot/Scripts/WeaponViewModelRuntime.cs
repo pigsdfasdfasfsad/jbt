@@ -105,12 +105,40 @@ public partial class WeaponViewModelRuntime : Node3D
             ? Pass67SourceAimAlignment.ReticleError(Transform,sight)
             : -1f;
     private Transform3D? _sourceSight67;
+    private Pass68OriginalAimFormulas.Formula? _originalAimFormula68;
+    private Transform3D? _originalAimPart68;
+    private Transform3D? _originalHandle68;
+    public bool SourceExactAimCFAvailable68 =>
+        _originalAimFormula68 is not null &&
+        _originalAimPart68.HasValue &&
+        _originalHandle68.HasValue;
+    public string SourceOriginalAimFamily68 =>
+        _originalAimFormula68?.Kind.ToString() ?? "";
+    public bool TryGetOriginalAimCF68(out Transform3D originalAimCf)
+    {
+        originalAimCf=Transform3D.Identity;
+        return SourceExactAimCFAvailable68 &&
+            Pass68OriginalAimFormulas.TryCompute(
+                _originalAimFormula68,
+                _originalHandle68!.Value,
+                _originalAimPart68!.Value,out originalAimCf);
+    }
 
     public bool TryGetSourceAimRoot(out Transform3D target)
     {
         target=Transform3D.Identity;
-        return _sourceSight67 is { } sight &&
-            Pass67SourceAimAlignment.TryAimRoot(sight,out target);
+        if(_sourceSight67 is not { } sight)return false;
+        // Prefer actual original, finite AimCF family algebra while
+        // preserving the Pass67 original-marker camera-centering
+        // calibration in this different Godot avatar/camera rig.
+        if(_originalAimFormula68 is not null &&
+           _originalAimPart68 is { } sourceAim &&
+           _originalHandle68 is { } sourceHandle &&
+           Pass68OriginalAimFormulas.TryVisualRoot(
+                _originalAimFormula68,sourceHandle,sourceAim,
+                sight,out target,out _))
+            return true;
+        return Pass67SourceAimAlignment.TryAimRoot(sight,out target);
     }
 
     public bool SourceArmRigAvailable => _armRig66 is not null &&
@@ -414,6 +442,16 @@ public partial class WeaponViewModelRuntime : Node3D
             if(OriginalWeaponSourceRuntime.TryGetSourceSightLocal(
                 spec.Name,out var aimPart67))
                 _sourceSight67=aimPart67;
+            if(_sourceSight67.HasValue &&
+               Pass68OriginalAimFormulas.TryGet(spec.Name,
+                    out var family68) &&
+               OriginalWeaponSourceRuntime.TryGetSourceFormulaFrames(
+                    spec.Name,out var sourceAim68,out var sourceHandle68))
+            {
+                _originalAimFormula68=family68;
+                _originalAimPart68=sourceAim68;
+                _originalHandle68=sourceHandle68;
+            }
             _flash.Position = OriginalWeaponSourceRuntime.EstimatedMuzzle(spec.Name)
                 ?? _flash.Position;
             TrackMechanicalParts();
@@ -999,6 +1037,9 @@ public partial class WeaponViewModelRuntime : Node3D
         _shotRemaining=0f;
         _sourceMotion=null;
         _sourceSight67=null;
+        _originalAimFormula68=null;
+        _originalAimPart68=null;
+        _originalHandle68=null;
         _poseMotion=null;
         _poseFire=null;
         _handling=null;
