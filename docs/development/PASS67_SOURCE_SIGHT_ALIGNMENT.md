@@ -103,7 +103,31 @@ The geometric sight-center placement is demonstrably grounded
 in original Tool AimPart positions but **is not yet 1:1 sight
 animation or scope/optic fidelity**.
 
-## Verification status
+## Verified Windows checkpoint — October 11, 2026 (US Central)
 
-Implementation committed; only a completed and successful
-Pass67 exported Windows Actions run can verify the native engine.
+**Successful native Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38191379736
+
+**Tested code SHA:** `41b5057771b378851167ae455b4ec66a3936556c`.
+
+- **569 Python regression tests passed**, with one inherited Pass34
+  XML FutureWarning. The Windows Godot/.NET export succeeded with
+  **0 errors** and the one pre-existing Pass36 `CS0108` compiler warning.
+- Native `TWR_SMOKE_PASS67_SOURCE_SIGHT_OK` validated original
+  Glock 17 Aim 0.5s / UnAim 0.25s and source easing, strict finite
+  geometric alignment, an invisible synthetic owner-style `AimPart`
+  in the Glock and Mossberg, camera-axis sight centering at the
+  explicitly approximated **0.43m eye relief**, camera-stable
+  procedural shoulders during sight movement, a source-unsupported
+  Mosin fixture using fallback, and refusal of nonfinite or
+  impossible sight poses.
+- Exported Windows Pass59–66 native weapon smokes passed unchanged.
+  `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` passed as a scripted
+  progression simulation, **not a manually played ten-map game**.
+- The synthetic owner-style test packs were removed before the
+  original source/private-asset exclusion check; it passed. Public
+  Windows EXE artifact uploads remain disabled.
+
+**This verifies the new native engine visual alignment code.** It does
+not verify owner-original meshes, exact original dynamic `AimCF`
+algebra, scope optics, screenshot parity or a complete player-played
+15-wave match.
