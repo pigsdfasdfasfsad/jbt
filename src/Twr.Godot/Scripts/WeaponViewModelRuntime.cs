@@ -105,6 +105,21 @@ public partial class WeaponViewModelRuntime : Node3D
             ? Pass67SourceAimAlignment.ReticleError(Transform,sight)
             : -1f;
     private Transform3D? _sourceSight67;
+    private Vector3? _scopeLensLocal69;
+    public bool SourceScopeLensMarkerAvailable69 =>
+        _scopeLensLocal69.HasValue;
+    public bool OwnerSourceScopeLensVerified69 =>
+        _scopeLensLocal69.HasValue &&
+        OriginalWeaponSourceRuntime.OwnerSourcePackVerified;
+    public bool TryGetSourceScopeLensWorld69(out Vector3 worldLens)
+    {
+        worldLens=Vector3.Zero;
+        if(_scopeLensLocal69 is not { } local ||
+           _rig is null || !GodotObject.IsInstanceValid(_rig))
+            return false;
+        worldLens=_rig.ToGlobal(local);
+        return Pass66ArmKinematics.Finite(worldLens);
+    }
     private Pass68OriginalAimFormulas.Formula? _originalAimFormula68;
     private Transform3D? _originalAimPart68;
     private Transform3D? _originalHandle68;
@@ -442,6 +457,9 @@ public partial class WeaponViewModelRuntime : Node3D
             if(OriginalWeaponSourceRuntime.TryGetSourceSightLocal(
                 spec.Name,out var aimPart67))
                 _sourceSight67=aimPart67;
+            if(OriginalWeaponSourceRuntime.TryGetScopeLensLocal(
+                spec.Name,out var lensLocal69,out _))
+                _scopeLensLocal69=lensLocal69;
             if(_sourceSight67.HasValue &&
                Pass68OriginalAimFormulas.TryGet(spec.Name,
                     out var family68) &&
@@ -1037,6 +1055,7 @@ public partial class WeaponViewModelRuntime : Node3D
         _shotRemaining=0f;
         _sourceMotion=null;
         _sourceSight67=null;
+        _scopeLensLocal69=null;
         _originalAimFormula68=null;
         _originalAimPart68=null;
         _originalHandle68=null;
