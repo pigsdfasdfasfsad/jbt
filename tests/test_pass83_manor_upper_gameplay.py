@@ -49,4 +49,5 @@ def test_windows_pipeline_compiles_runs_native_and_privacy_audits_pass83():
     assert "twr-pass83-manor-upper-gameplay" in ci
     assert ci.index("Smoke Pass 78") < ci.index("Smoke Pass 83")
     assert ci.index("Smoke Pass 83") < ci.index("Verify no private map scenes")
-    assert "github.ref_name == 'twr-pass83-manor-upper-gameplay')" in ci
+    assert "github.ref_name == 'twr-pass83-manor-upper-gameplay'" in ci
+    assert "github.ref_name == 'twr-pass88-physical-wave-hardening'" in ci
