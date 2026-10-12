@@ -126,8 +126,16 @@ public partial class Pass70LiveCombatAcceptance : Node
         if(victim is null || victim.Target!=player)
             throw new InvalidOperationException(
                 "Pass70 first wave has no target-bound infected actor");
-        victim.Health=1f;
+        // Test-only nonlethal setup uses the infected actor's existing
+        // damage API. No presentation file writes domain Health directly.
+        // The final lethal hit must still arrive through the real
+        // camera ray -> mouse input -> weapon damage pipeline.
         victim.InfectedType="Civilian";
+        if(victim.Health>1f)
+            victim.ApplyDamage(victim.Health-1f,false,"Generic");
+        if(victim.Health<=0f || victim.Health>1.01f)
+            throw new InvalidOperationException(
+                "Pass70 nonlethal infected fixture setup failed");
         victim.MoveSpeed=0f;
         victim.Damage=0f;
         victim.GlobalPosition=player.GlobalPosition+
