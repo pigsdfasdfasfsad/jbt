@@ -40,3 +40,15 @@ checks reward idempotence.
 This is a measured improvement to an **approximate** original Roblox
 objective location, not a reconstruction of source retail animation
 rigs, multi-floor escorts or all 15 human-played waves.
+
+## Native Windows verification (passed)
+
+- Successful GitHub Actions run: [38281900340](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38281900340).
+- Verified source commit `eeb45d704d21a3f1f72a56e2cf99b2fb8687366b`.
+- **673 Python tests passed**, with one inherited warning; Godot/.NET Windows export completed with **zero compiler errors**.
+- Native Pass78, Pass83, Pass88 and Pass89 regressions all passed, and owner-private artifact exclusion remained enforced.
+- Native production Ranch Wave5 Escort originally marked destination at **Y=1.1m**; physically grounded goal was **Y=0**.
+- The actual survivor traveled **22.69m in 136 collision-checked motion steps** before its production objective's completion callback fired.
+- `TWR_PASS90_REWARD_ONCE_OK` verified base Escort reward **4,000 credits and 3,500 XP** and a separate legitimate level-up award of **2,700 credits**; domain XP normalization left **898 remaining XP at level 7**. Replaying the objective ID did not pay again.
+
+This verifies one controlled native objective completion; it is not a claim of 1:1 original Roblox geometry, retail NPC animations or a human-played 15-wave map clear.
