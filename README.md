@@ -2,7 +2,19 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 88 — Safer physical waves, loot and two-floor objectives
+## Latest verified branch: Pass 89 — Collision-safe Escort survivor navigation
+
+[Pass 89 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass89-escort-ground-navigation) ·
+[Verified Windows CI run 38237636678](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38237636678) ·
+[Pass 89 engineering record](docs/development/PASS89_ESCORT_GROUND_NAVIGATION.md)
+
+- Public reconstructed ground-floor maps now give Escort survivors collision-verified Pass73 routing rather than blindly walking toward an unverified straight-line destination. Candidate waypoints and every next 55cm movement are audited against the active static physics world; invalid routes stop safely, while an earlier verified route remains usable through a transient failed re-anchor.
+- A bounded set of alternative Escort destinations is used only if the original reconstructed local target is physically unreachable. Owner private source maps, Expressway and upper-floor Manor retain existing behavior until specific source-backed reconstructions exist.
+- **666 Python tests passed; Godot/.NET Windows compilation/export completed with zero errors.** Native Windows Pass78, Pass83, Pass88 and **Pass89** acceptance checks passed in [run 38237636678](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38237636678).
+- A real Ranch Escort survivor detoured **8.66m sideways / 17.25m forward** around an actual static wall without teleporting or clipping through it. The route was also correctly rejected when another wall was introduced after map navigation initialization.
+- This does **not** certify original Roblox Escort meshes/animations/waypoints, complete Escort objective payouts on all maps, full 15-wave playthroughs or exact retail fidelity. Public Windows executable uploads remain deliberately disabled under repository policy.
+
+## Historical verified branch: Pass 88 — Safer physical waves, loot and two-floor objectives
 
 [Pass 88 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass88-physical-wave-hardening) ·
 [Successful native Windows CI (run 38229534100)](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38229534100) ·
