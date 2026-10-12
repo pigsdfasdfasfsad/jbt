@@ -125,6 +125,16 @@ public partial class Pass83ManorUpperGameplayAcceptance : Node
                 "Pass83 collision-derived ground navigation not ready");
         game.SetProcess(false); // no wave clock spawns during physical tests
 
+        // The production opening supply roll is randomized. Remove those
+        // opening test-scene pickups so a natural pickup at the exact same
+        // marker cannot win the stable nearest-E-key tie-breaker. The
+        // actual pickup authority and domain command remain unmodified.
+        foreach(var node in GetTree().GetNodesInGroup("twr-pickup"))
+            if(node is PickupActor ordinary &&
+                ReferenceEquals(ordinary.Player,player))
+                ordinary.QueueFree();
+        await Frames(3);
+
         var crossings=game.Pass77ApproximateStairs
             .Select(stair => new
             {
@@ -140,8 +150,8 @@ public partial class Pass83ManorUpperGameplayAcceptance : Node
             var catwalk=game.GetNodeOrNull<StaticBody3D>(
                 name+"_UpperCrossing80");
             if(catwalk is null || catwalk.CollisionLayer!=1u ||
-                catwalk.GetNodeOrNull<CollisionShape3D>(
-                    "CollisionShape3D") is null)
+                !catwalk.GetChildren().OfType<CollisionShape3D>()
+                    .Any(shape => shape.Shape is BoxShape3D))
                 throw new InvalidOperationException(
                     "Pass83 missing real upper walkway collider: "+name);
 
