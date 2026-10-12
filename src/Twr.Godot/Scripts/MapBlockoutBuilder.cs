@@ -385,23 +385,18 @@ public static class MapBlockoutBuilder
         // an obstructing internal vertical seam at the balcony edge.
         // It does not pretend to replace retail Manor collision meshes.
         var crossingZ=upper.Z+zDir*1.40f;
+        // Pass94: the older 1.20m-long crossing ended 10cm short
+        // of the existing sloped landing, causing a full-size survivor
+        // to reject the entire Manor Escort route. Extend only this
+        // established horizontal crosswalk to 1.60m in Z, overlapping
+        // the landing by 10cm. Do NOT add a new raised physical plank
+        // over the top of the ramp: native Pass78 showed that its exposed
+        // downhill collision face blocks genuine player stair ascent.
+        // The longer crossing stops 60cm BEFORE the ramp's upper end,
+        // clear of the player's capsule while it finishes climbing.
         StaticBox(root,name+"_UpperCrossing80",
             new Vector3(center.X,upper.Y-.08f,crossingZ),
-            new Vector3(9.0f,.16f,1.20f),color.Lightened(.065f));
-        // Pass94 live full-capsule route diagnostics proved the 1.20m
-        // crosswalk ends 0.10m BEFORE the existing landing begins. A
-        // .42m-radius survivor must not plan across a missing floor sliver.
-        // Join these two PUBLIC FALLBACK collision decks with a short,
-        // recessed physical plank. Its far end overlaps the ramp by only
-        // 5cm: a longer plank would sit ABOVE the descending ramp and
-        // create a new collision lip. It also overlaps the crosswalk
-        // enough to bridge the missing 10cm floor without a teleport.
-        // The connector top sits 3cm below the existing balcony surface.
-        StaticBox(root,name+"_UpperStairConnector94",
-            new Vector3(center.X,upper.Y-.13f,
-                upper.Z+zDir*.75f),
-            new Vector3(3.2f,.20f,1.60f),
-            color.Lightened(.042f));
+            new Vector3(9.0f,.16f,1.60f),color.Lightened(.065f));
         return new Pass77StairLink(name,lower,upper);
     }
     private static void InteriorShell(Node3D root,string name,Vector3 center,Vector3 size,Color color,
