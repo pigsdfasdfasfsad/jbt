@@ -33,7 +33,7 @@ public static class Pass90EscortArrivalSafety
         foreach(var offset in FootprintSamples)
         {
             var at=marker+offset;
-            var ray=PhysicsRayQueryParameters3D.Create(
+            using var ray=PhysicsRayQueryParameters3D.Create(
                 at+Vector3.Up*.68f,
                 at+Vector3.Down*2.30f);
             ray.CollisionMask=1u;
@@ -60,7 +60,7 @@ public static class Pass90EscortArrivalSafety
         };
         var position=new Vector3(
             marker.X,firstFloor.Value.Y,marker.Z);
-        var query=new PhysicsShapeQueryParameters3D
+        using var query=new PhysicsShapeQueryParameters3D
         {
             Shape=survivorShape,
             Transform=new Transform3D(

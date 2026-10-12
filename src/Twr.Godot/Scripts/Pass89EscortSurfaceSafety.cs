@@ -46,7 +46,7 @@ public static class Pass89EscortSurfaceSafety
             {
                 Radius=.42f,Height=1.8f
             };
-            var capsuleSweep=new PhysicsShapeQueryParameters3D
+            using var capsuleSweep=new PhysicsShapeQueryParameters3D
             {
                 Shape=survivorCapsule,
                 Transform=new Transform3D(
@@ -65,7 +65,7 @@ public static class Pass89EscortSurfaceSafety
         // Check the NPC torso and a lower body segment against real walls.
         foreach(var height in new[]{.48f,.96f})
         {
-            var wall=PhysicsRayQueryParameters3D.Create(
+            using var wall=PhysicsRayQueryParameters3D.Create(
                 fromFeet+Vector3.Up*height,
                 toFeet+Vector3.Up*height);
             wall.CollisionMask=1u;
@@ -79,7 +79,7 @@ public static class Pass89EscortSurfaceSafety
             foreach(var lateral in SideOffsets)
             {
                 var at=expected+side*lateral;
-                var floorRay=PhysicsRayQueryParameters3D.Create(
+                using var floorRay=PhysicsRayQueryParameters3D.Create(
                     at+Vector3.Up*.68f,
                     at+Vector3.Down*.84f);
                 floorRay.CollisionMask=1u;

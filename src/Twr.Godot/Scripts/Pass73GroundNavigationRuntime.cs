@@ -91,6 +91,16 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         return nav;
     }
 
+    public override void _ExitTree()
+    {
+        // Dispose native graph and floor-probe shape while Godot's physics
+        // server still exists. Late C# GodotObject finalizers are unsafe.
+        _standingCapsule.Dispose();
+        _escortGraph91.Dispose();
+        _graph.Dispose();
+        base._ExitTree();
+    }
+
     public override void _Ready()
     {
         var points = new[] { Layout.PlayerSpawn }
@@ -199,7 +209,7 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         // Fallback map primary floors are at 0m; elevated docks are below
         // 2.4m. Start BELOW Manor's upper deck, deliberately excluding it
         // rather than incorrectly connecting the two floors across walls.
-        var ray = PhysicsRayQueryParameters3D.Create(
+        using var ray = PhysicsRayQueryParameters3D.Create(
             new Vector3(x, 2.4f, z), new Vector3(x, -1.4f, z));
         ray.CollisionMask = WorldCollisionMask;
         ray.Exclude = _exclude;
@@ -211,7 +221,7 @@ public partial class Pass73GroundNavigationRuntime : Node3D
 
         var floor = (Vector3)groundHit["position"];
         var stand = new Vector3(floor.X, floor.Y + .86f, floor.Z);
-        var capsuleQuery = new PhysicsShapeQueryParameters3D
+        using var capsuleQuery = new PhysicsShapeQueryParameters3D
         {
             Shape = _standingCapsule,
             Transform = new Transform3D(Basis.Identity, stand),
@@ -234,7 +244,7 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         foreach (var offset in new[] { 0f, -.23f, .23f })
         {
             var shift = side * offset + Vector3.Up * .82f;
-            var ray = PhysicsRayQueryParameters3D.Create(
+            using var ray = PhysicsRayQueryParameters3D.Create(
                 aFeet + shift, bFeet + shift);
             ray.CollisionMask = WorldCollisionMask;
             ray.Exclude = _exclude;
@@ -761,7 +771,7 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         for (var i = 0; i <= 6; i++)
         {
             var expected = stair.LowerFeet.Lerp(stair.UpperFeet, i/6f);
-            var ray = PhysicsRayQueryParameters3D.Create(
+            using var ray = PhysicsRayQueryParameters3D.Create(
                 expected + Vector3.Up*.85f,
                 expected + Vector3.Down*.70f);
             ray.CollisionMask = WorldCollisionMask;
