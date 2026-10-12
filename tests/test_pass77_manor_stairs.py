@@ -21,6 +21,8 @@ def test_three_manor_stair_geometry_is_physical_and_still_approximate():
     assert 'DecorativeBox(root,name+"_Stair"+i' in blockout
     assert "const int steps=8" in blockout
     assert "ramp.AddChild(new CollisionShape3D" in blockout
+    assert "new Vector3(5.60f,rampThickness,slopeLength+.20f)" in blockout
+    assert "bridgeThickness*.5f*Mathf.Cos(angle)+.16f" in blockout
     assert "Rotation = new Vector3(angle,0,0)" in blockout
     assert "Math.Abs(angle) >= Mathf.DegToRad(35f)" in blockout
     assert "reconstructed stair slope unsafe" in blockout

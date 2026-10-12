@@ -289,7 +289,10 @@ public static class MapBlockoutBuilder
             CollisionLayer=1,
             CollisionMask=0
         };
-        var rampSize = new Vector3(3.20f,rampThickness,slopeLength+.20f);
+        // A 5.6m top-to-bottom collision width reaches the two side decks
+        // directly. The former 3.2m corridor collided with the widened
+        // connector's internal side face as the zombie approached the top.
+        var rampSize = new Vector3(5.60f,rampThickness,slopeLength+.20f);
         ramp.AddChild(new CollisionShape3D
         {
             Shape = new BoxShape3D { Size = rampSize }
@@ -310,7 +313,12 @@ public static class MapBlockoutBuilder
         var bridge=new StaticBody3D
         {
             Name=name+"_Landing77",
-            Position=upper+Vector3.Down*bridgeThickness*.5f*Mathf.Cos(angle),
+            // Keep this continuation BELOW the main ramp's top plane.
+            // Two exactly coplanar solids create an internal collision
+            // seam for character capsules; a recessed overlap avoids it
+            // while retaining a solid 5.6m bridge over the centre gap.
+            Position=upper+Vector3.Down*(
+                bridgeThickness*.5f*Mathf.Cos(angle)+.16f),
             Rotation=new Vector3(angle,0,0),
             CollisionLayer=1,
             CollisionMask=0
