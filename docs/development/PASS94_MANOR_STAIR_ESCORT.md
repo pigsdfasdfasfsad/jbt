@@ -40,3 +40,9 @@ The fallback crosswalk had 1.20m Z collision length, and the existing sloped ram
 The new route also bounds failed goal searches to once per .75s instead of making 9 expensive candidate plans on every physics frame. It keeps survivors on their sloped stair route until their real feet reach the ground, rather than switching to a ground-only graph at 2.2m elevation.
 
 **Follow-up status:** native success remains unverified until a new Windows export passes the full preceding Escort regressions, completes the physical Manor stair descent, pays the domain reward once and passes the private-content exclusion check.
+
+## Additional capsule collision investigation
+
+Windows run [38300907996](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38300907996) passed the earlier Pass78/83/88/89/90/91/92 native regressions using the longer **existing** Manor crosswalk (1.60m), but the Manor survivor still rejected `crosswalk centre -> stair upper`. The 18-point grounded lower route remained valid. Therefore the previous 10cm floor gap was a real geometry omission but **not enough to explain the failure**; do not claim that an added plank or a wider catwalk verifies NPC navigation.
+
+The next instrumentation independently reports the full .42m capsule CastMotion safe fraction, the first torso wall-ray hit, and 50mm-resolution physical support probes along the failing segment. A CI-only preflight runs this evidence immediately after the Windows export; only a real fully completed production Manor Escort proceeds to the earlier ten-map/native regressions and eventual privacy audit. No reward, navmesh, physics layer or collision mask is disabled for that test.
