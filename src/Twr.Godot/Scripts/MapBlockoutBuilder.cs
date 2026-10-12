@@ -27,6 +27,8 @@ public sealed record RuntimeMapLayout(
     public IReadOnlyList<Vector3> FortificationPoints { get; init; } = [];
     public IReadOnlyList<Pass77StairLink> ApproximateStairs77 { get; init; } = [];
     public IReadOnlyList<Pass80UpperCrossing> ApproximateCrossings80 { get; init; } = [];
+    public IReadOnlyList<Vector3> ApproximateUpperPickups82 { get; init; } = [];
+    public IReadOnlyList<Vector3> ApproximateUpperObjectives82 { get; init; } = [];
 }
 
 public static class MapBlockoutBuilder
@@ -193,16 +195,28 @@ public static class MapBlockoutBuilder
             DecorativeBox(root, "CourtyardCoverL" + z, new Vector3(-6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
             DecorativeBox(root, "CourtyardCoverR" + z, new Vector3(6, 1, z), new Vector3(2, 2, 5), new Color(0.25f, 0.26f, 0.24f));
         }
+        // Pass82: new fallback-Manor-only upstairs gameplay markers.
+        // They are physically aligned to three previously verified decks.
+        // All source-original scene packs and the other nine maps retain
+        // their own item/objective marker locations.
+        var upperPickups82 = Pass82ManorUpperSpawnPlan.BuildPickupMarkers(
+            westStair77, eastStair77, frontStair77);
+        var upperObjectives82 = Pass82ManorUpperSpawnPlan.BuildObjectiveMarkers(
+            westStair77, eastStair77, frontStair77);
         return Layout(new Vector3(0, 1, 20),
             EdgeSpawns(36,42),
-            Points((-7,18),(7,18),(-7,4),(7,4),(-7,-14),(7,-14)),
-            Points((0,-8),(10,12))) with
+            Points((-7,18),(7,18),(-7,4),(7,4),(-7,-14),(7,-14))
+                .Concat(upperPickups82).ToArray(),
+            Points((0,-8),(10,12))
+                .Concat(upperObjectives82).ToArray()) with
         {
             ApproximateStairs77 = [westStair77, eastStair77, frontStair77],
             ApproximateCrossings80 = [
                 MakeUpperCrossing80(westStair77),
                 MakeUpperCrossing80(eastStair77),
-                MakeUpperCrossing80(frontStair77)]
+                MakeUpperCrossing80(frontStair77)],
+            ApproximateUpperPickups82 = upperPickups82,
+            ApproximateUpperObjectives82 = upperObjectives82
         };
     }
 

@@ -146,6 +146,10 @@ public partial class GameplayRoot : Node3D
     // Laboratory scene or other maps take their normal loading paths.
     public IReadOnlyList<Pass77StairLink> Pass77ApproximateStairs =>
         _mapLayout?.ApproximateStairs77 ?? [];
+    public IReadOnlyList<Vector3> Pass82UpperPickupMarkers =>
+        _mapLayout?.ApproximateUpperPickups82 ?? [];
+    public IReadOnlyList<Vector3> Pass82UpperObjectiveMarkers =>
+        _mapLayout?.ApproximateUpperObjectives82 ?? [];
 
     public int Pass47WeaponSourceVisibleParts => _player?.SourceWeaponVisibleParts ?? 0;
     public int Pass47MissingMeshProxies => _player?.SourceWeaponMissingMeshProxies ?? 0;
@@ -637,6 +641,14 @@ public partial class GameplayRoot : Node3D
     private Vector3 ObjectivePosition(int index)
     {
         if (_mapLayout.ObjectivePoints.Count == 0) return Vector3.Zero;
+        // Pass82 alternates the actual playable upper rooms into later
+        // Regular wave objectives, but ONLY on fallback Manor. Original
+        // source scene packs and nine other maps are unchanged.
+        if (MapName == "Manor" &&
+            _mapLayout.ApproximateUpperObjectives82.Count == 3 &&
+            Runtime?.Match?.Wave is int wave && wave >= 3)
+            return _mapLayout.ObjectivePoints[
+                (wave-1+index) % _mapLayout.ObjectivePoints.Count];
         return _mapLayout.ObjectivePoints[index % _mapLayout.ObjectivePoints.Count];
     }
 
