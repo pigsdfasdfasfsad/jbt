@@ -45,6 +45,8 @@ def test_placement_keeps_item_until_real_floor_and_open_space():
     assert "if (Runtime?.Player?.IsAlive != true)" in hammer
     assert 'if (Runtime?.Player?.IsAlive != true) return;' in hammer
     assert "DeployedCount76" in hammer
+    assert "else if (mouse.ButtonIndex == MouseButton.Left)" in hammer
+    assert "TrySwing();" in hammer
     assert "PhysicsRayQueryParameters3D.Create" in safety
     assert "PhysicsShapeQueryParameters3D" in safety
     assert "world.IntersectShape(space, 1).Count != 0" in safety

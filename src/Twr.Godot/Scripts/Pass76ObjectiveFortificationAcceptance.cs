@@ -307,23 +307,45 @@ public partial class Pass76ObjectiveFortificationAcceptance : Node
             throw new InvalidOperationException(
                 "Pass76 F key did not select real hammer mode");
 
-        MouseInput(true);
-        controller._Process(.6);
-        MouseInput(false);
+        controller._UnhandledInput(new InputEventMouseButton
+        {
+            ButtonIndex = MouseButton.Left,
+            Pressed = true,
+            Position = Vector2.Zero
+        });
         if (Runtime.Player.Inventory.GetValueOrDefault("Clap Bomb") != count ||
             controller.DeployedCount76 != 0)
             throw new InvalidOperationException(
                 "Pass76 hammer consumed an item despite invalid wall placement");
         placementWall.QueueFree();
         await Frames(3);
-        MouseInput(true);
+        // Deliberately expire the existing hammer cooldown before testing
+        // an actual second discrete click through the production handler.
         controller._Process(.6);
-        MouseInput(false);
+        var desired = player.GlobalPosition +
+            player.AimDirection.Normalized() * 3f + Vector3.Down * .8f;
+        var groundValid = Pass76PlacementSafety.TryFindGround(
+            player, desired, out var ground);
+        GD.Print("TWR_PASS76_HAMMER_PREVIEW " +
+            "valid_ground=" + groundValid + " " +
+            "ground=" + ground + " " +
+            "desired=" + desired + " " +
+            "count=" + Runtime.Player.Inventory.GetValueOrDefault("Clap Bomb"));
+        controller._UnhandledInput(new InputEventMouseButton
+        {
+            ButtonIndex = MouseButton.Left,
+            Pressed = true,
+            Position = Vector2.Zero
+        });
         await Frames(2);
         if (Runtime.Player.Inventory.GetValueOrDefault("Clap Bomb") != count - 1 ||
             controller.DeployedCount76 != 1)
             throw new InvalidOperationException(
-                "Pass76 grounded hammer did not deploy one actual Clap Bomb");
+                "Pass76 grounded hammer did not deploy one actual Clap Bomb " +
+                "valid_ground=" + groundValid +
+                " count=" + Runtime.Player.Inventory.GetValueOrDefault("Clap Bomb") +
+                " deployed=" + controller.DeployedCount76 +
+                " mode=" + controller.HammerMode76);
 
         controller._UnhandledInput(new InputEventKey
         {

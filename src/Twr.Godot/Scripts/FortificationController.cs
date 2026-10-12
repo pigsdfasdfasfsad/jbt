@@ -76,6 +76,11 @@ public partial class FortificationController : Node
             Cycle(-1);
         else if (mouse.ButtonIndex == MouseButton.WheelDown)
             Cycle(1);
+        else if (mouse.ButtonIndex == MouseButton.Left)
+            // A discrete first click should place the first swing without
+            // waiting for the next _Process-held-button sample. Cooldown
+            // prevents a click and held input from double-consuming ammo.
+            TrySwing();
     }
 
     public void ClearDeployed()
