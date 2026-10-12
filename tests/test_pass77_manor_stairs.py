@@ -14,8 +14,10 @@ def test_three_manor_stair_geometry_is_physical_and_still_approximate():
     assert "ApproximateStairs77 = [westStair77, eastStair77, frontStair77]" in blockout
     assert 'Name = name+"_WalkableRamp77"' in blockout
     assert 'name+"_Landing77"' in blockout
-    assert "upper.Z+zDir*.45f" in blockout
-    assert "new Vector3(5.6f,size.Y,1.15f)" in blockout
+    assert 'Name=name+"_Landing77"' in blockout
+    assert "bridgeSize=new Vector3(5.6f,bridgeThickness,1.40f)" in blockout
+    assert "Rotation=new Vector3(angle,0,0)" in blockout
+    assert "bridge.AddChild(new CollisionShape3D" in blockout
     assert 'DecorativeBox(root,name+"_Stair"+i' in blockout
     assert "const int steps=8" in blockout
     assert "ramp.AddChild(new CollisionShape3D" in blockout

@@ -299,15 +299,28 @@ public static class MapBlockoutBuilder
 
         // Bridge the actual split deck so the upper ramp exit reaches both
         // left and right balcony platforms without a void/ledge jump.
-        // The upper landing must NOT extend half a metre downhill:
-        // its original 1.65m depth blocked the ramp at a ~0.4m vertical
-        // lip, confirmed by an actual Windows first-person ascent ending
-        // at Y=2.48 instead of the upper deck's Y=2.96.
-        // Move the 1.15m cross-bridge slightly past the ramp end, leaving
-        // only ~0.13m overlap and at most a 6cm contact-height difference.
-        StaticBox(root,name+"_Landing77",
-            new Vector3(center.X,center.Y,upper.Z+zDir*.45f),
-            new Vector3(5.6f,size.Y,1.15f),color);
+        // A flat cross-landing still introduced a riser at its downhill
+        // edge (native player stopped at 2.48m, then 2.84m after shortening
+        // it, below the true 2.96m upper deck). Instead, overlap the upper
+        // ramp with a WIDER section of that very same slope. The centre
+        // has a continuous no-lip collision plane and its outer ±2.8m
+        // physically overlap both side deck tops near the upper endpoint.
+        const float bridgeThickness=.16f;
+        var bridgeSize=new Vector3(5.6f,bridgeThickness,1.40f);
+        var bridge=new StaticBody3D
+        {
+            Name=name+"_Landing77",
+            Position=upper+Vector3.Down*bridgeThickness*.5f*Mathf.Cos(angle),
+            Rotation=new Vector3(angle,0,0),
+            CollisionLayer=1,
+            CollisionMask=0
+        };
+        bridge.AddChild(new CollisionShape3D
+        {
+            Shape=new BoxShape3D { Size=bridgeSize }
+        });
+        bridge.AddChild(BoxMeshFor(bridgeSize,color.Lightened(.02f)));
+        root.AddChild(bridge);
 
         // Keep the existing eight recognizable visual stair treads, but they
         // are now meshes only: the continuous sloped ramp owns collision.
