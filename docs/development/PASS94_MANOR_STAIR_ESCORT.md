@@ -22,3 +22,21 @@ The new exported Windows native test instantiates a real production Manor scene,
 **Status:** pending native Windows verification. Source mesh/animation exactness, later objective rotations, original retail multi-floor AI navigation, and human-controlled 15-wave playthrough are not claimed.
 
 **If the physics acceptance fails**, preserve its actor-position, waypoint, blocked-step and graph telemetry, repair the real obstructing geometry or route rather than disable collision, shorten the test, or grant test-only currency.
+
+## Initial native failure and collision reconstruction
+
+GitHub Actions run [38299114181](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38299114181) passed the original Windows gameplay regressions, then the production Manor Wave5 Escort remained stationary at (-4.25, 2.96, 28.75), rejected all nine destination routes on every physics frame and correctly did not award credits. It proved source-contract passing alone did not establish real traversability.
+
+A follow-up diagnostic run [38299839014](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38299839014) isolated the break in the physical route:
+- Actual upper side-deck to crosswalk entry: **true**
+- Crosswalk entry to centre: **true**
+- Centre to upper stair landing: **false**
+- Stair head to first sloped ramp section: **true**
+- Ground-level physical Escort graph from stair exit to selected goal: **18 supported points**
+- Actual route to goal: **zero**
+
+The fallback crosswalk had 1.20m Z collision length, and the existing sloped ramp landing had only 1.40m Z length. Their nearest surfaces stopped **10cm apart**, leaving the real .42m Escort capsule with no supported crosswalk-to-stair route. Pass94 adds a small recessed, overlapping real collider `*_UpperStairConnector94` on each **approximate** Manor upper landing, without removing walls, changing the original owner map, lowering NPC collision radius or granting any simulated reward.
+
+The new route also bounds failed goal searches to once per .75s instead of making 9 expensive candidate plans on every physics frame. It keeps survivors on their sloped stair route until their real feet reach the ground, rather than switching to a ground-only graph at 2.2m elevation.
+
+**Follow-up status:** native success remains unverified until a new Windows export passes the full preceding Escort regressions, completes the physical Manor stair descent, pays the domain reward once and passes the private-content exclusion check.
