@@ -187,13 +187,16 @@ public partial class Pass88TenMapPhysicalWaveAcceptance : Node
         var objective2=FirstObjective(game);
         CheckFallbackAnchor(game,map,2,objective2);
         game._Process(.05);
+        await Frames(3); // retire QueueFree actors from the previous wave
         var wave2=game.GetChildren().OfType<InfectedAgent>()
-            .FirstOrDefault(x=>GodotObject.IsInstanceValid(x));
+            .FirstOrDefault(x=>GodotObject.IsInstanceValid(x) &&
+                !x.IsQueuedForDeletion());
         if(wave2 is null || wave2.Target!=player)
             throw new InvalidOperationException(
                 "Pass88 live Wave 2 infected missing map="+map);
         await Frames(9);
-        if(!GodotObject.IsInstanceValid(wave2))
+        if(!GodotObject.IsInstanceValid(wave2) ||
+           wave2.IsQueuedForDeletion())
             throw new InvalidOperationException(
                 "Pass88 real second-wave enemy vanished map="+map);
 
