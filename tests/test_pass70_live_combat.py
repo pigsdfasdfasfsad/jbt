@@ -63,7 +63,11 @@ def test_authoritative_reload_and_second_wave_hooks_not_directly_mutated():
     assert "Runtime.AwardWaveSurvival" in game
     assert "Runtime.EndWaveCleanup()" in game
     assert "Runtime?.AdvanceWave()" in game
-    assert "Runtime?.ReloadWeapon(_reloadWeapon, reloadSpec.Magazine)" in player
+    # Reload remains an authoritative domain call after the alive guard;
+    # Pass71 intentionally removes the obsolete null-conditional form.
+    assert "Runtime.ReloadWeapon(_reloadWeapon, reloadSpec.Magazine)" in player
+    physics=player[player.index("public override void _PhysicsProcess"):player.index("public override void _UnhandledInput")]
+    assert physics.index("!Runtime.Player.IsAlive") < physics.index("if (_reloadTimer > 0)")
     assert "Runtime.SpendAmmo(spec.Name, 1)" in player
     # The acceptance harness must not invent reload/ammo credits itself:
     assert "Runtime.AwardKill(" not in harness
@@ -80,7 +84,8 @@ def test_live_combat_test_never_touches_real_profile_or_archived_meshes():
     boot=read("src/Twr.Godot/Scripts/Bootstrap.cs")
     assert 'smoke70=OS.GetCmdlineUserArgs().Contains("--smoke-pass70"' in node
     assert '"user://pass70-live-combat-smoke-profile.json"' in node
-    assert "if(smoke70)\n            store.Save(new Profile());" in node
+    assert "if(smoke70 || smoke71)\n            store.Save(new Profile());" in node
+    assert "user://pass71-multimap-damage-smoke-profile.json" in node
     assert '"TWR_SMOKE_PASS70_LIVE_COMBAT_OK"' in harness
     assert "real_laboratory_fallback_scene=true" in harness
     assert "no_manual_15_wave_completion_claim=true" in harness
