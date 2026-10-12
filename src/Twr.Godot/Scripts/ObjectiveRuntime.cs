@@ -26,6 +26,10 @@ public partial class ObjectiveRuntime : Node3D
     private Vector3[] _escortRoute89 = [];
     private int _escortRouteIndex89;
     private double _escortRepathSeconds89;
+    // Rejected multi-storey route searches can cast thousands of 3D
+    // queries. Bounded retry prevents a non-navigable approximation from
+    // monopolizing the physics thread without ever moving the NPC.
+    private double _escortUpperRetrySeconds94;
     private bool _escortDestinationResolved89;
     public FirstPersonPlayer? Player { get; set; }
     public LocalSessionNode? Runtime { get; set; }
@@ -185,6 +189,14 @@ public partial class ObjectiveRuntime : Node3D
         };
         if (!_escortDestinationResolved89)
         {
+            if (UseManorElevatedEscort94 &&
+                _escortUpperRetrySeconds94>0)
+            {
+                _escortUpperRetrySeconds94=Math.Max(
+                    0,_escortUpperRetrySeconds94-delta);
+                StopEscortHorizontal89(delta);
+                return;
+            }
             // Reject impossible fixed -24Z locations on approximate maps.
             // Keep the original point whenever it IS safely reachable.
             var options=new[]
@@ -240,6 +252,8 @@ public partial class ObjectiveRuntime : Node3D
             if (!_escortDestinationResolved89)
             {
                 EscortBlockedRoutePlans89++;
+                if(UseManorElevatedEscort94)
+                    _escortUpperRetrySeconds94=.75;
                 StopEscortHorizontal89(delta);
                 return;
             }
