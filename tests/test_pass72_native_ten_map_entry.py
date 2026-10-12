@@ -60,4 +60,6 @@ def test_windows_export_runs_all_ten_and_retains_privacy_gate():
     assert "--smoke-pass72" in ci
     assert ci.index("Smoke Pass 71") < ci.index("Smoke Pass 72")
     assert ci.index("Smoke Pass 72") < ci.index("Verify no private map scenes")
-    assert "github.ref_name == 'twr-pass72-native-ten-map-entry')" in ci
+    assert "if: success() && github.ref_name == 'twr-pass72-native-ten-map-entry'" in ci
+    # The separate owner-private exclusion gate intentionally covers later
+    # verified branches, so Pass72 need not remain its last disjunct.

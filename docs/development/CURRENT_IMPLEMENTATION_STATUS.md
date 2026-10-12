@@ -1,3 +1,17 @@
+# PASS 73 — GROUND-ROUTE FALLBACK + FULL-MAP INTERACTION ACCEPTANCE (WINDOWS CI PENDING)
+
+**Branch:** `twr-pass73-fullmap-ground-navigation`. Builds on [verified Pass72 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201737219), which passed 596 Python regressions and ten actual Godot map scene/Wave 2 tests.
+
+Pass73 adds incremental Godot physics-sampled A* floor navigation for approximate fallback maps (nine release maps, excluding Expressway), with explicit floor/height/collision checks, short-corridor direct chase, shared bounded route cache and no modification of recovered Laboratory source graph. The game now tracks fallback navigation nodes/edges in F10 diagnostics.
+
+The new Windows-native smoke will check grounded actual scene entry on all ten maps, public Godot input-based walking, sprinting and jumping, a real enemy body moving around a clearly fabricated wall on Ranch, actual Medkit and Radio domain interactions, and preventing item/objective grants after death. Short jump-buffer expiry also prevents old airborne Space presses from causing unexpected later auto-jumps.
+
+**Verification is pending.** Fallback navigation is not a recovered original Roblox navmesh, is ground-floor only, and does not establish all ten source-map visual/navigation fidelity, long-haul human-controlled 15-wave completion or final Windows distribution.
+
+[Pass73 engineering record](PASS73_FALLBACK_GROUND_NAVIGATION.md)
+
+---
+
 # PASS 72 — NATIVE ALL-TEN-MAP ENTRY VERIFIED
 
 **Branch:** `twr-pass72-native-ten-map-entry`. The previous Pass71 exported Windows build and native two-map enemy/damage test [passed](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201351136).
