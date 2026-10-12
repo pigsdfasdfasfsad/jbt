@@ -392,13 +392,15 @@ public static class MapBlockoutBuilder
         // crosswalk ends 0.10m BEFORE the existing landing begins. A
         // .42m-radius survivor must not plan across a missing floor sliver.
         // Join these two PUBLIC FALLBACK collision decks with a short,
-        // recessed physical plank. The 20cm overlaps on both ends
-        // eliminate the gap without removing a wall or lifting the NPC.
-        // The connector top is 3cm below the existing deck top to avoid
-        // introducing a blocking upward interior seam at the landing.
+        // recessed physical plank. Its far end overlaps the ramp by only
+        // 5cm: a longer plank would sit ABOVE the descending ramp and
+        // create a new collision lip. It also overlaps the crosswalk
+        // enough to bridge the missing 10cm floor without a teleport.
+        // The connector top sits 3cm below the existing balcony surface.
         StaticBox(root,name+"_UpperStairConnector94",
-            new Vector3(center.X,upper.Y-.13f,(upper.Z+crossingZ)*.5f),
-            new Vector3(3.2f,.20f,1.80f),
+            new Vector3(center.X,upper.Y-.13f,
+                upper.Z+zDir*.75f),
+            new Vector3(3.2f,.20f,1.60f),
             color.Lightened(.042f));
         return new Pass77StairLink(name,lower,upper);
     }
