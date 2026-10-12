@@ -1,3 +1,22 @@
+# CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 70
+
+**Date:** October 11, 2026 (US Central). **Branch:** `twr-pass70-live-player-combat-loop`.
+
+**Successful exported Windows CI:** https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38198146639
+
+- **588 Python regression tests passed** with one inherited XML FutureWarning; **Godot/.NET Windows export: 0 errors**, one inherited Pass36 CS0108 warning.
+- Pass70 bridges the previous domain-state-only 10-map scripted completion loop to actual native game interaction: the exported Windows game constructs a real Laboratory `GameplayRoot`, first-person `FirstPersonPlayer` camera/collision body, HUD, Wave 1 spawner and native physics `InfectedAgent`. A deliberately artificial platform high above the map and a controlled, nonlethally pre-damaged infected ensure reproducible collision; these **are tests, not claimed original map changes**.
+- Native `TWR_SMOKE_PASS70_LIVE_COMBAT_OK` passed: an actual camera physics ray contacted the infected; a virtual left mouse event invoked production `TryUseWeapon`, spending **exactly one** cartridge and killing the target through `InfectedAgent.ApplyDamage`. The original death callback awarded XP/credits via the authoritative domain command bus. A normal R-key event waited out the player reload timer and transferred ammunition from reserve while conserving total rounds. The actual GameplayRoot end-of-wave and intermission logic then transitioned into Wave 2 and spawned a new living infected actor.
+- Godot headless Windows does not report true cursor capture; an exact **`--smoke-pass70` flag-only** exception skips *only* that UI prerequisite so the virtual click reaches the untouched player combat controls. **Normal player mouse behavior has not been relaxed**.
+- Pass59–69 weapon, hand, ADS and optics native smokes and `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` still passed. The prior completion test is scripted domain-only; **Pass70 verifies one controlled scene/one actual kill/reload/two waves, not ten manually completed 15-wave games**.
+- A separate `user://pass70-live-combat-smoke-profile.json` prevents native test activity from modifying the real offline profile. Synthetic owner-shaped weapon/hierarchy fixtures were cleaned before private asset exclusion; the owner-provided originals and exported Windows executable **remain unpublished publicly**.
+
+**Outstanding high-priority work:** owner-private Windows EXE distribution, real multi-map movement/collision/AI/gameplay acceptance and stability across full 15-wave matches, original source MeshPart/CSG triangle and UV/texture recovery, original rig/camera and optics fidelity, exact map interiors/fortifications/objectives on all ten maps, screenshot comparisons, audio, and manual player playtests. **Pass70 is verified, but the full game is not 1:1 finished.**
+
+[Pass70 real player click-to-kill, ammo/credit/XP and Wave 2 engineering record](PASS70_LIVE_COMBAT_INTEGRATION.md)
+
+---
+
 # CURRENT VERIFIED DEVELOPMENT CHECKPOINT — PASS 69
 
 **Date:** October 11, 2026 (US Central). **Branch:** `twr-pass69-source-optical-reticles`.
