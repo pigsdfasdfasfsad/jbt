@@ -20,6 +20,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public Camera3D CaptureCamera => _camera;
     public Vector3 AimOrigin => _camera.GlobalPosition;
     public Vector3 AimDirection => -_camera.GlobalTransform.Basis.Z;
+    public float SourceAimVisualBlend67 => _sourceAimVisualBlend67;
+    public bool SourceAimSightAligned67 =>
+        _viewModel?.SourceAimPartAvailable == true;
+    public float SourceAimReticleError67 =>
+        _viewModel?.SourceAimReticleLateralError ?? -1f;
 
     private Camera3D _camera = null!;
     private WeaponViewModelRuntime _viewModel = null!;
@@ -34,6 +39,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private Vector3 _hipViewPosition;
     private Vector3 _hipViewRotation;
     private float _sourceSprintBlend;
+    private float _sourceAimVisualBlend67;
+    private float _sourceAimFrom67;
+    private float _sourceAimElapsed67;
+    private bool _sourceAimTarget67;
     private string? _reloadWeapon;
     private string _primaryWeapon = StarterLoadoutService.SawnOff;
     private string _secondaryWeapon = StarterLoadoutService.Glock17;
@@ -212,6 +221,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     {
         HammerMode = enabled;
         if(enabled)_heldThrowable=null;
+        if(enabled)ResetSourceAimVisual67();
         _viewModel.Visible = !enabled;
         _reloadTimer = 0;
         _reloadWeapon = null;
@@ -246,6 +256,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _reloadWeapon = null;
         _actionCooldown = 0;
         _aiming=false;
+        ResetSourceAimVisual67();
         _camera.Fov=60;
         var spec=RuntimeWeaponCatalog.Get(weapon);
         var equipSpeed=Runtime?.HasPerk("Dexterous")==true ? 1.3 : 1.0;
@@ -288,6 +299,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         _hipViewPosition = _viewModel.Position;
         _hipViewRotation = _viewModel.Rotation;
+        ResetSourceAimVisual67();
         _sourceSprintBlend=0f;
     }
 
@@ -296,6 +308,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
         if(Runtime?.Player is null || Runtime.Player.Inventory.GetValueOrDefault(type)<=0)return;
         HammerMode=false;
         _heldThrowable=type;
+        ResetSourceAimVisual67();
         _reloadTimer=0;
         _reloadWeapon=null;
         _actionCooldown=0;
@@ -443,11 +456,20 @@ public partial class FirstPersonPlayer : CharacterBody3D
         _adrenalineTick=1.0;
     }
 
+    private void ResetSourceAimVisual67()
+    {
+        _sourceAimVisualBlend67=0f;
+        _sourceAimFrom67=0f;
+        _sourceAimElapsed67=0f;
+        _sourceAimTarget67=false;
+    }
+
     private void UpdateAim(double delta,RuntimeWeaponDefinition spec)
     {
         if(_heldThrowable is not null || HammerMode)
         {
             _aiming=false;
+            ResetSourceAimVisual67();
             _camera.Fov=Mathf.MoveToward(_camera.Fov,60f,(float)(120.0*delta));
             return;
         }
@@ -463,9 +485,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
         var fullTravel=Math.Max(1f,Math.Abs(60f-Math.Clamp(spec.AimFov,5f,60f)));
         _camera.Fov=Mathf.MoveToward(_camera.Fov,desiredFov,(float)(fullTravel/seconds*delta));
 
-        // AimCF depends on dynamic Roblox assemblies; this sight alignment
-        // remains APPROXIMATED. Original camera-local SprintCF translation
-        // and composed rotation are safe inert data, not executed Luau.
+        // Pass67 uses SHA-verified original AimPart geometry to center
+        // actual source sights where possible. The dynamic original
+        // Roblox AimCF formula is NOT executed or claimed recovered.
+        // Shot rays, recoil, aim permission and FOV remain authoritative
+        // in the pre-existing player logic.
         var sourceSprint=Pass60WeaponAnimationLibrary.TryGet(spec.Name,
             out var poseMotion) && poseMotion.HasSprint;
         var fallbackSprint=Pass59WeaponMotion.TryGet(spec.Name,out var motion);
@@ -488,6 +512,53 @@ public partial class FirstPersonPlayer : CharacterBody3D
         else if(fallbackSprint)
             desiredPosition+=motion.Sprint*RobloxUnits.MetersPerStud*
                 _sourceSprintBlend;
+        if(_viewModel.TryGetSourceAimRoot(out var sightTarget) &&
+           Pass67SourceAimAlignment.TryGet(spec.Name,out var originalAim) &&
+           originalAim is not null)
+        {
+            // Source animation duration and easing are visual only.
+            // Preserve the current player's existing aim-permission,
+            // FOV and gunfire authority above this path.
+            var visualDuration=(_aiming
+                ? originalAim.Aim.Duration
+                : originalAim.UnAim.Duration)/aimSpeed;
+            if(_sourceAimTarget67!=_aiming)
+            {
+                _sourceAimFrom67=_sourceAimVisualBlend67;
+                _sourceAimElapsed67=0f;
+                _sourceAimTarget67=_aiming;
+            }
+            _sourceAimElapsed67=Math.Min(_sourceAimElapsed67+(float)delta,
+                (float)Math.Max(.02f,visualDuration));
+            var fraction=(float)(_sourceAimElapsed67/
+                Math.Max(.02f,visualDuration));
+            var sourceEase=_aiming
+                ? originalAim.Aim.Ease : originalAim.UnAim.Ease;
+            var eased=Pass67SourceAimAlignment.Eased(
+                fraction,sourceEase);
+            _sourceAimVisualBlend67=Mathf.Lerp(_sourceAimFrom67,
+                _aiming ? 1f : 0f,eased);
+            var hip=new Transform3D(
+                Basis.FromEuler(_hipViewRotation),_hipViewPosition);
+            var sourceAligned=Pass60WeaponPoseMath.Interpolate(
+                hip,sightTarget,_sourceAimVisualBlend67);
+            var sprintBasis=sourceSprint
+                ? Quaternion.Identity.Slerp(
+                    poseMotion.Sprint.Basis.GetRotationQuaternion(),
+                    _sourceSprintBlend)
+                : Quaternion.Identity;
+            var sprintOffset=sourceSprint
+                ? poseMotion.Sprint.Origin*_sourceSprintBlend
+                : fallbackSprint
+                    ? motion.Sprint*RobloxUnits.MetersPerStud*
+                        _sourceSprintBlend
+                    : Vector3.Zero;
+            _viewModel.Transform=new Transform3D(
+                sourceAligned.Basis*new Basis(sprintBasis),
+                sourceAligned.Origin+sprintOffset);
+            return;
+        }
+        ResetSourceAimVisual67();
         var blend=(float)Math.Clamp(delta/seconds,0.0,1.0);
         _viewModel.Position=_viewModel.Position.Lerp(desiredPosition,blend);
         var home=Basis.FromEuler(_hipViewRotation).GetRotationQuaternion();
