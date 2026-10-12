@@ -119,7 +119,7 @@ public partial class Pass77ManorStairAcceptance : Node
         // itself comes from real W-key input, physics, and collision.
         player.Rotation = Vector3.Zero;
         player.GlobalPosition = front.LowerFeet +
-            Vector3.Up*.85f + new Vector3(0,0,1.0f);
+            Vector3.Up*.03f + new Vector3(0,0,1.0f);
         await Frames(10);
         var start = player.GlobalPosition;
         if (!player.IsOnFloor())
@@ -148,7 +148,7 @@ public partial class Pass77ManorStairAcceptance : Node
             " end=" + final + " grounded=true flights=3");
 
         player.GlobalPosition = front.UpperFeet +
-            Vector3.Up*.87f + Vector3.Back*.15f;
+            Vector3.Up*.03f + Vector3.Back*.15f;
         await Frames(6);
         if (!player.IsOnFloor())
             throw new InvalidOperationException(

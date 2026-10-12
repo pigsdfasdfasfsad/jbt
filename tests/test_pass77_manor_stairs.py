@@ -31,6 +31,8 @@ def test_elevated_ai_path_requires_real_ramp_collider_and_ground_graph():
     assert "playerCentre.Y - infectedCentre.Y > 1.45f" in graph
     assert "TryGetVerifiedManorAscent77(" in graph
     assert "VerifiedPhysicalStair77(stair)" in graph
+    assert "var playerFeet = playerCentre;" in graph
+    assert "var infectedFeet = infectedCentre - Vector3.Up * .8f;" in graph
     assert "((Vector3)hit[\"normal\"]).Y < .74f" in graph
     assert "Math.Abs(((Vector3)hit[\"position\"]).Y - expected.Y) > .24f" in graph
     assert "CorridorClear(stair.LowerFeet, stair.UpperFeet)" in graph

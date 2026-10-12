@@ -287,8 +287,11 @@ public partial class Pass73GroundNavigationRuntime : Node3D
         Vector3 infectedCentre, Vector3 playerCentre, out Vector3[] result)
     {
         result = [];
+        // InfectedAgent's capsule is centred at its node origin, ~0.8m
+        // above its feet. FirstPersonPlayer's collision capsule is offset
+        // +0.9m locally, so its GlobalPosition IS already feet-level.
         var infectedFeet = infectedCentre - Vector3.Up * .8f;
-        var playerFeet = playerCentre - Vector3.Up * .8f;
+        var playerFeet = playerCentre;
         // Keep only the supported up-ramp transition. Downstairs chase and
         // stair routes between disconnected wings are NOT yet verified.
         if (infectedFeet.Y > 1.5f || playerFeet.Y < 2.2f ||
