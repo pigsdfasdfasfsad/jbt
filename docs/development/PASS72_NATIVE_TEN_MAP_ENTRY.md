@@ -14,7 +14,15 @@
 
 ## Verification status
 
-**Pending native Windows run**. The source and Python regressions must pass and the exported executable must prove all ten map entry and wave-transition checks before this pass is marked verified.
+**Verified native Windows release checkpoint:** [successful Pass72 CI run 38201737219](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201737219), compiled from source SHA `80d09e498d6737e9324fc4d2313e2798dd02304a`.
+
+- **596 Python tests passed**, with one inherited XML FutureWarning.
+- The Godot/.NET Windows build and actual exported-executable smoke completed successfully.
+- All ten `TWR_PASS72_MAP_OK` markers were emitted with `grounded=true`, `native_pickups=true`, and `wave2_infected=true` on Ranch, Mill, Bypass, Cabin, Cargo, District, Expressway, Prison, Laboratory and Manor.
+- The exported Windows game emitted `TWR_SMOKE_PASS72_TEN_MAP_ENTRY_OK maps=10`, proving per-map game nodes, grounded player physics, real wave-spawned infected, authoritative Wave 1 survival and Wave 2 actor creation.
+- The privacy gate passed and no owner-original source archives or original meshes were published to GitHub artifacts. CI deliberately leaves Windows artifact publication disabled.
+
+These test scenes use the available **fallback reconstruction map content**, not the user's full retail Roblox maps. No manual 15-wave human session is claimed.
 
 ## Important fidelity boundary
 

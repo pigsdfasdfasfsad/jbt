@@ -1,8 +1,8 @@
-# PASS 72 — NATIVE ALL-TEN-MAP ENTRY IMPLEMENTED; WINDOWS CI PENDING
+# PASS 72 — NATIVE ALL-TEN-MAP ENTRY VERIFIED
 
 **Branch:** `twr-pass72-native-ten-map-entry`. The previous Pass71 exported Windows build and native two-map enemy/damage test [passed](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201351136).
 
-Pass72 adds actual Godot gameplay-root instantiation on every release map; native first-person physics grounding, HUD/pickup construction, real infected spawn, accelerated Wave 1 to Wave 2 scene transitions, isolated Results-save teardown and runtime lobby roundtrip on all ten maps. **It is not verified until the Pass72 Windows Actions workflow succeeds.** These tests are not manual fifteen-wave matches or visual/floorplan parity with original Roblox.
+Pass72 adds actual Godot gameplay-root instantiation on every release map; native first-person physics grounding, HUD/pickup construction, real infected spawn, accelerated Wave 1 to Wave 2 scene transitions, isolated Results-save teardown and runtime lobby roundtrip on all ten maps. **Verified in [successful Windows CI run 38201737219](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38201737219): 596 Python tests passed, exported Godot/.NET Windows executable accepted, all ten native per-map markers and final Pass72 marker passed, and owner-private asset exclusion passed.** These tests are not manual fifteen-wave matches or visual/floorplan parity with original Roblox.
 
 [Pass72 engineering report](PASS72_NATIVE_TEN_MAP_ENTRY.md)
 
