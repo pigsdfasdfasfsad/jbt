@@ -16,6 +16,8 @@ public partial class ObjectiveRuntime : Node3D
     public bool EscortDestinationAdjusted89 { get; private set; }
     public int EscortGroundedDestinations90 { get; private set; }
     public int EscortRejectedDestinations90 { get; private set; }
+    public int EscortRouteInvalidations91 { get; private set; }
+    private bool _escortRouteInvalidated91;
     public bool EscortGroundedCompletion90 { get; private set; }
     private Vector3[] _escortRoute89 = [];
     private int _escortRouteIndex89;
@@ -238,7 +240,14 @@ public partial class ObjectiveRuntime : Node3D
         }
 
         _escortRepathSeconds89-=delta;
-        if (_escortRepathSeconds89 <= 0 ||
+        // Pass91: Pass89's 0.8-second unconditional replan caused route
+        // oscillation in Bypass around static shell walls: the survivor
+        // repeatedly returned to the nearest graph vertex rather than
+        // making progress along an already verified corridor. Preserve
+        // a completed, collision-audited waypoint chain until consumed
+        // or invalidated by a REAL collision probe. This keeps real
+        // physical step safety while allowing long detours to finish.
+        if (_escortRouteInvalidated91 ||
             _escortRouteIndex89 >= _escortRoute89.Length)
         {
             var newRoute=nav.GetVerifiedEscortRoute89(
@@ -248,16 +257,17 @@ public partial class ObjectiveRuntime : Node3D
             {
                 _escortRoute89=newRoute;
                 _escortRouteIndex89=0;
+                _escortRouteInvalidated91=false;
                 EscortSafeRoutePlans89++;
             }
             else
             {
                 EscortBlockedRoutePlans89++;
-                // A short failed re-anchor at an edge/corner MUST NOT
-                // erase a previously collision-audited route that still
-                // leads around the obstacle. Each upcoming 55cm movement
-                // remains checked against live floor and wall physics.
-                // Once consumed, an exhausted route cannot be reused.
+                // If the last short probe was a false obstruction, never
+                // move through it blindly. Stop/recheck next frame.
+                // A still-supported non-exhausted route is retained, but
+                // ONLY the immediate next physical step can authorize
+                // movement (CanTravel below).
                 if (_escortRouteIndex89 >= _escortRoute89.Length)
                 {
                     StopEscortHorizontal89(delta);
@@ -289,6 +299,8 @@ public partial class ObjectiveRuntime : Node3D
                 GetWorld3D(),from,from+direction*.55f,exclude))
         {
             EscortBlockedSteps89++;
+            EscortRouteInvalidations91++;
+            _escortRouteInvalidated91=true;
             _escortRepathSeconds89=0; // next frame re-audits world graph
             StopEscortHorizontal89(delta);
             return;
