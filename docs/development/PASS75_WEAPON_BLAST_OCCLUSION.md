@@ -15,4 +15,18 @@
 
 This addresses genuine game mechanics in the current reconstructed engine. It **does not** prove the recovered original Roblox damage curves, first-person arms, grenade bounce characteristics, per-weapon pellet counts or complete ten-map architecture. Source-original mesh triangles/UVs, exact collision interiors and full 15-wave player-driven sessions remain outstanding. The owner asset packs and private saves are excluded from public GitHub CI; no public downloadable EXE is produced.
 
-**Status:** implementation committed; compiled Windows acceptance not yet verified.
+**Verified Windows CI:** [successful run 38206918852](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38206918852) on source commit `e0eac465b43b7b28786c56ada02a6c1d3c5510f7` — **613 Python regressions passed**, Godot/.NET export compiled with **zero errors**, native `TWR_PASS75_LAUNCHER_OK`, `TWR_PASS75_FRAG_OK` and `TWR_SMOKE_PASS75_WEAPON_BLAST_OK` all appeared, and the private-assets check passed.
+
+### Native gameplay evidence
+
+| Test condition | Exported Windows result |
+| --- | --- |
+| Rocket against wall, infected and tanker behind | Both damage channels blocked |
+| Rocket after wall removal | Physical layer-2 infected hit, visible objective damaged |
+| Frag behind wall | No infected/tanker damage |
+| Frag after wall removal | Living infected damaged/killed, normal domain credit award, visible tanker damaged |
+| Target outside 30-stud Frag radius | No objective damage |
+| Two-contact Frag resting on Godot floor | Verified during genuine three-second fuse |
+| Replay of domain ten-map scripted progression | Passed `TWR_SMOKE_COMPLETE_OK maps=10 waves=150` (simulation only) |
+
+**Important evidence boundary:** The Laboratory and Manor test lanes are **synthetic**, installed above the existing Godot reconstruction. A passing physics test is not a substitute for the missing retail map collision data or 15 actual human-played waves. The Windows build was compiled in CI, but the workflow intentionally does not publish private original assets or a user-downloadable EXE.

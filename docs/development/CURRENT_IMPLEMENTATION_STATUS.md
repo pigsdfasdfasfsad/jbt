@@ -1,4 +1,4 @@
-# PASS 75 — ROCKET/FRAG OCCLUSION AND CROSSHAIR-FIRST COMBAT (WINDOWS CI PENDING)
+# PASS 75 — VERIFIED EXPORTED WINDOWS ROCKET, FRAG AND RECOIL COMBAT
 
 **Source branch:** `twr-pass75-blast-line-of-sight` based on [verified Pass74 Windows native gameplay](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38205313363).
 
@@ -6,7 +6,9 @@ Pass75 fixes three concrete gameplay issues: **rocket swept collision rays did n
 
 The dedicated native Windows smoke creates production Laboratory and Manor gameplay roots with actual wave-spawned infected, a clearly synthetic raised arena floor and temporary wall, real rocket sweep/impact and 3-second Frag fuse physics, and native damage-objective actors. It tests blocked/unblocked infected and tanker splash, out-of-radius preservation, and authoritative kill credits. The standalone smoke uses an isolated local profile and never requires online services or publishes owner-original data.
 
-**Verification pending:** Python regression suite, Godot/.NET Windows export, two native smoke markers, and private-asset exclusion. These collision tests are not proof of all original weapon ballistics, 1:1 map geometry, manual fifteen-wave survival or distribution-ready EXE.
+**Verified native Windows CI:** [run 38206918852](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38206918852) on gameplay source SHA `e0eac465b43b7b28786c56ada02a6c1d3c5510f7` — **613 Python regressions passed, zero Godot/.NET compiler errors, real Laboratory rocket and Manor Frag native smoke markers passed, owner-private source exclusion passed**. One inherited XML FutureWarning remains. The real Frag was specifically verified as resting at the temporary physics floor with a completed 3-second fuse, physically damaging visible infected/objectives, paying normal domain kill rewards, and preserving occluded and out-of-radius targets.
+
+**Fidelity limitations:** These tests do **not** demonstrate exact original weapon ballistics for all 91 weapons, authentic map meshes/collisions, complete 15-wave human survival or distribution-ready EXE. Test geometry is explicitly synthetic.
 
 [Pass75 engineering report](PASS75_WEAPON_BLAST_OCCLUSION.md)
 

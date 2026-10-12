@@ -2,7 +2,20 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 74 — Special-infected collision safety and real native combat
+## Latest verified branch: Pass 75 — Collision-safe weapon blasts and crosshair-first firing
+
+[Pass 75 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass75-blast-line-of-sight) ·
+[Successful Windows export, 613 tests and native rocket/Frag acceptance](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38206918852) ·
+[Pass 75 engineering record](docs/development/PASS75_WEAPON_BLAST_OCCLUSION.md)
+
+- Launchers now sweep against **Godot layer 2 infected colliders** as well as world/source collision. Previously the default layer-1-only ray could fly through zombies.
+- Launcher and Frag splash now require physical line-of-sight to infected and damage-objective centres; explosions no longer damage targets through solid reconstructed walls. Recovered **300 Frag damage / 30-stud blast radius / 3-second fuse** remain unchanged.
+- Physics Frags now rest on a second valid **upward-facing ground contact** instead of sliding into/tunnelling through a floor as the source fuse continues. The native test exposed this actual defect and validated the correction.
+- All first-shot bullet/shotgun/launcher directions are determined **before** the current shot's camera recoil; recoil still changes subsequent aim and visual weapon behavior. Domain ammo, kill credits and XP authority are unchanged.
+- **613 Python regressions passed**, Godot/.NET Windows export finished with **zero compiler errors**, and two real `GameplayRoot` scene smokes passed: on Laboratory, actual rocket direct infected hits and visible objective damage; on Manor, a **resting live Frag fuse**, occlusion-safe kill rewards and untouched out-of-range objectives. Owner-private original assets were excluded.
+- These checks used **clearly synthetic test floors/walls**, not recovered retail map interiors. Native full 15-wave player sessions, original mesh/animation parity and a downloadable privately assembled Windows EXE remain unfinished.
+
+## Historical verified branch: Pass 74 — Special-infected collision safety and real native combat
 
 [Pass 74 source code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass74-special-infected-safety) ·
 [Successful Windows export, 607 Python tests and native ability smoke](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38205313363) ·
