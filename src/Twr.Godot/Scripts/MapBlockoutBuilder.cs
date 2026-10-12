@@ -182,8 +182,8 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildManor(Node3D root)
     {
         BaseArena(root, 78, 90, new Color(0.12f, 0.13f, 0.12f));
-        InteriorShell(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f), 1.15f, 9.55f);
-        InteriorShell(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f), -23.45f, -15.15f);
+        InteriorShell(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f), .15f, 9.55f);
+        InteriorShell(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f), -23.45f, -14.15f);
         InteriorShell(root, "FrontHall", new Vector3(0, 2.7f, 31), new Vector3(28, 5.4f, 11), new Color(0.25f, 0.22f, 0.19f));
         // RECOVERED topology: Manor has usable rooms on both floors and a front
         // staircase plus a west staircase. Exact dimensions remain APPROXIMATED.
@@ -224,7 +224,7 @@ public static class MapBlockoutBuilder
     {
         var sign = Math.Sign(stair.UpperFeet.Z-stair.LowerFeet.Z);
         var center = stair.UpperFeet +
-            new Vector3(0f, 0f, sign*.70f);
+            new Vector3(0f, 0f, sign*1.40f);
         return new Pass80UpperCrossing(stair.Name, center,
             center+Vector3.Left*4.25f, center+Vector3.Right*4.25f);
     }
@@ -377,7 +377,7 @@ public static class MapBlockoutBuilder
         // upper surface is exactly level with the side decks, avoiding
         // an obstructing internal vertical seam at the balcony edge.
         // It does not pretend to replace retail Manor collision meshes.
-        var crossingZ=upper.Z+zDir*.70f;
+        var crossingZ=upper.Z+zDir*1.40f;
         StaticBox(root,name+"_UpperCrossing80",
             new Vector3(center.X,upper.Y-.08f,crossingZ),
             new Vector3(9.0f,.16f,1.20f),color.Lightened(.065f));

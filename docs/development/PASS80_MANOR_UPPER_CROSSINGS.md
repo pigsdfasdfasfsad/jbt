@@ -27,3 +27,11 @@ waypoints now sit at +/-4.25m on the supported side decks, and an agent
 outside the supported straight approach must first retreat through audited
 floor-support segments. Unlike a global location reset, every centimetre
 is still traversed by the ordinary CharacterBody physics controller.
+
+Further native collision telemetry isolated a hidden overlap: the recessed
+Pass77 stair landing's rotated side face reaches the original 0.70 m
+crosswalk standoff, catching an infected capsule at the transition.
+The Pass80 crosswalk is now offset a full 1.40 m beyond each landing, with
+corresponding wider divider apertures in West/East fallback wings. This
+removes the landing-side overlap while retaining an independently supported
+walkway across the actual split deck. These dimensions remain approximate.

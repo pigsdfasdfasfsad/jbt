@@ -338,7 +338,7 @@ public partial class Pass83ManorUpperGameplayAcceptance : Node
         // both derived from the same reconstructed staircase endpoints.
         var sign=Math.Sign(stair.UpperFeet.Z-stair.LowerFeet.Z);
         var mid=stair.UpperFeet+
-            new Vector3(0,0f,sign*.70f);
+            new Vector3(0,0f,sign*1.40f);
         return new Pass80UpperCrossing(stair.Name,mid,
             mid+Vector3.Left*4.25f,
             mid+Vector3.Right*4.25f);
