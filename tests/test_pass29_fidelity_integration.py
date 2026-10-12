@@ -11,7 +11,8 @@ def test_lab_navigation_wired_and_fail_closed():
     n=src("src/Twr.Godot/Scripts/Pass25SourceNavigationRuntime.cs")
     assert "Pass25SourceNavigationRuntime.TryBuild(this, MapName)" in g
     assert "SourceNavigator = _sourceNavigator" in g
-    assert "if (highwayReady || sourceReady)" in a
+    assert "if (highwayReady || sourceReady || fallbackReady)" in a
+    assert a.index("HighwayNavigator!.GetRoute(") < a.index("SourceNavigator!.GetRoute(") < a.index("GroundNavigator73!.GetRoute(")
     assert "fallback=local_steering" in n
     assert "SequenceEqual(sceneDigest)" in n
 
