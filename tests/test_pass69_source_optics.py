@@ -96,6 +96,9 @@ def test_six_procedural_reticle_styles_and_screen_space_layers():
         assert shape in optic
     assert "DrawScopeRim(" in optic
     assert "DrawDarkOutside(" in optic
+    assert "if(style==Style.Duplex)" in optic
+    assert "index<=4" in optic
+    assert "DrawScopeRim(center,radius,rim,edge);" in optic
     assert "DrawReticle(" in optic
     assert "MouseFilter=MouseFilterEnum.Ignore" in optic
     assert "GetTree().Quit(" not in optic
