@@ -21,6 +21,14 @@ public partial class GameplayHud : CanvasLayer
     private readonly ColorRect[] _armorBars = new ColorRect[4];
     private ColorRect _healthBar = null!;
     private WeaponDialHud _weaponDial = null!;
+    private Label _crosshair = null!;
+    public bool ScopeCrosshairSuppressed {get;private set;}
+    public void SetScopeCrosshairSuppressed(bool suppressed)
+    {
+        ScopeCrosshairSuppressed=suppressed;
+        if(_crosshair is not null)
+            _crosshair.Visible=!suppressed;
+    }
     private double _damageFlashSeconds;
 
     public override void _Ready()
@@ -186,18 +194,18 @@ public partial class GameplayHud : CanvasLayer
         };
         AddChild(_damageFlash);
 
-        var crosshair = MakeLabel(0,0,34,34,24);
-        crosshair.AnchorLeft = .5f;
-        crosshair.AnchorRight = .5f;
-        crosshair.AnchorTop = .5f;
-        crosshair.AnchorBottom = .5f;
-        crosshair.OffsetLeft = -17;
-        crosshair.OffsetRight = 17;
-        crosshair.OffsetTop = -17;
-        crosshair.OffsetBottom = 17;
-        crosshair.Text = "+";
-        crosshair.HorizontalAlignment = HorizontalAlignment.Center;
-        crosshair.AddThemeColorOverride("font_color",
+        _crosshair = MakeLabel(0,0,34,34,24);
+        _crosshair.AnchorLeft = .5f;
+        _crosshair.AnchorRight = .5f;
+        _crosshair.AnchorTop = .5f;
+        _crosshair.AnchorBottom = .5f;
+        _crosshair.OffsetLeft = -17;
+        _crosshair.OffsetRight = 17;
+        _crosshair.OffsetTop = -17;
+        _crosshair.OffsetBottom = 17;
+        _crosshair.Text = "+";
+        _crosshair.HorizontalAlignment = HorizontalAlignment.Center;
+        _crosshair.AddThemeColorOverride("font_color",
             new Color(.84f,.87f,.84f,.85f));
     }
 
