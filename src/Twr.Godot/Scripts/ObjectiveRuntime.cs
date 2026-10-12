@@ -14,6 +14,9 @@ public partial class ObjectiveRuntime : Node3D
     public int EscortSafeSteps89 { get; private set; }
     public int EscortBlockedSteps89 { get; private set; }
     public bool EscortDestinationAdjusted89 { get; private set; }
+    public int EscortGroundedDestinations90 { get; private set; }
+    public int EscortRejectedDestinations90 { get; private set; }
+    public bool EscortGroundedCompletion90 { get; private set; }
     private Vector3[] _escortRoute89 = [];
     private int _escortRouteIndex89;
     private double _escortRepathSeconds89;
@@ -138,6 +141,19 @@ public partial class ObjectiveRuntime : Node3D
         var actor=_escort;
         var from=actor.GlobalPosition;
         var target=_escortDestination.GlobalPosition;
+        // Source-derived and approximate marker positions are NOT
+        // guaranteed to equal the NPC's feet-level collision plane.
+        // Do not select any route until this real CharacterBody3D has
+        // first grounded using its own MoveAndSlide physics.
+        if (!actor.IsOnFloor())
+        {
+            StopEscortHorizontal89(delta);
+            return;
+        }
+        var exclusion90=new global::Godot.Collections.Array<Rid>
+        {
+            actor.GetRid(),Player.GetRid()
+        };
         if (!_escortDestinationResolved89)
         {
             // Reject impossible fixed -24Z locations on approximate maps.
@@ -156,13 +172,29 @@ public partial class ObjectiveRuntime : Node3D
             };
             foreach(var option in options)
             {
+                var grounded=Pass90EscortArrivalSafety.TryGroundDestination(
+                    GetWorld3D(),option,exclusion90);
+                if (!grounded.HasValue)
+                {
+                    EscortRejectedDestinations90++;
+                    continue;
+                }
+                var destinationFeet=grounded.Value;
                 var candidate=nav.GetVerifiedEscortRoute89(
-                    from,option,actor.GetRid());
-                if(candidate.Length == 0) continue;
-                _escortDestination.GlobalPosition=option;
+                    from,destinationFeet,actor.GetRid());
+                if(candidate.Length == 0)
+                {
+                    EscortRejectedDestinations90++;
+                    continue;
+                }
+                // Only the actual local marker or a collision-safe fallback
+                // changes. A vertical marker correction never counts as a
+                // new retail-original objective destination.
+                _escortDestination.GlobalPosition=destinationFeet;
                 _escortDestinationResolved89=true;
                 EscortDestinationAdjusted89 = option!=target;
-                _escortStartDistance=from.DistanceTo(option);
+                EscortGroundedDestinations90++;
+                _escortStartDistance=from.DistanceTo(destinationFeet);
                 _escortRoute89=candidate;
                 _escortRouteIndex89=0;
                 _escortRepathSeconds89=.8;
@@ -182,8 +214,20 @@ public partial class ObjectiveRuntime : Node3D
         toGoal.Y=0;
         if (toGoal.Length() <= 1.5f)
         {
-            StopEscortHorizontal89(delta);
-            Complete();
+            // Pass90: close in XZ is insufficient when the goal lies
+            // behind a wall, on another floor, or the player abandoned
+            // the survivor. The goal was physically grounded above.
+            if (Pass90EscortArrivalSafety.CanComplete(
+                    GetWorld3D(),from,target,actor.IsOnFloor(),
+                    Player.GlobalPosition.DistanceTo(from)<=EscortProximity,
+                    exclusion90))
+            {
+                EscortGroundedCompletion90=true;
+                StopEscortHorizontal89(delta);
+                Complete();
+            }
+            else
+                StopEscortHorizontal89(delta);
             return;
         }
 
