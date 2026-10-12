@@ -271,6 +271,8 @@ public partial class Pass94ManorEscortAcceptance : Node
         var maxTravel=0f;
         var reachedMidRamp=false;
         var last=initial;
+        var lastProgressPoint=initial;
+        var framesWithoutProgress=0;
         // Real CharacterBody3D physics runs at 60Hz. No NPC teleport,
         // domain state override, objective completion spoof, or wall disabling.
         for(var frame=0;frame<3000;frame++)
@@ -290,6 +292,37 @@ public partial class Pass94ManorEscortAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass94 NPC deleted before real objective completion");
             last=actor.GlobalPosition;
+            // Do not mistake a validated A* plan for actual NPC progress.
+            // A stalled CharacterBody3D must produce an actionable native
+            // failure rather than exiting from Godot's --quit-after timer.
+            if(last.DistanceTo(lastProgressPoint)>.60f)
+            {
+                lastProgressPoint=last;
+                framesWithoutProgress=0;
+            }
+            else
+                framesWithoutProgress++;
+            if(frame>300 && framesWithoutProgress>300)
+                throw new InvalidOperationException(
+                    "Pass94 physics survivor motion stalled"+
+                    " frame="+frame+
+                    " feet="+last+
+                    " floor="+actor.IsOnFloor()+
+                    " velocity="+actor.Velocity+
+                    " waypoint="+objective.EscortNextWaypoint91+
+                    " remaining="+objective.EscortRemainingWaypoints91+
+                    " routePlans="+objective.EscortSafeRoutePlans89+
+                    " routeFailures="+objective.EscortBlockedRoutePlans89+
+                    " steps="+objective.EscortSafeSteps89+
+                    " blocked="+objective.EscortBlockedSteps89);
+            if(frame%180==0)
+                GD.Print("TWR_PASS94_MOTION_PROGRESS"+
+                    " frame="+frame+
+                    " feet="+last+
+                    " safeSteps="+objective.EscortSafeSteps89+
+                    " blockedSteps="+objective.EscortBlockedSteps89+
+                    " next="+objective.EscortNextWaypoint91+
+                    " remaining="+objective.EscortRemainingWaypoints91);
             minimumFeetY=Math.Min(minimumFeetY,last.Y);
             maxTravel=Math.Max(maxTravel,last.DistanceTo(initial));
             safeSteps=objective.EscortSafeSteps89;
