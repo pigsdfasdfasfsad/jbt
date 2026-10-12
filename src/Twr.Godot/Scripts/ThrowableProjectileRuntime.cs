@@ -104,6 +104,7 @@ public partial class ThrowableProjectileRuntime : Node3D
         {
             if(node is not InfectedAgent infected || !GodotObject.IsInstanceValid(infected))continue;
             var distance=infected.GlobalPosition.DistanceTo(GlobalPosition);
+            if(distance>FragRadiusMeters)continue;
             if(!Pass75BlastOcclusion.CanReachTarget(
                     GetWorld3D(), GlobalPosition, infected,
                     FragRadiusMeters, SourcePlayer)) continue;
