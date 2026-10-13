@@ -310,6 +310,10 @@ public partial class Pass115LaboratoryDressing : Node3D
     private void BuildWard()
     {
         var area=Landmark("WardDressing");
+        // The existing FALLBACK HospitalWard slab rises to Y=.90. Keep
+        // the beds/partitions visibly ABOVE it, not embedded in the
+        // historical decorative platform; no collider is introduced.
+        area.Position=Vector3.Up*.82f;
         // Owner wiki: open-ceiling makeshift hospital with emergency beds.
         // Beds/canvas partitions are visual-only, so combat and pickups
         // still use existing verified physics/nav locations.
@@ -351,7 +355,10 @@ public partial class Pass115LaboratoryDressing : Node3D
         // Placement is APPROXIMATE; no source floor coordinate survives.
         for(var i=0;i<4;i++)
         {
-            var x=5.4f+(i%2)*8.5f;
+            // The older opaque BridgeEast proxy occupies X=6.5..13.5.
+            // Seat rows to either side so the new furniture is visible,
+            // while the pass never touches that verified bridge geometry.
+            var x=3.4f+(i%2)*13.0f;
             var z=25.7f+(i/2)*5.1f;
             var prefix="CafeteriaTable"+i;
             Box(area,prefix+"Top",new Vector3(x,.88f,z),
@@ -366,10 +373,10 @@ public partial class Pass115LaboratoryDressing : Node3D
         for(var i=0;i<2;i++)
         {
             Cylinder(area,"IndoorPlanter"+i,
-                new Vector3(3.1f+i*13.0f,.39f,29f),
+                new Vector3(1.5f+i*17.3f,.39f,29f),
                 .46f,.65f,Steel);
             Cylinder(area,"IndoorFoliage"+i,
-                new Vector3(3.1f+i*13.0f,1.22f,29f),
+                new Vector3(1.5f+i*17.3f,1.22f,29f),
                 .50f,.70f,new Color(.16f,.27f,.20f));
         }
     }
