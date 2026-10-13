@@ -29,6 +29,7 @@ def test_windows_pipeline_verifies_both_real_features_before_regressions():
     assert "Preflight Pass 96 full native fifteen-wave match and same-map payout replay" in ci
     assert "TWR_SMOKE_PASS96_GROUNDED_MATERIALS_OK" in ci
     assert "TWR_SMOKE_PASS96_FULL_MATCH_REPLAY_OK" in ci
+    assert "TWR_PASS97_MATERIALS_IN_FULL_MATCH_OK" in ci
     assert "'--smoke-pass96'" in ci
     assert "'--smoke-pass96-replay'" in ci
     assert ci.index("Preflight Pass 96 ten-map") < ci.index("Preflight Pass 96 full native")
@@ -65,3 +66,22 @@ def test_offline_wave_receipts_and_grounded_materials_do_not_conflict():
     assert "Profile.Credits = 0" not in match
     assert "Profile.Xp = 0" not in match
     assert "CollisionMask=0" not in materials
+
+
+def test_real_fifteen_wave_gameplay_also_grounds_live_material_missions():
+    full = read("src/Twr.Godot/Scripts/Pass96FullMatchReplayAcceptance.cs")
+    for marker in (
+        "foreach(var objective in game.GetChildren().OfType<ObjectiveRuntime>())",
+        "objective.UseFallbackMaterialGrounding96",
+        "objective.Pass96GroundedMaterialLayout",
+        "objective.Pass96MaterialFeet.Count",
+        "groundedMaterialObjectives97<6",
+        "groundedMaterialPieces97<60",
+        "TWR_PASS97_MATERIALS_IN_FULL_MATCH_OK",
+    ):
+        assert marker in full
+    # Do not fake the material planner, rewards or infected spawning.
+    assert "objective.Pass96GroundedMaterialLayout=true" not in full
+    assert "objective.Position=" not in full
+    assert "Runtime.Player.Credits=" not in full
+    assert "Runtime.Player.Xp=" not in full
