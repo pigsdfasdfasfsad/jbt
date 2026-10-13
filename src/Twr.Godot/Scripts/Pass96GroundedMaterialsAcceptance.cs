@@ -140,7 +140,8 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
     }
 
     private async Task<float> WalkTo100(
-        FirstPersonPlayer player,Vector3 targetFeet,string context)
+        FirstPersonPlayer player,Vector3 targetFeet,string context,
+        float arrivalRadius=.80f)
     {
         // Test operator adjusts only facing, analogous to moving the
         // mouse; horizontal motion comes solely from normal W input,
@@ -154,7 +155,7 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
             {
                 var direction=targetFeet-player.GlobalPosition;
                 direction.Y=0;
-                if(direction.Length()<=.80f)
+                if(direction.Length()<=arrivalRadius)
                 {
                     reached=true;
                     break;
@@ -181,7 +182,7 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
         await Frames(4);
         var separation=targetFeet-player.GlobalPosition;
         separation.Y=0;
-        if(!reached || separation.Length()>1.15f ||
+        if(!reached || separation.Length()>arrivalRadius+.35f ||
            !player.IsOnFloor())
             throw new InvalidOperationException(
                 "Pass100 forward-key traversal blocked "+
@@ -253,6 +254,51 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
         return metres;
     }
 
+    // The reconstructed Manor WestWing has a central divider immediately
+    // behind its narrow southern door. The escort graph samples every 3m
+    // and can miss a human-reachable doorway turn. Follow known PUBLIC
+    // blockout landmarks, auditing every short leg against actual Godot
+    // capsule/floor collision before pressing W. No player or world
+    // object is translated, and none of these approximate positions are
+    // represented as retail source navigation markers.
+    private async Task<float> WalkManorGround102(
+        GameplayRoot game, FirstPersonPlayer player,
+        Vector3 lowerStairApproach)
+    {
+        if(game.MapName!="Manor" ||
+           game.Pass77ApproximateStairs.Count!=3)
+            throw new InvalidOperationException(
+                "Pass102 Manor physical route requires fallback stairs");
+        var feet=new[]
+        {
+            new Vector3(0f,0f,23f),     // clear courtyard cover to north
+            new Vector3(-10f,0f,23f),   // travel around cover on solid floor
+            new Vector3(-20f,0f,20.1f), // outside narrow WestWing south door
+            new Vector3(-20f,.2f,17.5f),// physically cross sloped threshold
+            new Vector3(-18.5f,.2f,9f), // to side of the interior divider
+            lowerStairApproach          // turn through verified partition gap
+        };
+        var world=game.GetWorld3D();
+        var exclude=new global::Godot.Collections.Array<Rid>{player.GetRid()};
+        var walked=0f;
+        for(var i=0;i<feet.Length;i++)
+        {
+            var start=player.GlobalPosition;
+            if(!Pass89EscortSurfaceSafety.CanTravel(
+                    world,start,feet[i],exclude))
+                throw new InvalidOperationException(
+                    "Pass102 Manor live full-capsule route blocked segment="+
+                    i+" from="+start+" to="+feet[i]);
+            walked+=await WalkTo100(
+                player,feet[i],"Manor/ground-door-segment-"+i,
+                arrivalRadius:.38f);
+            if(!player.IsOnFloor())
+                throw new InvalidOperationException(
+                    "Pass102 Manor footpath lost ground segment="+i);
+        }
+        return walked;
+    }
+
     private async Task<float> WalkManorUpperIngress102(
         GameplayRoot game, FirstPersonPlayer player,
         Vector3 objectiveDepot)
@@ -268,8 +314,8 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
             "Pass102 invalid Manor staircase direction");
         var approach=stair.LowerFeet+
             new Vector3(0f,0f,-sign*.75f);
-        var walked=await WalkGroundIngress102(
-            game,player,approach,"Manor/spawn-to-WestWing-lower");
+        var walked=await WalkManorGround102(
+            game,player,approach);
 
         // The supported stair itself must be climbed continuously. The
         // ramp and deck are production physics meshes, not a teleport.
