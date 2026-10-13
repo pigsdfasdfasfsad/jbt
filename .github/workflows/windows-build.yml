@@ -3,7 +3,7 @@ name: TWR Offline Windows Build
 on:
   workflow_dispatch:
   push:
-    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer, twr-pass56-source-wiki-gallery, twr-pass57-offline-source-weapon-geometry, twr-pass58-original-weapon-silhouettes, twr-pass59-source-weapon-motion, twr-pass60-source-weapon-animations, twr-pass61-source-weapon-cycling, twr-pass62-source-subassembly-hierarchy, twr-pass63-source-magazine-reload, twr-pass64-source-shell-and-bolt, twr-pass65-source-hand-grips, twr-pass66-articulated-source-arms, twr-pass67-source-sight-alignment, twr-pass68-original-aimcf, twr-pass69-source-optical-reticles, twr-pass70-live-player-combat-loop, twr-pass71-native-multimap-damage, twr-pass72-native-ten-map-entry, twr-pass73-fullmap-ground-navigation, twr-pass74-special-infected-safety, twr-pass75-blast-line-of-sight, twr-pass76-interaction-objective-fortification, twr-pass77-manor-stair-traversal, twr-pass78-manor-bidirectional-stairs, twr-pass83-manor-upper-gameplay, twr-pass88-physical-wave-hardening, twr-pass89-escort-ground-navigation, twr-pass90-escort-completion-rewards, twr-pass91-multimap-escort, twr-pass92-expressway-escort, twr-pass93-escort-completion-safety, twr-pass94-manor-stair-escort, twr-pass95-manor-escort-rotation, twr-pass96-grounded-material-objectives, twr-pass97-unified-gameplay, twr-pass98-material-objective-completion, twr-pass99-global-material-carry]
+    branches: [twr-offline-dev, twr-pass29-integration, twr-pass30-gameplay-validation, twr-pass31-navigation-repair, twr-pass32-grounded-navigation, twr-pass33-navigation-cache, twr-pass34-original-client-walls, twr-pass35-infected-walls, twr-pass36-source-map-fragments, twr-pass37-source-lighting, twr-pass38-source-soundscapes, twr-pass39-original-laboratory, twr-pass40-grounded-lab-navigation, twr-pass41-source-native-bridges, twr-pass42-jump-navigation, twr-pass43-physical-jump-verification, twr-pass44-native-lab-streaming, twr-pass45-lab-proxy-visibility, twr-pass46-offline-original-art, twr-pass47-original-weapon-assemblies, twr-pass48-infected-source-asset-kit, twr-pass49-original-lobby-3d, twr-pass50-original-bulletin-board, twr-pass51-original-loadout-preview, twr-pass52-source-loadout-and-shop, twr-pass53-offline-skin-cases, twr-pass54-original-skin-materials, twr-pass55-source-skin-textures-and-shimmer, twr-pass56-source-wiki-gallery, twr-pass57-offline-source-weapon-geometry, twr-pass58-original-weapon-silhouettes, twr-pass59-source-weapon-motion, twr-pass60-source-weapon-animations, twr-pass61-source-weapon-cycling, twr-pass62-source-subassembly-hierarchy, twr-pass63-source-magazine-reload, twr-pass64-source-shell-and-bolt, twr-pass65-source-hand-grips, twr-pass66-articulated-source-arms, twr-pass67-source-sight-alignment, twr-pass68-original-aimcf, twr-pass69-source-optical-reticles, twr-pass70-live-player-combat-loop, twr-pass71-native-multimap-damage, twr-pass72-native-ten-map-entry, twr-pass73-fullmap-ground-navigation, twr-pass74-special-infected-safety, twr-pass75-blast-line-of-sight, twr-pass76-interaction-objective-fortification, twr-pass77-manor-stair-traversal, twr-pass78-manor-bidirectional-stairs, twr-pass83-manor-upper-gameplay, twr-pass88-physical-wave-hardening, twr-pass89-escort-ground-navigation, twr-pass90-escort-completion-rewards, twr-pass91-multimap-escort, twr-pass92-expressway-escort, twr-pass93-escort-completion-safety, twr-pass94-manor-stair-escort, twr-pass95-manor-escort-rotation, twr-pass96-grounded-material-objectives, twr-pass97-unified-gameplay, twr-pass98-material-objective-completion, twr-pass99-global-material-carry, twr-pass100-physical-material-walk]
     paths:
       - 'src/**'
       - 'content/**'
@@ -120,13 +120,13 @@ jobs:
           }
 
       - name: Preflight Pass 96 ten-map real Load/Repair material access
-        if: success() && (github.ref_name == 'twr-pass96-grounded-material-objectives' || github.ref_name == 'twr-pass97-unified-gameplay' || github.ref_name == 'twr-pass98-material-objective-completion')
+        if: success() && (github.ref_name == 'twr-pass96-grounded-material-objectives' || github.ref_name == 'twr-pass97-unified-gameplay' || github.ref_name == 'twr-pass98-material-objective-completion' || github.ref_name == 'twr-pass99-global-material-carry' || github.ref_name == 'twr-pass100-physical-material-walk')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass96.stdout.txt'
           $stderr = Join-Path $env:RUNNER_TEMP 'pass96.stderr.txt'
           $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
-          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','120000','--','--smoke-pass96') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','240000','--','--smoke-pass96') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
           $output = @()
           if(Test-Path $stdout){$output += Get-Content $stdout}
           if(Test-Path $stderr){$output += Get-Content $stderr}
@@ -142,9 +142,21 @@ jobs:
              -not ($output | Where-Object {"$_" -match 'TWR_SMOKE_PASS96_GROUNDED_MATERIALS_OK'})){
             throw "Pass96 ten-map material interaction did not complete. Exit $($run.ExitCode)"
           }
+          if($env:GITHUB_REF_NAME -eq 'twr-pass100-physical-material-walk'){
+            foreach($map in @('Ranch','Mill','Bypass','Cabin','Cargo','District','Prison','Laboratory','Expressway','Manor')){
+              foreach($family in @('Load','Repair')){
+                if(-not ($output | Where-Object {"$_" -match "TWR_PASS100_MAP_WALK_OK map=$map family=$family material_pickups=1 deposits=1"})){
+                  throw "Pass100 actual forward-key roundtrip failed map=$map family=$family"
+                }
+              }
+            }
+            if(-not ($output | Where-Object {"$_" -match 'TWR_SMOKE_PASS100_MATERIAL_WALK_OK maps=10 objective_families=Load,Repair material_roundtrips=20'})){
+              throw "Pass100 exported executable did not demonstrate twenty real forward-key material laps"
+            }
+          }
 
       - name: Preflight Pass 96 full native fifteen-wave match and same-map payout replay
-        if: success() && (github.ref_name == 'twr-pass96-wave-replay-persistence' || github.ref_name == 'twr-pass97-unified-gameplay' || github.ref_name == 'twr-pass98-material-objective-completion')
+        if: success() && (github.ref_name == 'twr-pass96-wave-replay-persistence' || github.ref_name == 'twr-pass97-unified-gameplay' || github.ref_name == 'twr-pass98-material-objective-completion' || github.ref_name == 'twr-pass99-global-material-carry' || github.ref_name == 'twr-pass100-physical-material-walk')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass96-replay.stdout.txt'
@@ -166,7 +178,7 @@ jobs:
           if($run.ExitCode -ne 0){throw "Pass96 production 15-wave replay failed: $($run.ExitCode)"}
 
       - name: Preflight Pass 98 real full Load and Repair E-key completions
-        if: success() && (github.ref_name == 'twr-pass98-material-objective-completion' || github.ref_name == 'twr-pass99-global-material-carry')
+        if: success() && (github.ref_name == 'twr-pass98-material-objective-completion' || github.ref_name == 'twr-pass99-global-material-carry' || github.ref_name == 'twr-pass100-physical-material-walk')
         shell: pwsh
         run: |
           $stdout = Join-Path $env:RUNNER_TEMP 'pass98.stdout.txt'
@@ -189,7 +201,7 @@ jobs:
               throw "Pass98 native physical-interaction marker missing: $marker"
             }
           }
-          if($env:GITHUB_REF_NAME -eq 'twr-pass99-global-material-carry' -and
+          if($env:GITHUB_REF_NAME -in @('twr-pass99-global-material-carry','twr-pass100-physical-material-walk') -and
              -not ($output | Where-Object {"$_" -match 'TWR_PASS99_GLOBAL_MATERIAL_CARRY_OK'})){
             throw "Pass99 exported Windows carry-ownership test failed"
           }
