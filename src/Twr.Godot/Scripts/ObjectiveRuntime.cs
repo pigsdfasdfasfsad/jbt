@@ -87,6 +87,14 @@ public partial class ObjectiveRuntime : Node3D
         PublishStatus();
     }
 
+    public override void _ExitTree()
+    {
+        // A timed-out, cleared, or restarted mission must relinquish its
+        // material even if the player never reached the deposit.
+        if (Player is not null && GodotObject.IsInstanceValid(Player))
+            Pass76InteractionSafety.ReleaseMaterialCarry99(Player, this);
+    }
+
     public override void _Process(double delta)
     {
         if (_completed || Player is null || Runtime?.Player?.IsAlive != true)
@@ -618,6 +626,7 @@ public partial class ObjectiveRuntime : Node3D
             Pass76InteractionSafety.CanReach(Player, GlobalPosition, 3f))
         {
             _carrying = false;
+            Pass76InteractionSafety.ReleaseMaterialCarry99(Player, this);
             _deposited++;
             PublishStatus();
             if (_deposited >= _required)
@@ -648,7 +657,8 @@ public partial class ObjectiveRuntime : Node3D
         }
 
         if (nearest is not null && nearestDistance <= 2.5f &&
-            Pass76InteractionSafety.CanReach(Player, nearest.GlobalPosition, 2.5f))
+            Pass76InteractionSafety.CanReach(Player, nearest.GlobalPosition, 2.5f) &&
+            Pass76InteractionSafety.TryClaimMaterialCarry99(Player, this))
         {
             _items.Remove(nearest);
             nearest.QueueFree();
