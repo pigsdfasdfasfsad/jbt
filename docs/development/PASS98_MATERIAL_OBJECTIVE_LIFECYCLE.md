@@ -25,8 +25,30 @@ This test deliberately accelerates stage clocks and teleports the test **player*
 
 The Pass98 CI gate also preserves Pass95 upper-Manor Escorts; both Pass96 physics/objective material checks; Pass97 full fifteen-wave material/persistence integration; Pass78/83/88/89/90/91/92/94 native regressions; and exclusion of owner-private map packs or public downloadable executables.
 
-**Status:** implementation committed; Pass98 requires green exported Windows native validation before completion is claimed.
+**Status:** verified on an exported Windows executable. Native CI run [38326670040](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38326670040) passed all production material preflights, source contracts, previous native map/escort regressions and the private-asset audit.
 
 ## Remaining work
 
 Original retail map/asset coordinate fidelity, non-placeholder item models, human-controlled 15-wave survival, complete objective collision walks, original animation/audio and a distributable owner-approved Windows package are not verified by this pass.
+
+## Verified Pass98 Windows results
+
+[GitHub Actions run 38326670040](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38326670040) passed **729 Python contract tests** (one existing source-parser warning), compiled and exported the Godot .NET Windows application, and passed all native gameplay plus private-asset exclusion checks.
+
+The new production-material acceptance completed **four actual objectives using the real E key**:
+
+| Map | Wave | Objective | Materials individually carried/deposited |
+|---|---:|---|---:|
+| Ranch | 1 | Load | 10 |
+| Ranch | 2 | Repair | 12 |
+| Manor | 1 | Load | 10 |
+| Manor | 2 | Repair | 10 |
+
+That is **42 separately collected, carried and deposited items**, with **84 independent E press/release actions**. Each objective granted its exact source-backed 4,000-credit / 3,500-XP reward once, with progression bonuses accounted for and repeated domain completion commands rejected. The randomly chosen Repair size can change between runs (10 or 12), so acceptance uses the real item count.
+
+A separate overlap scenario placed two Load objectives at coincident floor-supported item points. A held E key picked up **only one** item between them; a subsequent press deposited **only one**. The accepted native log emitted:
+
+- `TWR_PASS98_SHARED_E_PRESS_OK overlapping_objectives=2 held_pickup_total=1 deposit_total=1`
+- `TWR_SMOKE_PASS98_MATERIAL_LIFECYCLE_OK maps=Ranch,Manor production_wave_objectives=4 carried_pieces=42 real_E_key=true`
+
+The test changes **only the location of the acceptance player** to reduce headless runtimes, not world colliders, material positions, mission completion callbacks, inventory, health or currency. It does not establish human-operated walking between 42 item locations, retail-original world positions, source-original item meshes or an owner-approved packaged .exe.
