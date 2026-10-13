@@ -241,9 +241,13 @@ jobs:
           if($run.ExitCode -ne 0){
             throw "Pass108 Windows exported native executable failed: exit $($run.ExitCode)"
           }
-          $matching = @($output | Where-Object {"$_" -match '^TWR_SMOKE_PASS108_CARRY_ADS_FRUSTUM_OK maps=Ranch,Manor families=Load,Repair genuine_RMB_aim_stows=4 physically_collected_items=[0-9]+ physically_deposited_items=[0-9]+ carried_material_retained_during_ADS=true full_primitive_silhouette_framed=true reticle_clear_during_hip_and_ADS=true '})
+          $matching = @($output | Where-Object {"$_" -match '^TWR_SMOKE_PASS108_CARRY_ADS_FRUSTUM_OK maps=Ranch,Manor families=Load,Repair genuine_RMB_aim_stows=4 virtual_viewport_cases=[0-9]+ physically_collected_items=[0-9]+ physically_deposited_items=[0-9]+ carried_material_retained_during_ADS=true full_primitive_silhouette_framed=true reticle_clear_during_hip_and_ADS=true '})
           if($matching.Count -ne 1){
             throw "Pass108 missing 4 actual-RMB ADS stow and camera frustum checks"
+          }
+          $viewports = [regex]::Match($matching[0], 'virtual_viewport_cases=([0-9]+)')
+          if(-not $viewports.Success -or [int]$viewports.Groups[1].Value -lt 160){
+            throw "Pass108 missing 4 viewport variants for every material item"
           }
           $counts = [regex]::Match($matching[0], 'physically_collected_items=([0-9]+) physically_deposited_items=([0-9]+)')
           if(-not $counts.Success -or [int]$counts.Groups[1].Value -lt 40 -or
