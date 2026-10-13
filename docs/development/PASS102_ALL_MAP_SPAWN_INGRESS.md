@@ -35,3 +35,20 @@ With that repair, [native run 38333500545](https://github.com/pigsdfasdfasfsad/j
 An older Python test previously asserted that exactly four fallback shells could use the flush doorway. Rather than relaxing any of those original four requirements, its contract now checks each of the original PlazaNorth, PlazaSouth, CellBlockA and CellBlockB entrances **plus** CabinHouse individually.
 
 These improvements are physical geometry repairs, not assertions of recovered retail original dimensions. Later native runs remain authoritative for Laboratory, Expressway and Manor upper ingress.
+
+## Final verified Pass102 evidence
+
+The final production source SHA `80da1f50fc4a264b4077400259ae395c1173f503` passed [exported Windows Godot/.NET run 38334803204](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38334803204), including the native pass96 material-physics gate and the remaining Pass78/83/88/89/90/91/92/94/95 escort, stair, source-exclusion and objective regressions.
+
+Measured extra spawn-to-Load-depot physical walks (ordinary player W key; no position assignments):
+
+| Public reconstructed map | Measured distance |
+| --- | ---: |
+| Cabin | 18.4 m |
+| Cargo | 50.2 m |
+| Laboratory | 44.9 m |
+| Expressway | 16.3 m |
+| Manor, including first upstairs WestWing Load depot | 47.1 m |
+| **Pass102 new five maps total** | **176.8 m** |
+
+The prior five Pass101 spawn-origin walks totaled another **52.1 m**. Pass100's actual Load/Repair first-item material pickup+deposit loops totaled **109.1 m across all 10 maps and 20 missions**. Pass102 confirms a grounded player can reach each first-load depot, not that the original owner map assets are complete or that a human player can survive fifteen real-time waves.
