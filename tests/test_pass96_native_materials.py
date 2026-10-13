@@ -20,7 +20,7 @@ def test_native_acceptance_requires_real_world_physics_and_player_interaction():
         'Family=family',
         "Input.ParseInputEvent(new InputEventKey",
         'status.Contains("CARRYING ITEM"',
-        'status.Contains("1/10 INSERTED"',
+        'status.Contains($"1/{count} INSERTED"',
         "Runtime.FailMatch(",
         "Runtime.ReturnToLobby()",
         "TWR_SMOKE_PASS96_GROUNDED_MATERIALS_OK",
