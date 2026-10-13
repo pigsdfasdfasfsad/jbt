@@ -40,6 +40,12 @@ The new native acceptance checks:
 
 Expected native log: `TWR_SMOKE_PASS110_REPAIR_VEHICLE_OK`. `tests/test_pass110_repair_vehicle_assembly.py` adds static source/CI safety checks. Windows CI for the Pass110 branch additionally requires the old Pass109, Pass108, Pass105, Pass104, Pass103, navigation, infected, escort, save and source-exclusion smoke steps.
 
+## Recorded native Windows results
+
+- [Actions run 38356193184](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38356193184), built from code SHA `823b698104d35355044ca5cbef465a30f32b15e1`, **passed** Python validation, Windows Godot/.NET export, earlier physical Load/Repair, live-infected, first-person ADS, the Pass109 generator/HUD gate, and the new **Pass110 native two-map Repair vehicle assembly acceptance**. That gate checks two fully assembled vehicles, at least 20 real Repair item installations matched to real E deposits and no added colliders. Remaining historical native regressions were still running when recorded.
+- After that verified implementation, Pass110 tightened the material-name whitelist and updated its native acceptance to tally **which category the player's actual E key collected**, rather than assuming a fixed pickup order. The later code source SHA `cf129c5f99e825a3f7de46d209368d20fcf9412a` passed Python validation and Windows compilation in [run 38356914570](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38356914570), but its full native visual-assembly gate had not yet concluded at the time of this record.
+- This is *headless native game state* verification. It cannot prove the car matches an original Roblox 3D model or rendered screenshot, nor demonstrate a human-played full survival match.
+
 ## Still not done
 
 This adds truthful, playable **approximate** visual feedback for Repair, not exact original truck geometry, real car interaction physics, completion cinematic, pixel-verified matching or full fifteen-wave human survival. The next fidelity iteration should capture both variants in actual rendered Windows gameplay at close/medium distance, audit their orientation against recovered original screenshots, and compare the repair prop silhouette/HUD overlap on every playable map.
