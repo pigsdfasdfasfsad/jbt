@@ -106,6 +106,14 @@ def test_native_physical_mission_checks_visual_install_after_every_actual_e():
     assert "vehicle110.ExpectedPartCount != objective.Pass98RequiredMaterials" in native
     assert "vehicle110.GetChildren().OfType<CollisionObject3D>().Any()" in native
     assert "CheckRepairVehicle110(" in native
+    assert "var carriedName110=objective.Pass106HeldMaterialName;" in native
+    assert "expectedSpark110++" in native
+    assert "expectedWheels110++" in native
+    assert "expectedFuel110++" in native
+    assert "vehicle.InstalledWheels != expectedWheels" in native
+    assert "vehicle.InstalledSparkPlugs != expectedPlugs" in native
+    assert "vehicle.AddedFuelCans != expectedFuel" in native
+    assert "var plugs=Math.Min(4,deposits);" not in native
     assert "vehicle110.AssemblyComplete" in native
     assert "vehicle110.AcceptedDeposits==count" in native
     assert "_repairVisualInstallChecks110!=_repairDeposits104" in native
