@@ -245,6 +245,16 @@ public partial class Pass105LiveThreatObjectiveAcceptance : Node
             throw new InvalidOperationException(
                 "Pass105 original E-key material pickup failed");
 
+        // Pass106: this actual E pickup must mount a visibly segmented
+        // carried object on the first-person camera before live combat.
+        var presentedName106=objective.Pass106HeldMaterialName;
+        var presentedParts106=objective.Pass106HeldMaterialMeshParts;
+        if(!objective.Pass106HeldMaterialVisible ||
+           presentedParts106<2 ||
+           player.CaptureCamera.GetNodeOrNull<Node3D>(
+               "Pass106CarriedObjectiveMaterial") is null)
+            throw new InvalidOperationException(
+                "Pass106 no first-person Load material while carrying");
         // The engine's NORMAL wave _Process spawns a real AI actor. No
         // fabricated InfectedAgent or direct Runtime.DamagePlayer call.
         // Test-only enemy placement makes a bounded, unobstructed melee
@@ -330,6 +340,11 @@ public partial class Pass105LiveThreatObjectiveAcceptance : Node
                 "Pass105 no real pursuit and authoritative melee hit"+
                 " start_gap="+startGap+" minimum_gap="+minGap+
                 " health_damage="+damageTaken);
+        if(!objective.Pass106HeldMaterialVisible ||
+           objective.Pass106HeldMaterialName!=presentedName106 ||
+           objective.Pass106HeldMaterialMeshParts!=presentedParts106)
+            throw new InvalidOperationException(
+                "Pass106 visual material lost on actual infected melee hit");
 
         // Do not disable the running wave or the enemy while returning
         // with the material. The E interaction must still work under
@@ -353,6 +368,18 @@ public partial class Pass105LiveThreatObjectiveAcceptance : Node
            game.ActiveInfectedCount<1)
             throw new InvalidOperationException(
                 "Pass105 under-fire deposit corrupted objective or rewards");
+        if(objective.Pass106HeldMaterialVisible ||
+           player.CaptureCamera.GetNodeOrNull<Node3D>(
+               "Pass106CarriedObjectiveMaterial") is not null)
+            throw new InvalidOperationException(
+                "Pass106 material view remained after real E deposit");
+        GD.Print("TWR_PASS106_UNDER_FIRE_CARRY_VISUAL_OK"+
+            " family=Load"+
+            " carried_item="+presentedName106.Replace(' ','_')+
+            " visual_mesh_parts="+presentedParts106+
+            " survived_real_melee_damage=true"+
+            " disappeared_after_deposit=true"+
+            " original_asset_mesh_unverified=true");
 
         GD.Print("TWR_PASS105_RANCH_UNDER_FIRE_DEPOSIT_OK"+
             " original_spawn="+originalSpawn+
