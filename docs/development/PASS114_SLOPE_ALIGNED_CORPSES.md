@@ -38,4 +38,10 @@ The real exported-Windows Godot/.NET acceptance fails on nonzero process exit, a
 
 [Pass114 development branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass114-slope-aligned-corpse-settling) · [Pass114 Windows build](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass114-slope-aligned-corpse-settling)
 
+## Verified native Windows checkpoint
+
+The new **dedicated Pass114 inclined-floor acceptance passed** in [Windows Actions run 38446320183](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38446320183), built with gameplay and testing code commit `d5e14be5b97a998e673adb0f33561176abe02961`. The same job also passed Python content/domain tests, the Godot/.NET exported Windows executable build and the Pass111 actual Glock kill, Pass112 four-limb fall and Pass113 flat-ground test before reaching Pass114. The Pass114 native test explicitly required a physical 16° slope, true rigid terrain normal, measured 0.14–0.35 radians of pose alignment and final body-to-plane error no greater than 0.045m; its PowerShell native gate concluded successfully.
+
+Historical multi-map and long-running survival/navigation regressions were still executing at the time of this note. Thus the **dedicated Pass114 native gate is verified**, but this does not in itself establish the conclusion of the entire Windows workflow or source screenshot fidelity.
+
 **Status boundary:** A source commit is not a verified build. The dedicated Pass114 native test and entire long-running CI suite must complete before calling the pass fully Windows-verified. Source-based headless checks do **not** prove rendered-pixel fidelity or a real human 15-wave victory. No distributable `.exe` is currently attached; owner-private assets are excluded from public releases.
