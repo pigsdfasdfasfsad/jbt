@@ -19,7 +19,7 @@ Headless Windows runners cannot acquire a cursor, and older smoke tests did not 
 3. Sends RMB release and checks the unchanged item model reappears entirely within the hip-camera frame.
 4. Walks back to the real depot and deposits with E, then continues the full original mission, reward, replay/persistence and subsequent wave checks.
 
-The test requires **four real aim stows** (Load/Repair × Ranch/Manor) and **at least forty** genuinely physically collected/cleared material cycles. Expected success marker: `TWR_SMOKE_PASS108_CARRY_ADS_FRUSTUM_OK`. Existing Pass78/95/96/98/103/104/105/106 controls continue running in Windows CI, along with the source/private-asset exclusion gate. The separate Python assertions are in `tests/test_pass108_carry_ads_frustum.py`.
+The test requires **four real aim stows** (Load/Repair × Ranch/Manor) and **at least forty** genuinely physically collected/cleared material cycles. At each actual pickup it also checks the complete same material mesh at **1024×768 (4:3), 1920×1080 (16:9), 2560×1080 (21:9) and 3440×1440 (ultrawide)**, temporarily applying the Pass107 camera pose for that virtual viewport, verifying the entire model remains inside the frame and out of the central crosshair, and restoring the true transform without touching player coordinates. At least **160 viewport/item checks** are required. Expected success marker: `TWR_SMOKE_PASS108_CARRY_ADS_FRUSTUM_OK`. Existing Pass78/95/96/98/103/104/105/106 controls continue running in Windows CI, along with the source/private-asset exclusion gate. The separate Python assertions are in `tests/test_pass108_carry_ads_frustum.py`.
 
 ## Verification boundary
 
