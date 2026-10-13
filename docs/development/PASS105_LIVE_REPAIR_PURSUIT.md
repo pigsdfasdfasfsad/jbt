@@ -2,7 +2,7 @@
 
 **Base:** [Pass104 Windows-native green pipeline](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38338396152): 748 Python tests, 10 map traversal regression, real physics Wave1 Load and Wave2 Repair on Ranch/Manor, 44 material deposits and 336.4 metres, 15-wave simulation/replay and private-source exclusion.
 
-**Status:** committed as a new optional headless native smoke mode; must pass exported Windows CI before the Pass105 gameplay claim is considered verified.
+**Status:** Native Windows and full CI **verified**. Implementation SHA `ed71073eec7340f650a1e267101f5fd815a788a0` passed [all enabled CI gates in run 38340291660](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340291660). A second independent build [38340312355](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340312355) also passed the dedicated pursuit preflight; full second-run status can be checked separately.
 
 ## New integration boundary
 
@@ -28,3 +28,23 @@ The enemy starts from its normal, often distant, collision-approved map spawn. P
 A subsequent pass should verify actual camera-fired defense, ammunition, taking damage during an objective, and recoverable carry/deposit flow without god mode, eventually enabling a bounded live-wave combat-and-material loop.
 
 The native smoke executable is built on the Actions runner; public compiled artifacts and private owner-original scene data remain disabled in the repository workflow.
+
+## Verified exported Windows run and measured live pursuit
+
+The first fully green Actions run [38340291660](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340291660) exported the normal offline executable, then passed **748 Python source/contract tests (one inherited warning)**, all Pass103/104/105 native acceptance steps, ten-map material ingress and 15-wave replay, real stair/infected/escort tests, and the owner-original asset exclusion audit.
+
+Actual Pass105 native output:
+
+| Public fallback map | Wave2 actor still alive at real Repair E-deposit | Horizontal enemy displacement |
+| --- | --- | ---: |
+| Ranch | Yes, grounded | 8.28 metres |
+| Manor | Yes, grounded | 8.93 metres |
+| **Total** | **Both completed** | **17.21 metres** |
+
+`TWR_SMOKE_PASS105_LIVE_REPAIR_PURSUIT_OK maps=Ranch,Manor full_wave2_repairs=2 materials_deposited=22 live_pursuit_metres=17.21 real_wave2_spawn=true physics_enemy_alive_at_deposit=true real_W_E_keys=true player_teleports=0 no_damage_immunity=true timed_extra_spawns_paused=true player_combat_kill_not_tested=true full_combat_survival_unverified=true`
+
+### Production item counts can vary
+
+Earlier Pass104 production tests generated 12 Repair items on **each** map (24 total) and 44 total Load+Repair deposits. The Pass105 run generated 22 Repair items in total (42 Load+Repair deposits). These are both genuine native successful production outcomes; **neither 10 nor 12 is safe to hardcode as the required Repair item count on every map or every execution**. The strengthened acceptance uses each actor's exact `Pass96MaterialFeet` and `Pass98RequiredMaterials` and validates every real pickup/deposit/reward. Check actual generated count rather than changing the game to fit the test.
+
+No assertion is made that the pursuer reached melee distance, damaged the player, or was shot. The new verified boundary is **real spawned infected physics movement concurrent with carrying and E-depositing a production objective** on both maps, preserving prior full objectives, accounting, map geometry and persistent offline results.
