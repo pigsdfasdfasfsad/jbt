@@ -184,8 +184,12 @@ jobs:
               }
             }
           }
-          if($run.ExitCode -ne 0 -or
-             -not ($output | Where-Object {"$_" -match 'TWR_SMOKE_PASS98_MATERIAL_LIFECYCLE_OK'})){
+          foreach($marker in @('TWR_PASS98_SHARED_E_PRESS_OK','TWR_SMOKE_PASS98_MATERIAL_LIFECYCLE_OK')){
+            if(-not ($output | Where-Object {"$_" -match "$marker"})){
+              throw "Pass98 native physical-interaction marker missing: $marker"
+            }
+          }
+          if($run.ExitCode -ne 0){
             throw "Pass98 failed full material carry/deposit production loop, exit $($run.ExitCode)"
           }
 
