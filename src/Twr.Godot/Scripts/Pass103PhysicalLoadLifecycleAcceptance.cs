@@ -18,6 +18,13 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     private int _completed;
     private int _deposits;
     private float _walkedMetres;
+    // Pass104 extends the existing, fully verified real-input Wave1 Load
+    // acceptance through an actual Wave1->Wave2 progression and a complete
+    // physical Repair mission. The default Pass103 mode is unchanged.
+    public bool ExtendToRepair104 { get; set; }
+    private int _completedRepairs104;
+    private int _repairDeposits104;
+    private float _repairWalkedMetres104;
     private const int MaxWalkFrames=540;
 
     public override async void _Ready()
@@ -45,13 +52,39 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 " accelerated_wave_start=true"+
                 " isolated_enemy_combat=true"+
                 " retail_art_fidelity_unverified=true");
+            if(ExtendToRepair104)
+            {
+                if(_completedRepairs104!=2 ||
+                   _repairDeposits104<20 ||
+                   _repairWalkedMetres104<40f)
+                    throw new InvalidOperationException(
+                        "Pass104 incomplete real Wave2 Repair acceptance"+
+                        " maps="+_completedRepairs104+
+                        " deposits="+_repairDeposits104+
+                        " metres="+_repairWalkedMetres104);
+                GD.Print("TWR_SMOKE_PASS104_FULL_PHYSICAL_REPAIR_OK"+
+                    " maps=Ranch,Manor completed_wave1_loads="+_completed+
+                    " completed_wave2_repairs="+_completedRepairs104+
+                    " wave2_material_deposits="+_repairDeposits104+
+                    " wave2_walked_metres="+
+                        _repairWalkedMetres104.ToString("F1")+
+                    " total_material_deposits="+
+                        (_deposits+_repairDeposits104)+
+                    " actual_W_E_keys=true player_teleports=0"+
+                    " wave1_to_wave2_runtime_progression=true"+
+                    " exactly_once_rewards=true persisted_results=true"+
+                    " enemy_spawning_frozen_during_missions=true"+
+                    " full_realtime_survival_unverified=true");
+            }
             GetTree().Quit(0);
         }
         catch(Exception e)
         {
             InputEvent(Key.W,false);
             InputEvent(Key.E,false);
-            GD.PushError("TWR_SMOKE_PASS103_FULL_PHYSICAL_LOAD_FAILED "+
+            GD.PushError((ExtendToRepair104
+                    ? "TWR_SMOKE_PASS104_FULL_PHYSICAL_REPAIR_FAILED "
+                    : "TWR_SMOKE_PASS103_FULL_PHYSICAL_LOAD_FAILED ")+
                 e.GetType().Name+" "+e.Message+"\n"+e.StackTrace);
             GetTree().Quit(1);
         }
@@ -206,6 +239,128 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 " level="+Runtime.Player?.Level);
     }
 
+    /// <summary>
+    /// After the complete, real-input Wave1 Load mission, use the normal
+    /// stage state machine (not a modified wave number) to start Wave2.
+    /// The running stage clock stays frozen during item carrying, as in
+    /// Pass103; physically spawned players and objective markers are never
+    /// translated or modified by the acceptance harness.
+    /// </summary>
+    private async Task WalkRepairWave104(
+        GameplayRoot game,FirstPersonPlayer player,
+        string map,string completedLoadId)
+    {
+        if(Runtime.Match?.Phase!=MatchPhase.Wave ||
+           Runtime.Match.Wave!=1 ||
+           game.WaveStage!="WAVE" ||
+           Runtime.Match.CompletedObjectives.Contains(completedLoadId)!=true)
+            throw new InvalidOperationException(
+                "Pass104 requires completed real Wave1 Load "+map);
+
+        // These are the exact production Stage.Wave -> WaveEnd ->
+        // Intermission -> Countdown transitions used by the game. The
+        // regular EndWave teardown clears old objective actors and
+        // zombies; no gameplay scene is restarted between the waves.
+        game._Process(RegularWaveRules.WaveDurationSeconds+.25);
+        game._Process(RegularWaveRules.WaveEndSeconds+.25);
+        game._Process(RegularWaveRules.IntermissionSeconds+.25);
+        if(Runtime.Match?.Wave!=2 || game.WaveStage!="COUNTDOWN")
+            throw new InvalidOperationException(
+                "Pass104 actual Wave1->2 state transition failed "+map);
+        game._Process(RegularWaveRules.CountdownSeconds+.25);
+        game.SetProcess(false);
+        await Frames(5);
+        if(Runtime.Match?.Phase!=MatchPhase.Wave ||
+           Runtime.Match.Wave!=2 || game.WaveStage!="WAVE" ||
+           Runtime.Player?.IsAlive!=true ||
+           !player.IsOnFloor())
+            throw new InvalidOperationException(
+                "Pass104 no living player in real Wave2 "+map);
+
+        var objective=game.GetChildren().OfType<ObjectiveRuntime>()
+            .FirstOrDefault(x=>GodotObject.IsInstanceValid(x) &&
+                !x.IsQueuedForDeletion() && x.Family=="Repair");
+        if(objective is null ||
+           !objective.UseFallbackMaterialGrounding96 ||
+           !objective.Pass96GroundedMaterialLayout ||
+           objective.Pass98RequiredMaterials<10)
+            throw new InvalidOperationException(
+                "Pass104 actual Wave2 Repair objective not spawned "+map);
+
+        var feet=objective.Pass96MaterialFeet.ToArray();
+        var count=feet.Length;
+        var depot=objective.GlobalPosition;
+        var id=objective.ObjectiveId;
+        var callbacks=0;
+        objective.Completed+=_=>callbacks++;
+        var expected=RewardAfterObjective(Runtime.Player!);
+        var wave2Start=player.GlobalPosition;
+        var metres=await WalkSafely(
+            game,player,depot,map+"/wave2-to-production-Repair");
+
+        for(var item=0;item<count;item++)
+        {
+            if(!GodotObject.IsInstanceValid(objective) ||
+               Runtime.Player?.IsAlive!=true ||
+               objective.Pass98RemainingMaterials!=count-item ||
+               objective.Pass98DepositedMaterials!=item ||
+               objective.Pass98CarryingMaterial ||
+               callbacks!=0)
+                throw new InvalidOperationException(
+                    "Pass104 stale real Repair material state "+map+
+                    " item="+item);
+            metres+=await WalkSafely(
+                game,player,feet[item],map+"/wave2-Repair-material-"+item);
+            await PressE();
+            if(!objective.Pass98CarryingMaterial ||
+               objective.Pass98RemainingMaterials!=count-item-1 ||
+               objective.Pass98DepositedMaterials!=item)
+                throw new InvalidOperationException(
+                    "Pass104 failed physical E pickup "+map+
+                    " item="+item);
+            metres+=await WalkSafely(
+                game,player,depot,map+"/wave2-Repair-deposit-"+item);
+            await PressE();
+            if(item<count-1 &&
+               (!GodotObject.IsInstanceValid(objective) ||
+                objective.Pass98CarryingMaterial ||
+                objective.Pass98DepositedMaterials!=item+1 ||
+                callbacks!=0))
+                throw new InvalidOperationException(
+                    "Pass104 failed physical E deposit "+map+
+                    " item="+item);
+            _repairDeposits104++;
+        }
+
+        await Frames(5);
+        if(callbacks!=1 ||
+           Runtime.Match?.CompletedObjectives.Contains(id)!=true ||
+           Runtime.Match.CompletedObjectives.Contains(completedLoadId)!=true)
+            throw new InvalidOperationException(
+                "Pass104 domain did not complete both waves' missions "+
+                map+" repair_callbacks="+callbacks);
+        ValidateReward(expected,map+"/wave2-Repair-completed");
+        Runtime.CompleteObjective(id,"Repair");
+        await Frames(3);
+        ValidateReward(expected,map+"/wave2-Repair-replayed-receipt");
+        if(callbacks!=1)
+            throw new InvalidOperationException(
+                "Pass104 duplicate Repair callback "+map);
+
+        _completedRepairs104++;
+        _repairWalkedMetres104+=metres;
+        GD.Print("TWR_PASS104_MAP_FULL_REPAIR_OK map="+map+
+            " production_wave=2 family=Repair"+
+            " material_items="+count+
+            " pickups="+count+" deposits="+count+
+            " walked_metres="+metres.ToString("F1")+
+            " wave2_start="+wave2Start+
+            " no_position_assignment=true"+
+            " actual_W_E_keys=true"+
+            " callbacks_once=true rewards_once=true"+
+            " previous_load_completion_retained=true");
+    }
+
     private async Task VerifyMap(string map)
     {
         if(Runtime.Match?.Phase!=MatchPhase.Lobby)
@@ -319,7 +474,11 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
             " no_position_assignment=true"+
             " actual_W_E_keys=true"+
             " callbacks_once=true rewards_once=true");
-        Runtime.FailMatch("Pass103 isolated physical Load mission");
+        if(ExtendToRepair104)
+            await WalkRepairWave104(game,player,map,id);
+        Runtime.FailMatch(ExtendToRepair104
+            ? "Pass104 isolated physical Load and Repair missions"
+            : "Pass103 isolated physical Load mission");
         if(Runtime.Match?.Phase!=MatchPhase.Results ||
            !Runtime.Match.SaveCommitted)
             throw new InvalidOperationException(
