@@ -32,6 +32,16 @@ public partial class Pass111FallenInfected : Node3D
     public float MaximumAppliedLimbDelta112 { get; private set; }
     public int SnapshotMeshNodeCount => CountSnapshotMeshes(this);
 
+    // Pass113 floor settling is presentation-only and bounded by the
+    // same static physical terrain used for the actual player collider.
+    public bool GroundProbeAttempted113 { get; private set; }
+    public bool WalkableGroundFound113 { get; private set; }
+    public bool GroundSettled113 { get; private set; }
+    public float GroundContactError113 { get; private set; }
+    public float GroundCorrectionMeters113 { get; private set; }
+    public float GroundSurfaceHeight113 { get; private set; }
+    public Vector3 GroundNormal113 { get; private set; } = Vector3.Up;
+
     private sealed record LimbPose(Node3D Pivot, Vector3 OriginalRotation);
     private readonly Dictionary<string,LimbPose> _limbs112 =
         new(StringComparer.Ordinal);
@@ -172,6 +182,23 @@ public partial class Pass111FallenInfected : Node3D
         _limbs112.Clear();
     }
 
+    public override void _PhysicsProcess(double delta)
+    {
+        if (!_initialized || GroundProbeAttempted113) return;
+        // Space queries belong in the physics tick, NOT inside the
+        // infected death callback while its collision is being freed.
+        // Character bodies (player/infected) never count as terrain.
+        GroundProbeAttempted113=true;
+        WalkableGroundFound113=Pass113CorpseGroundContact.TryProbe(
+            this,_originalPose.Origin,
+            out var floorY,out var floorNormal);
+        if (WalkableGroundFound113)
+        {
+            GroundSurfaceHeight113=floorY;
+            GroundNormal113=floorNormal;
+        }
+    }
+
     public override void _Process(double delta)
     {
         if (!_initialized) return;
@@ -197,6 +224,31 @@ public partial class Pass111FallenInfected : Node3D
                 pair.Value.OriginalRotation + deltaPose;
             MaximumAppliedLimbDelta112=Math.Max(
                 MaximumAppliedLimbDelta112,deltaPose.Length());
+        }
+
+        // Pass113: every drawn limb and accessory influences the support
+        // height, so the tipped corpse rests on the actual ground rather
+        // than hovering or sinking through the test/map collision.
+        // Apply correction gradually during the last part of the fall;
+        // missing collision, very steep slopes and midair deaths keep
+        // the existing harmless noncolliding animation unchanged.
+        if (WalkableGroundFound113 &&
+            Pass113CorpseGroundContact.TryLowestVisiblePointY(
+                this,_originalPose.Origin,out var lowestY))
+        {
+            var correction=Pass113CorpseGroundContact.BoundedCorrection(
+                GroundSurfaceHeight113,lowestY);
+            var contactProgress=Mathf.Clamp((ease-.42f)/.58f,0f,1f);
+            var settle=contactProgress*contactProgress*
+                (3f-2f*contactProgress);
+            GroundCorrectionMeters113=correction*settle;
+            GlobalPosition+=Vector3.Up*GroundCorrectionMeters113;
+            GroundContactError113=Math.Abs(
+                lowestY+GroundCorrectionMeters113-
+                (GroundSurfaceHeight113+
+                    Pass113CorpseGroundContact.ClearanceMeters));
+            GroundSettled113=t>=.99f &&
+                GroundContactError113<=.045f;
         }
 
         if (AgeSeconds > LifetimeSeconds - .70f)
