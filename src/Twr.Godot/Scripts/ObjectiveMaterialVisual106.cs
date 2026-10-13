@@ -29,16 +29,68 @@ public static class ObjectiveMaterialVisual106
         if (materialName.StartsWith("Generator", StringComparison.Ordinal))
         {
             kind="Generator";
-            Box(model,"Housing",new Vector3(0,0,0),
-                new Vector3(.59f,.48f,.47f),new Color(.19f,.23f,.26f));
-            Box(model,"ControlPanel",new Vector3(0,.10f,-.246f),
-                new Vector3(.36f,.20f,.028f),new Color(.69f,.68f,.46f));
-            Box(model,"CarryBar",new Vector3(0,.33f,0),
-                new Vector3(.52f,.07f,.08f),new Color(.43f,.46f,.48f),.6f);
-            Box(model,"LeftBracket",new Vector3(-.24f,.23f,0),
-                new Vector3(.06f,.20f,.08f),new Color(.40f,.44f,.46f),.6f);
-            Box(model,"RightBracket",new Vector3(.24f,.23f,0),
-                new Vector3(.06f,.20f,.08f),new Color(.40f,.44f,.46f),.6f);
+            // Pass109: the owner-provided Generator-Market.png depicts
+            // a pale industrial generator with a dark skid, front service
+            // doors/vents, tiny illuminated indicator and top exhausts.
+            // These are local primitive reconstructions of its *visual
+            // language*, NOT recovered Roblox triangles or source scale.
+            // Direct render-only children deliberately retain the Pass108
+            // complete-mesh frustum audit and the original E interaction.
+            var paleSteel=new Color(.48f,.48f,.44f);
+            var darkSteel=new Color(.135f,.15f,.16f);
+            var shadowSteel=new Color(.23f,.26f,.27f);
+            Box(model,"Housing",new Vector3(0,-.02f,0),
+                new Vector3(.62f,.45f,.43f),paleSteel,.21f);
+            Box(model,"SkidBase",new Vector3(0,-.293f,0),
+                new Vector3(.71f,.09f,.48f),darkSteel,.35f);
+            Box(model,"TopAccessLid",new Vector3(0,.235f,0),
+                new Vector3(.66f,.055f,.465f),shadowSteel,.28f);
+            Box(model,"ServiceDoor",new Vector3(-.063f,-.034f,-.223f),
+                new Vector3(.43f,.334f,.022f),
+                new Color(.43f,.45f,.42f),.12f);
+            Box(model,"DoorSeam",new Vector3(.153f,-.03f,-.236f),
+                new Vector3(.012f,.31f,.015f),darkSteel,.25f);
+            Box(model,"FrontControlConsole",
+                new Vector3(.207f,.089f,-.236f),
+                new Vector3(.155f,.116f,.036f),darkSteel,.26f);
+            Box(model,"InstrumentDisplay",
+                new Vector3(.208f,.105f,-.258f),
+                new Vector3(.097f,.04f,.012f),
+                new Color(.28f,.54f,.44f));
+            Box(model,"StatusRed",
+                new Vector3(.168f,.061f,-.258f),
+                new Vector3(.025f,.019f,.012f),
+                new Color(.76f,.23f,.16f));
+            Box(model,"StatusGreen",
+                new Vector3(.214f,.061f,-.258f),
+                new Vector3(.025f,.019f,.012f),
+                new Color(.32f,.78f,.40f));
+            for (var vent=0; vent<5; vent++)
+                Box(model,"IntakeVent"+vent,
+                    new Vector3(-.239f+vent*.085f,-.112f,-.251f),
+                    new Vector3(.046f,.021f,.014f),darkSteel,.20f);
+            Box(model,"LiftingRail",new Vector3(0,.297f,-.13f),
+                new Vector3(.50f,.038f,.045f),darkSteel,.35f);
+            Box(model,"LeftRailStand",new Vector3(-.22f,.26f,-.13f),
+                new Vector3(.036f,.1f,.045f),shadowSteel,.33f);
+            Box(model,"RightRailStand",new Vector3(.22f,.26f,-.13f),
+                new Vector3(.036f,.1f,.045f),shadowSteel,.33f);
+            Cylinder(model,"LeftExhaustPipe",
+                new Vector3(-.222f,.343f,.104f),
+                .041f,.19f,shadowSteel,.4f);
+            Cylinder(model,"RightExhaustPipe",
+                new Vector3(-.125f,.332f,.104f),
+                .036f,.169f,shadowSteel,.4f);
+            Cylinder(model,"LeftExhaustCap",
+                new Vector3(-.222f,.443f,.104f),
+                .047f,.025f,darkSteel,.42f);
+            Cylinder(model,"RightExhaustCap",
+                new Vector3(-.125f,.424f,.104f),
+                .043f,.025f,darkSteel,.42f);
+            Box(model,"LeftSkidFoot",new Vector3(-.252f,-.35f,0),
+                new Vector3(.09f,.036f,.42f),darkSteel,.3f);
+            Box(model,"RightSkidFoot",new Vector3(.252f,-.35f,0),
+                new Vector3(.09f,.036f,.42f),darkSteel,.3f);
         }
         else if (materialName.StartsWith("Tool Box",StringComparison.Ordinal))
         {
