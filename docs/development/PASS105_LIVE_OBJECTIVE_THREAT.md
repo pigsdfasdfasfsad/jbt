@@ -28,3 +28,21 @@ A successful exported Windows run must include both `TWR_PASS105_RANCH_UNDER_FIR
 This pass adds a **single material** exposed to bounded live attack on Ranch; it **does not** claim a complete real-time ten-item objective completed through uninterrupted enemy pressure. The sampled enemy's near-item lane and Civilian stats are test-controlled; production random spawn coordinates, long-range pursuit and balancing remain separate. It does not prove a human player surviving waves or original-map geometry fidelity. A later pass should extend live combat to longer natural-spawn encounters and entire objectives without invulnerability, relocation, teleportation or combat freezing.
 
 **Status:** the original native Pass105 encounter passed in two exported Windows preflights, [run 38347029430](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38347029430) and [run 38347111514](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38347111514). These runs also passed independent prior Pass103/104 mission preflights. The subsequently committed dynamic-enemy route-planning improvement was compiled and **passed the same native Pass105 hostile-interaction acceptance preflight** in [run 38347592407](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38347592407), alongside previously verified Pass101 stair, Pass103 full Load, and Pass104 full Repair preflights. The longer ten-map and privacy regression pipeline is separate and must complete successfully before the branch is called globally green.
+
+## Measured native evidence from a completed run
+
+[Windows Actions run 38347111514](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38347111514) completed **successfully** across the full CI pipeline (751 passed Python contract tests, one inherited warning, native Godot/.NET export, all earlier gameplay regressions and private-asset exclusion).
+
+Its bounded Pass105 physical gameplay reported:
+
+| Native measurement | Value |
+| --- | ---: |
+| Real player W-key walking from Ranch spawn to deposit | 15.5m |
+| Production-spawned infected physically closed | 1.3m |
+| Authoritative melee health damage while carrying | 4.0 |
+| Real Load material pickup and deposit | 1 each |
+| Player position teleports | 0 |
+| Premature objective payout | none |
+| Interrupted match result | persisted |
+
+The printed native marker was `TWR_PASS105_RANCH_UNDER_FIRE_DEPOSIT_OK` followed by `TWR_SMOKE_PASS105_LIVE_OBJECTIVE_OK`. The later moving-enemy planning update separately passed its Pass105 native gameplay preflight in [38347592407](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38347592407); the full revised-code CI result is to be confirmed before marking the *latest* code globally green.
