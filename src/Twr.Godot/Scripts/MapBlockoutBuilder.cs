@@ -187,6 +187,10 @@ public static class MapBlockoutBuilder
         InteriorShell(root, "ParkingGarage", new Vector3(28, 4, 0), new Vector3(28, 8, 46), new Color(0.27f, 0.29f, 0.30f));
         InteriorShell(root, "ServerRoom", new Vector3(-18, 3.2f, -34), new Vector3(28, 6.4f, 18), new Color(0.18f, 0.24f, 0.29f));
         DecorativeBox(root, "HospitalWard", new Vector3(17, 0.45f, -30), new Vector3(28, 0.9f, 18), new Color(0.58f, 0.62f, 0.61f));
+        // Pass115: visual-only dressing is scoped to THIS fallback
+        // builder. The source-pack path calls LaboratorySourceLoader
+        // instead, so original Roblox owner geometry remains untouched.
+        Pass115LaboratoryDressing.AddToFallback(root);
         return Layout(new Vector3(0, 1, 39),
             Points((-45,42),(45,42),(-42,-20),(42,-20),(0,-45),(25,-42)),
             Points((0,34),(-7,16),(8,16),(16,-28),(-16,-28),(28,5)),
