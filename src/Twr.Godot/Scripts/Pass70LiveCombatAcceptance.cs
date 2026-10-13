@@ -19,12 +19,31 @@ public partial class Pass70LiveCombatAcceptance : Node
 {
     public LocalSessionNode Runtime {get;set;} = null!;
     public const string SuccessMarker="TWR_SMOKE_PASS70_LIVE_COMBAT_OK";
+    public bool VerifyCorpse111 { get; set; }
+    private int _corpseMeshParts111;
+    private bool _fallenAndCleared111;
 
     public override async void _Ready()
     {
         try
         {
             await Run();
+            if (VerifyCorpse111)
+            {
+                if(_corpseMeshParts111<8 || !_fallenAndCleared111)
+                    throw new InvalidOperationException(
+                        "Pass111 exported combat visual acceptance incomplete");
+                GD.Print("TWR_SMOKE_PASS111_INFECTED_CORPSE_OK"+
+                    " actual_camera_ray_weapon_kill=true"+
+                    " corpse_mesh_parts="+_corpseMeshParts111+
+                    " noncolliding=true"+
+                    " reuses_infected_render_materials=true"+
+                    " bounded_to_16=true"+
+                    " falls_then_expires=true"+
+                    " wave_cleanup=true"+
+                    " credits_xp_unchanged=true"+
+                    " original_ragdoll_unverified=true");
+            }
             GD.Print(SuccessMarker+" "+
                 "exported_windows_gameplay_root=true "+
                 "real_laboratory_fallback_scene=true "+
@@ -211,6 +230,37 @@ public partial class Pass70LiveCombatAcceptance : Node
             throw new InvalidOperationException(
                 "Pass70 actual hit ray failed to kill infected and award credits/XP through domain commands");
 
+        Pass111FallenInfected? corpse111=null;
+        if (VerifyCorpse111)
+        {
+            var bodies=game.GetChildren().OfType<Pass111FallenInfected>()
+                .Where(z=>GodotObject.IsInstanceValid(z) &&
+                    !z.IsQueuedForDeletion()).ToArray();
+            if (bodies.Length!=1 ||
+                game.ActiveFallenBodies111!=1 ||
+                game.TotalFallenSnapshots111!=1 ||
+                game.PeakFallenBodies111!=1)
+                throw new InvalidOperationException(
+                    "Pass111 real Glock kill did not create exactly one corpse");
+            corpse111=bodies[0];
+            if(corpse111.SourceMeshCount<8 ||
+               corpse111.SourceMeshCount>
+                    Pass111FallenInfected.MaxSnapshotMeshes ||
+               corpse111.GetChildren().OfType<MeshInstance3D>().Count()!=
+                    corpse111.SourceMeshCount ||
+               corpse111.GetChildren().OfType<CollisionObject3D>().Any() ||
+               corpse111.HasPhysicsOrScripts ||
+               corpse111.Headshot != false && corpse111.Headshot != true)
+                throw new InvalidOperationException(
+                    "Pass111 missing visual snapshot or non-render nodes");
+            _corpseMeshParts111=corpse111.SourceMeshCount;
+            // The original physics actor has died; this corpse must NOT
+            // count as a living wave infected or a ray-hittable body.
+            if(game.ActiveInfectedCount!=0 && game.ActiveInfectedCount!=1)
+                throw new InvalidOperationException(
+                    "Pass111 corpse unexpectedly altered live enemy count");
+        }
+
         // A real R key event enters the player's normal reload timer.
         // A simulated engine clock completes it through its existing
         // PhysicsProcess and authoritative ReloadWeapon command.
@@ -225,6 +275,16 @@ public partial class Pass70LiveCombatAcceptance : Node
         var afterReload=Runtime.Player.Ammo.GetValueOrDefault("Glock 17");
         var reserveAfterReload=Runtime.Player.ReserveAmmo.GetValueOrDefault(
             "Glock 17");
+        if (VerifyCorpse111)
+        {
+            if(corpse111 is null ||
+               !GodotObject.IsInstanceValid(corpse111) ||
+               corpse111.IsQueuedForDeletion() ||
+               corpse111.FallProgress < .96f)
+                throw new InvalidOperationException(
+                    "Pass111 real corpse did not complete its short fall"+
+                    " while the player actually reloaded");
+        }
         if(afterReload<=afterFire || afterReload>spec.Magazine ||
            reserveAfterReload>=initialReserve ||
            afterReload+reserveAfterReload!=afterFire+initialReserve)
@@ -234,6 +294,14 @@ public partial class Pass70LiveCombatAcceptance : Node
         // Fast-forward ONLY stage timers, not player command handling:
         // verifies actual GameplayRoot award/cleanup/start-wave hooks.
         game._Process(RegularWaveRules.WaveDurationSeconds+.2);
+        if(VerifyCorpse111)
+        {
+            if(game.ActiveFallenBodies111!=0 ||
+               corpse111 is null || !corpse111.IsQueuedForDeletion())
+                throw new InvalidOperationException(
+                    "Pass111 death visuals leaked across wave teardown");
+            _fallenAndCleared111=true;
+        }
         if(game.WaveStage!="WAVE END" || Runtime.Match.Wave!=1 ||
            game.ActiveInfectedCount!=0)
             throw new InvalidOperationException(
