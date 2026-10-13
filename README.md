@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest native-verified checkpoint: Pass 103 — full production Load completed by walking
+## Latest native-verified checkpoint: Pass 104 — full physical Load and Repair across two waves
+
+[Pass104 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass104-full-physical-repair) ·
+[Successfully exported Windows CI 38338396152](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38338396152) ·
+[Detailed Pass104 report](docs/development/PASS104_FULL_PHYSICAL_REPAIR.md)
+
+- **748 Python tests passed (one inherited warning), native Windows Godot/.NET export succeeded**, and all enabled material, stair, combat-adjacent, escort, navigation, wave-replay/persistence and private-source-exclusion gates passed. Verified gameplay code SHA: `840acf516025f3293e30734d08e1d90fd2e65e8f`.
+- The real first-person player physically completed every material pickup and deposit for production **Wave1 Load (10 items/map)** and **Wave2 Repair (12 items/map)**, advancing through the production wave state machine without test teleports. **Ranch: 72.5m Load + 97.0m Repair; Manor: 90.5m Load + 76.4m Repair. Total 336.4m traveled, 44 materials carried and deposited, exactly-once mission rewards and persisted match results.**
+- **Scope:** enemy spawning was frozen during each material mission after an accelerated wave start/transition, so this verifies collision-backed objective interactions, *not* a continuously human-survived real-time two-wave match. The ten public maps remain approximate reconstructed blockouts where original scene/model/collision data is unavailable. The retail game's complete art, audio, animations, behavior and a publicly distributed executable are not certified.
+
+## Earlier verified checkpoint: Pass 103 — full production Load completed by walking
 
 [Pass103 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass103-full-physical-load) ·
 [Verified exported Windows CI 38335724427](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38335724427) ·
@@ -19,7 +29,7 @@ Durable development repository for the standalone offline reconstruction of **Th
 [Pass102 engineering notes](docs/development/PASS102_ALL_MAP_SPAWN_INGRESS.md)
 
 - Normal first-person player input and real collision now reach the first Load depot **from natural spawn across all ten public fallback maps**. The first five were accepted in Pass101; Pass102 completed **Cabin, Cargo, Laboratory, Expressway and upstairs Manor**. The same player then physically collected and deposited one material for each Load and Repair mission family on all ten fallback maps.
-- Real Windows native regression gates passed Pass78 Manor stair ascent/descent twice, Pass95 Escort, Pass96 15-wave offline simulation/replay persistence, Pass98 full material objectives with test-controlled positioning, plus the ten-map physics and privacy gates. **Pass103** adds a stronger distinct test: full production Wave1 Load through ordinary W/E movement on Ranch and Manor; [track its development branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass103-full-physical-load). Do not call Pass103 validated until its own latest Windows native run passes.
+- Real Windows native regression gates passed Pass78 Manor stair ascent/descent twice, Pass95 Escort, Pass96 15-wave offline simulation/replay persistence, Pass98 full material objectives with test-controlled positioning, plus the ten-map physics and privacy gates. **Pass103 and Pass104 separately verify full physical Wave1 Load and Wave2 Repair on Ranch and Manor, with both checks now passing native Windows CI.
 - This project remains a **development reconstruction**, not a release-equivalent 1:1 original. Original Roblox map geometry/art/audio/animations, real-time human-operated survival, and a downloadable standalone .exe are not certified by these headless CI tests. Owner-private source assets and compiled executables are intentionally not publicly uploaded.
 
 ## Earlier verified branch: Pass 92 — Expressway physically supported Escort
