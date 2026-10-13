@@ -20,4 +20,9 @@ The Pass101 branch runs the new five-map ingress gate **in addition to** Pass100
 
 A result from this pass is *not* a proof that all ten maps permit spawn-to-objective travel: Cabin, Cargo, Laboratory, Expressway and elevated Manor still need character-controlled ingress. This also is not a human-operated 15-wave survival session, original placement recovery, 1:1 visual fidelity certification or a distributable game.
 
-**Status:** implementation committed and Windows CI requested; native gate is authoritative, not contract source text.
+## Verified native acceptance
+
+[GitHub Actions run 38330029719](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38330029719) successfully compiled/exported the actual Windows Godot/.NET game and passed the **Pass96 material preflight containing all five new Pass101 spawn ingress checks**, plus Pass100 20 physical material round trips on ten maps, Pass97 fifteen-wave replay/persistence and Pass98 full material lifecycle. The separate Pass95 Manor Escort and Pass73 all-map physical movement regression gates also passed during the same run. The later full CI pipeline's final conclusion must still be checked before describing the branch as globally green. The public CI workflow does not release its executable artifact.
+
+These pass results establish actual headless player movement and authoritative E-key interactions on the stated fallback routes. They do not establish a complete human-operated match or original retail visual geometry.
+
