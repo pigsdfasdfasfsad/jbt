@@ -266,7 +266,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
                 !OS.GetCmdlineUserArgs().Contains(
                     "--smoke-pass111",StringComparer.Ordinal) &&
                 !OS.GetCmdlineUserArgs().Contains(
-                    "--smoke-pass112",StringComparer.Ordinal))
+                    "--smoke-pass112",StringComparer.Ordinal) &&
+                !OS.GetCmdlineUserArgs().Contains(
+                    "--smoke-pass113",StringComparer.Ordinal))
                 Input.MouseMode = Input.MouseModeEnum.Captured;
             else if (!HammerMode && _heldThrowable is not null)
                 TryThrowThrowable();
