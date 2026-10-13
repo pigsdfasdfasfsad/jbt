@@ -21,6 +21,11 @@ public partial class Pass70LiveCombatAcceptance : Node
     public const string SuccessMarker="TWR_SMOKE_PASS70_LIVE_COMBAT_OK";
     public bool VerifyCorpse111 { get; set; }
     public bool VerifyArticulation112 { get; set; }
+    public bool VerifyGroundContact113 { get; set; }
+    private bool _groundContactChecked113;
+    private float _groundCorrection113;
+    private float _groundError113;
+    private float _groundNormalUp113;
     private int _articulatedLimbGroups112;
     private int _articulatedMeshParts112;
     private bool _articulationMoved112;
@@ -65,6 +70,31 @@ public partial class Pass70LiveCombatAcceptance : Node
                     " real_wave_cleanup=true"+
                     " synthetic_glock_fixture_only=true"+
                     " original_motor6d_data_unverified=true");
+            }
+            if(VerifyGroundContact113)
+            {
+                if(!VerifyCorpse111 || !VerifyArticulation112 ||
+                   !_groundContactChecked113 ||
+                   _groundError113>.045f ||
+                   _groundNormalUp113<
+                       Pass113CorpseGroundContact.MinimumWalkableNormalY)
+                    throw new InvalidOperationException(
+                        "Pass113 real floor-contact visual acceptance incomplete");
+                GD.Print("TWR_SMOKE_PASS113_CORPSE_GROUND_OK"+
+                    " real_glock_kill=true"+
+                    " one_static_floor_probe=true"+
+                    " true_terrain_collision=true"+
+                    " static_body_only=true"+
+                    " normal_y="+_groundNormalUp113.ToString(
+                        "F4",System.Globalization.CultureInfo.InvariantCulture)+
+                    " correction_m="+_groundCorrection113.ToString(
+                        "F4",System.Globalization.CultureInfo.InvariantCulture)+
+                    " contact_error_m="+_groundError113.ToString(
+                        "F4",System.Globalization.CultureInfo.InvariantCulture)+
+                    " articulated_limbs=4"+
+                    " zero_added_colliders=true"+
+                    " rewards_and_wave_preserved=true"+
+                    " original_ragdoll_ground_physics_unverified=true");
             }
             GD.Print(SuccessMarker+" "+
                 "exported_windows_gameplay_root=true "+
@@ -335,6 +365,31 @@ public partial class Pass70LiveCombatAcceptance : Node
                     "Pass112 independently articulated limbs did not animate"+
                     " across the player's actual reload");
             _articulationMoved112=true;
+        }
+        if(VerifyGroundContact113)
+        {
+            if(corpse111 is null ||
+               !corpse111.GroundProbeAttempted113 ||
+               !corpse111.WalkableGroundFound113 ||
+               !corpse111.GroundSettled113 ||
+               corpse111.GroundContactError113>.045f ||
+               Math.Abs(corpse111.GroundCorrectionMeters113)>
+                   Pass113CorpseGroundContact.MaximumCorrectionMeters ||
+               Math.Abs(corpse111.GroundCorrectionMeters113)<.02f ||
+               corpse111.GroundNormal113.Y<
+                   Pass113CorpseGroundContact.MinimumWalkableNormalY)
+                throw new InvalidOperationException(
+                    "Pass113 actual fallen R6 character did not settle onto"+
+                    " nearby platform while normal R-key reload completed"+
+                    " attempted="+corpse111?.GroundProbeAttempted113+
+                    " static_ground="+corpse111?.WalkableGroundFound113+
+                    " settled="+corpse111?.GroundSettled113+
+                    " offset="+corpse111?.GroundCorrectionMeters113+
+                    " gap="+corpse111?.GroundContactError113);
+            _groundContactChecked113=true;
+            _groundCorrection113=corpse111.GroundCorrectionMeters113;
+            _groundError113=corpse111.GroundContactError113;
+            _groundNormalUp113=corpse111.GroundNormal113.Y;
         }
         if(afterReload<=afterFire || afterReload>spec.Magazine ||
            reserveAfterReload>=initialReserve ||
