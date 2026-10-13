@@ -574,6 +574,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
         // camera/weapon handling and game authority are otherwise identical.
         var pass108NativeAimInput =
             OS.GetCmdlineUserArgs().Contains("--smoke-pass108",
+                StringComparer.Ordinal) ||
+            // Pass109 reuses the same real RMB/ADS acceptance while
+            // checking additional world/held generator and HUD geometry.
+            // Regular gameplay still requires actual captured OS mouse.
+            OS.GetCmdlineUserArgs().Contains("--smoke-pass109",
                 StringComparer.Ordinal);
         var wantsAim = !spec.IsMelee && _equipTimer<=0 && _reloadTimer<=0 &&
             (Input.MouseMode==Input.MouseModeEnum.Captured ||
