@@ -121,6 +121,10 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
            held is null || !held.Visible ||
            held.GetChildCount()!=objective.Pass106HeldMaterialMeshParts ||
            !held.HasMeta("Pass106VisualKind") ||
+           !Pass107CarryPresentation.HasSafeAnchor(
+               held, player.CaptureCamera.Fov,
+               new Vector2I((int)GetViewport().GetVisibleRect().Size.X,
+                   (int)GetViewport().GetVisibleRect().Size.Y)) ||
            held.GetMeta("Pass106RecoveredItemName").AsString()!=
                 objective.Pass106HeldMaterialName ||
            held.GetChildren().OfType<CollisionObject3D>().Any())
