@@ -141,6 +141,11 @@ public partial class Pass96FullMatchReplayAcceptance : Node
         };
         var game=await CreateActualMap();
         var infectedVerified=0;
+        // Pass97 integration: during the same actual 15-wave replay run,
+        // verify that production Load/Repair objectives use the merged
+        // fallback-only supported-floor material planner.
+        var groundedMaterialObjectives97=0;
+        var groundedMaterialPieces97=0;
         for(var wave=1;wave<=ReleaseRules.MaxWaves;wave++)
         {
             if(Runtime.Match?.Wave!=wave ||
@@ -160,6 +165,23 @@ public partial class Pass96FullMatchReplayAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass96 no real wave infected "+wave);
             infectedVerified++;
+            foreach(var objective in game.GetChildren().OfType<ObjectiveRuntime>())
+            {
+                if(!GodotObject.IsInstanceValid(objective) ||
+                   (objective.Family!="Load" && objective.Family!="Repair"))
+                    continue;
+                if(!objective.UseFallbackMaterialGrounding96 ||
+                   !objective.Pass96GroundedMaterialLayout ||
+                   objective.Pass96MaterialFeet.Count<10)
+                    throw new InvalidOperationException(
+                        "Pass97 merged material placement failed during real"+
+                        " replay match wave="+wave+
+                        " family="+objective.Family+
+                        " supported="+objective.Pass96GroundedMaterialLayout+
+                        " pieces="+objective.Pass96MaterialFeet.Count);
+                groundedMaterialObjectives97++;
+                groundedMaterialPieces97+=objective.Pass96MaterialFeet.Count;
+            }
 
             var current=Runtime.Player!;
             var expected=ExpectedWave(current.Credits,current.Xp,
@@ -223,6 +245,20 @@ public partial class Pass96FullMatchReplayAcceptance : Node
         if(infectedVerified!=ReleaseRules.MaxWaves)
             throw new InvalidOperationException(
                 "Pass96 not all 15 real waves spawned infected");
+        // Ranch's production five-family cycle guarantees Load in waves
+        // 1,6,11 and Repair in 2,7,12, independent of the random second
+        // objective. We observe the material placements before cleanup.
+        if(groundedMaterialObjectives97<6 ||
+           groundedMaterialPieces97<60)
+            throw new InvalidOperationException(
+                "Pass97 merged replay lacked real grounded materials"+
+                " missions="+groundedMaterialObjectives97+
+                " pieces="+groundedMaterialPieces97);
+        GD.Print("TWR_PASS97_MATERIALS_IN_FULL_MATCH_OK"+
+            " map=Ranch waves=15"+
+            " grounded_missions="+groundedMaterialObjectives97+
+            " pieces="+groundedMaterialPieces97+
+            " real_infected_waves="+infectedVerified);
         var completedCredit=Runtime.Player!.Credits;
         var completedXp=Runtime.Player.Xp;
         var completedLevel=Runtime.Player.Level;
