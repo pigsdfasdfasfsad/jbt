@@ -22,11 +22,14 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     // acceptance through an actual Wave1->Wave2 progression and a complete
     // physical Repair mission. The default Pass103 mode is unchanged.
     public bool ExtendToRepair104 { get; set; }
+    // Pass108: isolated native RMB aiming/stow check during genuine carry.
+    public bool VerifyCarryAim108 { get; set; }
     private int _completedRepairs104;
     private int _repairDeposits104;
     private float _repairWalkedMetres104;
     private int _visibleCarryPickups106;
     private int _clearedCarryDeposits106;
+    private int _verifiedAimStows108;
     private const int MaxWalkFrames=540;
 
     public override async void _Ready()
@@ -94,6 +97,22 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 " cleared_deposits="+_clearedCarryDeposits106+
                 " render_only=true camera_attached=true"+
                 " physics_interactions_unchanged=true");
+            if (VerifyCarryAim108)
+            {
+                if (!ExtendToRepair104 || _verifiedAimStows108 != 4)
+                    throw new InvalidOperationException(
+                        "Pass108 native RMB carry coverage incomplete count="+
+                        _verifiedAimStows108);
+                GD.Print("TWR_SMOKE_PASS108_CARRY_ADS_FRUSTUM_OK"+
+                    " maps=Ranch,Manor families=Load,Repair"+
+                    " genuine_RMB_aim_stows="+_verifiedAimStows108+
+                    " physically_collected_items="+_visibleCarryPickups106+
+                    " physically_deposited_items="+_clearedCarryDeposits106+
+                    " carried_material_retained_during_ADS=true"+
+                    " full_primitive_silhouette_framed=true"+
+                    " reticle_clear_during_hip_and_ADS=true"+
+                    " source_pictures_not_pixel_compared=true");
+            }
             GetTree().Quit(0);
         }
         catch(Exception e)
@@ -121,6 +140,12 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
            held is null || !held.Visible ||
            held.GetChildCount()!=objective.Pass106HeldMaterialMeshParts ||
            !held.HasMeta("Pass106VisualKind") ||
+           !objective.Pass108HeldSilhouetteSafe ||
+           !Pass108CarryFrustum.Measure(
+               held,player.CaptureCamera.Fov,
+               new Vector2I((int)GetViewport().GetVisibleRect().Size.X,
+                   (int)GetViewport().GetVisibleRect().Size.Y)
+               ).EntirePropSafe ||
            !Pass107CarryPresentation.HasSafeAnchor(
                held, player.CaptureCamera.Fov,
                new Vector2I((int)GetViewport().GetVisibleRect().Size.X,
@@ -145,6 +170,68 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
             throw new InvalidOperationException(
                 "Pass106 carried material survived a deposit "+context);
         _clearedCarryDeposits106++;
+    }
+
+    private static void PressRight108(bool pressed)
+    {
+        Input.ParseInputEvent(new InputEventMouseButton
+        {
+            ButtonIndex=MouseButton.Right,
+            Pressed=pressed
+        });
+    }
+
+    private async Task CheckRealAimStow108(
+        ObjectiveRuntime objective,FirstPersonPlayer player,string context)
+    {
+        if (!VerifyCarryAim108)
+            return;
+        var itemName=objective.Pass106HeldMaterialName;
+        var itemRemaining=objective.Pass98RemainingMaterials;
+        var alreadyDeposited=objective.Pass98DepositedMaterials;
+        var held=player.CaptureCamera.GetNodeOrNull<Node3D>(
+            "Pass106CarriedObjectiveMaterial");
+        if (held is null || !held.Visible ||
+            !objective.Pass108HeldSilhouetteSafe ||
+            !objective.Pass98CarryingMaterial || player.Pass107Aiming ||
+            player.CaptureCamera.Fov < 54f)
+            throw new InvalidOperationException(
+                "Pass108 invalid physical hip carry baseline "+context);
+
+        try
+        {
+            PressRight108(true);
+            await Frames(65);
+            // The local input is a genuine RMB event: FirstPersonPlayer's
+            // ordinary UpdateAim and the real weapon FOV path must execute.
+            // Only the OS mouse-capture prerequisite is disabled for this
+            // exported headless smoke mode, never for a normal game.
+            if (!player.Pass107Aiming || held.Visible ||
+                objective.Pass106HeldMaterialVisible ||
+                !objective.Pass98CarryingMaterial ||
+                objective.Pass106HeldMaterialName != itemName ||
+                objective.Pass98RemainingMaterials != itemRemaining ||
+                objective.Pass98DepositedMaterials != alreadyDeposited)
+                throw new InvalidOperationException(
+                    "Pass108 RHS ADS stow changed authoritative material "+
+                    context);
+        }
+        finally
+        {
+            PressRight108(false);
+        }
+
+        await Frames(65);
+        if (player.Pass107Aiming || !held.Visible ||
+            !objective.Pass98CarryingMaterial ||
+            objective.Pass106HeldMaterialName != itemName ||
+            objective.Pass98RemainingMaterials != itemRemaining ||
+            objective.Pass98DepositedMaterials != alreadyDeposited ||
+            !objective.Pass108HeldSilhouetteSafe)
+            throw new InvalidOperationException(
+                "Pass108 real RMB release did not restore safe hip carry "+
+                context);
+        _verifiedAimStows108++;
     }
 
     private async Task Frames(int count)
@@ -376,6 +463,9 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     "Pass104 failed physical E pickup "+map+
                     " item="+item);
             CheckCarriedVisual106(objective,player,map+"/Repair/"+item);
+            if (item==0)
+                await CheckRealAimStow108(
+                    objective,player,map+"/Repair-first-material");
             metres+=await WalkSafely(
                 game,player,depot,map+"/wave2-Repair-deposit-"+item);
             await PressE();
@@ -496,6 +586,9 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     "Pass103 actual E pickup failed "+map+
                     " item="+item);
             CheckCarriedVisual106(objective,player,map+"/Load/"+item);
+            if (item==0)
+                await CheckRealAimStow108(
+                    objective,player,map+"/Load-first-material");
             metres+=await WalkSafely(
                 game,player,depot,map+"/return-to-depot-"+item);
             await PressE();
