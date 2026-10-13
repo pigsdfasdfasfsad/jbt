@@ -52,3 +52,7 @@ A separate overlap scenario placed two Load objectives at coincident floor-suppo
 - `TWR_SMOKE_PASS98_MATERIAL_LIFECYCLE_OK maps=Ranch,Manor production_wave_objectives=4 carried_pieces=42 real_E_key=true`
 
 The test changes **only the location of the acceptance player** to reduce headless runtimes, not world colliders, material positions, mission completion callbacks, inventory, health or currency. It does not establish human-operated walking between 42 item locations, retail-original world positions, source-original item meshes or an owner-approved packaged .exe.
+
+## Final branch regression (latest tested source)
+
+The final source-contract version passed the complete Windows pipeline in [38326681247](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38326681247) with **729 passing Python tests** and **one pre-existing warning**, actual E-key overlap validation, both-map full material mission completion, Pass95 Manor wing Escorts, both Pass96/97 integrated checks, and all earlier physics/privacy gates. That run randomly selected two **10-item** Repair variants, so it recorded **40** successful carry/deposit cycles; the prior run randomly selected one 12-item variant and recorded **42**. Both passed the same dynamic material-count assertions. Only documentation was committed after the final verified code SHA `0493d7cda0b04d28411ba48eeaf75385a65bba5a`.
