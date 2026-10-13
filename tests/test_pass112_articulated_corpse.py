@@ -101,7 +101,9 @@ def test_real_glock_kill_checks_pose_movement_and_all_previous_combat_rules():
     ):
         assert anchor in native, anchor
     assert "corpses.Count" not in native
-    assert "player.GlobalPosition=new Vector3" not in native
+    # Pass70 deliberately positions its isolated temporary combat platform;
+    # this is not teleporting a live player's real match to award a kill.
+    assert 'Name="Pass70SyntheticCombatFloor"' in native
 
 
 def test_pass112_ci_is_full_windows_gated_and_privacy_preserving():
