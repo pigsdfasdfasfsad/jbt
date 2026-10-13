@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest development: Pass 114 — slope-aligned fallen infected
+## Latest development: Pass 115 — screenshot-guided Laboratory interiors
+
+[Pass115 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass115-laboratory-reference-dressing) ·
+[Pass115 engineering report](docs/development/PASS115_LABORATORY_REFERENCE_DRESSING.md) ·
+[Pass115 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass115-laboratory-reference-dressing)
+
+- **A map-focused fidelity pass, rather than another tiny combat animation:** the formerly empty Laboratory blockout now has **seven recognizable interior areas** based on the owner's original source screenshots: ALYTH reception counter and blue scanner; server cabinets/indicator lamps; research workstations; examination cots; parked garage cars; emergency hospital-ward beds; and cafeteria tables/plants. Approximately 190 collision-free primitive meshes and 10 soft local fixture lights are authored entirely as standalone Godot 3D objects; original screenshot images themselves are not published.
+- **No original-map modifications:** new decor exists *only* in the source-absent Laboratory fallback. If owner original Laboratory source geometry loads locally, it takes priority and the visual dressing is never built. No source model proxy is mislabelled original, and no player/enemy physics, objective actors, navigation blockers or original private art bytes are added. The other nine maps keep their existing scenes.
+- **Pass115 native Windows acceptance:** `--smoke-pass115` extends the physically grounded ten-map Pass72 wave 1/2 test. It verifies all seven render-only landmark zones in Lab, 140–260 mesh pieces, 8+ lights, no extra collision, no Lab props on any other map, correct reward and full lobby-return lifecycle. Historical Pass70–114 native and privacy regressions remain required. The new dedicated native gate and full workflow must pass before declaring the latest branch verified; screenshot parity, source geometry, full 15-wave manual playthrough and a distributable owner-private `.exe` remain outstanding.
+
+## Earlier verified development: Pass 114 — slope-aligned fallen infected
 
 [Pass114 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass114-slope-aligned-corpse-settling) ·
 [Pass114 engineering report](docs/development/PASS114_SLOPE_ALIGNED_CORPSES.md) ·
