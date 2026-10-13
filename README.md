@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest native-verified checkpoint: Pass 102 — all ten physical objective ingress routes
+## Latest native-verified checkpoint: Pass 103 — full production Load completed by walking
+
+[Pass103 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass103-full-physical-load) ·
+[Verified exported Windows CI 38335724427](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38335724427) ·
+[Detailed Pass103 engineering report](docs/development/PASS103_FULL_PHYSICAL_LOAD.md)
+
+- **746 Python tests passed**, full Godot/.NET Windows export, native physics/objectives/combat/escort/persistence checks and private-asset exclusion passed. The final code SHA was `439c8c46ffae48756802cd88b7381681cc923293`.
+- New exported-Windows `--smoke-pass103` completed both **real Wave1 Ranch and Manor Load objectives**. The player walked from the actual map spawn to every material and back using normal W/E gameplay input: **20 pickups, 20 deposits, 163.0 metres physically traveled, zero teleports**, each completed objective saved with exactly-once domain rewards. Previous full material tests used controlled repositioning.
+- This is an isolated headless mission test with an accelerated wave start and enemy spawning held during item collection. It does **not** prove a human-survived real-time match or 1:1 original Roblox geometry, sounds, models or animation. Public executable downloads remain deliberately disabled.
+
+## Earlier verified checkpoint: Pass 102 — all ten physical objective ingress routes
 
 [Pass102 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass102-remaining-spawn-ingress) ·
 [Successful exported Windows CI 38334803204](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38334803204) ·
