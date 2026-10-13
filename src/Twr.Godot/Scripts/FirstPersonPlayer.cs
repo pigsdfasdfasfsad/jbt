@@ -260,13 +260,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
             // explicitly isolated native combat test modes skip the
             // cursor-capture prerequisite. They still run the real hit ray,
             // ammo/cooldown, lethal damage, and reward logic unchanged.
-            var nativeCombatSmoke =
-                OS.GetCmdlineUserArgs().Contains(
-                    "--smoke-pass70",StringComparer.Ordinal) ||
-                OS.GetCmdlineUserArgs().Contains(
-                    "--smoke-pass111",StringComparer.Ordinal);
             if (Input.MouseMode != Input.MouseModeEnum.Captured &&
-                !nativeCombatSmoke)
+                !OS.GetCmdlineUserArgs().Contains(
+                    "--smoke-pass70",StringComparer.Ordinal) &&
+                !OS.GetCmdlineUserArgs().Contains(
+                    "--smoke-pass111",StringComparer.Ordinal))
                 Input.MouseMode = Input.MouseModeEnum.Captured;
             else if (!HammerMode && _heldThrowable is not null)
                 TryThrowThrowable();
