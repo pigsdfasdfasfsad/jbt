@@ -127,6 +127,15 @@ public partial class Pass105LiveThreatObjectiveAcceptance : Node
     {
         var world=game.GetWorld3D();
         var excluded=new global::Godot.Collections.Array<Rid>{player.GetRid()};
+        // Pass89's swept-footprint probe was designed for a civilian NPC.
+        // Nearby moving infected are NOT permanent walls. Exclude them
+        // from the STATIC route audit only; actual W-key walking still
+        // uses unmodified FirstPersonPlayer.MoveAndSlide physics and
+        // collides with every live infected CharacterBody3D normally.
+        foreach(var mobile in game.GetChildren().OfType<InfectedAgent>())
+            if(GodotObject.IsInstanceValid(mobile) &&
+               !mobile.IsQueuedForDeletion() && mobile.Health>0)
+                excluded.Add(mobile.GetRid());
         Vector3[] legs;
         if(Pass89EscortSurfaceSafety.CanTravel(
                 world,player.GlobalPosition,target,excluded))
@@ -256,9 +265,17 @@ public partial class Pass105LiveThreatObjectiveAcceptance : Node
             player.GetRid(),spawned.GetRid()
         };
         Vector3? lane=null;
+        // Place the short-range sample behind the collected material
+        // relative to its real deposit, keeping the live attacker away
+        // from the immediate W-key return lane wherever collision permits.
+        var away=player.GlobalPosition-depot;
+        away.Y=0f;
+        away=away.LengthSquared()>.01f
+            ? away.Normalized():Vector3.Right;
         foreach(var direction in new[]
         {
-            Vector3.Right,Vector3.Left,Vector3.Forward,Vector3.Back
+            away,Vector3.Right,Vector3.Left,
+            Vector3.Forward,Vector3.Back
         })
         {
             var proposed=player.GlobalPosition+direction*3.0f;
