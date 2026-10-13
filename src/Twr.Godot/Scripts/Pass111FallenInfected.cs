@@ -24,8 +24,17 @@ public partial class Pass111FallenInfected : Node3D
     public bool Headshot { get; private set; }
     public float AgeSeconds { get; private set; }
     public float FallProgress => Mathf.Clamp(AgeSeconds / FallSeconds, 0f, 1f);
-    public bool HasPhysicsOrScripts => false; // only snapshots of MeshInstance3D
+    public bool HasPhysicsOrScripts => false; // only passive Godot render nodes
+    // Pass112: Source R6/fallback limb pivots are retained as read-only
+    // visual articulation groups; zero means unsupported original rig.
+    public int ArticulatedLimbCount112 => _limbs112.Count;
+    public int MeshesOnArticulatedLimbs112 { get; private set; }
+    public float MaximumAppliedLimbDelta112 { get; private set; }
+    public int SnapshotMeshNodeCount => CountSnapshotMeshes(this);
 
+    private sealed record LimbPose(Node3D Pivot, Vector3 OriginalRotation);
+    private readonly Dictionary<string,LimbPose> _limbs112 =
+        new(StringComparer.Ordinal);
     private Transform3D _originalPose;
     private bool _initialized;
 
@@ -74,12 +83,34 @@ public partial class Pass111FallenInfected : Node3D
                 !GodotObject.IsInstanceValid(mesh.Mesh))
                 continue;
 
+            // Pass112 groups only recognized *existing* shoulder/hip
+            // pivots. A source-rig with unknown anatomy remains a truthful
+            // original death-frame flat snapshot, not a guessed skeleton.
+            Node3D snapshotParent = corpse;
+            var parentInverse = corpse._originalPose.AffineInverse();
+            if (Pass112R6CorpseArticulation.TryFindAnchor(
+                    mesh,visual,out var region,out var sourcePivot) &&
+                sourcePivot is not null)
+            {
+                if (!corpse._limbs112.TryGetValue(region,out var limb))
+                {
+                    var pivot=new Node3D { Name = "Pass112" + region + "Pivot" };
+                    corpse.AddChild(pivot);
+                    pivot.Transform=corpse._originalPose.AffineInverse() *
+                        sourcePivot.GlobalTransform;
+                    limb=new LimbPose(pivot,pivot.Rotation);
+                    corpse._limbs112.Add(region,limb);
+                }
+                snapshotParent=limb.Pivot;
+                parentInverse=limb.Pivot.GlobalTransform.AffineInverse();
+                corpse.MeshesOnArticulatedLimbs112++;
+            }
+
             var staticMesh = new MeshInstance3D
             {
                 Name = "Pass111Mesh" + corpse.SourceMeshCount,
                 Mesh = mesh.Mesh,
-                Transform = corpse._originalPose.AffineInverse() *
-                    mesh.GlobalTransform,
+                Transform = parentInverse * mesh.GlobalTransform,
                 MaterialOverride = mesh.MaterialOverride,
                 MaterialOverlay = mesh.MaterialOverlay,
                 CastShadow = mesh.CastShadow
@@ -93,7 +124,7 @@ public partial class Pass111FallenInfected : Node3D
                 if (material is not null)
                     staticMesh.SetSurfaceOverrideMaterial(surface, material);
             }
-            corpse.AddChild(staticMesh);
+            snapshotParent.AddChild(staticMesh);
             corpse.SourceMeshCount++;
         }
 
@@ -122,6 +153,17 @@ public partial class Pass111FallenInfected : Node3D
         }
     }
 
+    private static int CountSnapshotMeshes(Node root)
+    {
+        var count=0;
+        foreach(var child in root.GetChildren())
+        {
+            if(child is MeshInstance3D)count++;
+            count+=CountSnapshotMeshes(child);
+        }
+        return count;
+    }
+
     public override void _Process(double delta)
     {
         if (!_initialized) return;
@@ -138,6 +180,16 @@ public partial class Pass111FallenInfected : Node3D
         GlobalTransform = new Transform3D(
             basis,
             _originalPose.Origin + Vector3.Down * (.16f * ease));
+
+        foreach(var pair in _limbs112)
+        {
+            var deltaPose=Pass112R6CorpseArticulation.Delta(
+                pair.Key,ease,Headshot);
+            pair.Value.Pivot.Rotation=
+                pair.Value.OriginalRotation + deltaPose;
+            MaximumAppliedLimbDelta112=Math.Max(
+                MaximumAppliedLimbDelta112,deltaPose.Length());
+        }
 
         if (AgeSeconds > LifetimeSeconds - .70f)
         {
