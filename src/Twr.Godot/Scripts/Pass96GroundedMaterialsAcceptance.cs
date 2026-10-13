@@ -74,14 +74,14 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
                 " maps=10 objective_families=Load,Repair"+
                 " material_roundtrips="+_walkedMaterialRoundTrips100+
                 " walked_metres="+_walkedMetres100.ToString("F1")+
-                " actual_forward_key=true entry_setup_only=true"+
+                " actual_forward_key=true entry_setup_only=false"+
                 " human_operated_waves_unverified=true");
             GD.Print("TWR_SMOKE_PASS101_SPAWN_OBJECTIVE_INGRESS_OK"+
                 " maps="+_spawnToDepotWalks101+
                 " distance_metres="+_spawnToDepotMetres101.ToString("F1")+
                 " actual_spawn_positions=true"+
                 " forward_key_movement=true"+
-                " remaining_maps_depot_entry_test_controlled=true"+
+                " remaining_maps_checked_by_pass102=true"+
                 " retail_source_positions_unverified=true");
             GD.Print("TWR_SMOKE_PASS102_ALL_SPAWN_OBJECTIVE_INGRESS_OK"+
                 " newly_verified_maps="+_spawnToDepotWalks102+
