@@ -65,7 +65,9 @@ public partial class Pass110RepairVehicleVisual : Node3D
     public bool PresentSuccessfulDeposit(string? materialName)
     {
         if (string.IsNullOrWhiteSpace(materialName) ||
-            _installedNames.Contains(materialName))
+            !IsExpectedName(materialName) ||
+            _installedNames.Contains(materialName) ||
+            AssemblyComplete)
             return false;
 
         if(materialName.StartsWith("Spark Plug ",StringComparison.Ordinal))
@@ -101,6 +103,17 @@ public partial class Pass110RepairVehicleVisual : Node3D
             _completeLamp.Visible = true;
         return true;
     }
+
+    // Whitelist actual recovered material names, not any user-supplied
+    // prefix such as "Wheel C" or "Jerry Can Z". Installation remains
+    // independent of pickup order (the player may choose any available item).
+    private bool IsExpectedName(string name) =>
+        name is "Spark Plug A" or "Spark Plug B" or
+            "Spark Plug C" or "Spark Plug D" or
+            "Wheel A" or "Wheel B" or
+            "Jerry Can A" or "Jerry Can B" or
+            "Jerry Can C" or "Jerry Can D" ||
+        (LargeVariant && (name is "Jerry Can E" or "Jerry Can F"));
 
     private void BuildVisual()
     {
