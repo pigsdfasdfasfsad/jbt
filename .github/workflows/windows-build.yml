@@ -97,6 +97,27 @@ jobs:
             throw "Manor Escort physics preflight did not complete: inspect route and movement diagnostics. Exit $($run.ExitCode)"
           }
 
+      - name: Preflight Pass 101 three-stair real infected descent
+        if: success() && github.ref_name == 'twr-pass101-spawn-objective-walk'
+        shell: pwsh
+        run: |
+          $stdout = Join-Path $env:RUNNER_TEMP 'pass101-manor-descend.stdout.txt'
+          $stderr = Join-Path $env:RUNNER_TEMP 'pass101-manor-descend.stderr.txt'
+          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','9000','--','--smoke-pass78') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          $output = @()
+          if(Test-Path $stdout){$output += Get-Content $stdout}
+          if(Test-Path $stderr){$output += Get-Content $stderr}
+          $output | ForEach-Object {Write-Host $_}
+          foreach($stair in @('WestWingUpper','EastWingUpper','FrontHallUpper')){
+            if(-not ($output | Where-Object {"$_" -match "TWR_PASS78_INFECTED_DOWN_OK stair=$stair "})){
+              throw "Pass101 collision-safe infected downhill failed on $stair"
+            }
+          }
+          if($run.ExitCode -ne 0 -or -not ($output | Where-Object {"$_" -match 'TWR_SMOKE_PASS78_BIDIRECTIONAL_STAIRS_OK'})){
+            throw "Pass101 physical Manor descent did not complete. Exit $($run.ExitCode)"
+          }
+
       - name: Preflight Pass 95 real Manor West and East Escort rotation
         if: success() && (github.ref_name == 'twr-pass101-spawn-objective-walk' || ((github.ref_name == 'twr-pass95-manor-escort-rotation' || github.ref_name == 'twr-pass97-unified-gameplay' || github.ref_name == 'twr-pass98-material-objective-completion')))
         shell: pwsh
