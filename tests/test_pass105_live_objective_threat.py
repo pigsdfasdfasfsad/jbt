@@ -18,6 +18,8 @@ def test_true_wave_spawning_physics_damage_and_normal_pickup_deposit():
         "spawned.Target!=player",
         "Pass89EscortSurfaceSafety.CanTravel(",
         "GetVerifiedEscortRoute89(",
+        "excluded.Add(mobile.GetRid());",
+        "away=player.GlobalPosition-depot;",
         "spawned.GlobalPosition=lane.Value+Vector3.Up*.47f",
         "spawned.IsOnFloor()",
         "minGap>startGap-.65f || damageTaken<.5f",
