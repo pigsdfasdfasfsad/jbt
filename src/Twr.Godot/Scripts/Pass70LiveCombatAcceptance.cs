@@ -80,12 +80,12 @@ public partial class Pass70LiveCombatAcceptance : Node
                 "source_weapon_fixture_is_synthetic_only=true "+
                 "no_manual_15_wave_completion_claim=true "+
                 "no_original_private_assets_or_profile_exposed=true");
-            if(VerifyArticulation112)
+            if(VerifyCorpse111)
             {
                 // The exported .NET headless game can otherwise quit while
                 // CLR finalizers still hold wrappers for freed render pivots.
-                // This teardown applies ONLY to the isolated Pass112 native
-                // fixture, after all gameplay/reward/wave assertions.
+                // Teardown is ONLY for isolated corpse smoke modes (Pass111
+                // and Pass112), after every gameplay/reward/wave assertion.
                 var temporaryScene=GetNodeOrNull<GameplayRoot>(
                     "Pass70LiveGameplayRoot");
                 if(temporaryScene is not null &&
