@@ -24,6 +24,7 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     public bool ExtendToRepair104 { get; set; }
     // Pass108: isolated native RMB aiming/stow check during genuine carry.
     public bool VerifyCarryAim108 { get; set; }
+    public bool VerifyReferenceVisuals109 { get; set; }
     private int _completedRepairs104;
     private int _repairDeposits104;
     private float _repairWalkedMetres104;
@@ -31,6 +32,10 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     private int _clearedCarryDeposits106;
     private int _verifiedAimStows108;
     private int _virtualFrustumCases108;
+    private int _generatorWorldChecks109;
+    private int _generatorHeldChecks109;
+    private int _repairBadgeShown109;
+    private int _repairBadgeCleared109;
     private const int MaxWalkFrames=540;
 
     public override async void _Ready()
@@ -116,6 +121,33 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     " reticle_clear_during_hip_and_ADS=true"+
                     " source_pictures_not_pixel_compared=true");
             }
+            if (VerifyReferenceVisuals109)
+            {
+                if (!ExtendToRepair104 ||
+                    _generatorWorldChecks109!=2 ||
+                    _generatorHeldChecks109!=2 ||
+                    _repairBadgeShown109!=2 ||
+                    _repairBadgeCleared109!=2 ||
+                    _visibleCarryPickups106<40 ||
+                    _visibleCarryPickups106!=_clearedCarryDeposits106)
+                    throw new InvalidOperationException(
+                        "Pass109 production model/HUD acceptance incomplete"+
+                        " generators_world="+_generatorWorldChecks109+
+                        " generators_held="+_generatorHeldChecks109+
+                        " repair_shown="+_repairBadgeShown109+
+                        " repair_cleared="+_repairBadgeCleared109);
+                GD.Print("TWR_SMOKE_PASS109_REFERENCE_VISUALS_OK"+
+                    " maps=Ranch,Manor"+
+                    " generators_world="+_generatorWorldChecks109+
+                    " generators_held="+_generatorHeldChecks109+
+                    " repair_badges_shown="+_repairBadgeShown109+
+                    " repair_badges_cleared="+_repairBadgeCleared109+
+                    " full_material_pickups="+_visibleCarryPickups106+
+                    " full_material_deposits="+_clearedCarryDeposits106+
+                    " actual_W_E_input=true"+
+                    " collider_free_visuals=true"+
+                    " owner_image_files_not_bundled=true");
+            }
             GetTree().Quit(0);
         }
         catch(Exception e)
@@ -160,6 +192,32 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 "Pass106 no matching collision-free carried model "+context);
         CheckCommonViewports108(held,player,context);
         _visibleCarryPickups106++;
+    }
+
+    private void CheckGenerator109(Node3D? model,string context,bool held)
+    {
+        if(!VerifyReferenceVisuals109)
+            return;
+        if(model is null || !model.HasMeta("Pass106VisualKind") ||
+           model.GetMeta("Pass106VisualKind").AsString()!="Generator" ||
+           model.GetChildCount()<20 ||
+           model.GetChildren().OfType<CollisionObject3D>().Any())
+            throw new InvalidOperationException(
+                "Pass109 generator was absent, incomplete or collidable "+
+                context);
+        foreach (var part in new[]
+        {
+            "Housing","SkidBase","TopAccessLid","ServiceDoor",
+            "FrontControlConsole","InstrumentDisplay","StatusRed",
+            "StatusGreen","IntakeVent0","IntakeVent4",
+            "LeftExhaustPipe","RightExhaustPipe",
+            "LeftSkidFoot","RightSkidFoot"
+        })
+            if(model.GetNodeOrNull<MeshInstance3D>(part) is not { Mesh: not null })
+                throw new InvalidOperationException(
+                    "Pass109 missing generator assembly "+part+" "+context);
+        if(held)_generatorHeldChecks109++;
+        else _generatorWorldChecks109++;
     }
 
     // Independently test the complete *same* carried mesh at 4:3, 16:9,
@@ -476,6 +534,19 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
             throw new InvalidOperationException(
                 "Pass104 actual Wave2 Repair objective not spawned "+map);
 
+        if(VerifyReferenceVisuals109)
+        {
+            var hud=game.GetNodeOrNull<GameplayHud>("HUD");
+            var badge=hud?.GetNodeOrNull<Pass109RepairObjectiveBadge>(
+                "Pass109RepairObjectiveBadge");
+            if(hud is null || badge is null || !badge.Visible ||
+               !hud.Pass109RepairBadgeVisible ||
+               badge.GetChildCount()!=0)
+                throw new InvalidOperationException(
+                    "Pass109 real Repair HUD badge missing "+map);
+            _repairBadgeShown109++;
+        }
+
         var feet=objective.Pass96MaterialFeet.ToArray();
         var count=feet.Length;
         var depot=objective.GlobalPosition;
@@ -534,6 +605,15 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 "Pass104 domain did not complete both waves' missions "+
                 map+" repair_callbacks="+callbacks);
         ValidateReward(expected,map+"/wave2-Repair-completed");
+        if(VerifyReferenceVisuals109)
+        {
+            var hud=game.GetNodeOrNull<GameplayHud>("HUD");
+            if(hud is null || hud.Pass109RepairBadgeVisible)
+                throw new InvalidOperationException(
+                    "Pass109 Repair badge survived objective completion "+
+                    map);
+            _repairBadgeCleared109++;
+        }
         Runtime.CompleteObjective(id,"Repair");
         await Frames(3);
         ValidateReward(expected,map+"/wave2-Repair-replayed-receipt");
@@ -599,6 +679,17 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
             throw new InvalidOperationException(
                 "Pass103 real Wave1 Load mission absent "+map);
 
+        if(VerifyReferenceVisuals109)
+        {
+            var hud=game.GetNodeOrNull<GameplayHud>("HUD");
+            if(hud is null || hud.Pass109RepairBadgeVisible)
+                throw new InvalidOperationException(
+                    "Pass109 Repair badge incorrectly shown during Load "+map);
+            CheckGenerator109(
+                objective.GetNodeOrNull<Node3D>("Generator"),
+                map+"/world-Generator",false);
+        }
+
         var feet=objective.Pass96MaterialFeet.ToArray();
         var count=feet.Length;
         var depot=objective.GlobalPosition;
@@ -631,6 +722,11 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     "Pass103 actual E pickup failed "+map+
                     " item="+item);
             CheckCarriedVisual106(objective,player,map+"/Load/"+item);
+            if (item==0 && VerifyReferenceVisuals109)
+                CheckGenerator109(
+                    player.CaptureCamera.GetNodeOrNull<Node3D>(
+                        "Pass106CarriedObjectiveMaterial"),
+                    map+"/held-Generator",true);
             if (item==0)
                 await CheckRealAimStow108(
                     objective,player,map+"/Load-first-material");
