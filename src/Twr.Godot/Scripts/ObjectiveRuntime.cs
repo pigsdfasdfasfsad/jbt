@@ -21,6 +21,12 @@ public partial class ObjectiveRuntime : Node3D
     public int Pass96RejectedMaterialCandidates { get; private set; }
     public int Pass96OverlappingMaterialFallbacks { get; private set; }
     public IReadOnlyList<Vector3> Pass96MaterialFeet => _materialFeet96;
+    // Pass98: real E-key material lifecycle telemetry. A single press
+    // picks up OR deposits one item; carrying capacity remains one.
+    public int Pass98DepositedMaterials => _deposited;
+    public int Pass98RemainingMaterials => _items.Count;
+    public bool Pass98CarryingMaterial => _carrying;
+    public int Pass98RequiredMaterials => _required;
     public Pass73GroundNavigationRuntime? EscortGroundNavigator89 { get; set; }
     public int EscortSafeRoutePlans89 { get; private set; }
     public int EscortBlockedRoutePlans89 { get; private set; }
@@ -98,7 +104,14 @@ public partial class ObjectiveRuntime : Node3D
                 break;
             case "Load":
             case "Repair":
-                if (interactPressed) TickFillInteract();
+                // Pass98 shares the player's ONE E-press budget with
+                // ordinary world loot and any other active objective.
+                // Holding E, overlap, or QueueFree in the same frame must
+                // never carry/deposit more than one physical item.
+                if(interactPressed &&
+                   !Pass76InteractionSafety.IsInteractionPressClaimed(Player) &&
+                   TickFillInteract())
+                    Pass76InteractionSafety.ClaimInteractionPress(Player);
                 break;
         }
     }
@@ -596,10 +609,10 @@ public partial class ObjectiveRuntime : Node3D
         }
     }
 
-    private void TickFillInteract()
+    private bool TickFillInteract()
     {
         if (Player is null)
-            return;
+            return false;
 
         if (_carrying &&
             Pass76InteractionSafety.CanReach(Player, GlobalPosition, 3f))
@@ -609,20 +622,25 @@ public partial class ObjectiveRuntime : Node3D
             PublishStatus();
             if (_deposited >= _required)
                 Complete();
-            return;
+            return true;
         }
 
         if (_carrying)
-            return;
+            return false;
 
         Node3D? nearest = null;
         var nearestDistance = float.MaxValue;
         foreach (var item in _items)
         {
-            if (!GodotObject.IsInstanceValid(item))
+            if (!GodotObject.IsInstanceValid(item) ||
+                item.IsQueuedForDeletion())
                 continue;
             var distance = Player.GlobalPosition.DistanceTo(item.GlobalPosition);
-            if (distance < nearestDistance)
+            // Pass98: the closest *occluded* prop must not prevent
+            // collecting a slightly farther, physically visible prop.
+            if(distance<=2.5f && distance<nearestDistance &&
+               Pass76InteractionSafety.CanReach(
+                   Player,item.GlobalPosition,2.5f))
             {
                 nearest = item;
                 nearestDistance = distance;
@@ -636,7 +654,9 @@ public partial class ObjectiveRuntime : Node3D
             nearest.QueueFree();
             _carrying = true;
             PublishStatus();
+            return true;
         }
+        return false;
     }
 
     private void Complete()
