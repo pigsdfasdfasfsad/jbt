@@ -579,6 +579,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
             // checking additional world/held generator and HUD geometry.
             // Regular gameplay still requires actual captured OS mouse.
             OS.GetCmdlineUserArgs().Contains("--smoke-pass109",
+                StringComparer.Ordinal) ||
+            // Pass110 also reuses verified RMB/ADS while ensuring that
+            // repair vehicle visuals never modify the real held item.
+            OS.GetCmdlineUserArgs().Contains("--smoke-pass110",
                 StringComparer.Ordinal);
         var wantsAim = !spec.IsMelee && _equipTimer<=0 && _reloadTimer<=0 &&
             (Input.MouseMode==Input.MouseModeEnum.Captured ||
