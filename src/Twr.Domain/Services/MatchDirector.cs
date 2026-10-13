@@ -6,6 +6,12 @@ public sealed class MatchDirector(EventStream events)
 {
     public void Start(MatchState m,string map,DateTimeOffset now)
     {
+        // A new match must begin from the committed results lobby.
+        // Rejecting an in-progress restart also prevents resetting
+        // per-match reward receipts to farm a duplicate Wave 1 payout.
+        if(m.Phase!=MatchPhase.Lobby)
+            throw new InvalidOperationException(
+                "Finish or leave the active match before starting another.");
         if(!ReleaseRules.Maps.Contains(map,StringComparer.Ordinal)) throw new ArgumentException("Map outside locked release set",nameof(map));
         m.MapName=map;m.Wave=1;m.Phase=MatchPhase.Wave;m.CompletionAwarded=false;m.SaveCommitted=false;m.CompletedObjectives.Clear();
         events.Publish(new WaveStartedEvent(1,now));
