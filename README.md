@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest development: Pass 108 — complete carried-object framing and native ADS stow checks
+## Latest development: Pass 109 — reference-guided generator and live Repair badge
+
+[Pass109 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass109-reference-generator-repair-icon) ·
+[Pass109 engineering record](docs/development/PASS109_REFERENCE_GENERATOR_REPAIR_ICON.md) ·
+[Live Windows verification](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass109-reference-generator-repair-icon)
+
+- **Actual rendered model improvement:** the earlier five-part objective Generator cuboid now has a pale industrial enclosure, dark skid feet, exhausts, service door, front intake vents and working-looking colored status indicators, reconstructed as 23 collision-free primitive meshes from the owner-supplied `Generator-Market.png` visual reference. The screenshot does **not** provide original Roblox mesh triangles, scale or source dimensions.
+- **Actual HUD improvement:** a newly drawn round, cream-and-ink Repair wrench icon based on `RepairObjective.png` appears when the *real* Repair objective actors spawn and clears on their completion/wave transition. This uses gameplay objective activity, not whichever of two simultaneous objective text updates happened most recently. Neither owner-private screenshot is committed.
+- **Native acceptance added:** `--smoke-pass109` builds on the physically walked Wave1 Load/Wave2 Repair missions on Ranch and Manor, validates two original-name Generator world meshes and two genuinely camera-carried models, two Repair-badge show/clear cycles, and the earlier Pass108 ADS and 4-viewport model bounds checks. All legacy map, infected, Escort, progression and private-source CI gates remain configured. **Pass109 itself still requires a successful latest Windows workflow result** before being certified; a rendered-pixel human playtest and exact 1:1 art are still not verified.
+
+## Earlier verified development: Pass 108 — complete carried-object framing and native ADS stow checks
 
 [Pass108 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass108-native-carry-ads-frustum) ·
 [Pass108 Windows validation](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass108-native-carry-ads-frustum) ·
