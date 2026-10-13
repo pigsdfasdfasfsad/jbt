@@ -31,6 +31,16 @@ public static class Pass76InteractionSafety
         ClaimedPickupPresses.Add(player.GetInstanceId());
     }
 
+    // Pass98: the E key has ONE shared per-player press budget, including
+    // Load/Repair material collection and deposit, not only world loot.
+    // The physics player clears it on key release (even if an actor is freed).
+    // Both actor families must check this before mutating a gameplay state.
+    public static bool IsInteractionPressClaimed(FirstPersonPlayer player)
+    {
+        ArgumentNullException.ThrowIfNull(player);
+        return ClaimedPickupPresses.Contains(player.GetInstanceId());
+    }
+
     public static void ForgetPlayer(FirstPersonPlayer player)
     {
         ClaimedPickupPresses.Remove(player.GetInstanceId());
