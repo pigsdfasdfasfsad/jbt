@@ -79,6 +79,43 @@ jobs:
         run: |
           if (!(Test-Path 'build/output/ThoseWhoRemainOffline.exe')) { throw 'Missing Windows executable' }
 
+      - name: Preflight Pass 111 native Glock kill and corpse lifecycle
+        if: success() && github.ref_name == 'twr-pass111-bounded-infected-corpse-fall'
+        shell: pwsh
+        run: |
+          $source = 'build/output/Content/Weapons/SourceWeaponModels.json.gz'
+          $hierarchy = 'build/output/Content/Weapons/SourceWeaponMotorHierarchy62.json.gz'
+          python tools/maps/make_pass68_aimcf_fixture.py --source $source --hierarchy $hierarchy --create
+          if($LASTEXITCODE -ne 0){ throw 'Pass111 synthetic original-style Glock fixture creation failed' }
+          try {
+            $stdout = Join-Path $env:RUNNER_TEMP 'pass111-corpse.stdout.txt'
+            $stderr = Join-Path $env:RUNNER_TEMP 'pass111-corpse.stderr.txt'
+            $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+            $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','1800','--','--smoke-pass111') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            $output = @()
+            if(Test-Path $stdout){$output += Get-Content $stdout}
+            if(Test-Path $stderr){$output += Get-Content $stderr}
+            $output | ForEach-Object {Write-Host $_}
+            if($run.ExitCode -ne 0){
+              throw "Pass111 actual native Glock kill/death visual failed: exit $($run.ExitCode)"
+            }
+            $matching = @($output | Where-Object {"$_" -match '^TWR_SMOKE_PASS111_INFECTED_CORPSE_OK actual_camera_ray_weapon_kill=true corpse_mesh_parts=[0-9]+ noncolliding=true reuses_infected_render_materials=true bounded_to_16=true short_lifetime_seconds=5.5 wave_cleanup=true credits_xp_unchanged=true original_ragdoll_unverified=true'})
+            if($matching.Count -ne 1){
+              throw "Pass111 did not verify the genuine Glock corpse visual and wave cleanup"
+            }
+            $parts = [regex]::Match($matching[0], 'corpse_mesh_parts=([0-9]+)')
+            if(-not $parts.Success -or [int]$parts.Groups[1].Value -lt 8 -or
+               [int]$parts.Groups[1].Value -gt 64){
+              throw "Pass111 snapshot violates visible corpse mesh budget"
+            }
+            if(-not ($output | Where-Object {"$_" -match '^TWR_SMOKE_PASS70_LIVE_COMBAT_OK exported_windows_gameplay_root=true '})){
+              throw "Pass111 broke the original real weapon, reload and Wave2 combat acceptance"
+            }
+          } finally {
+            python tools/maps/make_pass68_aimcf_fixture.py --source $source --hierarchy $hierarchy --clean
+            if($LASTEXITCODE -ne 0){ throw 'Pass111 source-safe synthetic viewmodel fixture cleanup failed' }
+          }
+
       - name: Preflight Manor upper Escort route physics and bounded diagnostics
         if: success() && github.ref_name == 'twr-pass94-manor-stair-escort'
         shell: pwsh
@@ -311,34 +348,6 @@ jobs:
           }
           if(-not ($output | Where-Object {"$_" -match '^TWR_SMOKE_PASS108_CARRY_ADS_FRUSTUM_OK maps=Ranch,Manor families=Load,Repair genuine_RMB_aim_stows=4 virtual_viewport_cases=[0-9]+ '})){
             throw 'Pass110 broke native RMB aiming or all-viewport carry-model checks'
-          }
-
-      - name: Preflight Pass 111 native Glock kill and corpse lifecycle
-        if: success() && github.ref_name == 'twr-pass111-bounded-infected-corpse-fall'
-        shell: pwsh
-        run: |
-          $stdout = Join-Path $env:RUNNER_TEMP 'pass111-corpse.stdout.txt'
-          $stderr = Join-Path $env:RUNNER_TEMP 'pass111-corpse.stderr.txt'
-          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
-          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','1800','--','--smoke-pass111') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-          $output = @()
-          if(Test-Path $stdout){$output += Get-Content $stdout}
-          if(Test-Path $stderr){$output += Get-Content $stderr}
-          $output | ForEach-Object {Write-Host $_}
-          if($run.ExitCode -ne 0){
-            throw "Pass111 actual native Glock kill/death visual failed: exit $($run.ExitCode)"
-          }
-          $matching = @($output | Where-Object {"$_" -match '^TWR_SMOKE_PASS111_INFECTED_CORPSE_OK actual_camera_ray_weapon_kill=true corpse_mesh_parts=[0-9]+ noncolliding=true reuses_infected_render_materials=true bounded_to_16=true short_lifetime_seconds=5.5 wave_cleanup=true credits_xp_unchanged=true original_ragdoll_unverified=true'})
-          if($matching.Count -ne 1){
-            throw "Pass111 did not verify the genuine Glock corpse visual and wave cleanup"
-          }
-          $parts = [regex]::Match($matching[0], 'corpse_mesh_parts=([0-9]+)')
-          if(-not $parts.Success -or [int]$parts.Groups[1].Value -lt 8 -or
-             [int]$parts.Groups[1].Value -gt 64){
-            throw "Pass111 snapshot violates visible corpse mesh budget"
-          }
-          if(-not ($output | Where-Object {"$_" -match '^TWR_SMOKE_PASS70_LIVE_COMBAT_OK exported_windows_gameplay_root=true '})){
-            throw "Pass111 broke the original real weapon, reload and Wave2 combat acceptance"
           }
 
       - name: Preflight Pass 95 real Manor West and East Escort rotation
