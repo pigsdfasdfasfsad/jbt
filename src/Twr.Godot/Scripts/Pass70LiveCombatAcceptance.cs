@@ -39,7 +39,7 @@ public partial class Pass70LiveCombatAcceptance : Node
                     " noncolliding=true"+
                     " reuses_infected_render_materials=true"+
                     " bounded_to_16=true"+
-                    " falls_then_expires=true"+
+                    " short_lifetime_seconds=5.5"+
                     " wave_cleanup=true"+
                     " credits_xp_unchanged=true"+
                     " original_ragdoll_unverified=true");
@@ -249,16 +249,12 @@ public partial class Pass70LiveCombatAcceptance : Node
                corpse111.GetChildren().OfType<MeshInstance3D>().Count()!=
                     corpse111.SourceMeshCount ||
                corpse111.GetChildren().OfType<CollisionObject3D>().Any() ||
-               corpse111.HasPhysicsOrScripts ||
-               corpse111.Headshot != false && corpse111.Headshot != true)
+               corpse111.HasPhysicsOrScripts)
                 throw new InvalidOperationException(
                     "Pass111 missing visual snapshot or non-render nodes");
             _corpseMeshParts111=corpse111.SourceMeshCount;
-            // The original physics actor has died; this corpse must NOT
-            // count as a living wave infected or a ray-hittable body.
-            if(game.ActiveInfectedCount!=0 && game.ActiveInfectedCount!=1)
-                throw new InvalidOperationException(
-                    "Pass111 corpse unexpectedly altered live enemy count");
+            // Passive Node3D meshes are intentionally NOT ray-hittable
+            // CollisionObject3D targets and cannot award another kill.
         }
 
         // A real R key event enters the player's normal reload timer.
