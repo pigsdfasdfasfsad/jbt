@@ -350,13 +350,13 @@ public partial class GameplayHud : CanvasLayer
         }
     }
     public void SetBanner(string text) => _banner.Text = text;
-    public void SetObjective(string text)
+    public void SetObjective(string text) => _objective.Text = text;
+    public void SetRepairObjectiveActive109(bool active)
     {
-        _objective.Text = text;
-        // Only genuine, live Repair status shows the wrench. The badge
-        // clears with the existing empty/completed/status-family updates.
-        _repairBadge109.Visible =
-            text.StartsWith("REPAIR  ", System.StringComparison.Ordinal);
+        // Driven by the actual objective actors, not whichever of the
+        // wave's 1-2 objective status callbacks ran last this frame.
+        // A Radio/Unpack update must not erase a still-active Repair icon.
+        _repairBadge109.Visible = active;
     }
     public void SetUtility(string text) => _utility.Text = text;
 
