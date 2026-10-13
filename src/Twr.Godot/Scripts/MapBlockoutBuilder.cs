@@ -99,7 +99,10 @@ public static class MapBlockoutBuilder
     private static RuntimeMapLayout BuildCabin(Node3D root)
     {
         BaseArena(root, 76, 76, new Color(0.10f, 0.12f, 0.09f));
-        InteriorShell(root, "CabinHouse", new Vector3(0, 3, 0), new Vector3(34, 6, 30), new Color(0.25f, 0.18f, 0.13f));
+        // Pass102: the prior +0.20m cabin floor lip isolated the interior
+        // Load depot from normal player spawn. Only this PUBLIC fallback
+        // shell receives the already-validated Pass91 flush-door floor.
+        InteriorShell(root, "CabinHouse", new Vector3(0, 3, 0), new Vector3(34, 6, 30), new Color(0.25f, 0.18f, 0.13f), frontDoorRelief91:true);
         for (var i = -32; i <= 32; i += 8)
         {
             DecorativeBox(root, "ForestN" + i, new Vector3(i, 3, -34), new Vector3(1.2f, 6, 1.2f), new Color(0.10f, 0.20f, 0.10f));
