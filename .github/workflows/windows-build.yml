@@ -155,7 +155,7 @@ jobs:
           if(Test-Path $stdout){$output += Get-Content $stdout}
           if(Test-Path $stderr){$output += Get-Content $stderr}
           $output | ForEach-Object {Write-Host $_}
-          foreach($marker in @('TWR_PASS96_FIFTEEN_WAVES_OK','TWR_PASS96_REPLAY_WAVE1_OK','TWR_SMOKE_PASS96_FULL_MATCH_REPLAY_OK')){
+          foreach($marker in @('TWR_PASS97_MATERIALS_IN_FULL_MATCH_OK','TWR_PASS96_FIFTEEN_WAVES_OK','TWR_PASS96_REPLAY_WAVE1_OK','TWR_SMOKE_PASS96_FULL_MATCH_REPLAY_OK')){
             if(-not ($output | Where-Object {"$_" -match "$marker"})){throw "Pass96 missing actual exported Windows marker: $marker"}
           }
           foreach($wave in 1..15){
