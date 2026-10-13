@@ -34,7 +34,7 @@ The new native acceptance checks:
 
 1. Each real Wave2 Repair objective owns one `Pass110RepairVehicle` with ~37 render-only mesh parts, the variant matching the objective's source-recognized `RepairVariant` and required material count. No added collision objects or owner-original-geometry claims.
 2. Initial vehicle state has no installed spark-plug visuals, no fuel, two missing rear wheels and no completion lamp.
-3. **After every real E deposit** (not after pickup), actual visual install counts equal the expected item-index step: plugs 1–4, wheels 1–2, fuel cans 1–4 or 1–6. Rear-wheel visibility and completion lamp are checked as well.
+3. **After every real E deposit** (not after pickup), the test reads the actual carried material name collected by E and increments only that source-named category. Each visual install count must match the real plug, wheel and fuel deposition totals, **regardless of pickup order or overlapping ground markers**. Rear-wheel visibility and completion lamp are checked as well.
 4. On the final deposit the real `ObjectiveRuntime.Completed` callback captures the fully assembled model *before* the objective is freed. This is checked independently of the final reward and one-time receipt.
 5. Across both maps there must be exactly two finished vehicles, and the number of visual installation checks must equal the number of physically deposited Repair materials (at least 20).
 
