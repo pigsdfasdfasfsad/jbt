@@ -25,3 +25,13 @@ CI also reruns Pass99 carrying arbitration, Pass100 20 material loops, Pass101 f
 All ten environments in the public Windows CI build are approximate *fallback blockouts*. Passage through them is not proof of original Roblox retail coordinates or 1:1 visual/animation/audio fidelity. A headless test controlling the real player's input is not a full human-controlled survival session.
 
 **Status:** Implementation and native test gates committed. A successful Windows export/native smoke run on the latest code SHA is required before this pass can be called verified. The CI workflow does not release an executable.
+
+## Found and corrected gameplay collisions
+
+The first exported Windows run [38333058408](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38333058408) failed at **Cabin**, before it could reach the Load depot. The cabin's public blockout used a raised interior floor with no accessible threshold. Pass102 now opts CabinHouse into the existing tested Pass91 flush-doorway construction. This does not alter private/owner map data.
+
+With that repair, [native run 38333500545](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38333500545) physically reached and interacted with the first Load objective from normal spawn on **Cabin (18.4m)** and **Cargo (50.2m)**, in addition to preserving the five previously verified Pass101 ingress maps. It then exposed a second production fallback obstacle: the Laboratory Research building had a +0.20m entrance step, and the physical route from Reception failed precisely at the Research doorway. Pass102 now also uses the flush-doorway collision/floor for that **fallback-only Research shell**; the owner-original Laboratory loader and original markers are untouched.
+
+An older Python test previously asserted that exactly four fallback shells could use the flush doorway. Rather than relaxing any of those original four requirements, its contract now checks each of the original PlazaNorth, PlazaSouth, CellBlockA and CellBlockB entrances **plus** CabinHouse individually.
+
+These improvements are physical geometry repairs, not assertions of recovered retail original dimensions. Later native runs remain authoritative for Laboratory, Expressway and Manor upper ingress.
