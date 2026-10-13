@@ -179,7 +179,11 @@ public static class MapBlockoutBuilder
         InteriorShell(root, "Reception", new Vector3(0, 2.2f, 39), new Vector3(30, 4.4f, 12), new Color(0.39f, 0.42f, 0.44f));
         DecorativeBox(root, "BridgeWest", new Vector3(-10, 1.0f, 24), new Vector3(7, 2, 20), new Color(0.34f, 0.37f, 0.39f));
         DecorativeBox(root, "BridgeEast", new Vector3(10, 1.0f, 24), new Vector3(7, 2, 20), new Color(0.34f, 0.37f, 0.39f));
-        InteriorShell(root, "Research", new Vector3(-16, 4, -3), new Vector3(35, 8, 42), new Color(0.36f, 0.39f, 0.41f));
+        // Pass102: native W-key travel from the actual Reception spawn
+        // reached the Research door but its previous +20cm slab stopped
+        // the verified full-capsule route. Reuse the flush fallback-only
+        // threshold (the owner-original Laboratory scene is untouched).
+        InteriorShell(root, "Research", new Vector3(-16, 4, -3), new Vector3(35, 8, 42), new Color(0.36f, 0.39f, 0.41f), frontDoorRelief91:true);
         InteriorShell(root, "ParkingGarage", new Vector3(28, 4, 0), new Vector3(28, 8, 46), new Color(0.27f, 0.29f, 0.30f));
         InteriorShell(root, "ServerRoom", new Vector3(-18, 3.2f, -34), new Vector3(28, 6.4f, 18), new Color(0.18f, 0.24f, 0.29f));
         DecorativeBox(root, "HospitalWard", new Vector3(17, 0.45f, -30), new Vector3(28, 0.9f, 18), new Color(0.58f, 0.62f, 0.61f));
