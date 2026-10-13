@@ -45,3 +45,13 @@ def test_windows_export_requires_five_new_routes_and_previous_gates():
     assert "Verify no private map scenes entered the CI export" in ci
     assert ci.count("uses: actions/upload-artifact@v4")==ci.count(
         "if: false && success()")
+
+
+def test_cabin_fallback_enters_on_ground_level_not_unwalkable_floor_lip():
+    blockout=src("src/Twr.Godot/Scripts/MapBlockoutBuilder.cs")
+    cabin=blockout.split("private static RuntimeMapLayout BuildCabin(Node3D root)",1)[1].split(
+        "private static RuntimeMapLayout BuildCargo",1)[0]
+    assert 'InteriorShell(root, "CabinHouse"' in cabin
+    assert "frontDoorRelief91:true" in cabin
+    assert "StaticBox(root,name+\"_Floor\"" in blockout
+    assert "bottom-.10f" in blockout
