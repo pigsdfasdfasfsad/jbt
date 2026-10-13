@@ -105,7 +105,12 @@ public static class Pass96GroundedMaterials
                        MaximumSameFloorDifference ||
                    FlatDistanceSquared(origin,grounded.Value)<1.1f ||
                    !Pass89EscortSurfaceSafety.CanTravel(
-                       world,origin,grounded.Value,exclude))
+                       world,origin,grounded.Value,exclude) ||
+                   // Pass100: the player must return while carrying the
+                   // material. A one-way capsule sweep is insufficient
+                   // near sloped terrain, thresholds and narrow corners.
+                   !Pass89EscortSurfaceSafety.CanTravel(
+                       world,grounded.Value,origin,exclude))
                 {
                     rejected++;
                     continue;
