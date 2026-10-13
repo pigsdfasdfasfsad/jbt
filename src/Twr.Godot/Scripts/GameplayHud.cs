@@ -21,6 +21,12 @@ public partial class GameplayHud : CanvasLayer
     private readonly ColorRect[] _armorBars = new ColorRect[4];
     private ColorRect _healthBar = null!;
     private WeaponDialHud _weaponDial = null!;
+    private Pass109RepairObjectiveBadge _repairBadge109 = null!;
+    // Read-only native acceptance telemetry for the real objective HUD.
+    public bool Pass109RepairBadgeVisible =>
+        _repairBadge109 is not null &&
+        GodotObject.IsInstanceValid(_repairBadge109) &&
+        _repairBadge109.Visible;
     private Label _crosshair = null!;
     public bool ScopeCrosshairSuppressed {get;private set;}
     public void SetScopeCrosshairSuppressed(bool suppressed)
@@ -106,6 +112,22 @@ public partial class GameplayHud : CanvasLayer
         _objective.HorizontalAlignment = HorizontalAlignment.Center;
         _objective.AddThemeColorOverride("font_color",
             new Color(.86f,.88f,.84f));
+        // Pass109 reference-guided 42px wrench in a cream circular field.
+        // HUD-only presentation; completion, mission target, pickup and
+        // player movement remain exclusively in ObjectiveRuntime.
+        _repairBadge109 = new Pass109RepairObjectiveBadge
+        {
+            Name = "Pass109RepairObjectiveBadge",
+            AnchorLeft = .5f,
+            AnchorRight = .5f,
+            OffsetLeft = -381f,
+            OffsetRight = -339f,
+            OffsetTop = 136f,
+            OffsetBottom = 178f,
+            Visible = false,
+            MouseFilter = Control.MouseFilterEnum.Ignore
+        };
+        AddChild(_repairBadge109);
 
         _utility = MakeLabel(0,183,680,29,16);
         _utility.AnchorLeft = .5f;
@@ -328,7 +350,14 @@ public partial class GameplayHud : CanvasLayer
         }
     }
     public void SetBanner(string text) => _banner.Text = text;
-    public void SetObjective(string text) => _objective.Text = text;
+    public void SetObjective(string text)
+    {
+        _objective.Text = text;
+        // Only genuine, live Repair status shows the wrench. The badge
+        // clears with the existing empty/completed/status-family updates.
+        _repairBadge109.Visible =
+            text.StartsWith("REPAIR  ", System.StringComparison.Ordinal);
+    }
     public void SetUtility(string text) => _utility.Text = text;
 
     private static string FormatTime(double seconds)
