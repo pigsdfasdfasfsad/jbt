@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest development: Pass 112 — articulated R6 death silhouettes
+## Latest development: Pass 113 — ground-settled infected death visuals
+
+[Pass113 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass113-ground-contact-corpse-settling) ·
+[Pass113 engineering record](docs/development/PASS113_CORPSE_GROUND_CONTACT.md) ·
+[Pass113 Windows tests](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass113-ground-contact-corpse-settling)
+
+- Death bodies now probe the **real static collision floor once** in the next physics step, reject steep/missing/dynamic ground, and compute landing height using every visible mesh's current **R6 arm, leg and accessory poses**. The corpse eases vertically into contact at ~3.5cm clearance over the last portion of its existing fall, instead of always rigidly lowering its centre by 0.16m. Correction is bounded at 2.75m, with no new collisions, enemy damage, navigation or objective effects.
+- The Pass113 exported-Windows real Glock death test verifies the four independent R6 limb pivots, actual static ground normal, a measurable adjustment, **≤4.5cm final body-to-floor error** and the unchanged shot/ammunition/reload/XP/wave cleanup markers. Existing Pass70/111/112 acceptance and all longer map, escort, interaction, and private asset exclusion regressions remain on this branch.
+- **Fidelity limits:** this is a render-only ground contact approximation, not recovered original Roblox skeleton physics or exact terrain-aware ragdoll. Windows CI's headless measurements are not rendered screenshot comparisons or a player-tested full fifteen-wave match. Pass113 requires confirmation of the latest native workflow result before claiming it fully verified.
+
+## Earlier verified development: Pass 112 — articulated R6 death silhouettes
 
 [Pass112 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass112-articulated-infected-death-pose) ·
 [Pass112 engineering report](docs/development/PASS112_ARTICULATED_INFECTED_DEATH.md) ·
