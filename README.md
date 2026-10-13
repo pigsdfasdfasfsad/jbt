@@ -5,11 +5,11 @@ Durable development repository for the standalone offline reconstruction of **Th
 ## Latest native-verified checkpoint: Pass 105 — live infected movement during Repair deposit
 
 [Pass105 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass105-live-repair-pursuit) ·
-[Green Windows native CI 38340291660](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340291660) ·
+[Green Windows CI 38340312355](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340312355) ·
 [Measured Pass105 engineering report](docs/development/PASS105_LIVE_REPAIR_PURSUIT.md)
 
-- **748 Python tests passed (one inherited warning)**; the offline Godot/.NET Windows executable exported successfully, and the ten-map movement, 15-wave replay, original material, Manor stair/escort and private-asset exclusion gates remained green.
-- Production-spawned, unmodified Wave2 infected **physically pursued the player while the final Repair material was carried and deposited**. On the public reconstructed fallback maps, the Ranch infected walked **8.28 metres** and the Manor infected **8.93 metres**, each alive and grounded at the successful objective completion. The player used real W/E inputs, with no actor teleports or test-granted health/damage immunity.
+- **750 Python tests passed (one inherited warning)** in the final independent run; the offline Godot/.NET Windows executable exported successfully, and the ten-map movement, 15-wave replay, original material, Manor stair/escort and private-asset exclusion gates remained green.
+- Production-spawned, unmodified Wave2 infected **physically pursued the player while the final Repair material was carried and deposited**. On the public reconstructed fallback maps, Ranch's infected walked **8.28–9.26 metres** and Manor's walked **8.07–8.93 metres** across two independently green runs, each alive and grounded at the successful objective completion. The player used real W/E inputs, with no actor teleports or test-granted health/damage immunity.
 - The two-map/two-wave test deposited every generated material (**42 in this run; 44 in the earlier Pass104 run**), retained exactly-once rewards, and saved the offline results. Repair item requirements vary; acceptance validates actual actor counts rather than forcing them to ten or twelve.
 - **Limit:** one normal Wave2 infected is spawned near the final material carry; additional timed spawning and the wave clock remain paused. This verifies pursuit and mission interaction **together**, not a two-wave real-time player survival scenario, shooting while carrying, or 1:1 owner-original art/audio/map fidelity. Private original assets and compiled public .exe downloads remain intentionally excluded.
 
