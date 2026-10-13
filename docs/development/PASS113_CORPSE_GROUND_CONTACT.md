@@ -48,4 +48,10 @@ The Windows CI PowerShell check parses the numeric contact measurements and reje
 
 [Pass113 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass113-ground-contact-corpse-settling) · [Pass113 CI](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass113-ground-contact-corpse-settling)
 
-**Verification boundary:** Source commits and headless geometry tests do not establish screenshot-level Roblox fidelity, true limb physics, slope-accurate contact, or full 15-wave manual survival. Do not call this pass native-verified until its **exact newest Windows source commit** has passed the new native gate and the full regression workflow. The compiled public download artifact is still deliberately disabled to avoid distributing owner-private assets.
+## Recorded Windows checkpoint
+
+The **dedicated Pass113 native gameplay gate passed** in [Windows run 38443944987](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38443944987), using gameplay and CI commit `987963c77f73c3bfec9774d85d0acdc07b591598`. The same exported executable also passed the inherited Pass111 actual Glock corpse gate, Pass112 real four-limb motion gate and initial Manor stair descent. This verifies one actual static-floor landing in an isolated physical fixture **without claiming pixel-level visual resemblance**.
+
+A following [Windows run 38444020308](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38444020308) includes the additional Pass113 Python source/CI assertions at commit `86633d10abd3eb24ff3046d17add4bccdc5a1e45`. The broader full-map, objective, Escort, progression and source-leak regression workflow had not yet concluded at the time of this record.
+
+**Verification boundary:** Source commits and headless geometry tests do not establish screenshot-level Roblox fidelity, true limb physics, slope-accurate contact, or a full 15-wave human playthrough. The dedicated native Pass113 gate is green; the **overall entire Windows workflow must independently finish green** before the branch is described as fully regression-verified. The compiled public download artifact remains deliberately disabled to avoid distributing owner-private assets.
