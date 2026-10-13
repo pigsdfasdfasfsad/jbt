@@ -325,6 +325,17 @@ public partial class InfectedAgent : CharacterBody3D
                 }
             }
             var direction = SteerAroundObstacles(desired);
+            // Pass101: on the three known physical Manor ramps the
+            // ordinary 2.2m flat-world obstacle lookahead can mistake the
+            // sloped landing for a wall and send a descending survivor
+            // sideways off the ramp. Follow the existing verified route
+            // ONLY if a full-capsule floor/wall sweep authorizes the next
+            // 0.4m step. Otherwise preserve ordinary collision steering.
+            if (manorDownhill78 &&
+                _nextNavigationPoint < _navigationRoute.Length &&
+                GroundNavigator73!.SafeManorDescentStep101(
+                    GlobalPosition,desired,GetRid()))
+                direction=desired;
             if (manorSameUpper79)
             {
                 // Pass83: a collision-audited UPSTAIRS waypoint must take
