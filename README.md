@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest verified branch: Pass 92 — Expressway physically supported Escort
+## Latest native-verified checkpoint: Pass 102 — all ten physical objective ingress routes
+
+[Pass102 source](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass102-remaining-spawn-ingress) ·
+[Successful exported Windows CI 38334803204](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38334803204) ·
+[Pass102 engineering notes](docs/development/PASS102_ALL_MAP_SPAWN_INGRESS.md)
+
+- Normal first-person player input and real collision now reach the first Load depot **from natural spawn across all ten public fallback maps**. The first five were accepted in Pass101; Pass102 completed **Cabin, Cargo, Laboratory, Expressway and upstairs Manor**. The same player then physically collected and deposited one material for each Load and Repair mission family on all ten fallback maps.
+- Real Windows native regression gates passed Pass78 Manor stair ascent/descent twice, Pass95 Escort, Pass96 15-wave offline simulation/replay persistence, Pass98 full material objectives with test-controlled positioning, plus the ten-map physics and privacy gates. **Pass103** adds a stronger distinct test: full production Wave1 Load through ordinary W/E movement on Ranch and Manor; [track its development branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass103-full-physical-load). Do not call Pass103 validated until its own latest Windows native run passes.
+- This project remains a **development reconstruction**, not a release-equivalent 1:1 original. Original Roblox map geometry/art/audio/animations, real-time human-operated survival, and a downloadable standalone .exe are not certified by these headless CI tests. Owner-private source assets and compiled executables are intentionally not publicly uploaded.
+
+## Earlier verified branch: Pass 92 — Expressway physically supported Escort
 
 [Pass92 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass92-expressway-escort) ·
 [Successful Windows CI 38296791093](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38296791093) ·
