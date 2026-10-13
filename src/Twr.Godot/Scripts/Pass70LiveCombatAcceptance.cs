@@ -20,6 +20,10 @@ public partial class Pass70LiveCombatAcceptance : Node
     public LocalSessionNode Runtime {get;set;} = null!;
     public const string SuccessMarker="TWR_SMOKE_PASS70_LIVE_COMBAT_OK";
     public bool VerifyCorpse111 { get; set; }
+    public bool VerifyArticulation112 { get; set; }
+    private int _articulatedLimbGroups112;
+    private int _articulatedMeshParts112;
+    private bool _articulationMoved112;
     private int _corpseMeshParts111;
     private bool _fallenAndCleared111;
 
@@ -43,6 +47,24 @@ public partial class Pass70LiveCombatAcceptance : Node
                     " wave_cleanup=true"+
                     " credits_xp_unchanged=true"+
                     " original_ragdoll_unverified=true");
+            }
+            if(VerifyArticulation112)
+            {
+                if (!VerifyCorpse111 || _articulatedLimbGroups112!=4 ||
+                    _articulatedMeshParts112<6 ||
+                    !_articulationMoved112)
+                    throw new InvalidOperationException(
+                        "Pass112 source-R6 limb articulation acceptance incomplete");
+                GD.Print("TWR_SMOKE_PASS112_ARTICULATED_CORPSE_OK"+
+                    " source_r6_limb_pivots=4"+
+                    " correctly_grouped_meshes="+_articulatedMeshParts112+
+                    " actual_glock_kill=true"+
+                    " independent_limb_fall=true"+
+                    " root_fall_preserved=true"+
+                    " no_physics_colliders=true"+
+                    " real_waved_cleanup=true"+
+                    " synthetic_glock_fixture_only=true"+
+                    " original_motor6d_data_unverified=true");
             }
             GD.Print(SuccessMarker+" "+
                 "exported_windows_gameplay_root=true "+
@@ -246,13 +268,22 @@ public partial class Pass70LiveCombatAcceptance : Node
             if(corpse111.SourceMeshCount<8 ||
                corpse111.SourceMeshCount>
                     Pass111FallenInfected.MaxSnapshotMeshes ||
-               corpse111.GetChildren().OfType<MeshInstance3D>().Count()!=
+               corpse111.SnapshotMeshNodeCount!=
                     corpse111.SourceMeshCount ||
                corpse111.GetChildren().OfType<CollisionObject3D>().Any() ||
                corpse111.HasPhysicsOrScripts)
                 throw new InvalidOperationException(
                     "Pass111 missing visual snapshot or non-render nodes");
             _corpseMeshParts111=corpse111.SourceMeshCount;
+            if(VerifyArticulation112)
+            {
+                if(corpse111.ArticulatedLimbCount112!=4 ||
+                   corpse111.MeshesOnArticulatedLimbs112<6)
+                    throw new InvalidOperationException(
+                        "Pass112 actual infected proxy has no four R6 limb poses");
+                _articulatedLimbGroups112=corpse111.ArticulatedLimbCount112;
+                _articulatedMeshParts112=corpse111.MeshesOnArticulatedLimbs112;
+            }
             // Passive Node3D meshes are intentionally NOT ray-hittable
             // CollisionObject3D targets and cannot award another kill.
         }
@@ -280,6 +311,16 @@ public partial class Pass70LiveCombatAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass111 real corpse did not complete its short fall"+
                     " while the player actually reloaded");
+        }
+        if(VerifyArticulation112)
+        {
+            if(corpse111 is null ||
+               corpse111.MaximumAppliedLimbDelta112<.15f ||
+               corpse111.ArticulatedLimbCount112!=4)
+                throw new InvalidOperationException(
+                    "Pass112 independently articulated limbs did not animate"+
+                    " across the player's actual reload");
+            _articulationMoved112=true;
         }
         if(afterReload<=afterFire || afterReload>spec.Magazine ||
            reserveAfterReload>=initialReserve ||
