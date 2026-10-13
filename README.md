@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest development: Pass 111 — temporary infected death bodies
+## Latest development: Pass 112 — articulated R6 death silhouettes
+
+[Pass112 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass112-articulated-infected-death-pose) ·
+[Pass112 engineering report](docs/development/PASS112_ARTICULATED_INFECTED_DEATH.md) ·
+[Pass112 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass112-articulated-infected-death-pose)
+
+- Builds on the real infected lethal hit and bounded, 5.5-second noncolliding corpse snapshot introduced in Pass111. Instead of **only tipping the whole dead body as a single solid piece**, the four recognizable original-source/fallback R6 shoulder and hip pivots are captured from the actual victim's death pose and animated independently, while maintaining the exact source material/mesh references in memory. Unsupported imported source anatomy stays a flat visual snapshot rather than fabricating recovered joints.
+- The Pass112 **native Glock test** requires four correct R6 limb pivots, at least six real arm/leg meshes, more than 0.15 rad of visible independent motion across a normal R-key reload, and the earlier Pass111 single visual, camera ray, ammo, kill-credit, Wave2 and bounded cleanup checks. Temporary synthetic weapon fixtures are accepted **only** under explicitly named smoke flags and removed in CI. All preceding objective, map and private-asset exclusion gates remain.
+- **Not yet source-exact:** The fall's curves are authored approximations; there are no recovered Roblox Motor6D or BallSocketConstraint dynamics, no per-joint rigid-body simulation or manual screenshot/image parity. Do not call this an authentic physics ragdoll or a 1:1 zombie animation. Pass112 must pass its own exported Windows workflow before being claimed native-verified.
+
+## Earlier development: Pass 111 — temporary infected death bodies
 
 [Pass111 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass111-bounded-infected-corpse-fall) ·
 [Pass111 engineering record](docs/development/PASS111_BOUNDED_INFECTED_CORPSE_FALL.md) ·
