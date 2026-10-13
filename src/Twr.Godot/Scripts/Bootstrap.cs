@@ -298,6 +298,16 @@ public partial class Bootstrap : Node
             });
             return;
         }
+        if(args.Contains("--smoke-pass115",StringComparer.Ordinal))
+        {
+            AddChild(new Pass72NativeTenMapEntryAcceptance
+            {
+                Name="Pass115LaboratoryNativeTenMapAcceptance",
+                Runtime=_runtime,
+                VerifyLabDressing115=true
+            });
+            return;
+        }
         if(args.Contains("--smoke-pass72",StringComparer.Ordinal))
         {
             AddChild(new Pass72NativeTenMapEntryAcceptance
