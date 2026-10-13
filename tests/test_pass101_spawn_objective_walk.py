@@ -18,8 +18,9 @@ def test_spawn_input_uses_actual_player_and_five_live_objective_origins():
     assert "TWR_PASS101_MAP_SPAWN_INGRESS_OK map=" in test
     assert "TWR_SMOKE_PASS101_SPAWN_OBJECTIVE_INGRESS_OK" in test
     assert "_spawnToDepotWalks101!=SpawnIngressMaps101.Length" in test
-    assert "player.GlobalPosition=deposit+Vector3.Up*1.1f" in test
-    assert test.count("player.GlobalPosition=") == 1
+    # Pass102 removed even the controlled initial depot placement.
+    assert "player.GlobalPosition=deposit+Vector3.Up*1.1f" not in test
+    assert test.count("player.GlobalPosition=") == 0
     assert "Position = _mapLayout.PlayerSpawn" in game
     assert "player.Velocity=" not in test
 
