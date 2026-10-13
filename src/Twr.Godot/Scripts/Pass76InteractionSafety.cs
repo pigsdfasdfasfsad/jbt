@@ -21,6 +21,13 @@ public static class Pass76InteractionSafety
     private static readonly System.Collections.Generic.HashSet<ulong>
         ClaimedPickupPresses = [];
 
+    // Pass99: holding a material belongs to the player, not to a single
+    // ObjectiveRuntime. Several Load/Repair actors can coexist in a wave;
+    // a second E press must not create an additional carried item.
+    // Weak references avoid keeping despawned Godot nodes alive.
+    private static readonly System.Collections.Generic.Dictionary<
+        ulong, WeakReference<ObjectiveRuntime>> ActiveMaterialCarriers99 = [];
+
     public static void ObservePickupKey(FirstPersonPlayer player, bool down)
     {
         if (!down) ClaimedPickupPresses.Remove(player.GetInstanceId());
@@ -44,9 +51,46 @@ public static class Pass76InteractionSafety
         return ClaimedPickupPresses.Contains(player.GetInstanceId());
     }
 
+    /// <summary>
+    /// Atomically claim the one carried-objective-item slot for a player.
+    /// A live owner blocks even a NEW E press by another objective.
+    /// A removed/queued-for-deletion objective cannot strand the slot.
+    /// </summary>
+    public static bool TryClaimMaterialCarry99(
+        FirstPersonPlayer player, ObjectiveRuntime objective)
+    {
+        ArgumentNullException.ThrowIfNull(player);
+        ArgumentNullException.ThrowIfNull(objective);
+        var id = player.GetInstanceId();
+        if (ActiveMaterialCarriers99.TryGetValue(id, out var held) &&
+            held.TryGetTarget(out var current) &&
+            GodotObject.IsInstanceValid(current) &&
+            !current.IsQueuedForDeletion())
+            return ReferenceEquals(current, objective);
+
+        ActiveMaterialCarriers99[id] =
+            new WeakReference<ObjectiveRuntime>(objective);
+        return true;
+    }
+
+    public static void ReleaseMaterialCarry99(
+        FirstPersonPlayer player, ObjectiveRuntime objective)
+    {
+        ArgumentNullException.ThrowIfNull(player);
+        ArgumentNullException.ThrowIfNull(objective);
+        var id = player.GetInstanceId();
+        if (!ActiveMaterialCarriers99.TryGetValue(id, out var held))
+            return;
+        if (!held.TryGetTarget(out var current) ||
+            !GodotObject.IsInstanceValid(current) ||
+            ReferenceEquals(current, objective))
+            ActiveMaterialCarriers99.Remove(id);
+    }
+
     public static void ForgetPlayer(FirstPersonPlayer player)
     {
         ClaimedPickupPresses.Remove(player.GetInstanceId());
+        ActiveMaterialCarriers99.Remove(player.GetInstanceId());
     }
 
     public static bool CanReach(FirstPersonPlayer player, Vector3 target,
