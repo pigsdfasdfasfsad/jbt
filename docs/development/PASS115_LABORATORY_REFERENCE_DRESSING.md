@@ -37,6 +37,12 @@ The new native `--smoke-pass115` runs the **real existing Pass72 10-map lifecycl
 
 For Laboratory, the native checker requires exactly seven known landmark nodes, at least **140** total render-mesh components but no more than **260**, at least **8** real local lights, original-geometry metadata marked *false*, no collision objects and at least 12 mesh components per landmark. For the other **nine** maps, this Lab-only dressing node must be **absent**. The dedicated native marker `TWR_SMOKE_PASS115_LAB_DRESSING_OK` requires all ten maps to finish without changing the original `TWR_SMOKE_PASS72_TEN_MAP_ENTRY_OK` success conditions. Every older Pass70–114 map, infected, weapon, Load/Repair, Escort, save and original-asset leakage regression remains in Windows CI.
 
+## Windows native checkpoint
+
+The first two Pass115 exported-Windows source commits passed the **dedicated Pass115 seven-zone / ten-map native acceptance** in [Actions 38449900951](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38449900951) and [Actions 38449959826](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38449959826), including the older Pass111–114 live weapon and corpse checks. That is native executable gameplay evidence, not screenshots of the Godot scene.
+
+A later source-only visibility adjustment moves emergency-ward beds above the historical raised slab and the cafeteria tables beside, not inside, the older bridge proxy. Those source and Python assertions are in [latest Pass115 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass115-laboratory-reference-dressing); confirm its exact-commit conclusion separately before describing those latest tweaks as native-verified. A green dedicated stage is not proof that the entire historical regression suite finished.
+
 ## Important fidelity limits and next map milestone
 
 This is **recognizable landmark set dressing**, not a recovered 1:1 Laboratory. The original source screenshot relative layouts cannot safely be converted into actual coordinates without original `.rbxlx` world geometry. The approximate placement in the fallback shell does not reproduce original complex staircase access, exact bridges, vents, level topology, dynamic sound, medical equipment animations, lighting probes or asset textures. As a deliberate first compatibility step the dressings do not collide; furniture is visually present but currently not a physical obstacle.
