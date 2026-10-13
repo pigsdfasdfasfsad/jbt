@@ -30,6 +30,14 @@ It additionally verifies:
 
 All earlier Pass111 and Pass103–110, map, stair, escort, infection, 15-wave domain replay, persistence, source-leak and packaging gates remain on the branch. Windows CI still cannot prove human screenshots match original Roblox animation or wall-floor contact; those comparisons require real graphics and owner reference footage.
 
+## Native acceptance result and outstanding full-suite boundary
+
+The dedicated exported-Windows **Pass111 real Glock kill/corpse stage** and **Pass112 articulated R6 limb motion stage** both completed successfully in [Actions run 38422509731](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38422509731). The native test used an actual shooting/reload/wave transition, recognized four shoulder/hip groups and six or more limb mesh leaves, and observed independent falling-limb movement. Python validation and the Windows compilation/export also passed.
+
+Later minor revisions release native pose handles at corpse destruction and explicitly dispose the temporary isolated gameplay scene before exiting Godot. Their [latest Windows run](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass112-articulated-infected-death-pose) must be checked before calling the current SHA verified.
+
+One separate Pass111 baseline [run 38420641147](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38420641147) passed its own corpse acceptance and many prior regression steps but returned a Windows heap-corruption exit from the historical **Pass92 Expressway Escort** process after its gameplay success markers. That is not proven to be caused by Pass111 death rendering; there is no Pass92 infected-kill code path shown in its acceptance. Do not claim the historical full workflow was green, or dismiss a nonzero process exit as a pass.
+
 ## Code and verification
 
 - [Pass112 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass112-articulated-infected-death-pose)
