@@ -8,10 +8,11 @@ def test_bypass_plazas_recess_wall_behind_exterior_doors_only():
     source=read("src/Twr.Godot/Scripts/MapBlockoutBuilder.cs")
     assert 'InteriorShell(root, "PlazaNorth"' in source
     assert 'InteriorShell(root, "PlazaSouth"' in source
-    assert source.count("frontDoorRelief91:true") == 4
-    for name in ("CellBlockA","CellBlockB"):
+    # Cabin now legitimately reuses the same physically tested flush
+    # entrance; do not require an exact global number of callers.
+    for name in ("PlazaNorth","PlazaSouth","CellBlockA","CellBlockB","CabinHouse"):
         p=source.index(f'InteriorShell(root, "{name}"')
-        assert "frontDoorRelief91:true" in source[p:p+240]
+        assert "frontDoorRelief91:true" in source[p:p+260]
     assert "bool frontDoorRelief91=false" in source
     assert "const float clearance91=2.70f" in source
     assert "AddRecessedDivider91" in source
