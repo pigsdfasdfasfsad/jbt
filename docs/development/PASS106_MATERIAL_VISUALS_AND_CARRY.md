@@ -28,4 +28,20 @@ The unchanged Pass102 ten-map spawn-route tests, Pass99 shared carrying-state te
 
 This pass builds better proxy models, not original mesh recovery. It does not implement item-specific hand IK or carry animations, and headless Godot mesh-instance tests cannot confirm aesthetic quality, self-clipping or whether the chosen camera placement occludes a particular weapon. Human-controlled graphical screenshots and weapon/carry layout review are required. Native CI compiles a Windows executable but deliberately does **not** publish public executable artifacts.
 
-**Status at commit:** implementation, native acceptance extensions and CI gates committed; wait for an actual green Windows run before describing Pass106 as verified.
+## Final verified Windows acceptance
+
+**Pass106 is fully verified in GitHub Actions [run 38348938021](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38348938021).** The exact gameplay/source/test commit `a8dbf3015968b136ac193f20a2fd6df55c20ae0a` built the Godot/.NET Windows executable, completed **757 Python tests** (one pre-existing warning) and passed all native regression and final private-asset exclusion gates. The immediately preceding gameplay/CI commit also had a separate successful full Windows run [38348912008](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38348912008).
+
+In the final exported Windows test, the production Repair variant randomly selected ten items per map rather than the twelve from the earlier Pass104 run. The actual acceptance reported:
+- `TWR_SMOKE_PASS106_FULL_CARRY_VISUALS_OK families=Load maps=Ranch,Manor visual_pickups=20 cleared_deposits=20`.
+- `TWR_SMOKE_PASS106_FULL_CARRY_VISUALS_OK families=Load,Repair maps=Ranch,Manor visual_pickups=40 cleared_deposits=40`. All forty generated materials in this run were physically carried, shown on the camera and then correctly removed from the carried view.
+- `TWR_PASS106_UNDER_FIRE_CARRY_VISUAL_OK family=Load carried_item=Generator visual_mesh_parts=5 survived_real_melee_damage=true disappeared_after_deposit=true`.
+
+The successful production-spawned Wave1 hostile fixture separately recorded 4.0 points of player damage and 1.3m actual zombie closing distance while the carried material remained intact. The test controls the hostile enemy's starting lane and does not certify full natural-spawn pursuit or a human-operated full wave.
+
+The private-owner source exclusion gate passed. **No public downloadable `.exe` was released.** CI compiles a Windows game for test execution but disables binary artifact upload.
+
+## Next recommended pass
+
+**Pass107:** visually render the actual first-person carry poses and representative world item models on a graphical Windows client, check the overlays against each weapon's aim view/ADS and UI/crosshair, and refine clipping, scale, lighting and source-accurate shapes using reference screenshots. Existing headless tests certify node ownership and interaction lifecycle but do not certify what appears on screen.
+
