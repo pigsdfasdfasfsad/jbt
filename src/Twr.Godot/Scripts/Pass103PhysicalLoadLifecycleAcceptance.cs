@@ -25,6 +25,8 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     private int _completedRepairs104;
     private int _repairDeposits104;
     private float _repairWalkedMetres104;
+    private int _visibleCarryPickups106;
+    private int _clearedCarryDeposits106;
     private const int MaxWalkFrames=540;
 
     public override async void _Ready()
@@ -76,6 +78,22 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     " enemy_spawning_frozen_during_missions=true"+
                     " full_realtime_survival_unverified=true");
             }
+            var expectedVisuals=_deposits+
+                (ExtendToRepair104 ? _repairDeposits104 : 0);
+            if(_visibleCarryPickups106!=expectedVisuals ||
+               _clearedCarryDeposits106!=expectedVisuals)
+                throw new InvalidOperationException(
+                    "Pass106 missing first-person carry models"+
+                    " visual_pickups="+_visibleCarryPickups106+
+                    " visual_deposits="+_clearedCarryDeposits106+
+                    " expected="+expectedVisuals);
+            GD.Print("TWR_SMOKE_PASS106_FULL_CARRY_VISUALS_OK"+
+                " families="+(ExtendToRepair104?"Load,Repair":"Load")+
+                " maps=Ranch,Manor"+
+                " visual_pickups="+_visibleCarryPickups106+
+                " cleared_deposits="+_clearedCarryDeposits106+
+                " render_only=true camera_attached=true"+
+                " physics_interactions_unchanged=true");
             GetTree().Quit(0);
         }
         catch(Exception e)
@@ -88,6 +106,38 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 e.GetType().Name+" "+e.Message+"\n"+e.StackTrace);
             GetTree().Quit(1);
         }
+    }
+
+    // Every real E pickup must show the matching 3D prop on the
+    // actual first-person camera, without adding physics colliders.
+    private void CheckCarriedVisual106(
+        ObjectiveRuntime objective,FirstPersonPlayer player,string context)
+    {
+        var held=player.CaptureCamera.GetNodeOrNull<Node3D>(
+            "Pass106CarriedObjectiveMaterial");
+        if(!objective.Pass106HeldMaterialVisible ||
+           objective.Pass106HeldMaterialMeshParts<2 ||
+           string.IsNullOrWhiteSpace(objective.Pass106HeldMaterialName) ||
+           held is null || !held.Visible ||
+           held.GetChildCount()!=objective.Pass106HeldMaterialMeshParts ||
+           !held.HasMeta("Pass106VisualKind") ||
+           held.GetMeta("Pass106RecoveredItemName").AsString()!=
+                objective.Pass106HeldMaterialName ||
+           held.GetChildren().OfType<CollisionObject3D>().Any())
+            throw new InvalidOperationException(
+                "Pass106 no matching collision-free carried model "+context);
+        _visibleCarryPickups106++;
+    }
+
+    private void CheckClearedVisual106(
+        ObjectiveRuntime objective,FirstPersonPlayer player,string context)
+    {
+        if(objective.Pass106HeldMaterialVisible ||
+           player.CaptureCamera.GetNodeOrNull<Node3D>(
+               "Pass106CarriedObjectiveMaterial") is not null)
+            throw new InvalidOperationException(
+                "Pass106 carried material survived a deposit "+context);
+        _clearedCarryDeposits106++;
     }
 
     private async Task Frames(int count)
@@ -318,6 +368,7 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass104 failed physical E pickup "+map+
                     " item="+item);
+            CheckCarriedVisual106(objective,player,map+"/Repair/"+item);
             metres+=await WalkSafely(
                 game,player,depot,map+"/wave2-Repair-deposit-"+item);
             await PressE();
@@ -329,6 +380,7 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass104 failed physical E deposit "+map+
                     " item="+item);
+            CheckClearedVisual106(objective,player,map+"/Repair/"+item);
             _repairDeposits104++;
         }
 
@@ -436,6 +488,7 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass103 actual E pickup failed "+map+
                     " item="+item);
+            CheckCarriedVisual106(objective,player,map+"/Load/"+item);
             metres+=await WalkSafely(
                 game,player,depot,map+"/return-to-depot-"+item);
             await PressE();
@@ -449,6 +502,7 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                         "Pass103 premature/failed material deposit "+
                         map+" item="+item);
             }
+            CheckClearedVisual106(objective,player,map+"/Load/"+item);
             _deposits++;
         }
         await Frames(5);
