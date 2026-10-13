@@ -568,8 +568,16 @@ public partial class FirstPersonPlayer : CharacterBody3D
             return;
         }
 
+        // A headless CI runner cannot acquire OS cursor capture. Only the
+        // explicitly opted-in Pass108 exported-Windows smoke bypasses that UI
+        // prerequisite; the real right-button input, equipment locks, FOV,
+        // camera/weapon handling and game authority are otherwise identical.
+        var pass108NativeAimInput =
+            OS.GetCmdlineUserArgs().Contains("--smoke-pass108",
+                StringComparer.Ordinal);
         var wantsAim = !spec.IsMelee && _equipTimer<=0 && _reloadTimer<=0 &&
-            Input.MouseMode==Input.MouseModeEnum.Captured &&
+            (Input.MouseMode==Input.MouseModeEnum.Captured ||
+                pass108NativeAimInput) &&
             Input.IsMouseButtonPressed(MouseButton.Right);
         _aiming=wantsAim;
 
