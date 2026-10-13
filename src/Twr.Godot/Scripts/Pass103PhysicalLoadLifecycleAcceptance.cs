@@ -25,6 +25,13 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     private int _completedRepairs104;
     private int _repairDeposits104;
     private float _repairWalkedMetres104;
+    // Pass105: production-spawned infected must remain a live physics
+    // pursuer while the player physically carries and deposits the last
+    // Wave2 Repair material. These optional checks never run in normal
+    // gameplay or the already-verified Pass103/104 test modes.
+    public bool VerifyPursuit105 { get; set; }
+    private int _pursuitMaps105;
+    private float _pursuitMetres105;
     private const int MaxWalkFrames=540;
 
     public override async void _Ready()
@@ -52,6 +59,9 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 " accelerated_wave_start=true"+
                 " isolated_enemy_combat=true"+
                 " retail_art_fidelity_unverified=true");
+            if(VerifyPursuit105 && !ExtendToRepair104)
+                throw new InvalidOperationException(
+                    "Pass105 requires Pass104 two-wave mission progression");
             if(ExtendToRepair104)
             {
                 if(_completedRepairs104!=2 ||
@@ -76,13 +86,35 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     " enemy_spawning_frozen_during_missions=true"+
                     " full_realtime_survival_unverified=true");
             }
+            if(VerifyPursuit105)
+            {
+                if(_pursuitMaps105!=2 || _pursuitMetres105<.60f)
+                    throw new InvalidOperationException(
+                        "Pass105 insufficient grounded live pursuit"+
+                        " maps="+_pursuitMaps105+
+                        " moved="+_pursuitMetres105.ToString("F2"));
+                GD.Print("TWR_SMOKE_PASS105_LIVE_REPAIR_PURSUIT_OK"+
+                    " maps=Ranch,Manor full_wave2_repairs="+
+                        _completedRepairs104+
+                    " materials_deposited="+_repairDeposits104+
+                    " live_pursuit_metres="+_pursuitMetres105.ToString("F2")+
+                    " real_wave2_spawn=true"+
+                    " physics_enemy_alive_at_deposit=true"+
+                    " real_W_E_keys=true player_teleports=0"+
+                    " no_damage_immunity=true"+
+                    " timed_extra_spawns_paused=true"+
+                    " player_combat_kill_not_tested=true"+
+                    " full_combat_survival_unverified=true");
+            }
             GetTree().Quit(0);
         }
         catch(Exception e)
         {
             InputEvent(Key.W,false);
             InputEvent(Key.E,false);
-            GD.PushError((ExtendToRepair104
+            GD.PushError((VerifyPursuit105
+                    ? "TWR_SMOKE_PASS105_LIVE_REPAIR_PURSUIT_FAILED "
+                    : ExtendToRepair104
                     ? "TWR_SMOKE_PASS104_FULL_PHYSICAL_REPAIR_FAILED "
                     : "TWR_SMOKE_PASS103_FULL_PHYSICAL_LOAD_FAILED ")+
                 e.GetType().Name+" "+e.Message+"\n"+e.StackTrace);
@@ -239,6 +271,55 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 " level="+Runtime.Player?.Level);
     }
 
+    private async Task<(InfectedAgent enemy,Vector3 start)> SpawnRealPursuer105(
+        GameplayRoot game,FirstPersonPlayer player,string map)
+    {
+        if(game.WaveStage!="WAVE" || Runtime.Match?.Wave!=2 ||
+           game.ActiveInfectedCount!=0)
+            throw new InvalidOperationException(
+                "Pass105 requires clean genuine Wave2 spawner "+map);
+
+        // One ordinary production SpawnInfected call, using the REAL
+        // collision-approved map spawn and source/current wave catalog.
+        // Stopping only GameplayRoot's future stage clock and spawn timer
+        // does not disable the spawned InfectedAgent._PhysicsProcess.
+        game._Process(.05);
+        game.SetProcess(false);
+        var actor=game.GetChildren().OfType<InfectedAgent>()
+            .FirstOrDefault(x=>GodotObject.IsInstanceValid(x) &&
+                !x.IsQueuedForDeletion() && x.Health>0f);
+        if(actor is null || actor.Target!=player ||
+           game.ActiveInfectedCount!=1 ||
+           game.VerifiedFallbackSpawns85<1)
+            throw new InvalidOperationException(
+                "Pass105 production Wave2 spawn not collision supported "+
+                map+" infected="+game.ActiveInfectedCount+
+                " verified="+game.VerifiedFallbackSpawns85);
+
+        var initial=actor.GlobalPosition;
+        // While W is not pressed, the carried material and player stay
+        // in the actual playable world with real pursuit/damage enabled.
+        // No enemy or player positions, speed, damage, health or collision
+        // properties are modified for this acceptance.
+        await Frames(90);
+        if(!GodotObject.IsInstanceValid(actor) ||
+           actor.IsQueuedForDeletion() || actor.Health<=0f ||
+           !actor.IsOnFloor() || Runtime.Player?.IsAlive!=true)
+            throw new InvalidOperationException(
+                "Pass105 active physics pursuer lost during carried item "+
+                map);
+
+        var horizontal=actor.GlobalPosition-initial;
+        horizontal.Y=0;
+        if(horizontal.Length()<.30f)
+            throw new InvalidOperationException(
+                "Pass105 wave-spawned infected failed grounded pursuit "+
+                map+" start="+initial+
+                " actual="+actor.GlobalPosition+
+                " displacement="+horizontal.Length().ToString("F2"));
+        return (actor,initial);
+    }
+
     /// <summary>
     /// After the complete, real-input Wave1 Load mission, use the normal
     /// stage state machine (not a modified wave number) to start Wave2.
@@ -297,6 +378,8 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
         var wave2Start=player.GlobalPosition;
         var metres=await WalkSafely(
             game,player,depot,map+"/wave2-to-production-Repair");
+        InfectedAgent? livePursuer105=null;
+        var pursuitOrigin105=Vector3.Zero;
 
         for(var item=0;item<count;item++)
         {
@@ -318,6 +401,11 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass104 failed physical E pickup "+map+
                     " item="+item);
+            if(VerifyPursuit105 && item==count-1)
+            {
+                (livePursuer105,pursuitOrigin105)=
+                    await SpawnRealPursuer105(game,player,map);
+            }
             metres+=await WalkSafely(
                 game,player,depot,map+"/wave2-Repair-deposit-"+item);
             await PressE();
@@ -333,6 +421,34 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
         }
 
         await Frames(5);
+        if(VerifyPursuit105)
+        {
+            if(livePursuer105 is null ||
+               !GodotObject.IsInstanceValid(livePursuer105) ||
+               livePursuer105.IsQueuedForDeletion() ||
+               livePursuer105.Health<=0f ||
+               !livePursuer105.IsOnFloor() ||
+               Runtime.Player?.IsAlive!=true)
+                throw new InvalidOperationException(
+                    "Pass105 lost living pursuer at actual final E deposit "+
+                    map);
+            var distance=livePursuer105.GlobalPosition-pursuitOrigin105;
+            distance.Y=0f;
+            if(distance.Length()<.30f)
+                throw new InvalidOperationException(
+                    "Pass105 enemy did not advance during carry "+map);
+            _pursuitMaps105++;
+            _pursuitMetres105+=distance.Length();
+            GD.Print("TWR_PASS105_MAP_REPAIR_PURSUIT_OK map="+map+
+                " production_wave=2"+
+                " material_carried_while_pursued=true"+
+                " final_material_deposited_with_enemy_alive=true"+
+                " infected_grounded=true"+
+                " player_alive=true"+
+                " pursuit_metres="+distance.Length().ToString("F2")+
+                " real_spawn_and_collision=true"+
+                " player_teleports=0 enemy_test_relocation=0");
+        }
         if(callbacks!=1 ||
            Runtime.Match?.CompletedObjectives.Contains(id)!=true ||
            Runtime.Match.CompletedObjectives.Contains(completedLoadId)!=true)
