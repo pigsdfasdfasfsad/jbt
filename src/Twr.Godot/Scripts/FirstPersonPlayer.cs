@@ -23,6 +23,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public bool HammerMode { get; private set; }
     public bool MountedMode {get;private set;}
     public Camera3D CaptureCamera => _camera;
+    // Pass107: read-only presentation state; combat/ADS authority is unchanged.
+    public bool Pass107Aiming => _aiming;
     public Vector3 AimOrigin => _camera.GlobalPosition;
     public Vector3 AimDirection => -_camera.GlobalTransform.Basis.Z;
     public float SourceAimVisualBlend67 => _sourceAimVisualBlend67;
