@@ -740,6 +740,12 @@ public partial class GameplayRoot : Node3D
             _objectives.Add(objective);
             AddChild(objective);
         }
+        // Pass109 is driven by *active* Repair actors. Wave 1/2 may
+        // contain a second objective whose status callback runs later;
+        // only adding/removing the real Repair actor changes this icon.
+        _hud.SetRepairObjectiveActive109(
+            _objectives.Any(x => x.Family == "Repair" &&
+                GodotObject.IsInstanceValid(x) && !x.IsQueuedForDeletion()));
     }
 
     private Vector3 ObjectivePosition(int index)
@@ -768,6 +774,9 @@ public partial class GameplayRoot : Node3D
     {
         _completedObjectivesThisWave++;
         _objectives.Remove(objective);
+        _hud.SetRepairObjectiveActive109(
+            _objectives.Any(x => x.Family == "Repair" &&
+                GodotObject.IsInstanceValid(x) && !x.IsQueuedForDeletion()));
 
         var completionPosition = objective.GlobalPosition;
         if (objective.Family == "Radio")
@@ -802,7 +811,10 @@ public partial class GameplayRoot : Node3D
             if (GodotObject.IsInstanceValid(objective)) objective.QueueFree();
         _objectives.Clear();
         if (GodotObject.IsInstanceValid(_hud))
+        {
+            _hud.SetRepairObjectiveActive109(false);
             _hud.SetObjective("");
+        }
     }
 
     private readonly record struct FortPickup(string Name, int Count);
