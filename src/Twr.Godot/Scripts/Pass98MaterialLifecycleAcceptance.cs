@@ -168,6 +168,18 @@ public partial class Pass98MaterialLifecycleAcceptance : Node
                 " second="+second.Pass98RemainingMaterials);
         var carried=first.Pass98CarryingMaterial?first:second;
         var idle=ReferenceEquals(carried,first)?second:first;
+        // Pass99 regression: releasing E must NOT permit a player to
+        // hold material from both overlapping objectives at once.
+        await PressE();
+        if(!carried.Pass98CarryingMaterial ||
+           idle.Pass98CarryingMaterial ||
+           first.Pass98RemainingMaterials+
+               second.Pass98RemainingMaterials!=19)
+            throw new InvalidOperationException(
+                "Pass99 second E acquired an additional carried material");
+        GD.Print("TWR_PASS99_GLOBAL_MATERIAL_CARRY_OK"+
+            " overlapping_objectives=2 concurrent_carried=1"+
+            " second_press_blocked=true");
         await MoveTestPlayer(player,carried.GlobalPosition);
         await PressE();
         if(carried.Pass98DepositedMaterials!=1 ||
