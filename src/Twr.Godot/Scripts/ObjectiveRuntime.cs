@@ -27,6 +27,12 @@ public partial class ObjectiveRuntime : Node3D
     public int Pass98RemainingMaterials => _items.Count;
     public bool Pass98CarryingMaterial => _carrying;
     public int Pass98RequiredMaterials => _required;
+    // Pass110: noncolliding world visualization only. E-key, rewards,
+    // map source geometry and completed objective receipts are unchanged.
+    public Pass110RepairVehicleVisual? Pass110RepairVehicle => _repairVehicle110;
+    public int Pass110VisualPartCount => _repairVehicle110?.MeshPartCount ?? 0;
+    public int Pass110AcceptedVisualDeposits =>
+        _repairVehicle110?.AcceptedDeposits ?? 0;
     // Pass106: read-only evidence for the actual camera-mounted carried prop.
     public bool Pass106HeldMaterialVisible =>
         _heldMaterial106 is not null &&
@@ -79,6 +85,7 @@ public partial class ObjectiveRuntime : Node3D
     private int _deposited;
     private bool _carrying;
     private Node3D? _heldMaterial106;
+    private Pass110RepairVehicleVisual? _repairVehicle110;
     private string? _heldMaterialName106;
     private bool _completed;
     private bool _interactWasDown;
@@ -518,6 +525,18 @@ public partial class ObjectiveRuntime : Node3D
         if(large){items.Add("Jerry Can E");items.Add("Jerry Can F");}
         SetMeta("RepairVariant",large ? "Large" : "Small");
         BuildFillItems(items.ToArray());
+        // Source-authored geometry must never receive an invented vehicle
+        // duplicate. Only SOURCE-ABSENT, supported fallback stages get
+        // this approximate Silverado/Tundra visual next to the depot.
+        if(UseFallbackMaterialGrounding96)
+        {
+            _repairVehicle110=new Pass110RepairVehicleVisual
+            {
+                Name="Pass110RepairVehicle",
+                LargeVariant=large
+            };
+            AddChild(_repairVehicle110);
+        }
     }
     private void BuildDamageTarget()
     {
@@ -665,6 +684,12 @@ public partial class ObjectiveRuntime : Node3D
             Pass76InteractionSafety.CanReach(Player, GlobalPosition, 3f))
         {
             _carrying = false;
+            // Only a successful authoritative E deposit changes the
+            // passive vehicle assembly; never allow its visuals to
+            // determine whether an objective item counts as deposited.
+            if(Family=="Repair")
+                _repairVehicle110?.PresentSuccessfulDeposit(
+                    _heldMaterialName106);
             ClearHeldMaterial106();
             Pass76InteractionSafety.ReleaseMaterialCarry99(Player, this);
             _deposited++;
