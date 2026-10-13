@@ -41,6 +41,12 @@ public partial class Pass111FallenInfected : Node3D
     public float GroundCorrectionMeters113 { get; private set; }
     public float GroundSurfaceHeight113 { get; private set; }
     public Vector3 GroundNormal113 { get; private set; } = Vector3.Up;
+    // Pass114: read-only bounded surface alignment telemetry; the source
+    // rig remains only render nodes, with no changed combat/physics body.
+    public float SlopeTiltRadians114 { get; private set; }
+    public bool SlopePlaneSupportMeasured114 { get; private set; }
+    public float SlopePlaneGapMeters114 { get; private set; }
+    public bool SlopeSettled114 { get; private set; }
 
     private sealed record LimbPose(Node3D Pivot, Vector3 OriginalRotation);
     private readonly Dictionary<string,LimbPose> _limbs112 =
@@ -212,6 +218,13 @@ public partial class Pass111FallenInfected : Node3D
         var pitch = (Headshot ? -.49f : .49f) * Mathf.Pi * ease;
         var basis = _originalPose.Basis *
             new Basis(Vector3.Right, pitch);
+        if (WalkableGroundFound113)
+        {
+            var surfaceTilt=Pass114CorpseSlopeSupport.TiltToNormal(
+                GroundNormal113,ease,out var tilt114);
+            SlopeTiltRadians114=tilt114;
+            basis=surfaceTilt*basis;
+        }
         GlobalTransform = new Transform3D(
             basis,
             _originalPose.Origin + Vector3.Down * (.16f * ease));
@@ -232,23 +245,53 @@ public partial class Pass111FallenInfected : Node3D
         // Apply correction gradually during the last part of the fall;
         // missing collision, very steep slopes and midair deaths keep
         // the existing harmless noncolliding animation unchanged.
-        if (WalkableGroundFound113 &&
-            Pass113CorpseGroundContact.TryLowestVisiblePointY(
-                this,_originalPose.Origin,out var lowestY))
+        if (WalkableGroundFound113)
         {
-            var correction=Pass113CorpseGroundContact.BoundedCorrection(
-                GroundSurfaceHeight113,lowestY);
             var contactProgress=Mathf.Clamp((ease-.42f)/.58f,0f,1f);
             var settle=contactProgress*contactProgress*
                 (3f-2f*contactProgress);
-            GroundCorrectionMeters113=correction*settle;
-            GlobalPosition+=Vector3.Up*GroundCorrectionMeters113;
-            GroundContactError113=Math.Abs(
-                lowestY+GroundCorrectionMeters113-
-                (GroundSurfaceHeight113+
-                    Pass113CorpseGroundContact.ClearanceMeters));
-            GroundSettled113=t>=.99f &&
-                GroundContactError113<=.045f;
+            // Above 3 degrees, the contact plane is tilted. The lowest
+            // absolute Y corner can float at the high side or penetrate
+            // the downhill side, so use the lowest signed plane distance
+            // from all currently articulated source R6 mesh corners.
+            if (SlopeTiltRadians114>
+                    Pass114CorpseSlopeSupport.MinimumVisualTiltRadians*.85f &&
+                Pass114CorpseSlopeSupport.TryLowestSignedDistance(
+                    this,_originalPose.Origin,
+                    new Vector3(_originalPose.Origin.X,
+                        GroundSurfaceHeight113,_originalPose.Origin.Z),
+                    GroundNormal113,out var lowestPlaneDistance))
+            {
+                var correction=Pass114CorpseSlopeSupport.VerticalCorrection(
+                    lowestPlaneDistance,GroundNormal113);
+                GroundCorrectionMeters113=correction*settle;
+                GlobalPosition+=Vector3.Up*GroundCorrectionMeters113;
+                SlopePlaneSupportMeasured114=true;
+                SlopePlaneGapMeters114=Math.Abs(
+                    lowestPlaneDistance+
+                        GroundCorrectionMeters113*GroundNormal113.Y-
+                        Pass113CorpseGroundContact.ClearanceMeters);
+                SlopeSettled114=t>=.99f &&
+                    SlopePlaneGapMeters114<=.045f;
+                GroundContactError113=SlopePlaneGapMeters114;
+                GroundSettled113=SlopeSettled114;
+            }
+            else if (Pass113CorpseGroundContact.TryLowestVisiblePointY(
+                         this,_originalPose.Origin,out var lowestY))
+            {
+                // Preserve the verified flat-world Pass113 behavior and
+                // its existing native smoke contract exactly.
+                var correction=Pass113CorpseGroundContact.BoundedCorrection(
+                    GroundSurfaceHeight113,lowestY);
+                GroundCorrectionMeters113=correction*settle;
+                GlobalPosition+=Vector3.Up*GroundCorrectionMeters113;
+                GroundContactError113=Math.Abs(
+                    lowestY+GroundCorrectionMeters113-
+                    (GroundSurfaceHeight113+
+                        Pass113CorpseGroundContact.ClearanceMeters));
+                GroundSettled113=t>=.99f &&
+                    GroundContactError113<=.045f;
+            }
         }
 
         if (AgeSeconds > LifetimeSeconds - .70f)
