@@ -203,6 +203,14 @@ public partial class InfectedAgent : CharacterBody3D
             var manorSameUpper79 = fallbackReady &&
                 GroundNavigator73!.IsManorSameUpperFloor79(
                     GlobalPosition, Target.GlobalPosition);
+            // Share the downhill state between waypoint selection and
+            // the final full-capsule route steering safety check.
+            var manorDownhill78 = fallbackReady &&
+                GroundNavigator73!.MapName == "Manor" &&
+                GroundNavigator73.StairLinkCount77 == 3 &&
+                Target.GlobalPosition.Y <= 1.5f &&
+                (GlobalPosition.Y - .8f) -
+                    Target.GlobalPosition.Y > .25f;
             if (highwayReady || sourceReady || fallbackReady)
             {
                 _navigationRefresh -= delta;
@@ -242,12 +250,6 @@ public partial class InfectedAgent : CharacterBody3D
                 // contact as Pass77 uphill routes. Flat-route skip radii
                 // would otherwise jump from an upper flight directly toward
                 // a player below the floor and strand the infected.
-                var manorDownhill78 = fallbackReady &&
-                    GroundNavigator73!.MapName == "Manor" &&
-                    GroundNavigator73.StairLinkCount77 == 3 &&
-                    Target.GlobalPosition.Y <= 1.5f &&
-                    (GlobalPosition.Y - .8f) -
-                        Target.GlobalPosition.Y > .25f;
                 while (_nextNavigationPoint < _navigationRoute.Length)
                 {
                     var waypoint = _navigationRoute[_nextNavigationPoint];
