@@ -25,6 +25,7 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     // Pass108: isolated native RMB aiming/stow check during genuine carry.
     public bool VerifyCarryAim108 { get; set; }
     public bool VerifyReferenceVisuals109 { get; set; }
+    public bool VerifyRepairVehicle110 { get; set; }
     private int _completedRepairs104;
     private int _repairDeposits104;
     private float _repairWalkedMetres104;
@@ -36,6 +37,11 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     private int _generatorHeldChecks109;
     private int _repairBadgeShown109;
     private int _repairBadgeCleared109;
+    private int _repairVehiclesSeen110;
+    private int _repairVisualInstallChecks110;
+    private int _repairAssemblyCompletions110;
+    private int _smallRepairVehicles110;
+    private int _largeRepairVehicles110;
     private const int MaxWalkFrames=540;
 
     public override async void _Ready()
@@ -147,6 +153,32 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     " actual_W_E_input=true"+
                     " collider_free_visuals=true"+
                     " owner_image_files_not_bundled=true");
+            }
+            if(VerifyRepairVehicle110)
+            {
+                if(!ExtendToRepair104 || _repairVehiclesSeen110!=2 ||
+                   _repairAssemblyCompletions110!=2 ||
+                   _repairVisualInstallChecks110!=_repairDeposits104 ||
+                   _repairVisualInstallChecks110<20 ||
+                   _visibleCarryPickups106!=_clearedCarryDeposits106 ||
+                   _smallRepairVehicles110+_largeRepairVehicles110!=2)
+                    throw new InvalidOperationException(
+                        "Pass110 actual Repair vehicle assembly incomplete"+
+                        " vehicles="+_repairVehiclesSeen110+
+                        " completed="+_repairAssemblyCompletions110+
+                        " visual_installs="+_repairVisualInstallChecks110+
+                        " actual_deposits="+_repairDeposits104);
+                GD.Print("TWR_SMOKE_PASS110_REPAIR_VEHICLE_OK"+
+                    " maps=Ranch,Manor"+
+                    " vehicles="+_repairVehiclesSeen110+
+                    " completed_assemblies="+_repairAssemblyCompletions110+
+                    " visual_install_checks="+_repairVisualInstallChecks110+
+                    " physical_repair_deposits="+_repairDeposits104+
+                    " small_variant="+_smallRepairVehicles110+
+                    " large_variant="+_largeRepairVehicles110+
+                    " native_W_E_actions=true"+
+                    " no_added_colliders=true"+
+                    " exact_original_mesh_unverified=true");
             }
             GetTree().Quit(0);
         }
@@ -486,6 +518,35 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 " level="+Runtime.Player?.Level);
     }
 
+    private void CheckRepairVehicle110(
+        Pass110RepairVehicleVisual vehicle,int deposits,string context)
+    {
+        if(!VerifyRepairVehicle110)
+            return;
+        var plugs=Math.Min(4,deposits);
+        var wheels=Math.Clamp(deposits-4,0,2);
+        var cans=Math.Max(0,deposits-6);
+        if(!GodotObject.IsInstanceValid(vehicle) ||
+           vehicle.MeshPartCount < 36 ||
+           vehicle.AcceptedDeposits != deposits ||
+           vehicle.InstalledSparkPlugs != plugs ||
+           vehicle.InstalledWheels != wheels ||
+           vehicle.AddedFuelCans != cans ||
+           vehicle.RearLeftWheelVisible != (wheels>=1) ||
+           vehicle.RearRightWheelVisible != (wheels>=2) ||
+           vehicle.CompletionLampVisible !=
+                (deposits==vehicle.ExpectedPartCount) ||
+           vehicle.GetChildren().OfType<CollisionObject3D>().Any())
+            throw new InvalidOperationException(
+                "Pass110 non-authoritative visual assembly inaccurate "+
+                context+" expected_deposits="+deposits+
+                " observed_visual_deposits="+vehicle.AcceptedDeposits+
+                " wheels="+vehicle.InstalledWheels+
+                " plugs="+vehicle.InstalledSparkPlugs+
+                " fuel="+vehicle.AddedFuelCans);
+        _repairVisualInstallChecks110++;
+    }
+
     /// <summary>
     /// After the complete, real-input Wave1 Load mission, use the normal
     /// stage state machine (not a modified wave number) to start Wave2.
@@ -534,6 +595,33 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
             throw new InvalidOperationException(
                 "Pass104 actual Wave2 Repair objective not spawned "+map);
 
+        Pass110RepairVehicleVisual? vehicle110=null;
+        if(VerifyRepairVehicle110)
+        {
+            vehicle110=objective.Pass110RepairVehicle;
+            var expectedVariant=objective.GetMeta("RepairVariant").AsString();
+            if(vehicle110 is null || !GodotObject.IsInstanceValid(vehicle110) ||
+               vehicle110.Name != "Pass110RepairVehicle" ||
+               (expectedVariant=="Large") != vehicle110.LargeVariant ||
+               vehicle110.ExpectedPartCount != objective.Pass98RequiredMaterials ||
+               vehicle110.MeshPartCount < 36 ||
+               vehicle110.AcceptedDeposits != 0 ||
+               vehicle110.InstalledWheels != 0 ||
+               vehicle110.InstalledSparkPlugs != 0 ||
+               vehicle110.AddedFuelCans != 0 ||
+               vehicle110.RearLeftWheelVisible ||
+               vehicle110.RearRightWheelVisible ||
+               vehicle110.CompletionLampVisible ||
+               vehicle110.GetChildren().OfType<CollisionObject3D>().Any() ||
+               !vehicle110.HasMeta("Pass110RecoveredGeometry") ||
+               vehicle110.GetMeta("Pass110RecoveredGeometry").AsBool())
+                throw new InvalidOperationException(
+                    "Pass110 bad initial source-absent repair truck "+map);
+            _repairVehiclesSeen110++;
+            if(vehicle110.LargeVariant)_largeRepairVehicles110++;
+            else _smallRepairVehicles110++;
+        }
+
         if(VerifyReferenceVisuals109)
         {
             var hud=game.GetNodeOrNull<GameplayHud>("HUD");
@@ -552,7 +640,15 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
         var depot=objective.GlobalPosition;
         var id=objective.ObjectiveId;
         var callbacks=0;
-        objective.Completed+=_=>callbacks++;
+        var vehicleCompleted110=false;
+        objective.Completed+=_ =>
+        {
+            callbacks++;
+            if(VerifyRepairVehicle110 && vehicle110 is not null)
+                vehicleCompleted110 = vehicle110.AssemblyComplete &&
+                    vehicle110.AcceptedDeposits==count &&
+                    vehicle110.CompletionLampVisible;
+        };
         var expected=RewardAfterObjective(Runtime.Player!);
         var wave2Start=player.GlobalPosition;
         var metres=await WalkSafely(
@@ -594,6 +690,23 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     "Pass104 failed physical E deposit "+map+
                     " item="+item);
             CheckClearedVisual106(objective,player,map+"/Repair/"+item);
+            if(VerifyRepairVehicle110 && vehicle110 is not null)
+            {
+                if(item<count-1)
+                    CheckRepairVehicle110(
+                        vehicle110,item+1,map+"/Repair-deposit-"+item);
+                else
+                {
+                    if(!vehicleCompleted110)
+                        throw new InvalidOperationException(
+                            "Pass110 final E deposit did not fully assemble "+
+                            map);
+                    _repairAssemblyCompletions110++;
+                    // The completed objective may already be QueueFree,
+                    // but its callback inspected the real final visuals.
+                    _repairVisualInstallChecks110++;
+                }
+            }
             _repairDeposits104++;
         }
 
