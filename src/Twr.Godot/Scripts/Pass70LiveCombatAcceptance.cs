@@ -22,6 +22,12 @@ public partial class Pass70LiveCombatAcceptance : Node
     public bool VerifyCorpse111 { get; set; }
     public bool VerifyArticulation112 { get; set; }
     public bool VerifyGroundContact113 { get; set; }
+    public bool VerifySlope114 { get; set; }
+    private bool _slopeFixtureBuilt114;
+    private bool _slopeVerified114;
+    private float _slopeNormalUp114;
+    private float _slopeTilt114;
+    private float _slopePlaneError114;
     private bool _groundContactChecked113;
     private float _groundCorrection113;
     private float _groundError113;
@@ -95,6 +101,30 @@ public partial class Pass70LiveCombatAcceptance : Node
                     " zero_added_colliders=true"+
                     " rewards_and_wave_preserved=true"+
                     " original_ragdoll_ground_physics_unverified=true");
+            }
+            if (VerifySlope114)
+            {
+                if(!VerifyGroundContact113 || !_slopeFixtureBuilt114 ||
+                   !_slopeVerified114 || _slopeNormalUp114>.99f ||
+                   _slopeNormalUp114<.90f ||
+                   _slopeTilt114<.14f || _slopeTilt114>
+                       Pass114CorpseSlopeSupport.MaximumVisualTiltRadians ||
+                   _slopePlaneError114>.045f)
+                    throw new InvalidOperationException(
+                        "Pass114 actual sloped-floor visual acceptance incomplete");
+                GD.Print("TWR_SMOKE_PASS114_SLOPE_CORPSE_OK"+
+                    " real_glock_kill=true"+
+                    " sloped_static_terrain=true"+
+                    " normal_y="+_slopeNormalUp114.ToString(
+                        "F4",System.Globalization.CultureInfo.InvariantCulture)+
+                    " tilt_radians="+_slopeTilt114.ToString(
+                        "F4",System.Globalization.CultureInfo.InvariantCulture)+
+                    " plane_clearance_error_m="+_slopePlaneError114.ToString(
+                        "F4",System.Globalization.CultureInfo.InvariantCulture)+
+                    " independently_articulated_r6=true"+
+                    " no_physics_corpse_added=true"+
+                    " credits_xp_ammo_wave_preserved=true"+
+                    " actual_motor6d_constraint_ragdoll_unverified=true");
             }
             GD.Print(SuccessMarker+" "+
                 "exported_windows_gameplay_root=true "+
@@ -225,6 +255,31 @@ public partial class Pass70LiveCombatAcceptance : Node
         victim.Damage=0f;
         victim.GlobalPosition=player.GlobalPosition+
             new Vector3(0f,1.50f,-3.0f);
+        if(VerifySlope114)
+        {
+            // CI-only sloped terrain patch above the existing synthetic
+            // horizontal platform, exactly under the real firearm victim.
+            // Real player spawn and original map terrain stay untouched.
+            var slope114=new StaticBody3D
+            {
+                Name="Pass114SyntheticSlopedTerrain",
+                Position=new Vector3(
+                    victim.GlobalPosition.X,floorY+.55f,
+                    victim.GlobalPosition.Z),
+                RotationDegrees=new Vector3(0f,0f,16f),
+                CollisionLayer=1,
+                CollisionMask=0
+            };
+            slope114.AddChild(new CollisionShape3D
+            {
+                Shape=new BoxShape3D
+                {
+                    Size=new Vector3(3.5f,.12f,4.2f)
+                }
+            });
+            game.AddChild(slope114);
+            _slopeFixtureBuilt114=true;
+        }
         await PhysicsFrames(2);
 
         // Assert the exact collision object that the *real* weapon
@@ -390,6 +445,32 @@ public partial class Pass70LiveCombatAcceptance : Node
             _groundCorrection113=corpse111.GroundCorrectionMeters113;
             _groundError113=corpse111.GroundContactError113;
             _groundNormalUp113=corpse111.GroundNormal113.Y;
+        }
+        if(VerifySlope114)
+        {
+            if(corpse111 is null ||
+               !_slopeFixtureBuilt114 ||
+               !corpse111.SlopePlaneSupportMeasured114 ||
+               !corpse111.SlopeSettled114 ||
+               corpse111.SlopeTiltRadians114<.14f ||
+               corpse111.SlopeTiltRadians114>
+                   Pass114CorpseSlopeSupport.MaximumVisualTiltRadians ||
+               corpse111.GroundNormal113.Y>.99f ||
+               corpse111.GroundNormal113.Y<.90f ||
+               corpse111.SlopePlaneGapMeters114>.045f ||
+               corpse111.SnapshotMeshNodeCount!=corpse111.SourceMeshCount ||
+               corpse111.ArticulatedLimbCount112!=4)
+                throw new InvalidOperationException(
+                    "Pass114 actual death-frame body did not align and rest"+
+                    " on the tilted static platform after genuine reload"+
+                    " hit="+corpse111?.WalkableGroundFound113+
+                    " normal="+corpse111?.GroundNormal113+
+                    " tilt="+corpse111?.SlopeTiltRadians114+
+                    " gap="+corpse111?.SlopePlaneGapMeters114);
+            _slopeVerified114=true;
+            _slopeNormalUp114=corpse111.GroundNormal113.Y;
+            _slopeTilt114=corpse111.SlopeTiltRadians114;
+            _slopePlaneError114=corpse111.SlopePlaneGapMeters114;
         }
         if(afterReload<=afterFire || afterReload>spec.Magazine ||
            reserveAfterReload>=initialReserve ||
