@@ -23,6 +23,10 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
     private int _completedMaps;
     private int _checkedItems;
     private int _overlapFallbacks;
+    // Pass100 measures genuine CharacterBody3D locomotion, not teleport
+    // between an item's position and its deposit point.
+    private int _walkedMaterialRoundTrips100;
+    private float _walkedMetres100;
 
     public override async void _Ready()
     {
@@ -34,7 +38,9 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
                     "Pass96 needs isolated offline profile");
             foreach(var map in Maps)
                 await CheckMap(map);
-            if(_completedMaps!=Maps.Length || _checkedItems<200)
+            if(_completedMaps!=Maps.Length || _checkedItems<200 ||
+               _walkedMaterialRoundTrips100!=Maps.Length*2 ||
+               _walkedMetres100<25f)
                 throw new InvalidOperationException(
                     "Pass96 failed ten-map material totals maps="+
                     _completedMaps+" items="+_checkedItems);
@@ -44,6 +50,12 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
                 " same_floor=true solid_capsule_routes=true"+
                 " overlap_fallbacks="+_overlapFallbacks+
                 " retail_source_positions_unverified=true");
+            GD.Print("TWR_SMOKE_PASS100_MATERIAL_WALK_OK"+
+                " maps=10 objective_families=Load,Repair"+
+                " material_roundtrips="+_walkedMaterialRoundTrips100+
+                " walked_metres="+_walkedMetres100.ToString("F1")+
+                " actual_forward_key=true entry_setup_only=true"+
+                " human_operated_waves_unverified=true");
             GetTree().Quit(0);
         }
         catch(Exception e)
@@ -77,6 +89,69 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
         await Frames(3);
         KeyInput(false);
         await Frames(3);
+    }
+
+    private static void Forward100(bool pressed)
+    {
+        // Godot's actual player physics reads W. No physics actor,
+        // objective, collider or material is moved by this input helper.
+        Input.ParseInputEvent(new InputEventKey
+        {
+            Keycode=Key.W,
+            PhysicalKeycode=Key.W,
+            Pressed=pressed
+        });
+    }
+
+    private async Task<float> WalkTo100(
+        FirstPersonPlayer player,Vector3 targetFeet,string context)
+    {
+        // Test operator adjusts only facing, analogous to moving the
+        // mouse; horizontal motion comes solely from normal W input,
+        // FirstPersonPlayer._PhysicsProcess and MoveAndSlide.
+        var travelled=0f;
+        var reached=false;
+        Forward100(true);
+        try
+        {
+            for(var frame=0;frame<360;frame++)
+            {
+                var direction=targetFeet-player.GlobalPosition;
+                direction.Y=0;
+                if(direction.Length()<=.80f)
+                {
+                    reached=true;
+                    break;
+                }
+                player.Rotation=new Vector3(
+                    0,Mathf.Atan2(-direction.X,-direction.Z),0);
+                var prior=player.GlobalPosition;
+                await Frames(1);
+                var step=player.GlobalPosition.DistanceTo(prior);
+                if(step>.55f)
+                    throw new InvalidOperationException(
+                        "Pass100 discontinuous player movement "+
+                        context+" step="+step);
+                travelled+=step;
+                if(Runtime.Player?.IsAlive!=true)
+                    throw new InvalidOperationException(
+                        "Pass100 player died during movement "+context);
+            }
+        }
+        finally
+        {
+            Forward100(false);
+        }
+        await Frames(4);
+        var separation=targetFeet-player.GlobalPosition;
+        separation.Y=0;
+        if(!reached || separation.Length()>1.15f ||
+           !player.IsOnFloor())
+            throw new InvalidOperationException(
+                "Pass100 forward-key traversal blocked "+
+                context+" final="+player.GlobalPosition+
+                " target="+targetFeet+" travelled="+travelled);
+        return travelled;
     }
 
     private async Task CheckMap(string map)
@@ -155,28 +230,67 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
             _overlapFallbacks+=
                 objective.Pass96OverlappingMaterialFallbacks;
 
-            // Real keyboard interaction on the real Ranch material pickup.
-            // The world geometry and objective count remain unchanged.
-            if(map=="Ranch" && family=="Load")
+            // Pass100: one entry-only test positioning at the actual
+            // collision-supported Load depot, then entirely physical W
+            // movement to/from each family's first grounded material.
+            // The same on-foot player is reused for Repair. Only natural
+            // loot actors are removed from this isolated test scene so
+            // randomized unrelated E-key recipients cannot steal a press.
+            if(family=="Load")
             {
-                player.GlobalPosition=objective.Pass96MaterialFeet[0]+
-                    Vector3.Up*1.1f;
-                await Frames(24);
-                await PressE();
-                if(!status.Contains("CARRYING ITEM",
-                    StringComparison.Ordinal))
-                    throw new InvalidOperationException(
-                        "Pass96 physical E pickup was not carried"+
-                        " player="+player.GlobalPosition+
-                        " item="+objective.Pass96MaterialFeet[0]);
+                foreach(var pickup in game.GetChildren().OfType<PickupActor>())
+                    pickup.QueueFree();
                 player.GlobalPosition=deposit+Vector3.Up*1.1f;
                 await Frames(24);
-                await PressE();
-                if(!status.Contains("1/10 INSERTED",
-                    StringComparison.Ordinal))
+                if(!player.IsOnFloor())
                     throw new InvalidOperationException(
-                        "Pass96 actual player E deposit failed status="+status);
+                        "Pass100 player failed to ground at entry depot "+map);
             }
+            else
+            {
+                // Repair's depot is planned against the same actual map
+                // colliders. Walk any slight shift; never teleport again.
+                var shift=deposit-player.GlobalPosition;
+                shift.Y=0;
+                if(shift.Length()>1f)
+                    _walkedMetres100+=await WalkTo100(
+                        player,deposit,map+"/Repair/entry");
+            }
+
+            var initialRemaining=objective.Pass98RemainingMaterials;
+            var routeContext=map+"/"+family;
+            var forward=await WalkTo100(
+                player,objective.Pass96MaterialFeet[0],
+                routeContext+"/to material");
+            await PressE();
+            if(!status.Contains("CARRYING ITEM",
+                StringComparison.Ordinal) ||
+               !objective.Pass98CarryingMaterial ||
+               objective.Pass98RemainingMaterials!=initialRemaining-1)
+                throw new InvalidOperationException(
+                    "Pass100 walked E pickup was not actually carried"+
+                    " context="+routeContext+
+                    " player="+player.GlobalPosition+
+                    " item="+objective.Pass96MaterialFeet[0]);
+
+            var backward=await WalkTo100(
+                player,deposit,routeContext+"/return to depot");
+            await PressE();
+            if(!status.Contains("1/10 INSERTED",
+                StringComparison.Ordinal) ||
+               objective.Pass98CarryingMaterial ||
+               objective.Pass98DepositedMaterials!=1)
+                throw new InvalidOperationException(
+                    "Pass100 walked E deposit failed"+
+                    " context="+routeContext+" status="+status);
+            _walkedMaterialRoundTrips100++;
+            _walkedMetres100+=forward+backward;
+            GD.Print("TWR_PASS100_MAP_WALK_OK map="+map+
+                " family="+family+
+                " material_pickups=1 deposits=1"+
+                " walked_metres="+(forward+backward).ToString("F1")+
+                " no_route_teleport=true"+
+                " player_physics=MoveAndSlide");
             GD.Print("TWR_PASS96_MAP_MATERIALS_OK"+
                 " map="+map+
                 " family="+family+
