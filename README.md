@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest development: Pass 110 — visible vehicle rebuild during Repair
+## Latest development: Pass 111 — temporary infected death bodies
+
+[Pass111 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass111-bounded-infected-corpse-fall) ·
+[Pass111 engineering record](docs/development/PASS111_BOUNDED_INFECTED_CORPSE_FALL.md) ·
+[Pass111 Windows validation](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass111-bounded-infected-corpse-fall)
+
+- Real infected kills no longer need to make their 3D bodies vanish instantly: at the moment the normal kill callback fires, **visible mesh/material parts are snapshotted** from the already-rendered infected and tilted down into a short-lived, noncolliding fallen silhouette. The original owner-provided gameplay clip establishes that bodies appear on the ground; the 0.62s fall and 5.5s lifetime are source-unverified approximations, not a skeletal original Roblox ragdoll.
+- The presentation budget is bounded to **16 simultaneous bodies / 64 mesh leaves each**, culls kills beyond 70 metres and clears on genuine wave/map transitions. Corpse nodes are not enemies, combat colliders, navigation blockers or reward actors. Lethal hit rules, ammo, kill credits, XP, special Burster effects and the previous original/source-fallback infected live rigs are untouched.
+- `--smoke-pass111` reuses the **actual exported-Windows Glock camera ray + mouse-click** kill test, checks a noncolliding corpse is rendered from that death, observes the fall through a real reload, and verifies cleanup at wave end while retaining all existing Pass70 and Pass103–110 regression gates. **The new branch needs Windows CI confirmation** before Pass111 is called native-verified. Full source ragdoll physics, pixel-level similarity and distributable owner-private binaries remain incomplete.
+
+## Earlier verified development: Pass 110 — visible vehicle rebuild during Repair
 
 [Pass110 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass110-repair-vehicle-assembly) ·
 [Pass110 engineering report](docs/development/PASS110_REPAIR_VEHICLE_ASSEMBLY.md) ·
