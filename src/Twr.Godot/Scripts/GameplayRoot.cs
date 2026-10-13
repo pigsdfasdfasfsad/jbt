@@ -31,6 +31,13 @@ public partial class GameplayRoot : Node3D
     private FirstPersonPlayer _player = null!;
     private FortificationController _fortifications = null!;
     private readonly List<InfectedAgent> _infected = [];
+    // Pass111: strictly presentation-only death silhouettes; never combat
+    // actors, physics bodies or navigation obstacles.
+    private readonly Queue<Pass111FallenInfected> _fallen111 = new();
+    public int ActiveFallenBodies111 => _fallen111.Count(x =>
+        GodotObject.IsInstanceValid(x) && !x.IsQueuedForDeletion());
+    public int TotalFallenSnapshots111 { get; private set; }
+    public int PeakFallenBodies111 { get; private set; }
     private int _pass43RetiredJumpAttempts;
     private int _pass43RetiredJumpLandings;
     private int _pass43RetiredJumpFailures;
@@ -1173,6 +1180,9 @@ public partial class GameplayRoot : Node3D
 
     private void OnInfectedDied(InfectedAgent infected, InfectedDeathContext context)
     {
+        // Take the actual posed visual before the real infected's QueueFree.
+        // Original kill reward and special death rules remain below.
+        SpawnFallenBody111(infected, context.Headshot);
         if (_infected.Remove(infected))
             RetirePass43Traversal(infected);
         if (context.DamageKind == "ObjectiveExplosion") return;
@@ -1252,6 +1262,42 @@ public partial class GameplayRoot : Node3D
         _hud.SetBanner($"{title}  -  [R] RESTART  |  [ENTER] MENU");
     }
 
+    private void SpawnFallenBody111(InfectedAgent infected, bool headshot)
+    {
+        if (!GodotObject.IsInstanceValid(infected) ||
+            !GodotObject.IsInstanceValid(_player) ||
+            infected.GlobalPosition.DistanceTo(_player.GlobalPosition)>70f)
+            return;
+
+        // Strict bound across 15-wave hordes. Evict the oldest short-lived
+        // corpse, not any real infected or its collision/reward state.
+        while (_fallen111.Count>0 &&
+               (!GodotObject.IsInstanceValid(_fallen111.Peek()) ||
+                _fallen111.Peek().IsQueuedForDeletion()))
+            _fallen111.Dequeue();
+        while (_fallen111.Count>=Pass111FallenInfected.MaxLiveBodies)
+        {
+            var oldest=_fallen111.Dequeue();
+            if (GodotObject.IsInstanceValid(oldest))
+                oldest.QueueFree();
+        }
+
+        var corpse=Pass111FallenInfected.Snapshot(this,infected,headshot);
+        if (corpse is null) return;
+        _fallen111.Enqueue(corpse);
+        TotalFallenSnapshots111++;
+        PeakFallenBodies111=Math.Max(
+            PeakFallenBodies111,ActiveFallenBodies111);
+    }
+
+    private void ClearFallenBodies111()
+    {
+        foreach (var body in _fallen111)
+            if (GodotObject.IsInstanceValid(body))
+                body.QueueFree();
+        _fallen111.Clear();
+    }
+
     private void RetirePass43Traversal(InfectedAgent actor)
     {
         if (!GodotObject.IsInstanceValid(actor)) return;
@@ -1269,6 +1315,8 @@ public partial class GameplayRoot : Node3D
             infected.QueueFree();
         }
         _infected.Clear();
+        // Clearing a wave or result also retires all remaining visuals.
+        ClearFallenBodies111();
     }
 
     private string StageName()
