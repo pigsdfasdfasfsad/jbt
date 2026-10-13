@@ -2,7 +2,7 @@
 
 **Base:** [Pass104 Windows-native green pipeline](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38338396152): 748 Python tests, 10 map traversal regression, real physics Wave1 Load and Wave2 Repair on Ranch/Manor, 44 material deposits and 336.4 metres, 15-wave simulation/replay and private-source exclusion.
 
-**Status:** Native Windows and full CI **verified**. Implementation SHA `ed71073eec7340f650a1e267101f5fd815a788a0` passed [all enabled CI gates in run 38340291660](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340291660). A second independent build [38340312355](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340312355) also passed the dedicated pursuit preflight; full second-run status can be checked separately.
+**Status:** Native Windows and full CI **verified**. Implementation SHA `ed71073eec7340f650a1e267101f5fd815a788a0` passed [all enabled CI gates in run 38340291660](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340291660). A second independent build [38340312355](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340312355) also **completed the entire Windows CI pipeline successfully**, including 750 Python tests and the final source/privacy checks.
 
 ## New integration boundary
 
@@ -48,3 +48,14 @@ Actual Pass105 native output:
 Earlier Pass104 production tests generated 12 Repair items on **each** map (24 total) and 44 total Load+Repair deposits. The Pass105 run generated 22 Repair items in total (42 Load+Repair deposits). These are both genuine native successful production outcomes; **neither 10 nor 12 is safe to hardcode as the required Repair item count on every map or every execution**. The strengthened acceptance uses each actor's exact `Pass96MaterialFeet` and `Pass98RequiredMaterials` and validates every real pickup/deposit/reward. Check actual generated count rather than changing the game to fit the test.
 
 No assertion is made that the pursuer reached melee distance, damaged the player, or was shot. The new verified boundary is **real spawned infected physics movement concurrent with carrying and E-depositing a production objective** on both maps, preserving prior full objectives, accounting, map geometry and persistent offline results.
+
+## Second independent complete run
+
+The latest full code commit `ed71073eec7340f650a1e267101f5fd815a788a0` also passed all 32 Windows pipeline steps in [run 38340312355](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38340312355), with **750 Python tests passed (one inherited warning)**. Native pursuit distances varied with the production spawn/random type selection:
+
+| Run | Ranch horizontal infected movement | Manor horizontal infected movement | Total |
+| --- | ---: | ---: | ---: |
+| 38340291660 | 8.28 m | 8.93 m | 17.21 m |
+| **38340312355** | **9.26 m** | **8.07 m** | **17.33 m** |
+
+Both runs spawned a real collision-approved Wave2 infected on each map, proved movement via real Godot physics, and successfully deposited the final Repair material with the living pursuer in the scene. Exactly-once accounting, persistence, the original full material loops, upper-floor navigation, escort, 15-wave simulation/replay and owner-private-asset exclusions remained green. The random spawn variation demonstrates why the acceptance verifies **actual physical pursuit** rather than matching a fixed travel distance.
