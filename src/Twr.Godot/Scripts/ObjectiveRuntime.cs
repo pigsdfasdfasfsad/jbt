@@ -122,7 +122,8 @@ public partial class ObjectiveRuntime : Node3D
         {
             Pass107CarryPresentation.Apply(
                 _heldMaterial106, Player.Pass107Aiming ? 1f : 0f,
-                Player.CaptureCamera.Fov, GetViewport().GetVisibleRect().Size.RoundToInt(),
+                Player.CaptureCamera.Fov, new Vector2I((int)GetViewport().GetVisibleRect().Size.X,
+                    (int)GetViewport().GetVisibleRect().Size.Y),
                 (float)Time.GetTicksMsec() * .001f,
                 new Vector2(Player.Velocity.X, Player.Velocity.Z).Length());
         }
@@ -716,7 +717,8 @@ public partial class ObjectiveRuntime : Node3D
         Player.CaptureCamera.AddChild(model);
         Pass107CarryPresentation.Apply(
             model, Player.Pass107Aiming ? 1f : 0f,
-            Player.CaptureCamera.Fov, GetViewport().GetVisibleRect().Size.RoundToInt(),
+            Player.CaptureCamera.Fov, new Vector2I((int)GetViewport().GetVisibleRect().Size.X,
+                    (int)GetViewport().GetVisibleRect().Size.Y),
             (float)Time.GetTicksMsec() * .001f,
             new Vector2(Player.Velocity.X, Player.Velocity.Z).Length());
         _heldMaterial106=model;
