@@ -64,8 +64,10 @@ def test_pass104_windows_preflight_preserves_prior_full_load_and_ten_map_gates()
     assert "twr-pass104-full-physical-repair" in ci
     assert "Preflight Pass 103 real full production Load physical walking" in ci
     assert "Preflight Pass 104 full production Wave2 Repair by physical walking" in ci
-    assert "TWR_PASS104_MAP_FULL_REPAIR_OK map=$map production_wave=2 family=Repair material_items=10" in ci
-    assert "TWR_SMOKE_PASS104_FULL_PHYSICAL_REPAIR_OK maps=Ranch,Manor completed_wave1_loads=2 completed_wave2_repairs=2 wave2_material_deposits=20" in ci
+    assert "TWR_PASS104_MAP_FULL_REPAIR_OK map=$map production_wave=2 family=Repair material_items=[0-9]+ pickups=[0-9]+ deposits=[0-9]+" in ci
+    assert "$items -lt 10 -or $pickups -ne $items -or $deposits -ne $items" in ci
+    assert "TWR_SMOKE_PASS104_FULL_PHYSICAL_REPAIR_OK maps=Ranch,Manor completed_wave1_loads=2 completed_wave2_repairs=2 wave2_material_deposits=[0-9]+" in ci
+    assert "if(-not $declared.Success -or [int]$declared.Groups[1].Value -ne $repairTotal)" in ci
     assert "TWR_SMOKE_PASS102_ALL_SPAWN_OBJECTIVE_INGRESS_OK newly_verified_maps=5 total_verified_maps=10" in ci
     assert "TWR_PASS100_MAP_WALK_OK map=$map family=$family" in ci
     assert "TWR_PASS99_GLOBAL_MATERIAL_CARRY_OK" in ci
