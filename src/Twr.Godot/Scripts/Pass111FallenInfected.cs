@@ -164,6 +164,14 @@ public partial class Pass111FallenInfected : Node3D
         return count;
     }
 
+    public override void _ExitTree()
+    {
+        // Pass112: do not retain Godot native node wrappers in a managed
+        // limb dictionary after the corpse's native scene is freed.
+        // Source geometry and render materials have no disk writes.
+        _limbs112.Clear();
+    }
+
     public override void _Process(double delta)
     {
         if (!_initialized) return;
