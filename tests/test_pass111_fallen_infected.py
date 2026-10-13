@@ -133,3 +133,16 @@ def test_windows_export_checks_real_combat_and_retains_every_prior_gate():
     assert ci.count("uses: actions/upload-artifact@v4") == ci.count(
         "if: false && success()"
     )
+
+
+def test_synthetic_weapon_fixture_is_restricted_to_explicit_native_smoke():
+    source = read("src/Twr.Godot/Scripts/OriginalWeaponSourceRuntime.cs")
+    hierarchy = read("src/Twr.Godot/Scripts/Pass62SourceWeaponHierarchy.cs")
+    for text in (source, hierarchy):
+        assert 'or "--smoke-pass70" or "--smoke-pass111"' in text
+    assert "if (synthetic && !testMode)" in source
+    assert "if(synthetic && !testMode)" in hierarchy
+    ci = read(".github/workflows/windows-build.yml")
+    assert "make_pass68_aimcf_fixture.py --source $source --hierarchy $hierarchy --create" in ci
+    assert "make_pass68_aimcf_fixture.py --source $source --hierarchy $hierarchy --clean" in ci
+    assert "finally {" in ci
