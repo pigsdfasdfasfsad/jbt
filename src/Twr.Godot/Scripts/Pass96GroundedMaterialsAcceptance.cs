@@ -27,6 +27,12 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
     // between an item's position and its deposit point.
     private int _walkedMaterialRoundTrips100;
     private float _walkedMetres100;
+    // Start these open-corridor fallback missions at the real map player
+    // spawn; keep other maps' Pass100 isolated depot-entry gate intact.
+    private static readonly string[] SpawnIngressMaps101 =
+        ["Ranch","Mill","Bypass","District","Prison"];
+    private int _spawnToDepotWalks101;
+    private float _spawnToDepotMetres101;
 
     public override async void _Ready()
     {
@@ -40,7 +46,9 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
                 await CheckMap(map);
             if(_completedMaps!=Maps.Length || _checkedItems<200 ||
                _walkedMaterialRoundTrips100!=Maps.Length*2 ||
-               _walkedMetres100<25f)
+               _walkedMetres100<25f ||
+               _spawnToDepotWalks101!=SpawnIngressMaps101.Length ||
+               _spawnToDepotMetres101<20f)
                 throw new InvalidOperationException(
                     "Pass96 failed ten-map material totals maps="+
                     _completedMaps+" items="+_checkedItems);
@@ -56,6 +64,13 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
                 " walked_metres="+_walkedMetres100.ToString("F1")+
                 " actual_forward_key=true entry_setup_only=true"+
                 " human_operated_waves_unverified=true");
+            GD.Print("TWR_SMOKE_PASS101_SPAWN_OBJECTIVE_INGRESS_OK"+
+                " maps="+_spawnToDepotWalks101+
+                " distance_metres="+_spawnToDepotMetres101.ToString("F1")+
+                " actual_spawn_positions=true"+
+                " forward_key_movement=true"+
+                " remaining_maps_depot_entry_test_controlled=true"+
+                " retail_source_positions_unverified=true");
             GetTree().Quit(0);
         }
         catch(Exception e)
@@ -240,11 +255,46 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
             {
                 foreach(var pickup in game.GetChildren().OfType<PickupActor>())
                     pickup.QueueFree();
-                player.GlobalPosition=deposit+Vector3.Up*1.1f;
-                await Frames(24);
-                if(!player.IsOnFloor())
-                    throw new InvalidOperationException(
-                        "Pass100 player failed to ground at entry depot "+map);
+                if (SpawnIngressMaps101.Contains(map))
+                {
+                    // Unlike the previous depot-only acceptance, this
+                    // player begins at GameplayRoot's real PlayerSpawn.
+                    // Walk toward the live Load objective on the actual
+                    // built map; do not set position, velocity or collision.
+                    if(!player.IsOnFloor())
+                        throw new InvalidOperationException(
+                            "Pass101 player spawn unsupported "+map+
+                            " spawn="+player.GlobalPosition);
+                    var initial=player.GlobalPosition;
+                    var walked=await WalkTo100(
+                        player,deposit,map+"/spawn-to-Load-depot");
+                    var travelled=new Vector2(
+                        player.GlobalPosition.X-initial.X,
+                        player.GlobalPosition.Z-initial.Z).Length();
+                    if(walked<2f || travelled<2f)
+                        throw new InvalidOperationException(
+                            "Pass101 player did not traverse actual spawn"+
+                            " map="+map+" walked="+walked);
+                    _spawnToDepotWalks101++;
+                    _spawnToDepotMetres101+=walked;
+                    GD.Print("TWR_PASS101_MAP_SPAWN_INGRESS_OK map="+map+
+                        " player_spawn="+initial+
+                        " objective_depot="+deposit+
+                        " walked_metres="+walked.ToString("F1")+
+                        " player_w_key=true"+
+                        " teleport_after_spawn=false");
+                }
+                else
+                {
+                    // Pass100 retains explicit controlled entry for the
+                    // maps whose full spawn-to-objective route is not yet
+                    // accepted. Manor's upper depot needs a real stair path.
+                    player.GlobalPosition=deposit+Vector3.Up*1.1f;
+                    await Frames(24);
+                    if(!player.IsOnFloor())
+                        throw new InvalidOperationException(
+                            "Pass100 player failed to ground at entry depot "+map);
+                }
             }
             else
             {
