@@ -34,6 +34,15 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
     private int _spawnToDepotWalks101;
     private float _spawnToDepotMetres101;
 
+    // Pass102 adds collision-audited physical navigation from the untouched
+    // initial spawn on the remaining four ground-level fallback maps and
+    // through Manor's actual reconstructed WestWing staircase.
+    private static readonly string[] SpawnIngressMaps102 =
+        ["Cabin","Cargo","Laboratory","Expressway","Manor"];
+    private int _spawnToDepotWalks102;
+    private float _spawnToDepotMetres102;
+    private int _verifiedManorStairClimbs102;
+
     public override async void _Ready()
     {
         try
@@ -48,7 +57,10 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
                _walkedMaterialRoundTrips100!=Maps.Length*2 ||
                _walkedMetres100<25f ||
                _spawnToDepotWalks101!=SpawnIngressMaps101.Length ||
-               _spawnToDepotMetres101<20f)
+               _spawnToDepotMetres101<20f ||
+               _spawnToDepotWalks102!=SpawnIngressMaps102.Length ||
+               _spawnToDepotMetres102<20f ||
+               _verifiedManorStairClimbs102!=1)
                 throw new InvalidOperationException(
                     "Pass96 failed ten-map material totals maps="+
                     _completedMaps+" items="+_checkedItems);
@@ -71,6 +83,15 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
                 " forward_key_movement=true"+
                 " remaining_maps_depot_entry_test_controlled=true"+
                 " retail_source_positions_unverified=true");
+            GD.Print("TWR_SMOKE_PASS102_ALL_SPAWN_OBJECTIVE_INGRESS_OK"+
+                " newly_verified_maps="+_spawnToDepotWalks102+
+                " total_verified_maps="+
+                    (_spawnToDepotWalks101+_spawnToDepotWalks102)+
+                " new_walked_metres="+_spawnToDepotMetres102.ToString("F1")+
+                " manor_stair_climbs="+_verifiedManorStairClimbs102+
+                " W_key=true no_spawn_teleports=true"+
+                " actual_reconstructed_collision=true"+
+                " owner_original_map_fidelity_unverified=true");
             GetTree().Quit(0);
         }
         catch(Exception e)
@@ -169,6 +190,116 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
         return travelled;
     }
 
+
+    // A walk plan only controls facing and ordinary keyboard input.
+    // It never mutates the player's position/velocity, objective transform,
+    // floor geometry, or NPC navigation. Every graph segment is audited
+    // against live body-size collision before its W-key traversal.
+    private async Task<float> WalkGroundIngress102(
+        GameplayRoot game,FirstPersonPlayer player,
+        Vector3 destination,string context)
+    {
+        var world=game.GetWorld3D();
+        var exclude=new global::Godot.Collections.Array<Rid>{player.GetRid()};
+        var current=player.GlobalPosition;
+        Vector3[] route;
+        if(Pass89EscortSurfaceSafety.CanTravel(
+                world,current,destination,exclude))
+            route=[destination];
+        else
+        {
+            var navigator=game.GetNodeOrNull<Pass73GroundNavigationRuntime>(
+                game.MapName=="Expressway"
+                    ? "Pass92ExpresswayEscortGroundNavigation"
+                    : "Pass73GroundNavigation");
+            if(navigator is null || !navigator.IsGraphReady)
+                throw new InvalidOperationException(
+                    "Pass102 no ready collision graph "+context);
+            route=navigator.GetVerifiedEscortRoute89(
+                current,destination,player.GetRid());
+            if(route.Length==0 || route.Length>160)
+                throw new InvalidOperationException(
+                    "Pass102 no verified walkable objective ingress route "+
+                    context+" from="+current+" to="+destination);
+        }
+
+        var metres=0f;
+        var last=current;
+        foreach(var waypoint in route)
+        {
+            var d=waypoint-last;
+            d.Y=0;
+            if(d.Length()>.65f)
+            {
+                if(!Pass89EscortSurfaceSafety.CanTravel(
+                        world,last,waypoint,exclude))
+                    throw new InvalidOperationException(
+                        "Pass102 physics route invalidated "+context+
+                        " previous="+last+" next="+waypoint);
+                metres+=await WalkTo100(
+                    player,waypoint,context+"/waypoint");
+            }
+            last=player.GlobalPosition;
+        }
+        var separation=destination-player.GlobalPosition;
+        separation.Y=0;
+        if(separation.Length()>1.15f ||
+           Math.Abs(player.GlobalPosition.Y-destination.Y)>.60f ||
+           !player.IsOnFloor())
+            throw new InvalidOperationException(
+                "Pass102 player missed grounded objective "+context+
+                " at="+player.GlobalPosition+
+                " destination="+destination);
+        return metres;
+    }
+
+    private async Task<float> WalkManorUpperIngress102(
+        GameplayRoot game, FirstPersonPlayer player,
+        Vector3 objectiveDepot)
+    {
+        var stairs=game.Pass77ApproximateStairs;
+        var stair=stairs.FirstOrDefault(
+            item=>item.Name=="WestWingUpper");
+        if(stair is null || stairs.Count!=3)
+            throw new InvalidOperationException(
+                "Pass102 three real reconstructed Manor ramps unavailable");
+        var sign=Math.Sign(stair.UpperFeet.Z-stair.LowerFeet.Z);
+        if(sign==0)throw new InvalidOperationException(
+            "Pass102 invalid Manor staircase direction");
+        var approach=stair.LowerFeet+
+            new Vector3(0f,0f,-sign*.75f);
+        var walked=await WalkGroundIngress102(
+            game,player,approach,"Manor/spawn-to-WestWing-lower");
+
+        // The supported stair itself must be climbed continuously. The
+        // ramp and deck are production physics meshes, not a teleport.
+        // Walk beyond the landing to require full upstairs elevation.
+        var upstairs=stair.UpperFeet+
+            new Vector3(0f,0f,sign*1.0f);
+        walked+=await WalkTo100(
+            player,upstairs,"Manor/WestWing/ramp-climb");
+        if(!player.IsOnFloor() ||
+           player.GlobalPosition.Y<stair.UpperFeet.Y-.18f)
+            throw new InvalidOperationException(
+                "Pass102 actual Manor player failed to climb stairs"+
+                " at="+player.GlobalPosition+" top="+stair.UpperFeet);
+
+        // Walk laterally onto the landing's connected upper deck, then
+        // to the authored fallback mission marker on that same deck.
+        var side=stair.UpperFeet+
+            Vector3.Left*4.25f+
+            new Vector3(0f,0f,sign*1.0f);
+        walked+=await WalkTo100(
+            player,side,"Manor/WestWing/upper-side-deck");
+        walked+=await WalkTo100(
+            player,objectiveDepot,"Manor/WestWing/upper-Load-depot");
+        if(Math.Abs(player.GlobalPosition.Y-objectiveDepot.Y)>.50f ||
+           !player.IsOnFloor())
+            throw new InvalidOperationException(
+                "Pass102 upper Manor objective not reached on its floor");
+        _verifiedManorStairClimbs102++;
+        return walked;
+    }
     private async Task CheckMap(string map)
     {
         if(Runtime.Match?.Phase!=MatchPhase.Lobby)
@@ -187,7 +318,9 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
             throw new InvalidOperationException(
                 "Pass96 no playable production map/player "+map);
         game.SetProcess(false);
-        await Frames(50);
+        // Pass73 samples its ground graph during physics frames;
+        // Pass102 must not consume an incomplete route cache.
+        await Frames(90);
         if(game.Pass87FallbackObjectiveMarkers.Count==0)
             throw new InvalidOperationException(
                 "Pass96 private or empty map; expected fallback "+map);
@@ -284,17 +417,36 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
                         " player_w_key=true"+
                         " teleport_after_spawn=false");
                 }
-                else
+                else if (SpawnIngressMaps102.Contains(map))
                 {
-                    // Pass100 retains explicit controlled entry for the
-                    // maps whose full spawn-to-objective route is not yet
-                    // accepted. Manor's upper depot needs a real stair path.
-                    player.GlobalPosition=deposit+Vector3.Up*1.1f;
-                    await Frames(24);
+                    // The test player is still at the normal map spawn.
+                    // Only its facing and W key are controlled from here.
                     if(!player.IsOnFloor())
                         throw new InvalidOperationException(
-                            "Pass100 player failed to ground at entry depot "+map);
+                            "Pass102 player is not grounded at map spawn "+map);
+                    var spawn=player.GlobalPosition;
+                    var walked=map=="Manor"
+                        ? await WalkManorUpperIngress102(
+                            game,player,deposit)
+                        : await WalkGroundIngress102(
+                            game,player,deposit,
+                            map+"/spawn-to-Load-depot");
+                    if(walked<2f)
+                        throw new InvalidOperationException(
+                            "Pass102 no meaningful physical spawn movement "+
+                            map+" metres="+walked);
+                    _spawnToDepotWalks102++;
+                    _spawnToDepotMetres102+=walked;
+                    GD.Print("TWR_PASS102_MAP_SPAWN_INGRESS_OK map="+map+
+                        " player_spawn="+spawn+
+                        " objective_depot="+deposit+
+                        " walked_metres="+walked.ToString("F1")+
+                        " W_key=true no_route_teleport=true"+
+                        " grounded_arrival=true");
                 }
+                else
+                    throw new InvalidOperationException(
+                        "Pass102 unclassified fallback map "+map);
             }
             else
             {
