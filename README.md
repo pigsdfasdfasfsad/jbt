@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest development: Pass 109 — reference-guided generator and live Repair badge
+## Latest development: Pass 110 — visible vehicle rebuild during Repair
+
+[Pass110 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass110-repair-vehicle-assembly) ·
+[Pass110 engineering report](docs/development/PASS110_REPAIR_VEHICLE_ASSEMBLY.md) ·
+[Pass110 Windows build/checks](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass110-repair-vehicle-assembly)
+
+- The fallback **Repair** depot now has a 3D pickup truck instead of only the generic green collection box. Two distinct approximate source-NAME-informed scales represent small Silverado (10 repair items) and large Tundra (12). Direct render-only Godot primitives form the body, windows, bumpers, head/brake lights, hood, bed, grille and wheels; no source meshes, private screenshots or collision bodies are added.
+- During actual E-key Repair deposits, four engine parts, the two missing rear wheels and a progressive fuel meter assemble on the displayed vehicle. A completion indicator lights only after the final legitimate part; none of these visuals grant rewards or change the authoritative objective state. Owner-original map scene imports are not altered.
+- Pass110's new `--smoke-pass110` uses the existing native player to physically finish complete Wave1 Load and Wave2 Repair on Ranch/Manor and checks **each deposited part's visible state**, both final completed trucks, earlier ADS/carry/frustum, generator, repair HUD, rewards and save behavior. The new Windows branch is not certified until its exact compiled CI run passes; pixel-level recreation, source car mesh fidelity, human survival and a distributable private-assets `.exe` remain incomplete.
+
+## Earlier development: Pass 109 — reference-guided generator and live Repair badge
 
 [Pass109 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass109-reference-generator-repair-icon) ·
 [Pass109 engineering record](docs/development/PASS109_REFERENCE_GENERATOR_REPAIR_ICON.md) ·
