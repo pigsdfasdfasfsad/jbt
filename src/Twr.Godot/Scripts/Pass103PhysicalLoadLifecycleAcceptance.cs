@@ -132,7 +132,10 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     private void CheckClearedVisual106(
         ObjectiveRuntime objective,FirstPersonPlayer player,string context)
     {
-        if(objective.Pass106HeldMaterialVisible ||
+        // Completing the final item can legitimately QueueFree the
+        // objective before PressE's release frames have finished.
+        if((GodotObject.IsInstanceValid(objective) &&
+            objective.Pass106HeldMaterialVisible) ||
            player.CaptureCamera.GetNodeOrNull<Node3D>(
                "Pass106CarriedObjectiveMaterial") is not null)
             throw new InvalidOperationException(
