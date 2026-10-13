@@ -90,9 +90,9 @@ def test_native_real_weapon_kill_verifies_snapshot_and_wave_cleanup():
     boot = read("src/Twr.Godot/Scripts/Bootstrap.cs")
     native = read("src/Twr.Godot/Scripts/Pass70LiveCombatAcceptance.cs")
     player = read("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
-    assert 'Contains(\n                    "--smoke-pass111",StringComparer.Ordinal)' in player
-    assert 'var nativeCombatSmoke =' in player
-    assert 'if (Input.MouseMode != Input.MouseModeEnum.Captured &&\n                !nativeCombatSmoke)' in player
+    assert '!OS.GetCmdlineUserArgs().Contains(\n                    "--smoke-pass111",StringComparer.Ordinal)' in player
+    assert '!OS.GetCmdlineUserArgs().Contains(\n                    "--smoke-pass70",StringComparer.Ordinal)' in player
+    assert 'if (Input.MouseMode != Input.MouseModeEnum.Captured &&' in player
     assert 'args.Contains("--smoke-pass111",StringComparer.Ordinal)' in boot
     assert "VerifyCorpse111=true" in boot
     for anchor in (
