@@ -33,6 +33,11 @@ def test_lab_fallback_has_distinct_reference_guided_render_landmarks():
     assert 'new OmniLight3D' in lab
     assert 'new CylinderMesh' in lab
     assert 'new BoxMesh' in lab
+    # The ward's existing visual slab ends at Y=.9; props must sit above.
+    assert "area.Position=Vector3.Up*.82f;" in lab
+    # Existing solid-looking bridge proxy spans X=6.5..13.5. The rows
+    # must be visible alongside it, not buried inside its box mesh.
+    assert "var x=3.4f+(i%2)*13.0f;" in lab
     assert "ExpectedLandmarks = 7" in lab
     assert "MaxVisualMeshes = 260" in lab
     assert "LocalLightCount++" in lab
