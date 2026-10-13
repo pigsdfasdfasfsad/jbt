@@ -608,6 +608,55 @@ public partial class Pass73GroundNavigationRuntime : Node3D
 
 
     /// <summary>
+    /// Pass101: an infected descending an actual fallback Manor ramp
+    /// can follow its current audited downhill waypoint rather than
+    /// entering generic flat-obstacle steering. The latter sees a pitched
+    /// landing as a wall and rotates the actor sideways near the ramp toe.
+    /// Verify the NEXT short physical step with the same full-capsule
+    /// floor/wall sweep used by Escort. This grants no teleport or
+    /// unchecked movement, and never runs for source-owned map geometry.
+    /// </summary>
+    public bool SafeManorDescentStep101(
+        Vector3 infectedCentre,Vector3 desired,Rid infectedRid)
+    {
+        if(MapName!="Manor" || StairLinkCount77!=3 ||
+           !IsFinite(infectedCentre) || !IsFinite(desired))
+            return false;
+        var flat=new Vector3(desired.X,0,desired.Z);
+        if(flat.LengthSquared()<.0001f) return false;
+        var feet=infectedCentre-Vector3.Up*.8f;
+        var proposed=feet+flat.Normalized()*.40f;
+        foreach(var stair in Layout.ApproximateStairs77)
+        {
+            var ramp=stair.UpperFeet-stair.LowerFeet;
+            if(ramp.LengthSquared()<1f)continue;
+            var fraction=Mathf.Clamp(
+                (feet-stair.LowerFeet).Dot(ramp)/ramp.LengthSquared(),
+                0f,1f);
+            var expected=stair.LowerFeet.Lerp(stair.UpperFeet,fraction);
+            if(Math.Abs(feet.X-expected.X)>2.18f ||
+               Math.Abs(feet.Z-expected.Z)>.70f ||
+               Math.Abs(feet.Y-expected.Y)>.55f)
+                continue;
+            var nextFraction=Mathf.Clamp(
+                (proposed-stair.LowerFeet).Dot(ramp)/ramp.LengthSquared(),
+                0f,1f);
+            if(nextFraction>fraction+.012f)continue;
+            var nextFeet=new Vector3(
+                proposed.X,
+                Mathf.Lerp(stair.LowerFeet.Y,stair.UpperFeet.Y,
+                    nextFraction),
+                proposed.Z);
+            var exclude=new global::Godot.Collections.Array<Rid>();
+            foreach(var rid in _exclude)exclude.Add(rid);
+            if(infectedRid.IsValid)exclude.Add(infectedRid);
+            return Pass89EscortSurfaceSafety.CanTravel(
+                GetWorld3D(),feet,nextFeet,exclude);
+        }
+        return false;
+    }
+
+    /// <summary>
     /// Pass79 only applies to the three fallback Manor decks. Player
     /// GlobalPosition is feet-level; infected GlobalPosition is body-center.
     /// In particular this cannot route owner-original source geometry.
