@@ -31,4 +31,8 @@ This is an **analytical mesh-frustum and Godot headless input test**, not a grap
 - [Pass108 Windows CI runs](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass108-native-carry-ads-frustum)
 - Pass106 verified baseline: [Windows run 38348938021](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38348938021)
 
-At initial commit, Pass108 CI was running. Do not describe this branch as native-verified without checking the exact Actions run conclusion and matchable emitted markers.
+## Native Pass108 acceptance result
+
+The exact Pass108 gameplay/CI source commit `b5d09c75fe3ad38f99d29ed5041943b1cf478c2d` passed the Windows build, all Python contract tests and the dedicated exported-executable **Pass108 aiming and whole-silhouette** step in [Actions run 38352406878](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38352406878). The native gate required **4 successful RMB stow/reappear checks**, **at least 160 complete-primitive virtual viewport checks** and **at least 40 real W/E pickup/deposit cycles**, with actual picked/deposited totals equal. All preceding Pass103/104 full mission loops and Pass105 live-enemy pickup/deposit checks in the same run passed.
+
+At the time of this record, the remaining unrelated historical native regression steps were still executing. A green Pass108 acceptance *step* is not the same as asserting the entire workflow concluded successfully. Verify the final overall job result before calling the branch fully CI-green.
