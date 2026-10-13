@@ -19,6 +19,14 @@ This pass combines both into a single Godot/.NET Windows source tree. Git histor
 
 ## Verification gate
 
-A native Windows run on `twr-pass97-unified-gameplay` must pass the full source/contract suite, Godot .NET export, both Pass96 preflights, older required native regressions, and the private-content audit. Until that run is green, this combined pass is **not verified**, even though each unmerged Pass96 branch passed independently.
+The combined `twr-pass97-unified-gameplay` branch passed the complete native Windows pipeline in [run 38325416220](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38325416220): 724 Python tests passed (one prior source-parser warning), .NET/Godot Windows export, Manor West/East Escort, both Pass96 preflights, Pass78/83/88/89/90/91/92/94 physics regressions, and the private-asset exclusion audit. **Pass97 is verified**, including integrated match-level acceptance.
 
 The combined pass makes no new claims about 1:1 retail map geometry, source NPC animations, human-controlled real-time fifteen-wave survival, or a downloadable public executable. The public workflow does not attach a private-asset build.
+
+## Verified Pass97 integration evidence
+
+The native Ranch test advanced 15 Regular waves using genuine production infected and objectives (only stage clocks accelerated). During the **same match**, eight Load/Repair objectives created 82 collision-grounded item positions. The run committed exactly one match completion and a saved 184,050-credit balance, then paid Wave1 once more on a second Ranch match in the same LocalSession (185,550 credits), denying a duplicate claim. The separate ten-map preflight checked 210 Load/Repair materials on physically supported floors with zero overlapping fallback placements. Random Repair variants can change totals.
+
+Windows CI [38325416220](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38325416220) completed green; [38325152843](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38325152843) was also a green baseline merge run. This final documentation-only update follows the tested gameplay commit.
+
+This is not a completed 1:1 retail remake. Human-controlled real-time 15-wave survival, exact original map geometry and item placements, full source animations/audio, and a distributable owner-approved Windows package remain outstanding. The public workflow deliberately does not publish the executable or owner-private source packs.
