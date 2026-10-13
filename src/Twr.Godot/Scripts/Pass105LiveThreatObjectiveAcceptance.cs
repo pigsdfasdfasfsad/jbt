@@ -205,6 +205,12 @@ public partial class Pass105LiveThreatObjectiveAcceptance : Node
            Runtime.Match.Wave!=1 || game.WaveStage!="WAVE")
             throw new InvalidOperationException(
                 "Pass105 production Wave1 did not start");
+        // Leave only mission materials in the E-key range. Random supply
+        // pickups are independent of Load and can consume a same-frame E.
+        // Gameplay objective actors and their materials remain untouched.
+        foreach(var supply in game.GetChildren().OfType<PickupActor>())
+            supply.QueueFree();
+        await PhysicsFrames(5);
         var objective=game.GetChildren().OfType<ObjectiveRuntime>()
             .FirstOrDefault(x=>GodotObject.IsInstanceValid(x) &&
                 !x.IsQueuedForDeletion() && x.Family=="Load");
