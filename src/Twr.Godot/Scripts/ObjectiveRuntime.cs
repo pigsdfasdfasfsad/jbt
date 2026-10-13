@@ -27,6 +27,15 @@ public partial class ObjectiveRuntime : Node3D
     public int Pass98RemainingMaterials => _items.Count;
     public bool Pass98CarryingMaterial => _carrying;
     public int Pass98RequiredMaterials => _required;
+    // Pass106: read-only evidence for the actual camera-mounted carried prop.
+    public bool Pass106HeldMaterialVisible =>
+        _heldMaterial106 is not null &&
+        GodotObject.IsInstanceValid(_heldMaterial106) &&
+        !_heldMaterial106.IsQueuedForDeletion() &&
+        _heldMaterial106.Visible;
+    public int Pass106HeldMaterialMeshParts =>
+        Pass106HeldMaterialVisible ? _heldMaterial106!.GetChildCount() : 0;
+    public string Pass106HeldMaterialName => _heldMaterialName106 ?? "";
     public Pass73GroundNavigationRuntime? EscortGroundNavigator89 { get; set; }
     public int EscortSafeRoutePlans89 { get; private set; }
     public int EscortBlockedRoutePlans89 { get; private set; }
@@ -62,6 +71,8 @@ public partial class ObjectiveRuntime : Node3D
     private int _required;
     private int _deposited;
     private bool _carrying;
+    private Node3D? _heldMaterial106;
+    private string? _heldMaterialName106;
     private bool _completed;
     private bool _interactWasDown;
     private double _secureProgress;
@@ -89,6 +100,7 @@ public partial class ObjectiveRuntime : Node3D
 
     public override void _ExitTree()
     {
+        ClearHeldMaterial106();
         // A timed-out, cleared, or restarted mission must relinquish its
         // material even if the player never reached the deposit.
         if (Player is not null && GodotObject.IsInstanceValid(Player))
@@ -98,7 +110,11 @@ public partial class ObjectiveRuntime : Node3D
     public override void _Process(double delta)
     {
         if (_completed || Player is null || Runtime?.Player?.IsAlive != true)
+        {
+            if (_carrying && Runtime?.Player?.IsAlive != true)
+                ClearHeldMaterial106();
             return;
+        }
 
         var interactDown = Input.IsKeyPressed(Key.E);
         var interactPressed = interactDown && !_interactWasDown;
@@ -550,9 +566,11 @@ public partial class ObjectiveRuntime : Node3D
                     Mathf.Cos(angle)*radius,.35f,
                     Mathf.Sin(angle)*radius);
             }
-            var item=MakeBox(names[i],local,
-                new Vector3(.55f,.7f,.55f),
-                new Color(.74f,.58f,.18f));
+            // Pass106: source-recovered *names* now select render-only,
+            // distinct physical silhouettes rather than identical yellow
+            // cubes. The interaction origin, grounding and LOS stay fixed.
+            var item=ObjectiveMaterialVisual106.Create(
+                names[i],local,false);
             _items.Add(item);
             AddChild(item);
         }
@@ -626,6 +644,7 @@ public partial class ObjectiveRuntime : Node3D
             Pass76InteractionSafety.CanReach(Player, GlobalPosition, 3f))
         {
             _carrying = false;
+            ClearHeldMaterial106();
             Pass76InteractionSafety.ReleaseMaterialCarry99(Player, this);
             _deposited++;
             PublishStatus();
@@ -660,13 +679,45 @@ public partial class ObjectiveRuntime : Node3D
             Pass76InteractionSafety.CanReach(Player, nearest.GlobalPosition, 2.5f) &&
             Pass76InteractionSafety.TryClaimMaterialCarry99(Player, this))
         {
+            var carriedName=nearest.Name.ToString();
             _items.Remove(nearest);
             nearest.QueueFree();
             _carrying = true;
+            ShowHeldMaterial106(carriedName);
             PublishStatus();
             return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// Camera-only carried model. This has no collision, weapon rules,
+    /// item authority or source-original asset dependency. Pickup is still
+    /// committed only through TickFillInteract and the shared E budget.
+    /// </summary>
+    private void ShowHeldMaterial106(string materialName)
+    {
+        ClearHeldMaterial106();
+        if (Player is null || !GodotObject.IsInstanceValid(Player))
+            return;
+        var model=ObjectiveMaterialVisual106.Create(
+            materialName,new Vector3(.42f,-.45f,-.78f),true);
+        Player.CaptureCamera.AddChild(model);
+        _heldMaterial106=model;
+        _heldMaterialName106=materialName;
+    }
+
+    private void ClearHeldMaterial106()
+    {
+        if (_heldMaterial106 is not null &&
+            GodotObject.IsInstanceValid(_heldMaterial106))
+        {
+            _heldMaterial106.Visible=false;
+            if (!_heldMaterial106.IsQueuedForDeletion())
+                _heldMaterial106.QueueFree();
+        }
+        _heldMaterial106=null;
+        _heldMaterialName106=null;
     }
 
     private void Complete()
