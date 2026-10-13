@@ -118,6 +118,74 @@ public partial class Pass98MaterialLifecycleAcceptance : Node
                 " level="+Runtime.Player?.Level+"/"+expected.level);
     }
 
+    private async Task VerifyContendedPress(
+        GameplayRoot game,FirstPersonPlayer player)
+    {
+        // This isolated setup confirms two physically co-located mission
+        // actors cannot take the SAME held key press. Remove unrelated
+        // natural loot from only this test fixture so its input receiver
+        // does not vary with randomized supply placement.
+        foreach(var pickup in game.GetChildren().OfType<PickupActor>())
+            pickup.QueueFree();
+        await Frames(4);
+        var marker=game.Pass87FallbackObjectiveMarkers[0];
+        var first=new ObjectiveRuntime
+        {
+            Name="Pass98OverlapA",ObjectiveId="Ranch:Pass98:OverlapA",
+            Family="Load",Runtime=Runtime,Player=player,
+            UseFallbackMaterialGrounding96=true,Position=marker
+        };
+        var second=new ObjectiveRuntime
+        {
+            Name="Pass98OverlapB",ObjectiveId="Ranch:Pass98:OverlapB",
+            Family="Load",Runtime=Runtime,Player=player,
+            UseFallbackMaterialGrounding96=true,Position=marker
+        };
+        game.AddChild(first);
+        game.AddChild(second);
+        if(!first.Pass96GroundedMaterialLayout ||
+           !second.Pass96GroundedMaterialLayout ||
+           first.Pass96MaterialFeet.Count!=10 ||
+           second.Pass96MaterialFeet.Count!=10 ||
+           first.Pass96MaterialFeet[0].DistanceTo(
+               second.Pass96MaterialFeet[0])>.15f)
+            throw new InvalidOperationException(
+                "Pass98 overlapping objectives not physically co-located");
+        await MoveTestPlayer(player,first.Pass96MaterialFeet[0]);
+        E(true);
+        await Frames(12);
+        E(false);
+        await Frames(PressFrames);
+        var carriers=(first.Pass98CarryingMaterial?1:0)+
+            (second.Pass98CarryingMaterial?1:0);
+        if(carriers!=1 ||
+           first.Pass98RemainingMaterials+
+               second.Pass98RemainingMaterials!=19)
+            throw new InvalidOperationException(
+                "Pass98 shared held E consumed multiple overlapping props"+
+                " carriers="+carriers+" first="+
+                first.Pass98RemainingMaterials+
+                " second="+second.Pass98RemainingMaterials);
+        var carried=first.Pass98CarryingMaterial?first:second;
+        var idle=ReferenceEquals(carried,first)?second:first;
+        await MoveTestPlayer(player,carried.GlobalPosition);
+        await PressE();
+        if(carried.Pass98DepositedMaterials!=1 ||
+           idle.Pass98DepositedMaterials!=0 ||
+           idle.Pass98CarryingMaterial ||
+           carried.Pass98CarryingMaterial)
+            throw new InvalidOperationException(
+                "Pass98 one E deposit simultaneously interacted with"+
+                " another physically overlapping objective");
+        GD.Print("TWR_PASS98_SHARED_E_PRESS_OK"+
+            " overlapping_objectives=2"+
+            " held_pickup_total=1 deposit_total=1"+
+            " world_actors_single_press=true");
+        first.QueueFree();
+        second.QueueFree();
+        await Frames(4);
+    }
+
     private async Task VerifyMap(string map)
     {
         if(Runtime.Match?.Phase!=MatchPhase.Lobby)
@@ -143,6 +211,8 @@ public partial class Pass98MaterialLifecycleAcceptance : Node
             throw new InvalidOperationException(
                 "Pass98 player not on physical map floor "+map);
         game.SetProcess(false);
+        if(map=="Ranch")
+            await VerifyContendedPress(game,player);
 
         // Ranch/Manor production wave catalogs select Load on Wave1 and
         // Repair on Wave2. Only the stage clock is accelerated.
