@@ -519,21 +519,22 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     }
 
     private void CheckRepairVehicle110(
-        Pass110RepairVehicleVisual vehicle,int deposits,string context)
+        Pass110RepairVehicleVisual vehicle,int deposits,
+        int expectedPlugs,int expectedWheels,int expectedFuel,
+        string context)
     {
         if(!VerifyRepairVehicle110)
             return;
-        var plugs=Math.Min(4,deposits);
-        var wheels=Math.Clamp(deposits-4,0,2);
-        var cans=Math.Max(0,deposits-6);
+        // Pickup locations can overlap. Assert what the player ACTUALLY
+        // deposited, not a fictional fixed order of material categories.
         if(!GodotObject.IsInstanceValid(vehicle) ||
            vehicle.MeshPartCount < 36 ||
            vehicle.AcceptedDeposits != deposits ||
-           vehicle.InstalledSparkPlugs != plugs ||
-           vehicle.InstalledWheels != wheels ||
-           vehicle.AddedFuelCans != cans ||
-           vehicle.RearLeftWheelVisible != (wheels>=1) ||
-           vehicle.RearRightWheelVisible != (wheels>=2) ||
+           vehicle.InstalledSparkPlugs != expectedPlugs ||
+           vehicle.InstalledWheels != expectedWheels ||
+           vehicle.AddedFuelCans != expectedFuel ||
+           vehicle.RearLeftWheelVisible != (expectedWheels>=1) ||
+           vehicle.RearRightWheelVisible != (expectedWheels>=2) ||
            vehicle.CompletionLampVisible !=
                 (deposits==vehicle.ExpectedPartCount) ||
            vehicle.GetChildren().OfType<CollisionObject3D>().Any())
@@ -641,6 +642,9 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
         var id=objective.ObjectiveId;
         var callbacks=0;
         var vehicleCompleted110=false;
+        var expectedSpark110=0;
+        var expectedWheels110=0;
+        var expectedFuel110=0;
         objective.Completed+=_ =>
         {
             callbacks++;
@@ -675,6 +679,9 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                     "Pass104 failed physical E pickup "+map+
                     " item="+item);
             CheckCarriedVisual106(objective,player,map+"/Repair/"+item);
+            // Pass110 follows the exact name of the REAL nearest object
+            // collected by E, even when adjacent item footprints overlap.
+            var carriedName110=objective.Pass106HeldMaterialName;
             if (item==0)
                 await CheckRealAimStow108(
                     objective,player,map+"/Repair-first-material");
@@ -692,9 +699,21 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
             CheckClearedVisual106(objective,player,map+"/Repair/"+item);
             if(VerifyRepairVehicle110 && vehicle110 is not null)
             {
+                if(carriedName110.StartsWith("Spark Plug ",StringComparison.Ordinal))
+                    expectedSpark110++;
+                else if(carriedName110.StartsWith("Wheel ",StringComparison.Ordinal))
+                    expectedWheels110++;
+                else if(carriedName110.StartsWith("Jerry Can ",StringComparison.Ordinal))
+                    expectedFuel110++;
+                else
+                    throw new InvalidOperationException(
+                        "Pass110 real E picked unknown material "+
+                        carriedName110+" "+map);
                 if(item<count-1)
                     CheckRepairVehicle110(
-                        vehicle110,item+1,map+"/Repair-deposit-"+item);
+                        vehicle110,item+1,
+                        expectedSpark110,expectedWheels110,expectedFuel110,
+                        map+"/Repair-deposit-"+item);
                 else
                 {
                     if(!vehicleCompleted110)
