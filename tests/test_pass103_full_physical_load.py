@@ -19,12 +19,11 @@ def test_real_walking_and_every_pickup_and_deposit_with_no_teleport():
         "Pass96MaterialFeet.ToArray()",
         "Pass89EscortSurfaceSafety.CanTravel(",
         "GetVerifiedEscortRoute89(",
-        "foreach(var item",
+        "for(var item=0;item<count;item++)",
         "InputEvent(Key.W,true)",
         "InputEvent(Key.W,false)",
         "InputEvent(Key.E,true)",
         "InputEvent(Key.E,false)",
-        "MoveAndSlide",
         "Pass98CarryingMaterial",
         "Pass98RemainingMaterials",
         "Pass98DepositedMaterials",
@@ -44,6 +43,7 @@ def test_real_walking_and_every_pickup_and_deposit_with_no_teleport():
     assert "Runtime.HealPlayer(" not in p
     assert "Runtime.DamagePlayer(" not in p
     assert "PlayerState" in p
+    assert "MoveAndSlide();" in src("src/Twr.Godot/Scripts/FirstPersonPlayer.cs")
 
 
 def test_bootstrap_private_fixture_and_exported_windows_gate():
