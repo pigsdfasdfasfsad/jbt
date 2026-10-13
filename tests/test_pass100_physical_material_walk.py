@@ -30,10 +30,10 @@ def test_exported_player_moves_from_real_forward_input_without_route_teleports()
     assert "TWR_PASS100_MAP_WALK_OK map=" in walk
     assert "TWR_SMOKE_PASS100_MATERIAL_WALK_OK" in walk
     assert "material_roundtrips=" in walk
-    assert "player.GlobalPosition=deposit+Vector3.Up*1.1f" in walk
-    # One entry-only placement per map. The test walks both Load and Repair
-    # and must not silently move the physics player to each pickup.
-    assert walk.count("player.GlobalPosition=") == 1
+    # Pass102 removed even the controlled initial depot placement.
+    assert "player.GlobalPosition=deposit+Vector3.Up*1.1f" not in walk
+    # Pass102 now starts at each map's natural spawn, even for Manor.
+    assert walk.count("player.GlobalPosition=") == 0
     assert "player.GlobalPosition=objective.Pass96MaterialFeet[0]" not in walk
     assert "var world = GlobalTransform.Basis * local" in player
     assert "MoveAndSlide();" in player
