@@ -197,6 +197,11 @@ public static class MapBlockoutBuilder
     {
         BaseArena(root, 78, 90, new Color(0.12f, 0.13f, 0.12f));
         InteriorShell(root, "WestWing", new Vector3(-21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f), .15f, 9.55f);
+        // Pass102: the source-absent WestWing has a 20cm interior slab
+        // but its south opening had no step-free physical entrance. Use a
+        // very short walkable threshold without moving either the 3.06m
+        // upper stair landing or the previously verified stair geometry.
+        AddWestWingDoorThreshold102(root);
         InteriorShell(root, "EastWing", new Vector3(21, 2.8f, -7), new Vector3(19, 5.6f, 50), new Color(0.22f, 0.20f, 0.18f), -23.45f, -14.15f);
         InteriorShell(root, "FrontHall", new Vector3(0, 2.7f, 31), new Vector3(28, 5.4f, 11), new Color(0.25f, 0.22f, 0.19f));
         // RECOVERED topology: Manor has usable rooms on both floors and a front
@@ -232,6 +237,37 @@ public static class MapBlockoutBuilder
             ApproximateUpperPickups82 = upperPickups82,
             ApproximateUpperObjectives82 = upperObjectives82
         };
+    }
+
+    private static void AddWestWingDoorThreshold102(Node3D root)
+    {
+        // This COLLISION-ONLY accessibility patch is restricted to the
+        // public fallback Manor blockout. At the south door (Z=18) the
+        // interior floor is 0.20m above the ground: a normal W walk cannot
+        // step straight up. Rise gently over 2m, from Z=20/Y=0 to Z=18/
+        // Y=0.20, centred inside the existing 4m-wide open doorway.
+        // Do not substitute this invented threshold for owner source art.
+        const float rise=.20f;
+        const float run=2.0f;
+        const float thickness=.16f;
+        var pitch=Mathf.Atan2(rise,run);
+        var slopeLength=Mathf.Sqrt(run*run+rise*rise);
+        var size=new Vector3(3.10f,thickness,slopeLength+.08f);
+        var threshold=new StaticBody3D
+        {
+            Name="WestWingSouthWalkableThreshold102",
+            Position=new Vector3(-21f,
+                rise*.5f-thickness*.5f*Mathf.Cos(pitch),19f),
+            Rotation=new Vector3(pitch,0f,0f),
+            CollisionLayer=1u,CollisionMask=0u
+        };
+        threshold.AddChild(new CollisionShape3D
+        {
+            Shape=new BoxShape3D{Size=size}
+        });
+        threshold.AddChild(BoxMeshFor(size,
+            new Color(.23f,.20f,.17f)));
+        root.AddChild(threshold);
     }
 
     private static Pass80UpperCrossing MakeUpperCrossing80(Pass77StairLink stair)
