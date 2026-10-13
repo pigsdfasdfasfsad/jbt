@@ -36,6 +36,13 @@ public partial class ObjectiveRuntime : Node3D
     public int Pass106HeldMaterialMeshParts =>
         Pass106HeldMaterialVisible ? _heldMaterial106!.GetChildCount() : 0;
     public string Pass106HeldMaterialName => _heldMaterialName106 ?? "";
+    // Pass108: visibility and complete primitive geometry must BOTH remain
+    // within the lower-left camera frustum, not just the item root anchor.
+    public bool Pass108HeldSilhouetteSafe =>
+        Pass106HeldMaterialVisible && Player is not null &&
+        Pass108CarryFrustum.Measure(
+            _heldMaterial106!, Player.CaptureCamera.Fov,
+            Pass108ViewportSize()).EntirePropSafe;
     public Pass73GroundNavigationRuntime? EscortGroundNavigator89 { get; set; }
     public int EscortSafeRoutePlans89 { get; private set; }
     public int EscortBlockedRoutePlans89 { get; private set; }
@@ -127,6 +134,8 @@ public partial class ObjectiveRuntime : Node3D
                 (float)Time.GetTicksMsec() * .001f,
                 new Vector2(Player.Velocity.X, Player.Velocity.Z).Length());
         }
+
+        FitHeldFrustum108();
 
         var interactDown = Input.IsKeyPressed(Key.E);
         var interactPressed = interactDown && !_interactWasDown;
@@ -723,6 +732,23 @@ public partial class ObjectiveRuntime : Node3D
             new Vector2(Player.Velocity.X, Player.Velocity.Z).Length());
         _heldMaterial106=model;
         _heldMaterialName106=materialName;
+        FitHeldFrustum108();
+    }
+
+    private Vector2I Pass108ViewportSize()
+    {
+        var size=GetViewport().GetVisibleRect().Size;
+        return new Vector2I((int)size.X, (int)size.Y);
+    }
+
+    private void FitHeldFrustum108()
+    {
+        if (Player is null || _heldMaterial106 is null ||
+            !GodotObject.IsInstanceValid(_heldMaterial106) ||
+            !_heldMaterial106.Visible)
+            return;
+        Pass108CarryFrustum.Fit(_heldMaterial106,
+            Player.CaptureCamera.Fov, Pass108ViewportSize());
     }
 
     private void ClearHeldMaterial106()
