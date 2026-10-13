@@ -34,3 +34,16 @@ The first comprehensive native [Pass101 CI run 38330029719](https://github.com/p
 This revealed that the generic 2.2m flat-world obstacle-lookahead can turn a descending infected off the lower stair axis when it detects nearby shell walls beyond the immediate waypoint. Pass101 now checks a **short 0.4m physical downhill step** against the actual ramp slope and full-capsule Godot swept collision/floor support in `Pass73GroundNavigationRuntime.SafeManorDescentStep101`. Only when that safety test accepts the next step does `InfectedAgent` follow the current route direction instead of flat-world avoidance. All fallback/source distinctions, collision authority, and no-teleport restrictions remain intact.
 
 An early Windows preflight runs the real Pass78 exported executable on all three stairs before the longer objective/wave suite. **Run 38330923050 passed that native exported-game preflight on the corrected code SHA `13fc4220d535a71fd4f3150ea052d3e1b8590996`**, including all three actual infected stair descents. The full branch regression suite runs afterward; only a fully green pipeline can certify every gate.
+
+## Final Pass101 acceptance — full Windows pipeline green
+
+The final production code SHA **`13fc4220d535a71fd4f3150ea052d3e1b8590996`** passed the entire public Windows/Godot .NET CI pipeline in [run 38330923050](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38330923050) (738 Python tests passed; one previous Python warning). The native executable was built and passed both independent `--smoke-pass78` three-stair regressions, including real Front Hall infected descent with a logged **2.51m** physical drop and zero jump/teleport substitutions. The run also passed Pass95 Escort, Pass96 ten-map materials and 15-wave replay, Pass98 whole Load/Repair objective completions, Pass99 one-carried-material control, Pass100 20 player-walk material trips, Pass73 all-map movement, Pass83 Manor upper crossing, Pass88-94 navigation/escort checks, and the final private-source-exclusion audit.
+
+Five actual initial-map player-spawn to Load-depot walks used regular forward key input without test-player teleport:
+- Ranch: **9.2m**
+- Mill: **11.2m**
+- Bypass: **19.3m**
+- District: **4.2m**
+- Prison: **8.3m**
+
+These total **52.1m** of accepted spawn-origin movement. Separately, the 20 Pass100 Load/Repair first-item round trips on ten fallback maps recorded **107.2m** of player movement. The five other maps still use test-controlled initial depot entry and are not called verified spawn-to-objective walks. This project is neither a retail 1:1 art reproduction nor a verified human-operated full 15-wave playthrough. The workflow compiles the Windows executable but deliberately does not publish it.
