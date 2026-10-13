@@ -55,3 +55,13 @@ def test_cabin_fallback_enters_on_ground_level_not_unwalkable_floor_lip():
     assert "frontDoorRelief91:true" in cabin
     assert "StaticBox(root,name+\"_Floor\"" in blockout
     assert "bottom-.10f" in blockout
+
+
+def test_laboratory_fallback_research_entrance_is_not_a_raised_wall():
+    blockout=src("src/Twr.Godot/Scripts/MapBlockoutBuilder.cs")
+    research=blockout.index('InteriorShell(root, "Research"')
+    assert "frontDoorRelief91:true" in blockout[research:research+220]
+    # The original scene loader is independent of the fallback blockout.
+    game=src("src/Twr.Godot/Scripts/GameplayRoot.cs")
+    assert "LaboratorySourceLoader.TryBuild(" in game
+    assert "_mapLayout = originalWorldAvailable" in game
