@@ -65,3 +65,16 @@ def test_laboratory_fallback_research_entrance_is_not_a_raised_wall():
     game=src("src/Twr.Godot/Scripts/GameplayRoot.cs")
     assert "LaboratorySourceLoader.TryBuild(" in game
     assert "_mapLayout = originalWorldAvailable" in game
+
+
+def test_manor_west_wing_has_real_walkable_fallback_threshold():
+    map_source=src("src/Twr.Godot/Scripts/MapBlockoutBuilder.cs")
+    assert "AddWestWingDoorThreshold102(root);" in map_source
+    assert "Name=\"WestWingSouthWalkableThreshold102\"" in map_source
+    assert "var pitch=Mathf.Atan2(rise,run);" in map_source
+    assert "Shape=new BoxShape3D{Size=size}" in map_source
+    assert "CollisionLayer=1u" in map_source
+    assert "OriginalWorldAvailable" not in map_source
+    assert "AddWestWingDoorThreshold102(root);" in map_source.split(
+        "private static RuntimeMapLayout BuildManor",1)[1].split(
+        "private static Pass80UpperCrossing",1)[0]
