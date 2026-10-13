@@ -78,7 +78,10 @@ def test_actual_death_body_keeps_all_limb_and_material_snapshot_paths():
         assert anchor in corpse, anchor
     assert corpse.index("public override void _PhysicsProcess") < corpse.index(
         "public override void _Process")
-    assert "if (WalkableGroundFound113 &&" in corpse
+    # Pass114 adds a terrain-plane branch while preserving the earlier
+    # Pass113 flat-ground clearance correction below its else clause.
+    assert "if (WalkableGroundFound113)" in corpse
+    assert "else if (Pass113CorpseGroundContact.TryLowestVisiblePointY(" in corpse
     assert "AddToGroup" not in corpse
     assert "CollisionLayer" not in corpse
     assert "new CollisionShape3D" not in corpse
