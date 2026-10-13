@@ -152,17 +152,38 @@ jobs:
           if(Test-Path $stdout){$output += Get-Content $stdout}
           if(Test-Path $stderr){$output += Get-Content $stderr}
           $output | ForEach-Object {Write-Host $_}
+          $repairTotal = 0
           foreach($map in @('Ranch','Manor')){
-            if(-not ($output | Where-Object {"$_" -match "TWR_PASS103_MAP_FULL_LOAD_OK map=$map production_wave=1 material_items=10"})){
+            if(-not ($output | Where-Object {"$_" -match "^TWR_PASS103_MAP_FULL_LOAD_OK map=$map production_wave=1 material_items=[0-9]+"})){
               throw "Pass104 failed physical Wave1 Load prerequisite on $map"
             }
-            if(-not ($output | Where-Object {"$_" -match "TWR_PASS104_MAP_FULL_REPAIR_OK map=$map production_wave=2 family=Repair material_items=10"})){
-              throw "Pass104 failed real physical Wave2 Repair mission on $map"
+            # Repair demands twelve items in today's production catalog,
+            # whereas Load demands ten. Validate ALL actually generated
+            # items, and never hardcode a quantity that could change with
+            # the production objective rules.
+            $rows = @($output | Where-Object {"$_" -match "^TWR_PASS104_MAP_FULL_REPAIR_OK map=$map production_wave=2 family=Repair material_items=[0-9]+ pickups=[0-9]+ deposits=[0-9]+ "})
+            if($rows.Count -ne 1){
+              throw "Pass104 missing unique real physical Wave2 Repair completion on $map"
             }
+            $counts = [regex]::Match($rows[0], 'material_items=([0-9]+) pickups=([0-9]+) deposits=([0-9]+)')
+            if(-not $counts.Success){
+              throw "Pass104 unreadable item accounting on $map"
+            }
+            $items = [int]$counts.Groups[1].Value
+            $pickups = [int]$counts.Groups[2].Value
+            $deposits = [int]$counts.Groups[3].Value
+            if($items -lt 10 -or $pickups -ne $items -or $deposits -ne $items){
+              throw "Pass104 did not physically carry every generated Repair item on $map (required=$items picked=$pickups deposited=$deposits)"
+            }
+            $repairTotal += $deposits
           }
-          if($run.ExitCode -ne 0 -or
-             -not ($output | Where-Object {"$_" -match 'TWR_SMOKE_PASS104_FULL_PHYSICAL_REPAIR_OK maps=Ranch,Manor completed_wave1_loads=2 completed_wave2_repairs=2 wave2_material_deposits=20'})){
+          $summaries = @($output | Where-Object {"$_" -match '^TWR_SMOKE_PASS104_FULL_PHYSICAL_REPAIR_OK maps=Ranch,Manor completed_wave1_loads=2 completed_wave2_repairs=2 wave2_material_deposits=[0-9]+'})
+          if($run.ExitCode -ne 0 -or $summaries.Count -ne 1){
             throw "Pass104 full physical two-wave lifecycle failed. Exit $($run.ExitCode)"
+          }
+          $declared = [regex]::Match($summaries[0], 'wave2_material_deposits=([0-9]+)')
+          if(-not $declared.Success -or [int]$declared.Groups[1].Value -ne $repairTotal){
+            throw "Pass104 aggregate Repair receipts did not match the $repairTotal physically deposited items"
           }
 
       - name: Preflight Pass 95 real Manor West and East Escort rotation
