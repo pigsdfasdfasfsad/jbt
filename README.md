@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest native-verified checkpoint: Pass 104 — full physical Load and Repair across two waves
+## Latest development: Pass 108 — complete carried-object framing and native ADS stow checks
+
+[Pass108 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass108-native-carry-ads-frustum) ·
+[Pass108 Windows validation](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass108-native-carry-ads-frustum) ·
+[Engineering record](docs/development/PASS108_NATIVE_CARRY_ADS_FRUSTUM.md)
+
+- Pass106 already **passed 757 Python regressions and native exported-Windows 40-item carry/deposit checks** in [run 38348938021](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38348938021). Pass107 added camera-relative hip item placement and ADS-only visual stow, preserving authority.
+- Pass108 now audits the **entire 3D model's primitive corners** inside the camera field of view, not merely its anchor, and bounds optional per-viewport visual scaling. Its exported native Windows test walks and deposits the real Wave1 Load and Wave2 Repair materials on Ranch/Manor, verifies **four** real synthetic-input RMB ADS stow/reappear transitions without dropping the material, and evaluates every carried 3D model at **4:3, 16:9, 21:9 and ultrawide** mathematical viewport ratios.
+- The Pass108 full Windows test is pending confirmation. Analytical/headless geometry and genuine gameplay input are not graphical screenshot or 1:1 source model certifications. Private owner content is excluded from public Git and compiled public .exe distribution remains disabled.
+
+## Earlier native-verified checkpoint: Pass 104 — full physical Load and Repair across two waves
 
 [Pass104 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass104-full-physical-repair) ·
 [Successfully exported Windows CI 38338396152](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38338396152) ·
