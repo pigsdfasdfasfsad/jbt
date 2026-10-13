@@ -276,7 +276,7 @@ public partial class Pass96GroundedMaterialsAcceptance : Node
             var backward=await WalkTo100(
                 player,deposit,routeContext+"/return to depot");
             await PressE();
-            if(!status.Contains("1/10 INSERTED",
+            if(!status.Contains($"1/{count} INSERTED",
                 StringComparison.Ordinal) ||
                objective.Pass98CarryingMaterial ||
                objective.Pass98DepositedMaterials!=1)
