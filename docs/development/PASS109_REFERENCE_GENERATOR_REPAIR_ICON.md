@@ -29,6 +29,14 @@ The new geometry uses screenshot-guided primitive proportions and colors, not or
 
 The next graphical phase must collect F12 screenshots on a real Windows display, compare image pairs at identical camera positions/FOV and weapon, refine the scaled prop silhouette and HUD positioning, and benchmark draw calls/frame times. The surviving owner archives do not establish full 1:1 map geometry for the remaining nine maps.
 
+## Actual Windows validation checkpoint
+
+[GitHub Actions run 38354422921](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38354422921), built from gameplay/code commit `2d2294584630a999408c4e714bd96e51be56b339`, has **passed** the following native steps: Python evidence/domain contracts, Godot/.NET Windows executable compilation/export, physical Pass101 Manor descent, actual Wave1 Load and Wave2 Repair missions on Ranch/Manor (Pass103/104), Pass105 material deposit during a live infected attack, Pass108 real RMB ADS plus camera-frustum cycles, and the **new Pass109 reference generator/Repair-badge** acceptance.
+
+The Pass109 native acceptance step requires exactly two World Generator silhouettes and two genuine camera-carried Generator silhouettes, correct 42px Repair badge appearance/clearance for two active missions, 40+ physically collected/deposited item cycles, unchanged normal W/E interactions, and the previous 4 RMB + 160 viewport tests. The step **completed successfully**. The remaining broad historical Windows regression steps were still running when this paragraph was recorded; do not confuse a green dedicated Pass109 test with a fully concluded workflow.
+
+This is headless native game acceptance and does not certify graphical image-pixel fidelity against the private source screenshots.
+
 ## Repository
 
 - [Pass109 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass109-reference-generator-repair-icon)
