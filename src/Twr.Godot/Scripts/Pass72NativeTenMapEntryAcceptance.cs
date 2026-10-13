@@ -18,6 +18,10 @@ public partial class Pass72NativeTenMapEntryAcceptance : Node
     public LocalSessionNode Runtime { get; set; } = null!;
     public const string SuccessMarker = "TWR_SMOKE_PASS72_TEN_MAP_ENTRY_OK";
     private int _verified;
+    public bool VerifyLabDressing115 { get; set; }
+    private int _labDressed115;
+    private int _labMeshCount115;
+    private int _labLights115;
 
     public override async void _Ready()
     {
@@ -36,6 +40,28 @@ public partial class Pass72NativeTenMapEntryAcceptance : Node
                 throw new InvalidOperationException(
                     "Pass72 did not complete all ten native map lifecycles");
 
+            if(VerifyLabDressing115)
+            {
+                if(_labDressed115!=1 || _labMeshCount115<140 ||
+                   _labMeshCount115>Pass115LaboratoryDressing.MaxVisualMeshes ||
+                   _labLights115<8)
+                    throw new InvalidOperationException(
+                        "Pass115 Laboratory screenshot-guided scene missing"+
+                        " lab_scenes="+_labDressed115+
+                        " meshes="+_labMeshCount115+
+                        " local_lights="+_labLights115);
+                GD.Print("TWR_SMOKE_PASS115_LAB_DRESSING_OK"+
+                    " maps=10"+
+                    " lab_fallback_scenes="+_labDressed115+
+                    " landmark_zones=7"+
+                    " visual_meshes="+_labMeshCount115+
+                    " local_lights="+_labLights115+
+                    " other_maps_undressed=9"+
+                    " zero_new_colliders=true"+
+                    " two_native_waves_each=true"+
+                    " original_owner_assets_excluded=true"+
+                    " screenshot_exact_fidelity_unverified=true");
+            }
             GD.Print(SuccessMarker + " maps=" + _verified +
                 " actual_gameplay_roots=true" +
                 " native_player_grounding=true" +
@@ -77,6 +103,47 @@ public partial class Pass72NativeTenMapEntryAcceptance : Node
             MapName = map
         };
         AddChild(game);
+
+        if (VerifyLabDressing115)
+        {
+            var visual=game.GetNodeOrNull<Pass115LaboratoryDressing>(
+                "Pass115LaboratoryDressing");
+            if(map=="Laboratory")
+            {
+                if(visual is null ||
+                   visual.LandmarkCount!=Pass115LaboratoryDressing.ExpectedLandmarks ||
+                   visual.VisualMeshCount<140 ||
+                   visual.VisualMeshCount>Pass115LaboratoryDressing.MaxVisualMeshes ||
+                   visual.LocalLightCount<8 ||
+                   visual.HasAnyCollisionObjects ||
+                   !visual.HasMeta("Pass115OwnerOriginalGeometry") ||
+                   visual.GetMeta("Pass115OwnerOriginalGeometry").AsBool() ||
+                   !visual.HasMeta("Pass115SourceReferencesBundled") ||
+                   visual.GetMeta("Pass115SourceReferencesBundled").AsBool())
+                    throw new InvalidOperationException(
+                        "Pass115 source-absent Laboratory should have readable"+
+                        " seven-zone noncolliding render-only scene");
+                foreach(var landmark in new []
+                {
+                    "ReceptionDressing","ServerDressing","ResearchDressing",
+                    "ExaminationDressing","GarageDressing","WardDressing",
+                    "CafeteriaDressing"
+                })
+                {
+                    if(!visual.VisualMeshesByLandmark.TryGetValue(
+                           landmark,out var count) || count<12 ||
+                       visual.GetNodeOrNull<Node3D>(landmark) is null)
+                        throw new InvalidOperationException(
+                            "Pass115 missing readable Laboratory landmark "+landmark);
+                }
+                _labDressed115++;
+                _labMeshCount115=visual.VisualMeshCount;
+                _labLights115=visual.LocalLightCount;
+            }
+            else if(visual is not null)
+                throw new InvalidOperationException(
+                    "Pass115 Laboratory props leaked into "+map);
+        }
 
         var player = game.GetNodeOrNull<FirstPersonPlayer>("Player");
         var hud = game.GetNodeOrNull<GameplayHud>("HUD");
