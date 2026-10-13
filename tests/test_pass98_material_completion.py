@@ -52,6 +52,9 @@ def test_exported_real_production_load_repair_completion_on_two_maps():
         "Runtime.CompleteObjective(id,family)",
         "ProgressionRules.RequiredForNextLevel",
         "TWR_PASS98_OBJECTIVE_E_COMPLETE_OK",
+        "TWR_PASS98_SHARED_E_PRESS_OK",
+        "await VerifyContendedPress(game,player)",
+        "overlapping_objectives=2",
         "TWR_SMOKE_PASS98_MATERIAL_LIFECYCLE_OK",
         "Runtime.ReturnToLobby()",
         "Runtime.Match.SaveCommitted",
@@ -73,6 +76,7 @@ def test_native_ci_reruns_material_physics_reward_and_private_asset_regressions(
     assert "else if(smoke98)" in session
     assert "Preflight Pass 98 real full Load and Repair E-key completions" in ci
     assert "TWR_SMOKE_PASS98_MATERIAL_LIFECYCLE_OK" in ci
+    assert "TWR_PASS98_SHARED_E_PRESS_OK" in ci
     assert "TWR_SMOKE_PASS96_GROUNDED_MATERIALS_OK" in ci
     assert "TWR_PASS97_MATERIALS_IN_FULL_MATCH_OK" in ci
     assert ci.index("Preflight Pass 98") < ci.index("Smoke Pass 78")
