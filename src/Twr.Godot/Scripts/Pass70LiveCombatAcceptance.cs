@@ -62,7 +62,7 @@ public partial class Pass70LiveCombatAcceptance : Node
                     " independent_limb_fall=true"+
                     " root_fall_preserved=true"+
                     " no_physics_colliders=true"+
-                    " real_waved_cleanup=true"+
+                    " real_wave_cleanup=true"+
                     " synthetic_glock_fixture_only=true"+
                     " original_motor6d_data_unverified=true");
             }
