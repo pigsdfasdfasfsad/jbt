@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest native-verified checkpoint: Pass 104 — full physical Load and Repair across two waves
+## Latest native-verified checkpoint: Pass 105 — real infected attack while carrying objective material
+
+[Pass105 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass105-live-objective-threat) ·
+[Successful Windows gameplay CI 38347592407](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38347592407) ·
+[Pass105 native engineering evidence](docs/development/PASS105_LIVE_OBJECTIVE_THREAT.md)
+
+- **751 Python contract tests passed (one inherited warning)**, the actual Godot/.NET Windows executable exported, and every enabled physical objective, weapon-adjacent, fifteen-wave replay/persistence, movement, Manor stair, infected navigation, escort and owner-private-source exclusion test passed. Native-verified source SHA: `ad556c20b6a5579b120e03277050162efa0ad0d7`.
+- Pass105 strengthens Pass104's previously combat-isolated mission loops: on fallback **Ranch Wave1 Load**, the real player walked **15.5m** from natural spawn, picked up a material with E, and **carried it through 4.0 actual melee health damage** from a production-spawned infected that physically closed **1.3m**. The player survived, deposited with E, did not receive an early reward, and persisted an incomplete match. No player teleports, forced health changes, or frozen enemy physics were used.
+- **Scope:** This is one **bounded under-fire pickup and deposit**, not yet a complete material objective under sustained real-time combat. The infected's nearby approach lane and Civilian test stats are deliberately controlled, although the enemy itself originates from the production wave spawner and uses real CharacterBody/attack/damage systems. Long-distance original retail spawning, full human survival, 1:1 map/art/audio fidelity, and a published standalone installer remain unverified.
+
+## Earlier verified checkpoint: Pass 104 — full physical Load and Repair across two waves
 
 [Pass104 code](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass104-full-physical-repair) ·
 [Successfully exported Windows CI 38338396152](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38338396152) ·
@@ -29,7 +39,7 @@ Durable development repository for the standalone offline reconstruction of **Th
 [Pass102 engineering notes](docs/development/PASS102_ALL_MAP_SPAWN_INGRESS.md)
 
 - Normal first-person player input and real collision now reach the first Load depot **from natural spawn across all ten public fallback maps**. The first five were accepted in Pass101; Pass102 completed **Cabin, Cargo, Laboratory, Expressway and upstairs Manor**. The same player then physically collected and deposited one material for each Load and Repair mission family on all ten fallback maps.
-- Real Windows native regression gates passed Pass78 Manor stair ascent/descent twice, Pass95 Escort, Pass96 15-wave offline simulation/replay persistence, Pass98 full material objectives with test-controlled positioning, plus the ten-map physics and privacy gates. **Pass103 and Pass104 separately verify full physical Wave1 Load and Wave2 Repair on Ranch and Manor, with both checks now passing native Windows CI.
+- Real Windows native regression gates passed Pass78 Manor stair ascent/descent twice, Pass95 Escort, Pass96 15-wave offline simulation/replay persistence, Pass98 full material objectives with test-controlled positioning, plus the ten-map physics and privacy gates. Pass103 and Pass104 separately verify full physical Wave1 Load and Wave2 Repair on Ranch and Manor, with both checks passing native Windows CI.
 - This project remains a **development reconstruction**, not a release-equivalent 1:1 original. Original Roblox map geometry/art/audio/animations, real-time human-operated survival, and a downloadable standalone .exe are not certified by these headless CI tests. Owner-private source assets and compiled executables are intentionally not publicly uploaded.
 
 ## Earlier verified branch: Pass 92 — Expressway physically supported Escort
