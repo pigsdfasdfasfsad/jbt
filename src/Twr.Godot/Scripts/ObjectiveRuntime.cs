@@ -116,6 +116,17 @@ public partial class ObjectiveRuntime : Node3D
             return;
         }
 
+        // Pass107 presentation is driven by the actual player camera and
+        // real ADS state, never by the interaction or reward paths.
+        if (_carrying && _heldMaterial106 is not null)
+        {
+            Pass107CarryPresentation.Apply(
+                _heldMaterial106, Player.Pass107Aiming ? 1f : 0f,
+                Player.CaptureCamera.Fov, GetViewport().GetVisibleRect().Size.RoundToInt(),
+                (float)Time.GetTicksMsec() * .001f,
+                new Vector2(Player.Velocity.X, Player.Velocity.Z).Length());
+        }
+
         var interactDown = Input.IsKeyPressed(Key.E);
         var interactPressed = interactDown && !_interactWasDown;
         _interactWasDown = interactDown;
@@ -703,6 +714,11 @@ public partial class ObjectiveRuntime : Node3D
         var model=ObjectiveMaterialVisual106.Create(
             materialName,new Vector3(.42f,-.45f,-.78f),true);
         Player.CaptureCamera.AddChild(model);
+        Pass107CarryPresentation.Apply(
+            model, Player.Pass107Aiming ? 1f : 0f,
+            Player.CaptureCamera.Fov, GetViewport().GetVisibleRect().Size.RoundToInt(),
+            (float)Time.GetTicksMsec() * .001f,
+            new Vector2(Player.Velocity.X, Player.Velocity.Z).Length());
         _heldMaterial106=model;
         _heldMaterialName106=materialName;
     }
