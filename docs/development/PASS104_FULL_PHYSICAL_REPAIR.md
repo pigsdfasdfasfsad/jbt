@@ -1,7 +1,7 @@
 # Pass104 — Full physical production Wave2 Repair
 
 **Base:** Pass103 full-physical Wave1 Load (746 Python tests and successfully exported Windows native CI run 38335724427).  
-**Status:** implementation and automated Windows acceptance gate committed; the latest exported native run must pass before the feature is certified.
+**Status:** fully native-Windows verified. The final gameplay/CI implementation SHA `840acf516025f3293e30734d08e1d90fd2e65e8f` passed every enabled check in [Windows CI 38338396152](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38338396152).
 
 ## Goal
 
@@ -43,4 +43,15 @@ The two preceding full Wave1 Load missions also walked 163.0m and deposited all 
 
 The acceptance workflow has been corrected to parse each actual `material_items`, `pickups` and `deposits` value; each must equal the generated count (at least ten). Its summary's total Repair deposits must equal the sum verified on both maps. This strengthens coverage and avoids assuming Load and Repair have identical item requirements.
 
-The first runs were **CI failures due to their test matcher**, not native gameplay failures. A new fully green Windows CI result on the corrected matcher is still required for the pass's final acceptance.
+The first runs were **CI failures due to their test matcher**, not native gameplay failures. The corrected matcher was then fully verified in [Windows run 38338396152](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38338396152), which passed the complete native gameplay regression, source/asset privacy gate and Windows export.
+
+## Final Windows acceptance evidence
+
+[Run 38338396152](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38338396152) concluded **success** on executable source SHA `840acf516025f3293e30734d08e1d90fd2e65e8f`. Python contract validation reported **748 passed and one inherited warning**. The Windows Godot/.NET exporter succeeded; both isolated native Pass103 and Pass104 preflights passed, along with all ten-map physical material walks, 15-wave replay, full Load/Repair interaction, collision/stair/infected/escort tests and final original-private-asset exclusion.
+
+The verified exported executable emitted:
+- `TWR_PASS104_MAP_FULL_REPAIR_OK map=Ranch production_wave=2 family=Repair material_items=12 pickups=12 deposits=12 walked_metres=97.0`
+- `TWR_PASS104_MAP_FULL_REPAIR_OK map=Manor production_wave=2 family=Repair material_items=12 pickups=12 deposits=12 walked_metres=76.4`
+- `TWR_SMOKE_PASS104_FULL_PHYSICAL_REPAIR_OK maps=Ranch,Manor completed_wave1_loads=2 completed_wave2_repairs=2 wave2_material_deposits=24 wave2_walked_metres=173.4 total_material_deposits=44 actual_W_E_keys=true player_teleports=0 wave1_to_wave2_runtime_progression=true exactly_once_rewards=true persisted_results=true`
+
+This is **44 deposited objective materials and 336.4 metres of physical walking across both maps and waves**, with complete domain reward validation. The same test still intentionally isolates enemy combat and uses reconstructed fallback map geometry; it is not a fully human-operated two-wave survival demonstration or 1:1 original retail art verification. The workflow does not publish a downloadable binary.
