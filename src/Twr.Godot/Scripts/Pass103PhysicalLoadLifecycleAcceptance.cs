@@ -30,6 +30,7 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
     private int _visibleCarryPickups106;
     private int _clearedCarryDeposits106;
     private int _verifiedAimStows108;
+    private int _virtualFrustumCases108;
     private const int MaxWalkFrames=540;
 
     public override async void _Ready()
@@ -99,13 +100,15 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
                 " physics_interactions_unchanged=true");
             if (VerifyCarryAim108)
             {
-                if (!ExtendToRepair104 || _verifiedAimStows108 != 4)
+                if (!ExtendToRepair104 || _verifiedAimStows108 != 4 ||
+                    _virtualFrustumCases108 < 160)
                     throw new InvalidOperationException(
                         "Pass108 native RMB carry coverage incomplete count="+
                         _verifiedAimStows108);
                 GD.Print("TWR_SMOKE_PASS108_CARRY_ADS_FRUSTUM_OK"+
                     " maps=Ranch,Manor families=Load,Repair"+
                     " genuine_RMB_aim_stows="+_verifiedAimStows108+
+                    " virtual_viewport_cases="+_virtualFrustumCases108+
                     " physically_collected_items="+_visibleCarryPickups106+
                     " physically_deposited_items="+_clearedCarryDeposits106+
                     " carried_material_retained_during_ADS=true"+
@@ -155,7 +158,49 @@ public partial class Pass103PhysicalLoadLifecycleAcceptance : Node
            held.GetChildren().OfType<CollisionObject3D>().Any())
             throw new InvalidOperationException(
                 "Pass106 no matching collision-free carried model "+context);
+        CheckCommonViewports108(held,player,context);
         _visibleCarryPickups106++;
+    }
+
+    // Independently test the complete *same* carried mesh at 4:3, 16:9,
+    // 21:9 and ultrawide ratios, without changing the real game viewport.
+    // Real player position, item state and weapon FOV remain unmodified.
+    private void CheckCommonViewports108(
+        Node3D held,FirstPersonPlayer player,string context)
+    {
+        if (!VerifyCarryAim108)
+            return;
+        var original=held.Transform;
+        var originallyVisible=held.Visible;
+        try
+        {
+            foreach (var size in new[]
+            {
+                new Vector2I(1024,768),
+                new Vector2I(1920,1080),
+                new Vector2I(2560,1080),
+                new Vector2I(3440,1440)
+            })
+            {
+                Pass107CarryPresentation.Apply(
+                    held,0f,player.CaptureCamera.Fov,
+                    size,0f,0f);
+                var bounds=Pass108CarryFrustum.Fit(
+                    held,player.CaptureCamera.Fov,size);
+                if (!bounds.EntirePropSafe || bounds.IntersectsCrosshair ||
+                    bounds.Corners < 16)
+                    throw new InvalidOperationException(
+                        "Pass108 clipped full carried mesh "+
+                        context+" viewport="+size+
+                        " bounds="+bounds);
+                _virtualFrustumCases108++;
+            }
+        }
+        finally
+        {
+            held.Transform=original;
+            held.Visible=originallyVisible;
+        }
     }
 
     private void CheckClearedVisual106(
