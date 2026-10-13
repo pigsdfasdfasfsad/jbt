@@ -25,4 +25,19 @@ The Pass103 branch retains the prior Pass102 ten-map physical ingress marker gat
 
 This is a **headless mission-interaction acceptance**. The wave countdown is accelerated and enemy-wave spawning is frozen during the material operation, so it does **not** prove surviving a real-time wave while completing every item. Only **Load on Wave1** is being added; earlier full, teleport-controlled Pass98 still covers Load/Repair Wave1/2 on Ranch and Manor, and Pass102 still covers one physically carried item per family on each of ten maps. These public blockouts are not certified 1:1 original art, source collision, sound or animation.
 
-**Native acceptance status:** Exported Windows Godot/.NET compilation succeeded, and the **new Pass103 physical mission preflight completed successfully** in both [run 38335687532](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38335687532) and [run 38335724427](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38335724427). Both independently emitted the expected Ranch and Manor completion markers and summary checks. The remainder of the full CI regression pipeline is separate; do not call the complete branch globally green until that pipeline finishes successfully.
+## Final native Windows verification
+
+**Pass103 is fully Windows-CI verified.** The final code SHA `439c8c46ffae48756802cd88b7381681cc923293` passed all enabled checks in [GitHub Actions run 38335724427](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38335724427). The previous build/run [38335687532](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38335687532) also passed every native regression. The final source revision recorded **746 passing Python contract tests (one inherited warning)**, a successful Godot/.NET Windows export, and the complete Pass78/83/88/89/90/91/92/94/95/96/97/98/99/100/101/102/103 gameplay and private-asset-exclusion gates.
+
+Actual output from the final Windows game:
+
+| Map | Production Wave | Materials physically carried and deposited | Total physical walking |
+| --- | --- | ---: | ---: |
+| Ranch | 1, Load | 10 of 10 | 72.5 m |
+| Manor | 1, Load | 10 of 10 | 90.5 m |
+| **Total** | **Two complete Wave1 Load objectives** | **20 of 20** | **163.0 m** |
+
+Native summary: `TWR_SMOKE_PASS103_FULL_PHYSICAL_LOAD_OK maps=Ranch,Manor completed_production_wave1_loads=2 material_pickup_deposits=20 walked_metres=163.0 actual_W_E_keys=true player_teleports=0 objective_completion_receipts_once=true`.
+
+The headless test intentionally disables time-based enemy spawning after beginning Wave1. These results verify mission interactions and reward accounting under physical movement, **not** genuine real-time survival performance or exact retail art/scene fidelity. This run compiles the Windows executable but intentionally does **not** publish a downloadable public binary.
+
