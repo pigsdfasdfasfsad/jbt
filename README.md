@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest development: Pass 116 — procedural Laboratory floors and luminous equipment
+## Latest development: Pass 117 — playable-format original Laboratory source restored privately
+
+[Pass117 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass117-original-laboratory-private-installer) ·
+[Pass117 engineering report](docs/development/PASS117_ORIGINAL_LABORATORY_PRIVATE_INSTALL.md) ·
+[Pass117 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass117-original-laboratory-private-installer)
+
+- **Source geometry rather than more approximation:** the owner-provided original `TestPlace/TestPlace.rbxlx` Laboratory map has been decoded offline into an actual owner-private Godot-ready `Content/Maps/Laboratory.scene.jsonl.gz` containing **34,268 original positioned render parts**, 836 original enabled lights and actual player/infected, item and fortification markers. A matching `Content/Collision/Laboratory.col26.gz` caches **18,130 original-transform collision shapes across 180 tiles / 217,204 triangles**; **4,501** MeshPart/Union bounds are explicitly approximate because original custom triangles are absent. This is the original *source scene placement*, not an original-quality mesh/texture remake.
+- The exact authenticated source and collision files were packaged **only into a private conversation download**, not the public repository or GitHub Actions. `tools/maps/install_private_laboratory117.py` verifies strict SHA-256 identities and installs them alongside an existing `ThoseWhoRemainOffline.exe`, backing up replaced files. `build/Windows/package_private.ps1` now also supports the pinned Lab v2 scene and exact-source collision cache while preserving legacy v1 and complete private ten-map packaging. The current `LaboratorySourceLoader` already gives this original pack priority over Pass115/116 blockouts.
+- Public Windows CI validates installer safety with **no owner-private asset bytes**, and retains all earlier weapon, map, objective, navigation and native ten-map regression stages. Actual **graphical Windows traversal of the owner-private original source**, missing Roblox cloud-hosted 3D mesh/texture binaries, other nine maps, navigation sidecars and a tested full 15-wave victory remain substantial fidelity gaps. The private source-pack download does **not** contain a game executable.
+
+## Earlier verified development: Pass 116 — procedural Laboratory floors and luminous equipment
 
 [Pass116 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass116-laboratory-surface-materials) ·
 [Pass116 engineering report](docs/development/PASS116_LABORATORY_SURFACE_MATERIALS.md) ·
