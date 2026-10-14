@@ -19,6 +19,11 @@ public partial class Pass72NativeTenMapEntryAcceptance : Node
     public const string SuccessMarker = "TWR_SMOKE_PASS72_TEN_MAP_ENTRY_OK";
     private int _verified;
     public bool VerifyLabDressing115 { get; set; }
+    public bool VerifyLabMaterials116 { get; set; }
+    private int _labMaterialScenes116;
+    private int _labMaterialSurfaces116;
+    private int _labEmissiveDetails116;
+    private int _labGarageLines116;
     private int _labDressed115;
     private int _labMeshCount115;
     private int _labLights115;
@@ -61,6 +66,29 @@ public partial class Pass72NativeTenMapEntryAcceptance : Node
                     " two_native_waves_each=true"+
                     " original_owner_assets_excluded=true"+
                     " screenshot_exact_fidelity_unverified=true");
+            }
+            if(VerifyLabMaterials116)
+            {
+                if(!VerifyLabDressing115 ||
+                   _labMaterialScenes116!=1 ||
+                   _labMaterialSurfaces116!=13 ||
+                   _labEmissiveDetails116<28 ||
+                   _labGarageLines116!=10)
+                    throw new InvalidOperationException(
+                        "Pass116 procedural Laboratory surface verification incomplete");
+                GD.Print("TWR_SMOKE_PASS116_LAB_SURFACES_OK"+
+                    " maps=10"+
+                    " lab_material_scenes="+_labMaterialScenes116+
+                    " procedural_patterns=5"+
+                    " repainted_structural_surfaces="+_labMaterialSurfaces116+
+                    " emissive_fixture_parts="+_labEmissiveDetails116+
+                    " garage_decal_meshes="+_labGarageLines116+
+                    " other_maps_unchanged=9"+
+                    " zero_new_colliders=true"+
+                    " original_geometry_unmodified=true"+
+                    " native_wave2_each_map=true"+
+                    " owner_images_not_bundled=true"+
+                    " pixel_parity_unverified=true");
             }
             GD.Print(SuccessMarker + " maps=" + _verified +
                 " actual_gameplay_roots=true" +
@@ -143,6 +171,58 @@ public partial class Pass72NativeTenMapEntryAcceptance : Node
             else if(visual is not null)
                 throw new InvalidOperationException(
                     "Pass115 Laboratory props leaked into "+map);
+        }
+
+        if(VerifyLabMaterials116)
+        {
+            var surfaces=game.GetNodeOrNull<
+                Pass116LaboratorySurfaceMaterials>(
+                "Pass116LaboratorySurfaceMaterials");
+            if(map=="Laboratory")
+            {
+                if(surfaces is null ||
+                   surfaces.PatternCount116!=5 ||
+                   surfaces.RepaintedSurfaces116!=13 ||
+                   surfaces.FloorSurfaces116!=5 ||
+                   surfaces.RoofSurfaces116!=4 ||
+                   surfaces.WallSurfaces116!=4 ||
+                   surfaces.EmissiveDetails116<28 ||
+                   surfaces.EmissiveDetails116>48 ||
+                   surfaces.GarageDecals116!=10 ||
+                   surfaces.HasAddedCollision116 ||
+                   !surfaces.HasMeta("Pass116OriginalSourceMaterials") ||
+                   surfaces.GetMeta("Pass116OriginalSourceMaterials").AsBool() ||
+                   !surfaces.HasMeta("Pass116PrivateScreenshotBytes") ||
+                   surfaces.GetMeta("Pass116PrivateScreenshotBytes").AsBool() ||
+                   !surfaces.HasMeta("Pass116CollisionGeometryModified") ||
+                   surfaces.GetMeta("Pass116CollisionGeometryModified").AsBool())
+                    throw new InvalidOperationException(
+                        "Pass116 missing source-safe Laboratory tile/glow/markings");
+                foreach(var floor in new []{
+                    "Reception_Floor","Research_Floor","ServerRoom_Floor",
+                    "ParkingGarage_Floor"
+                })
+                {
+                    var body=game.GetNodeOrNull<StaticBody3D>(floor);
+                    var renderer=body?.GetChildren()
+                        .OfType<MeshInstance3D>().SingleOrDefault();
+                    if(renderer?.MaterialOverride is not StandardMaterial3D material ||
+                       material.AlbedoTexture is not ImageTexture texture ||
+                       texture.GetWidth()!=Pass116LaboratorySurfaceMaterials.PatternPixels ||
+                       texture.GetHeight()!=Pass116LaboratorySurfaceMaterials.PatternPixels ||
+                       body?.GetChildren().OfType<CollisionShape3D>().Count()!=1)
+                        throw new InvalidOperationException(
+                            "Pass116 original Lab floor collider or procedural UV"+
+                            " material missing: "+floor);
+                }
+                _labMaterialScenes116++;
+                _labMaterialSurfaces116=surfaces.RepaintedSurfaces116;
+                _labEmissiveDetails116=surfaces.EmissiveDetails116;
+                _labGarageLines116=surfaces.GarageDecals116;
+            }
+            else if(surfaces is not null)
+                throw new InvalidOperationException(
+                    "Pass116 Lab-only surface renderer leaked to "+map);
         }
 
         var player = game.GetNodeOrNull<FirstPersonPlayer>("Player");
