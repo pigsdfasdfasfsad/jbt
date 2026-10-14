@@ -47,13 +47,30 @@ Exact SHA-256: `a3067649db39d5f07be6600b642763fd846050c33b913f0d03dbfbed16468727
 
 The binary header embeds the **exact SHA-256 of the compressed scene file**. The existing Godot `Pass26CollisionRuntime` checks that full digest and rejects any mismatch; successful installation avoids the slower fallback hierarchy of 18,130 individual collision nodes. This is a structural performance optimization, not original custom mesh physics reconstruction.
 
+## Native original Part/Wedge render streaming (additional source cache)
+
+The original loaded scene also contains a large body of author-positioned **native Roblox Part and WedgePart primitives** whose exact source CFrames, shapes, dimensions, RGBA colors and source material tokens do **not** require downloading cloud MeshPart triangles. Pass117 now creates the private `TWRINS28 v1` draw cache already understood by the existing `Pass28PrimitiveStreamer`:
+
+| Source-geometry draw component | Validated total |
+|---|---:|
+| Native original Part/Wedge draws | **18,212** |
+| Draw batches grouped by original material and proximity | **786** |
+| 96-stud world-spatial draw tiles | **47** |
+
+**Generated owner-private native renderer:** `Content/Geometry/Laboratory.native28.gz`
+
+Exact SHA-256: `7a7600e8e4bc796faf2d6a178870f695960e346acad153b0d7139c0cc0fa8c01`
+
+This cache embeds the **same exact compressed Laboratory source-map SHA-256** as the collision cache. The existing Godot loader uses it to stream/batch actual native Part/Wedge transforms and suppress duplicated proxy drawing, while retaining fallback geometry for the **12,587 MeshPart**, **3,013 UnionOperation** and exceptional primitive shapes that depend on missing original mesh bytes. A cached Part does **not** imply custom mesh/pixel/texture recovery. Source-authored floor/roof/door transforms are preserved, with rendering grouped for performance.
+
 ## Downloadable owner-private deliverable
 
 **`TWR-Pass117-Original-Laboratory-Private-Source.zip`** was created within the private conversation artifact environment. It intentionally is **not committed into GitHub or uploaded as a public CI artifact**. It contains:
 
 - `Content/Maps/Laboratory.scene.jsonl.gz`
 - `Content/Collision/Laboratory.col26.gz`
-- Two local-only Python regeneration scripts and one owner installer script in `TOOLS/`
+- `Content/Geometry/Laboratory.native28.gz`
+- Three local-only Python regeneration scripts and one owner installer script in `TOOLS/`
 - Private structural reports and README installation instructions
 
 The scripts require no Roblox Studio, no Roblox servers, and no Internet once Python/lxml are available. The XML parser explicitly ignores Luau execution and authenticates the original source XML SHA before emitting real owner data.
@@ -68,16 +85,16 @@ Or use the GitHub-tracked strict installer:
 python tools/maps/install_private_laboratory117.py --private-pack "TWR-Pass117-Original-Laboratory-Private-Source.zip" --game-folder "C:\Games\ThoseWhoRemainOffline"
 ```
 
-The installer validates both full file SHA-256 digests, reads every scene record, checks source markers and cache tile/triangle totals, and **backs up existing scene/cache binaries** before updating. It refuses any synthetic substitute and refuses to install unless a built Windows executable exists.
+The installer validates **all three exact file SHA-256 digests**, reads every source scene record, checks source markers, collision tile/triangle totals and **native Part/Wedge batch/instance totals**, and **backs up previously installed original scene/collision/primitive caches** before updating. It refuses any synthetic substitute and refuses to install unless a built Windows executable exists.
 
-For a new owner-private executable package, `build/Windows/package_private.ps1` now accepts **both** the original authenticated `twr-source-map-v2` Laboratory scene under `-LaboratoryPack` and its matched `-LaboratoryCollision`. The legacy Lab v1 pack option and complete private ten-map ZIP remain supported. Owner-original data still cannot be packaged inside public repository output.
+For a new owner-private executable package, `build/Windows/package_private.ps1` now accepts the authenticated `twr-source-map-v2` Laboratory scene under `-LaboratoryPack`, its matched `-LaboratoryCollision`, and the exact matching `-LaboratoryPrimitives` streaming geometry cache. The legacy Lab v1 pack option and complete private ten-map ZIP remain supported. Owner-original data still cannot be packaged inside public repository output.
 
 ## GitHub source changes and CI boundary
 
 The publicly versioned branch changes are only **safe installer/packaging code and synthetic tests**:
 
-- `tools/maps/install_private_laboratory117.py`: digest-pinned owner installation of original scene/cache
-- `build/Windows/package_private.ps1`: validates authenticated Lab v2 source header, exact compressed scene SHA and exact matching COLL26 cache SHA (legacy v1 retained)
+- `tools/maps/install_private_laboratory117.py`: digest-pinned owner installation of original scene/collision/native render caches
+- `build/Windows/package_private.ps1`: validates authenticated Lab v2 source header, exact compressed scene SHA and matching COLL26/TWRINS28 cache SHAs (legacy v1 retained)
 - `tests/test_pass117_private_source_installer.py`: rejects synthetic/incomplete source ZIPs, ensures no private file in Git, original source loading precedence, and unchanged collision runtime pack validation
 - `.github/workflows/windows-build.yml`: branch Pass117 inherits the **entire Windows regression matrix**; dedicated step checks strict installer CLI and rejection without supplying owner-private bytes
 
