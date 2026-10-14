@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+"""Install a verified owner-private Laboratory source and collision cache.
+
+No Roblox/Studio/internet required. Never creates source-data files in Git.
+Keep the original scene ZIP/coordinates private to the owner's computer.
+"""
+from __future__ import annotations
+
+import argparse
+import gzip
+import hashlib
+import io
+import json
+import pathlib
+import struct
+import zipfile
+from collections import Counter
+
+SCENE_MEMBER = "Content/Maps/Laboratory.scene.jsonl.gz"
+COLLISION_MEMBER = "Content/Collision/Laboratory.col26.gz"
+SCENE_SHA256 = "b92efe792c93062a0741724f252949ec13cc828d601e277e21a1b13b1d02bb8c"
+COLLISION_SHA256 = "a3067649db39d5f07be6600b642763fd846050c33b913f0d03dbfbed16468727"
+XML_SHA256 = "272c478460c32bd332b7314eea0b69c08d0d78a34bfbfa1f796d6f059976f0d2"
+EXPECTED = {
+    "geometry": 34268, "collision": 1517, "lights": 836,
+    "infected_spawns": 15, "player_spawns": 8,
+    "item_markers": 127, "fortification_markers": 47,
+}
+
+
+def validate(scene: bytes, collision: bytes) -> dict:
+    if hashlib.sha256(scene).hexdigest() != SCENE_SHA256:
+        raise ValueError("Unexpected Laboratory scene: exact verified digest required")
+    if hashlib.sha256(collision).hexdigest() != COLLISION_SHA256:
+        raise ValueError("Unexpected Laboratory collision cache: exact verified digest required")
+    with gzip.open(io.BytesIO(scene), "rt", encoding="utf8") as stream:
+        header = json.loads(next(stream))
+        if (header.get("format") != "twr-source-map-v2" or
+            header.get("map") != "Laboratory" or
+            header.get("synthetic", True) or
+            header.get("original_xml_sha256") != XML_SHA256 or
+            header.get("counts") != EXPECTED):
+            raise ValueError("Owner-authenticated original Laboratory source header mismatch")
+        records, spawns, pickups = Counter(), Counter(), Counter()
+        for line in stream:
+            item = json.loads(line)
+            records[item["kind"]] += 1
+            if item["kind"] == "spawn":
+                spawns[item["side"]] += 1
+            if item["kind"] == "pickup_spawn":
+                pickups[item["group"]] += 1
+        if (records["geometry"] != 34268 or records["collision"] != 1517 or
+            records["light"] != 836 or spawns["infected"] != 15 or
+            spawns["player"] != 8 or pickups["Item"] != 127 or
+            pickups["Fortification"] != 47):
+            raise ValueError("Original source geometry or marker records incomplete")
+
+    blob = gzip.decompress(collision)
+    if len(blob) < 56 or blob[:8] != b"TWRCOL26":
+        raise ValueError("Invalid private collision cache")
+    version, tiles, shapes, proxies = struct.unpack_from("<IIII", blob, 8)
+    if (version, tiles, shapes, proxies) != (1, 180, 18130, 4501):
+        raise ValueError("Source collision cache shape counts do not match")
+    if blob[24:56] != hashlib.sha256(scene).digest():
+        raise ValueError("Collision cache does not match the exact compressed source map")
+
+    offset, triangles, seen = 56, 0, set()
+    for _ in range(tiles):
+        if offset + 12 > len(blob):
+            raise ValueError("Truncated original collision tile")
+        x, z, faces = struct.unpack_from("<iiI", blob, offset)
+        offset += 12
+        if faces < 1 or (x, z) in seen:
+            raise ValueError("Bad original collision tile")
+        seen.add((x, z))
+        triangles += faces
+        offset += faces * 36
+    if offset != len(blob) or triangles != 217204:
+        raise ValueError("Invalid original collision byte length/triangle count")
+    return {
+        "original_geometry": 34268,
+        "collision_shapes": shapes,
+        "tiles": tiles,
+        "original_enabled_lights": 836,
+        "triangles": triangles,
+        "approximate_mesh_bounds": proxies,
+        "source_texture_pixels_embedded": False,
+    }
+
+
+def install(archive: pathlib.Path, game_folder: pathlib.Path,
+            verify_executable: bool = True) -> dict:
+    root = game_folder.resolve()
+    if verify_executable and not (root / "ThoseWhoRemainOffline.exe").is_file():
+        raise ValueError("Destination must contain the compiled Windows executable")
+    with zipfile.ZipFile(archive) as zipped:
+        available = set(zipped.namelist())
+        if SCENE_MEMBER not in available or COLLISION_MEMBER not in available:
+            raise ValueError("Private ZIP lacks the original Laboratory scene/collision")
+        scene = zipped.read(SCENE_MEMBER)
+        collision = zipped.read(COLLISION_MEMBER)
+    report = validate(scene, collision)
+    for name, data in ((SCENE_MEMBER, scene), (COLLISION_MEMBER, collision)):
+        target = root / pathlib.Path(name)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        pending = target.with_name(target.name + ".pass117.tmp")
+        try:
+            pending.write_bytes(data)
+            if target.exists():
+                backup = target.with_name(target.name + ".before-pass117.bak")
+                if backup.exists():
+                    backup.unlink()
+                target.replace(backup)
+            pending.replace(target)
+        finally:
+            if pending.exists():
+                pending.unlink()
+    return report
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--private-pack", required=True, type=pathlib.Path)
+    parser.add_argument("--game-folder", required=True, type=pathlib.Path)
+    arguments = parser.parse_args()
+    report = install(arguments.private_pack, arguments.game_folder)
+    print("TWR_PASS117_OWNER_SOURCE_INSTALLED " +
+          json.dumps(report, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
