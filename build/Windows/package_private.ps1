@@ -1,5 +1,6 @@
 param(
   [string]$LaboratoryPack,
+  [string]$LaboratoryCollision,
   [string]$PrivateSourceZip,
   [string]$PrivateAssetsFolder,
   [string]$AuthorizedAudioFolder,
@@ -13,7 +14,10 @@ if (!(Test-Path -LiteralPath $Executable)) {
   throw "Windows executable not found. Run build\Windows\build.ps1 locally first."
 }
 if ([bool]$LaboratoryPack -eq [bool]$PrivateSourceZip) {
-  throw 'Specify exactly one of -PrivateSourceZip (recommended all ten maps) or -LaboratoryPack (legacy only).'
+  throw 'Specify exactly one of -PrivateSourceZip (recommended all ten maps) or -LaboratoryPack.'
+}
+if ($LaboratoryCollision -and !$LaboratoryPack) {
+  throw '-LaboratoryCollision is valid only with an owner-private -LaboratoryPack.'
 }
 
 function Read-SceneHeader([string]$Path) {
@@ -94,13 +98,57 @@ try {
       throw "Private Laboratory.scene.jsonl.gz pack not found: $LaboratoryPack"
     }
     $header = Read-SceneHeader $LaboratoryPack
-    if ($header.format -ne 'twr-laboratory-scene-v1' -or
+    $VerifiedOwnerXmlSha = '272c478460c32bd332b7314eea0b69c08d0d78a34bfbfa1f796d6f059976f0d2'
+    $LegacyLab = $header.format -eq 'twr-laboratory-scene-v1'
+    $VerifiedV2Lab = $header.format -eq 'twr-source-map-v2' -and
+      $header.original_xml_sha256 -eq $VerifiedOwnerXmlSha -and
+      $header.counts.geometry -eq 34268 -and
+      $header.counts.collision -eq 1517 -and
+      $header.counts.lights -eq 836 -and
+      $header.counts.infected_spawns -eq 15 -and
+      $header.counts.player_spawns -eq 8 -and
+      $header.counts.item_markers -eq 127 -and
+      $header.counts.fortification_markers -eq 47
+    if ((!$LegacyLab -and !$VerifiedV2Lab) -or
         $header.map -ne 'Laboratory' -or
         $header.synthetic -eq $true) {
-      throw 'Refusing to package an invalid or synthetic Laboratory scene.'
+      throw 'Refusing an invalid, synthetic, or unverified original Laboratory scene.'
     }
-    Copy-Item -LiteralPath $LaboratoryPack -Destination (Join-Path $MapDir 'Laboratory.scene.jsonl.gz') -Force
+    $LabDest = Join-Path $MapDir 'Laboratory.scene.jsonl.gz'
+    Copy-Item -LiteralPath $LaboratoryPack -Destination $LabDest -Force
     $MapHashes['Laboratory'] = (Get-FileHash -LiteralPath $LaboratoryPack -Algorithm SHA256).Hash.ToLowerInvariant()
+
+    if ($LaboratoryCollision) {
+      if (!$VerifiedV2Lab) {
+        throw 'Pass117 source-bound collision cache requires a verified v2 Laboratory scene.'
+      }
+      if (!(Test-Path -LiteralPath $LaboratoryCollision)) {
+        throw "Private Laboratory.col26.gz cache not found: $LaboratoryCollision"
+      }
+      # Pass26CollisionRuntime checks the complete compressed scene SHA,
+      # not just the author's map name. Refuse a mismatched cache here too.
+      $bytes = [IO.File]::OpenRead((Resolve-Path -LiteralPath $LaboratoryCollision).Path)
+      try {
+        $gzip = [IO.Compression.GZipStream]::new($bytes, [IO.Compression.CompressionMode]::Decompress)
+        $reader = [IO.BinaryReader]::new($gzip)
+        try {
+          $magic = [Text.Encoding]::ASCII.GetString($reader.ReadBytes(8))
+          $version = $reader.ReadUInt32()
+          $tileCount = $reader.ReadUInt32()
+          $shapeCount = $reader.ReadUInt32()
+          $proxyCount = $reader.ReadUInt32()
+          $cacheSceneSha = [Convert]::ToHexString($reader.ReadBytes(32)).ToLowerInvariant()
+          if ($magic -ne 'TWRCOL26' -or $version -ne 1 -or
+              $tileCount -ne 180 -or $shapeCount -ne 18130 -or
+              $proxyCount -ne 4501 -or $cacheSceneSha -ne $MapHashes['Laboratory']) {
+            throw 'Private source collision cache is incomplete or bound to a different scene.'
+          }
+        } finally { $reader.Dispose() }
+      } finally { $bytes.Dispose() }
+      $CollisionStage = Join-Path $Content 'Collision'
+      New-Item -ItemType Directory -Force -Path $CollisionStage | Out-Null
+      Copy-Item -LiteralPath $LaboratoryCollision -Destination (Join-Path $CollisionStage 'Laboratory.col26.gz') -Force
+    }
   }
 
   if ($PrivateAssetsFolder) {
