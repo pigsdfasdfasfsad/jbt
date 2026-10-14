@@ -18,8 +18,10 @@ from collections import Counter
 
 SCENE_MEMBER = "Content/Maps/Laboratory.scene.jsonl.gz"
 COLLISION_MEMBER = "Content/Collision/Laboratory.col26.gz"
+NATIVE_MEMBER = "Content/Geometry/Laboratory.native28.gz"
 SCENE_SHA256 = "b92efe792c93062a0741724f252949ec13cc828d601e277e21a1b13b1d02bb8c"
 COLLISION_SHA256 = "a3067649db39d5f07be6600b642763fd846050c33b913f0d03dbfbed16468727"
+NATIVE_SHA256 = "7a7600e8e4bc796faf2d6a178870f695960e346acad153b0d7139c0cc0fa8c01"
 XML_SHA256 = "272c478460c32bd332b7314eea0b69c08d0d78a34bfbfa1f796d6f059976f0d2"
 EXPECTED = {
     "geometry": 34268, "collision": 1517, "lights": 836,
@@ -28,7 +30,7 @@ EXPECTED = {
 }
 
 
-def validate(scene: bytes, collision: bytes) -> dict:
+def validate(scene: bytes, collision: bytes, native: bytes | None = None) -> dict:
     if hashlib.sha256(scene).hexdigest() != SCENE_SHA256:
         raise ValueError("Unexpected Laboratory scene: exact verified digest required")
     if hashlib.sha256(collision).hexdigest() != COLLISION_SHA256:
@@ -77,7 +79,48 @@ def validate(scene: bytes, collision: bytes) -> dict:
         offset += faces * 36
     if offset != len(blob) or triangles != 217204:
         raise ValueError("Invalid original collision byte length/triangle count")
+    # Pass28 streaming native draw batches are already authored in the
+    # existing Godot game. The private pack contains 18,212 source Parts /
+    # Wedges in 47 tiles / 786 batches, never recovered MeshPart triangles.
+    native_instances = 0
+    if native is not None:
+        if hashlib.sha256(native).hexdigest() != NATIVE_SHA256:
+            raise ValueError("Unexpected original Part/Wedge native render pack")
+        packed = gzip.decompress(native)
+        if packed[:8] != b"TWRINS28" or len(packed) < 56:
+            raise ValueError("Invalid TWRINS28 native renderer header")
+        native_version, tile_studs, declared = struct.unpack_from("<III", packed, 8)
+        draw_tiles = struct.unpack_from("<I", packed, 52)[0]
+        if ((native_version, tile_studs, declared, draw_tiles) !=
+            (1, 96, 18212, 47) or
+            packed[20:52] != hashlib.sha256(scene).digest()):
+            raise ValueError("Native source renderer not bound to exact Laboratory scene")
+        pos, group_count, used, seen = 56, 0, 0, set()
+        for _ in range(draw_tiles):
+            if pos + 12 > len(packed):
+                raise ValueError("Truncated original native render tile")
+            x, z, groups = struct.unpack_from("<iiI", packed, pos)
+            pos += 12
+            if groups < 1 or (x, z) in seen:
+                raise ValueError("Bad original native draw tile")
+            seen.add((x, z))
+            for _ in range(groups):
+                if pos + 12 > len(packed):
+                    raise ValueError("Truncated source rendering group")
+                kind, material, alpha, r, g, b, shadow, count = struct.unpack_from(
+                    "<BHB3BBI", packed, pos
+                )
+                pos += 12
+                if kind > 1 or alpha < 1 or shadow > 1 or count < 1 or count > 20000:
+                    raise ValueError("Invalid native draw batch")
+                used += count
+                group_count += 1
+                pos += count * 48
+        if pos != len(packed) or used != 18212 or group_count != 786:
+            raise ValueError("Native original draw batch/instance count mismatch")
+        native_instances = used
     return {
+        "native_original_part_instances": native_instances,
         "original_geometry": 34268,
         "collision_shapes": shapes,
         "tiles": tiles,
@@ -95,12 +138,15 @@ def install(archive: pathlib.Path, game_folder: pathlib.Path,
         raise ValueError("Destination must contain the compiled Windows executable")
     with zipfile.ZipFile(archive) as zipped:
         available = set(zipped.namelist())
-        if SCENE_MEMBER not in available or COLLISION_MEMBER not in available:
-            raise ValueError("Private ZIP lacks the original Laboratory scene/collision")
+        if (SCENE_MEMBER not in available or COLLISION_MEMBER not in available or
+            NATIVE_MEMBER not in available):
+            raise ValueError("Private ZIP lacks the original Laboratory scene/collision/native rendering cache")
         scene = zipped.read(SCENE_MEMBER)
         collision = zipped.read(COLLISION_MEMBER)
-    report = validate(scene, collision)
-    for name, data in ((SCENE_MEMBER, scene), (COLLISION_MEMBER, collision)):
+        native = zipped.read(NATIVE_MEMBER)
+    report = validate(scene, collision, native)
+    for name, data in ((SCENE_MEMBER, scene), (COLLISION_MEMBER, collision),
+                       (NATIVE_MEMBER, native)):
         target = root / pathlib.Path(name)
         target.parent.mkdir(parents=True, exist_ok=True)
         pending = target.with_name(target.name + ".pass117.tmp")
