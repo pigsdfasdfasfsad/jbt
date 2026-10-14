@@ -36,6 +36,10 @@ def test_owner_source_installer_is_sha_pinned_to_original_laboratory():
     }
     assert importer.SCENE_MEMBER == "Content/Maps/Laboratory.scene.jsonl.gz"
     assert importer.COLLISION_MEMBER == "Content/Collision/Laboratory.col26.gz"
+    assert importer.NATIVE_MEMBER == "Content/Geometry/Laboratory.native28.gz"
+    assert importer.NATIVE_SHA256 == (
+        "7a7600e8e4bc796faf2d6a178870f695960e346acad153b0d7139c0cc0fa8c01"
+    )
 
 
 def test_truncated_or_synthetic_pack_cannot_write_any_files(tmp_path):
@@ -44,6 +48,7 @@ def test_truncated_or_synthetic_pack_cannot_write_any_files(tmp_path):
     with zipfile.ZipFile(archive, "w") as z:
         z.writestr(importer.SCENE_MEMBER, b"this is not a source scene")
         z.writestr(importer.COLLISION_MEMBER, b"not a verified collision cache")
+        z.writestr(importer.NATIVE_MEMBER, b"not a verified native mesh cache")
     root = tmp_path / "game"
     root.mkdir()
     (root / "ThoseWhoRemainOffline.exe").write_bytes(b"CI synthetic non-executable")
@@ -83,12 +88,17 @@ def test_private_windows_packager_accepts_authenticated_source_and_collision():
     s = (ROOT / "build/Windows/package_private.ps1").read_text(encoding="utf8")
     assert "[string]$LaboratoryPack" in s
     assert "[string]$LaboratoryCollision" in s
+    assert "[string]$LaboratoryPrimitives" in s
     assert "twr-laboratory-scene-v1" in s
     assert "twr-source-map-v2" in s
     assert "272c478460c32bd332b7314eea0b69c08d0d78a34bfbfa1f796d6f059976f0d2" in s
     for count in ("34268", "1517", "836", "15", "127", "47", "18130", "4501", "180"):
         assert count in s
     assert "TWRCOL26" in s
+    assert "TWRINS28" in s
+    assert "18212" in s
+    assert "7a7600e8e4bc796faf2d6a178870f695960e346acad153b0d7139c0cc0fa8c01" in s
+    assert "Copy-Item -LiteralPath $LaboratoryPrimitives" in s
     assert "cacheSceneSha -ne $MapHashes['Laboratory']" in s
     assert "Copy-Item -LiteralPath $LaboratoryCollision" in s
     assert "Compress-Archive" in s
@@ -102,6 +112,7 @@ def test_original_map_prioritized_and_existing_fast_collision_consumes_pack():
     fast = (ROOT / "src/Twr.Godot/Scripts/Pass26CollisionRuntime.cs").read_text(encoding="utf8")
     assert 'var packName = mapName + ".scene.jsonl.gz";' in src
     assert "Pass26CollisionRuntime.TryBuild(stage, mapName, filePath)" in src
+    assert "Pass28PrimitiveStreamer.TryBuild(stage, mapName, filePath)" in src
     assert 'Str(header, "format") == "twr-source-map-v2"' in src
     assert 'Str(header, "map") != mapName' in src
     assert "LaboratorySourceLoader.TryBuild(this, MapName, out var recovered)" in world
@@ -115,6 +126,7 @@ def test_original_map_prioritized_and_existing_fast_collision_consumes_pack():
 def test_public_repo_does_not_contain_private_map_or_uploaded_original_xml():
     assert not (ROOT / "src/Twr.Godot/Content/Maps/Laboratory.scene.jsonl.gz").exists()
     assert not (ROOT / "src/Twr.Godot/Content/Collision/Laboratory.col26.gz").exists()
+    assert not (ROOT / "src/Twr.Godot/Content/Geometry/Laboratory.native28.gz").exists()
     assert not (ROOT / "TestPlace.zip").exists()
     ci = (ROOT / ".github/workflows/windows-build.yml").read_text(encoding="utf8")
     assert "twr-pass117-original-laboratory-private-installer" in ci
