@@ -117,6 +117,10 @@ try {
     $LabDest = Join-Path $MapDir 'Laboratory.scene.jsonl.gz'
     Copy-Item -LiteralPath $LaboratoryPack -Destination $LabDest -Force
     $MapHashes['Laboratory'] = (Get-FileHash -LiteralPath $LaboratoryPack -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($VerifiedV2Lab -and $MapHashes['Laboratory'] -ne
+        'b92efe792c93062a0741724f252949ec13cc828d601e277e21a1b13b1d02bb8c') {
+      throw 'Verified owner v2 source file SHA does not match Pass117 authenticated pack.'
+    }
 
     if ($LaboratoryCollision) {
       if (!$VerifiedV2Lab) {
@@ -145,6 +149,10 @@ try {
           }
         } finally { $reader.Dispose() }
       } finally { $bytes.Dispose() }
+      if ((Get-FileHash -LiteralPath $LaboratoryCollision -Algorithm SHA256).Hash.ToLowerInvariant() -ne
+          'a3067649db39d5f07be6600b642763fd846050c33b913f0d03dbfbed16468727') {
+        throw 'Pass117 original Laboratory collision cache SHA mismatch.'
+      }
       $CollisionStage = Join-Path $Content 'Collision'
       New-Item -ItemType Directory -Force -Path $CollisionStage | Out-Null
       Copy-Item -LiteralPath $LaboratoryCollision -Destination (Join-Path $CollisionStage 'Laboratory.col26.gz') -Force
