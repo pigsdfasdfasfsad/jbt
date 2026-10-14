@@ -1,6 +1,7 @@
 param(
   [string]$LaboratoryPack,
   [string]$LaboratoryCollision,
+  [string]$LaboratoryPrimitives,
   [string]$PrivateSourceZip,
   [string]$PrivateAssetsFolder,
   [string]$AuthorizedAudioFolder,
@@ -18,6 +19,9 @@ if ([bool]$LaboratoryPack -eq [bool]$PrivateSourceZip) {
 }
 if ($LaboratoryCollision -and !$LaboratoryPack) {
   throw '-LaboratoryCollision is valid only with an owner-private -LaboratoryPack.'
+}
+if ($LaboratoryPrimitives -and !$LaboratoryPack) {
+  throw '-LaboratoryPrimitives is valid only with an owner-private -LaboratoryPack.'
 }
 
 function Read-SceneHeader([string]$Path) {
@@ -156,6 +160,40 @@ try {
       $CollisionStage = Join-Path $Content 'Collision'
       New-Item -ItemType Directory -Force -Path $CollisionStage | Out-Null
       Copy-Item -LiteralPath $LaboratoryCollision -Destination (Join-Path $CollisionStage 'Laboratory.col26.gz') -Force
+    }
+
+    if ($LaboratoryPrimitives) {
+      if (!$VerifiedV2Lab) {
+        throw 'Pass117 native source Part/Wedge geometry requires authenticated v2 Laboratory scene.'
+      }
+      if (!(Test-Path -LiteralPath $LaboratoryPrimitives)) {
+        throw "Private Laboratory.native28.gz missing: $LaboratoryPrimitives"
+      }
+      if ((Get-FileHash -LiteralPath $LaboratoryPrimitives -Algorithm SHA256).Hash.ToLowerInvariant() -ne
+          '7a7600e8e4bc796faf2d6a178870f695960e346acad153b0d7139c0cc0fa8c01') {
+        throw 'Pass117 native Part geometry pack SHA mismatch.'
+      }
+      $bytes = [IO.File]::OpenRead((Resolve-Path -LiteralPath $LaboratoryPrimitives).Path)
+      try {
+        $gzip = [IO.Compression.GZipStream]::new($bytes, [IO.Compression.CompressionMode]::Decompress)
+        $reader = [IO.BinaryReader]::new($gzip)
+        try {
+          $magic = [Text.Encoding]::ASCII.GetString($reader.ReadBytes(8))
+          $version = $reader.ReadUInt32()
+          $nativeTileStuds = $reader.ReadUInt32()
+          $nativeParts = $reader.ReadUInt32()
+          $nativeSceneSha = [Convert]::ToHexString($reader.ReadBytes(32)).ToLowerInvariant()
+          $nativeTileCount = $reader.ReadUInt32()
+          if ($magic -ne 'TWRINS28' -or $version -ne 1 -or
+              $nativeTileStuds -ne 96 -or $nativeParts -ne 18212 -or
+              $nativeTileCount -ne 47 -or $nativeSceneSha -ne $MapHashes['Laboratory']) {
+            throw 'Original source Part geometry pack belongs to a different Laboratory scene.'
+          }
+        } finally { $reader.Dispose() }
+      } finally { $bytes.Dispose() }
+      $NativeStage = Join-Path $Content 'Geometry'
+      New-Item -ItemType Directory -Force -Path $NativeStage | Out-Null
+      Copy-Item -LiteralPath $LaboratoryPrimitives -Destination (Join-Path $NativeStage 'Laboratory.native28.gz') -Force
     }
   }
 
