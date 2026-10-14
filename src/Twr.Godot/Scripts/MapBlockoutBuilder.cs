@@ -190,7 +190,11 @@ public static class MapBlockoutBuilder
         // Pass115: visual-only dressing is scoped to THIS fallback
         // builder. The source-pack path calls LaboratorySourceLoader
         // instead, so original Roblox owner geometry remains untouched.
-        Pass115LaboratoryDressing.AddToFallback(root);
+        var props115=Pass115LaboratoryDressing.AddToFallback(root);
+        // Pass116 is material-only for the SAME source-absent blockout.
+        // Repaint existing mesh materials, never static collision bodies,
+        // player spawn/physics, original owner geometry or objective paths.
+        Pass116LaboratorySurfaceMaterials.AddToFallback(root,props115);
         return Layout(new Vector3(0, 1, 39),
             Points((-45,42),(45,42),(-42,-20),(42,-20),(0,-45),(25,-42)),
             Points((0,34),(-7,16),(8,16),(16,-28),(-16,-28),(28,5)),
