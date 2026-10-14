@@ -2,7 +2,17 @@
 
 Durable development repository for the standalone offline reconstruction of **Those Who Remain**.
 
-## Latest development: Pass 115 — screenshot-guided Laboratory interiors
+## Latest development: Pass 116 — procedural Laboratory floors and luminous equipment
+
+[Pass116 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass116-laboratory-surface-materials) ·
+[Pass116 engineering report](docs/development/PASS116_LABORATORY_SURFACE_MATERIALS.md) ·
+[Pass116 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass116-laboratory-surface-materials)
+
+- The source-absent Laboratory's formerly uniform-color boxes now have **five fully offline, deterministic tile/concrete/vinyl/acoustic texture patterns** on the existing **13 floor, wall and roof mesh surfaces**. Their true static collision, map entrance, navigation and objectives do not move. Server LEDs, monitoring screens and fluorescent diffuser meshes now emit light visually, and ten thin marked parking-bay stripes improve the garage's appearance without adding physics collision.
+- Pass116 uses locally authored small textures, **not original Roblox texture imports or owner screenshots**. Existing Pass115 reception, server-rack, research, ward, examination, parking and cafeteria objects stay in place. The owner-original Laboratory asset loader still takes precedence and these materials are only applied inside the approximation-only Laboratory fallback, never to other nine maps.
+- Native Windows `--smoke-pass116` builds real first-person gameplay on all 10 maps, asserts 5 generated 64×64 textures, 13 repainted render meshes, at least 28 lit status/diffuser parts, 10 noncolliding garage stripes, intact 4 original-floor colliders, Wave2 transitions and normal lobby returns. The preceding Pass115+Pass72 markers and all earlier Windows regression stages remain mandatory. **This still does not establish screenshot-level 1:1 fidelity or a distributable private-assets executable.**
+
+## Earlier verified development: Pass 115 — screenshot-guided Laboratory interiors
 
 [Pass115 source branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass115-laboratory-reference-dressing) ·
 [Pass115 engineering report](docs/development/PASS115_LABORATORY_REFERENCE_DRESSING.md) ·
