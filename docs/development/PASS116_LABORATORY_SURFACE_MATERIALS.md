@@ -49,6 +49,12 @@ The Windows gate demands native `TWR_SMOKE_PASS116_LAB_SURFACES_OK`, preserved P
 
 This improves **recognizable screenshot-derived surface categories**. It is not a 1:1 import of original tiled diffuse/normal/roughness maps, Roblox PBR shading, realistic light bounce, fixed prop transforms, accurate 3D silhouettes or source-authenticated original Laboratory geometry. Godot headless CI cannot establish rendered screenshot similarity. For exact visual comparison, capture local actual-game views with F12 using `FidelityCaptureRuntime` and compare against the owner's private originals. Do **not** publish those original PNG frames or generated source-asset streams.
 
-**Status:** Source and native CI must be evaluated at the exact latest commit before marking Pass116 verified. No public download artifact containing private assets is enabled.
+## Recorded Windows acceptance
+
+[GitHub Actions run 38503928944](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38503928944) built gameplay commit `bd254e471207a23d179bac092632ccb38dc7076f` successfully under pinned Godot/.NET for Windows. Its **dedicated Pass116 native Laboratory surfaces gate passed** with the real ten-map actor/wave lifecycle, after the old Pass111–115 native weapon/animation/Laboratory-dressing stages had also passed. Python validation, Windows compilation and executable verification were green.
+
+The longer navigation/Load/Repair/Escort/persistence/full historical matrix was **still running when this checkpoint was recorded**. A successful dedicated gate does not establish the entire workflow's ultimate conclusion or source screenshot pixel parity.
+
+**Status:** Pass116 implementation and dedicated exported-Windows visual-materials gameplay acceptance are verified. Full regression completion must be checked independently. No public download artifact containing private assets is enabled.
 
 [Pass116 branch](https://github.com/pigsdfasdfasfsad/jbt/tree/twr-pass116-laboratory-surface-materials) · [Pass116 Windows CI](https://github.com/pigsdfasdfasfsad/jbt/actions/workflows/windows-build.yml?query=branch%3Atwr-pass116-laboratory-surface-materials)
