@@ -11,7 +11,12 @@ def test_no_original_objective_locations_claimed():
     assert "ProvisionalSourceObjectives122 { get; init; }" in layout
     assert "ProvisionalSourceObjectives122 = true" in loader
     assert "if (_mapLayout.ProvisionalSourceObjectives122)" in game
-    assert "Pass122ProvisionalObjectiveSafety.TryFind(" in game
+    # Pass123 moved the physics query out of render-frame StartWave and
+    # into Pass123's physics-frame planner; Pass122 remains authoritative
+    # for the individual marker floor/capsule validation.
+    router=read("src/Twr.Godot/Scripts/Pass123ProvisionalObjectiveRouting.cs")
+    assert "Pass123ProvisionalObjectiveRouting.TryFind(" in game
+    assert "Pass122ProvisionalObjectiveSafety.TryFind(" in router
     assert "RejectedProvisionalObjectives122++" in game
     assert "VerifiedProvisionalObjectives122++" in game
     assert "AdjustedProvisionalObjectives122++" in game

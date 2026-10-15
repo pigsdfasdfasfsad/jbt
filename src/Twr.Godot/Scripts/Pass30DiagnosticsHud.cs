@@ -142,6 +142,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"P120 original loot: {Game?.VerifiedOriginalNaturalPickups120 ?? 0} grounded / {Game?.RejectedOriginalNaturalPickups120 ?? 0} rejected / {Game?.OriginalLootRespawns120 ?? 0} respawns\n" +
             $"P121 original player: {Game?.VerifiedOriginalPlayerSpawn121 ?? 0} validated / {Game?.RejectedOriginalPlayerSpawns121 ?? 0} rejected / alternate: {Game?.AlternativeOriginalPlayerSpawn121 ?? false} / blocked: {Game?.BlockedOriginalPlayerSpawn121 ?? false}\n" +
             $"P122 PROVISIONAL objectives: {Game?.VerifiedProvisionalObjectives122 ?? 0} supported / {Game?.RejectedProvisionalObjectives122 ?? 0} rejected / {Game?.AdjustedProvisionalObjectives122 ?? 0} adjusted (NOT recovered originals)\n" +
+            $"P123 provisional routes: {Game?.Pass123ReachableProvisionalObjectives ?? 0} reachable / {Game?.Pass123BlockedProvisionalObjectives ?? 0} invalid corridors / {Game?.Pass123DuplicateProvisionalCandidates ?? 0} duplicate / {Game?.Pass123AlternateProvisionalObjectives ?? 0} alternate\n" +
             $"Managed memory: {GC.GetTotalMemory(false) / 1048576} MiB";
     }
 
@@ -256,6 +257,10 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 pass122_provisional_objectives_verified = Game?.VerifiedProvisionalObjectives122 ?? 0,
                 pass122_provisional_objectives_rejected = Game?.RejectedProvisionalObjectives122 ?? 0,
                 pass122_provisional_objectives_adjusted = Game?.AdjustedProvisionalObjectives122 ?? 0,
+                pass123_reachable_provisional_objectives = Game?.Pass123ReachableProvisionalObjectives ?? 0,
+                pass123_blocked_provisional_objectives = Game?.Pass123BlockedProvisionalObjectives ?? 0,
+                pass123_duplicate_provisional_candidates = Game?.Pass123DuplicateProvisionalCandidates ?? 0,
+                pass123_alternate_provisional_objectives = Game?.Pass123AlternateProvisionalObjectives ?? 0,
                 managed_memory_bytes = GC.GetTotalMemory(false)
             };
             var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass33_Diagnostics.json");

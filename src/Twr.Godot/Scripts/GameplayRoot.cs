@@ -94,6 +94,18 @@ public partial class GameplayRoot : Node3D
     public int VerifiedProvisionalObjectives122 { get; private set; }
     public int RejectedProvisionalObjectives122 { get; private set; }
     public int AdjustedProvisionalObjectives122 { get; private set; }
+    // Source-neutral objective creation is split across physics and idle
+    // frames so DirectSpaceState queries never run from render-frame
+    // StartWave, and Node3D actor/collider allocation never runs inside
+    // a physics callback.
+    private bool _sourceObjectivePlanPending123;
+    private bool _sourceObjectivePlanReady123;
+    private int _sourceObjectiveCount123;
+    private readonly Vector3?[] _sourceObjectivePositions123 = new Vector3?[2];
+    public int Pass123ReachableProvisionalObjectives { get; private set; }
+    public int Pass123BlockedProvisionalObjectives { get; private set; }
+    public int Pass123DuplicateProvisionalCandidates { get; private set; }
+    public int Pass123AlternateProvisionalObjectives { get; private set; }
     private int _sourcePlayerPhysicsFrames121;
     public int VerifiedFallbackNaturalPickups86 { get; private set; }
     public int RejectedFallbackNaturalPickups86 { get; private set; }
@@ -399,6 +411,31 @@ public partial class GameplayRoot : Node3D
             _pendingOriginalLoot120 = false;
             SpawnNaturalPickups();
         }
+        if (_sourceObjectivePlanPending123)
+        {
+            _sourceObjectivePlanPending123 = false;
+            var reserved = new List<Vector3>(2);
+            for (var i = 0; i < _sourceObjectiveCount123; i++)
+            {
+                var candidate = Pass123ProvisionalObjectiveRouting.TryFind(
+                    GetWorld3D(), _provisionalObjectiveAnchors122,
+                    i, _player.GlobalPosition, _player.GetRid(), reserved,
+                    out var alternate, out var rejected, out var duplicates);
+                _sourceObjectivePositions123[i] = candidate;
+                Pass123BlockedProvisionalObjectives += rejected;
+                Pass123DuplicateProvisionalCandidates += duplicates;
+                if (candidate.HasValue)
+                {
+                    reserved.Add(candidate.Value);
+                    Pass123ReachableProvisionalObjectives++;
+                    if (alternate) Pass123AlternateProvisionalObjectives++;
+                }
+                else RejectedProvisionalObjectives122++;
+            }
+            // The next _Process creates objective colliders and UI only
+            // AFTER physics callbacks and shape queries finish.
+            _sourceObjectivePlanReady123 = true;
+        }
         // Original source loot must probe current PhysicsServer collision
         // while inside a physics tick; the fallback retains _Process timing.
         TickNaturalRespawns(delta);
@@ -410,7 +447,13 @@ public partial class GameplayRoot : Node3D
         if (Runtime?.Player is null || Runtime.Match is null) return;
         // Do not advance source gameplay wave timers while physical player
         // placement is pending; the rest of the source map is still loading.
-        if (_sourcePlayerPlacementPending121) return;
+        if (_sourcePlayerPlacementPending121 ||
+            _sourceObjectivePlanPending123) return;
+        if (_sourceObjectivePlanReady123 && !_finished)
+        {
+            _sourceObjectivePlanReady123 = false;
+            SpawnWaveObjectives();
+        }
         // Suppress the HUD plus only while the reconstructed optic
         // reticle is actually displayed; non-scoped weapons retain
         // the existing crosshair without gameplay input changes.
@@ -697,7 +740,18 @@ public partial class GameplayRoot : Node3D
             _supplyQueuedForNextWave=false;
             _queuedSupplySeconds=3.0;
         }
-        SpawnWaveObjectives();
+        if (_mapLayout.ProvisionalSourceObjectives122)
+        {
+            // The stage clock/authority starts now, but original source
+            // provisional objective positions need genuine PhysicsServer
+            // floor queries on the next fixed physics callback.
+            _sourceObjectiveCount123 = _rng.RandiRange(1, 2);
+            Array.Clear(_sourceObjectivePositions123, 0,
+                _sourceObjectivePositions123.Length);
+            _sourceObjectivePlanPending123 = true;
+            _sourceObjectivePlanReady123 = false;
+        }
+        else SpawnWaveObjectives();
         _audio.Play("wave");
         var currentWave = Runtime.Match.Wave;
         _hud.SetBanner(currentWave == ReleaseRules.MaxWaves ? "FINAL WAVE" : $"WAVE {currentWave}");
@@ -707,6 +761,8 @@ public partial class GameplayRoot : Node3D
     {
         if (Runtime?.Match is null) return;
         _stage = Stage.WaveEnd;
+        _sourceObjectivePlanPending123 = false;
+        _sourceObjectivePlanReady123 = false;
         _stageTime = RegularWaveRules.WaveEndSeconds;
         var survivedWave = Runtime.Match.Wave;
         Runtime.AwardWaveSurvival(survivedWave, _completedObjectivesThisWave, 1);
@@ -756,21 +812,20 @@ public partial class GameplayRoot : Node3D
         var wave = Runtime.Match.Wave;
 
         // RECOVERED rule: Regular starts one or two objectives every wave.
-        var count = _rng.RandiRange(1, 2);
+        var count = _mapLayout.ProvisionalSourceObjectives122
+            ? _sourceObjectiveCount123
+            : _rng.RandiRange(1, 2);
         for (var i = 0; i < count; i++)
         {
             var family = families[(wave - 1 + i * 2) % families.Length];
             var position = ObjectivePosition(i);
             if (_mapLayout.ProvisionalSourceObjectives122)
             {
-                var candidate = Pass122ProvisionalObjectiveSafety.TryFind(
-                    GetWorld3D(), _provisionalObjectiveAnchors122,
-                    i, _player.GlobalPosition, _player.GetRid());
-                if (!candidate.HasValue)
-                {
-                    RejectedProvisionalObjectives122++;
-                    continue; // Never instantiate unreachable guessed locations.
-                }
+                // Positions already validated in _PhysicsProcess. Rendering
+                // creates real ObjectiveRuntime actors only after the
+                // physics callback has returned. No render-frame raycasts.
+                var candidate = _sourceObjectivePositions123[i];
+                if (!candidate.HasValue) continue;
                 VerifiedProvisionalObjectives122++;
                 if (position.DistanceTo(candidate.Value) > .25f)
                     AdjustedProvisionalObjectives122++;
@@ -1450,6 +1505,8 @@ public partial class GameplayRoot : Node3D
         if (!won) Runtime?.FailMatch("All players dead");
 
         _finished = true;
+        _sourceObjectivePlanPending123 = false;
+        _sourceObjectivePlanReady123 = false;
         _stage = Stage.Results;
         ClearInfected();
         ClearObjectives();
