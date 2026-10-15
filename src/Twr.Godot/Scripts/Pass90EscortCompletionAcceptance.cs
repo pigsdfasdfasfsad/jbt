@@ -21,13 +21,13 @@ public partial class Pass90EscortCompletionAcceptance : Node
             await Run();
             GD.Print("TWR_SMOKE_PASS90_ESCORT_COMPLETION_OK"+
                 " map=Ranch wave=5 authentic_retail_geometry_unverified=true");
-            GetTree().Quit(0);
+            RuntimeShutdownCoordinator.Request(GetTree(), 0);
         }
         catch(Exception e)
         {
             GD.PushError("TWR_SMOKE_PASS90_ESCORT_COMPLETION_FAILED "+
                 e.GetType().Name+" "+e.Message+"\n"+e.StackTrace);
-            GetTree().Quit(1);
+            RuntimeShutdownCoordinator.Request(GetTree(), 1);
         }
     }
 

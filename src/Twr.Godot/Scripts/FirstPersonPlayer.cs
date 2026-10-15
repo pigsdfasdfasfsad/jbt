@@ -6,6 +6,25 @@ namespace Twr.Godot;
 public partial class FirstPersonPlayer : CharacterBody3D
 {
     public LocalSessionNode? Runtime { get; set; }
+    public bool GameplayControlsEnabled { get; private set; } = true;
+
+    public void SetGameplayControlsEnabled(bool enabled)
+    {
+        GameplayControlsEnabled = enabled;
+        SetProcessUnhandledInput(enabled);
+        if (enabled) return;
+        Velocity = Vector3.Zero;
+        _reloadTimer = 0;
+        _reloadWeapon = null;
+        _jumpRequested = false;
+        _jumpRequestRemaining73 = 0;
+        _aiming = false;
+        if (_camera is not null && GodotObject.IsInstanceValid(_camera))
+        {
+            ResetSourceAimVisual67();
+            ResetSourceScope69();
+        }
+    }
     public OfflineAudioRuntime? Audio { get; set; }
     public string EquippedWeaponName => _equippedWeapon;
     // Read-only diagnostics for exported native player-input acceptance.
@@ -129,6 +148,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (!GameplayControlsEnabled) return;
         // Reset the one-pickup-per-press budget even when the final nearby
         // pickup has already been freed and no PickupActor remains alive.
         Pass76InteractionSafety.ObservePickupKey(
@@ -216,6 +236,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        if (!GameplayControlsEnabled) return;
         // Dead players cannot begin reloads, fire, throw items or queue jumps.
         // GameplayRoot retains control of results-screen restart/menu actions.
         if (Runtime?.Player is null || !Runtime.Player.IsAlive)
@@ -419,6 +440,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     private void TryThrowThrowable()
     {
+        if (!GameplayControlsEnabled) return;
         if(_heldThrowable is null || Runtime is null || _actionCooldown>0)return;
         var type=_heldThrowable;
         if(!Runtime.ConsumeItem(type)){_heldThrowable=null;ApplyViewModel();return;}
@@ -440,6 +462,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     private void BeginReload()
     {
+        if (!GameplayControlsEnabled) return;
         if (_reloadTimer > 0 || Runtime?.Player is null) return;
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
         if (spec.IsMelee || spec.Magazine <= 0) return;
@@ -457,6 +480,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     private void TryUseWeapon()
     {
+        if (!GameplayControlsEnabled) return;
         if (_actionCooldown > 0 || _reloadTimer > 0 || _equipTimer > 0 || Runtime?.Player is null || !Runtime.Player.IsAlive) return;
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
 

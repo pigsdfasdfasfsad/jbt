@@ -14,7 +14,11 @@ def test_native_smoke_does_not_quit_from_physics_callback():
     source = read("src/Twr.Godot/Scripts/Pass92ExpresswayEscortAcceptance.cs")
     assert "ScheduleQuitOnIdle(0);" in source
     assert "ScheduleQuitOnIdle(1);" in source
-    assert 'GetTree().CallDeferred("quit", exitCode);' in source
+    assert 'RuntimeShutdownCoordinator.Request(GetTree(), exitCode);' in source
+    shutdown = read("src/Twr.Godot/Scripts/RuntimeShutdownCoordinator.cs")
+    assert 'tree.CallDeferred("quit", _exitCode);' in shutdown
+    assert 'GC.WaitForPendingFinalizers();' in shutdown
+    assert 'child.QueueFree();' in shutdown
     assert "GetTree().Quit(0)" not in source
     assert "GetTree().Quit(1)" not in source
     assert "SceneTree.SignalName.ProcessFrame" in source

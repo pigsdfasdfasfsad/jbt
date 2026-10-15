@@ -34,7 +34,13 @@ public partial class Bootstrap : Node
     {
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
+        AddChild(new RuntimeWindowCloseHandler { Name = "RuntimeWindowClose" });
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-runtime-readiness",StringComparer.Ordinal))
+        {
+            AddChild(new RuntimeReadinessAcceptance { Runtime = _runtime });
+            return;
+        }
         if(args.Contains("--smoke-pass123",StringComparer.Ordinal))
         {
             AddChild(new Pass123ProvisionalObjectiveAcceptance

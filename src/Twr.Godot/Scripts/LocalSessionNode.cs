@@ -111,7 +111,13 @@ public partial class LocalSessionNode : Node
             smoke96Replay ? "user://pass96-full-match-replay-smoke-profile.json" :
             smoke96 ? "user://pass96-material-objectives-smoke-profile.json" :
             "user://profile.json");
+        var runtimeReadinessSmoke = OS.GetCmdlineUserArgs().Contains(
+            "--smoke-runtime-readiness", StringComparer.Ordinal);
+        if (runtimeReadinessSmoke)
+            save = ProjectSettings.GlobalizePath(
+                "user://runtime-readiness-smoke-profile.json");
         var store = new JsonProfileStore(save);
+        if (runtimeReadinessSmoke) store.Save(new Profile());
         if(smoke70 || smoke71)
             store.Save(new Profile());
         else if(smoke72)

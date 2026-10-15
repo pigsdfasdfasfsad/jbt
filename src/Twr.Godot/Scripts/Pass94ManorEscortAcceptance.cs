@@ -24,13 +24,13 @@ public partial class Pass94ManorEscortAcceptance : Node
             GD.Print("TWR_SMOKE_PASS94_MANOR_STAIR_ESCORT_OK"+
                 " map=Manor wave=5 actual_physical_descent=true"+
                 " retail_map_and_animation_unverified=true");
-            GetTree().Quit(0);
+            RuntimeShutdownCoordinator.Request(GetTree(), 0);
         }
         catch(Exception e)
         {
             GD.PushError("TWR_SMOKE_PASS94_MANOR_STAIR_ESCORT_FAILED "+
                 e.GetType().Name+" "+e.Message+"\n"+e.StackTrace);
-            GetTree().Quit(1);
+            RuntimeShutdownCoordinator.Request(GetTree(), 1);
         }
     }
 

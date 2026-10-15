@@ -42,7 +42,7 @@ public partial class Pass92ExpresswayEscortAcceptance : Node
         // Leave the physics signal dispatcher before Godot performs final
         // managed/native object disposal. Windows CI still requires the
         // actual child-process exit code to be 0 on success.
-        GetTree().CallDeferred("quit", exitCode);
+        RuntimeShutdownCoordinator.Request(GetTree(), exitCode);
     }
 
     private async Task Frames(int count)

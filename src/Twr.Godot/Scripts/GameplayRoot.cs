@@ -309,6 +309,7 @@ public partial class GameplayRoot : Node3D
             // Do not move/attack from an unverified ORIGINAL player marker.
             // PhysicsServer requires the loaded source world to have
             // entered its first simulation frames before checking it.
+            _player.SetGameplayControlsEnabled(false);
             _player.SetPhysicsProcess(false);
             _sourcePlayerPlacementPending121 = true;
             _sourcePlayerPhysicsFrames121 = 2;
@@ -390,6 +391,7 @@ public partial class GameplayRoot : Node3D
             _player.Velocity = Vector3.Zero;
             VerifiedOriginalPlayerSpawn121++;
             AlternativeOriginalPlayerSpawn121 = alternateOriginal;
+            _player.SetGameplayControlsEnabled(true);
             _player.SetPhysicsProcess(true);
             if (_mapLayout.ProvisionalSourceObjectives122)
             {
@@ -445,6 +447,14 @@ public partial class GameplayRoot : Node3D
     {
         Pass43FrameTimes.Record(delta, ActiveInfectedCount);
         if (Runtime?.Player is null || Runtime.Match is null) return;
+        // Death must win over pending source/physics readiness.
+        // Otherwise _PhysicsProcess stops planning for a dead player
+        // while _Process waits forever for that plan to finish.
+        if (!_finished && !Runtime.Player.IsAlive)
+        {
+            Finish(false, "YOU DIED");
+            return;
+        }
         // Do not advance source gameplay wave timers while physical player
         // placement is pending; the rest of the source map is still loading.
         if (_sourcePlayerPlacementPending121 ||
@@ -522,6 +532,7 @@ public partial class GameplayRoot : Node3D
 
     private void OnPresentationEvent(string eventName)
     {
+        if (_finished || !IsInsideTree() || IsQueuedForDeletion()) return;
         if(eventName=="PlayerDamagedEvent")
         {
             _hud.FlashDamage();
@@ -1505,6 +1516,11 @@ public partial class GameplayRoot : Node3D
         if (!won) Runtime?.FailMatch("All players dead");
 
         _finished = true;
+        _sourcePlayerPlacementPending121 = false;
+        _pendingOriginalLoot120 = false;
+        _naturalRespawns.Clear();
+        _player.SetGameplayControlsEnabled(false);
+        StopTransientActors();
         _sourceObjectivePlanPending123 = false;
         _sourceObjectivePlanReady123 = false;
         _stage = Stage.Results;
@@ -1559,12 +1575,30 @@ public partial class GameplayRoot : Node3D
         _pass43RetiredJumpFailures += actor.SourceJumpFailures;
     }
 
+    private void StopTransientActors()
+    {
+        foreach (var child in GetChildren())
+        {
+            if (child is not (SporeCloudRuntime or SporeProjectileRuntime or
+                ThrowableProjectileRuntime or SupplyDropRuntime)) continue;
+            if (child is SupplyDropRuntime drop) drop.Landed = null;
+            child.SetProcess(false);
+            child.SetPhysicsProcess(false);
+            child.QueueFree();
+        }
+        _supplyDrops.Clear();
+        _queuedSupplySeconds = -1;
+        _supplyQueuedForNextWave = false;
+    }
+
     private void ClearInfected()
     {
         foreach (var infected in _infected.ToArray())
         {
             if (!GodotObject.IsInstanceValid(infected)) continue;
             RetirePass43Traversal(infected);
+            infected.Died = null;
+            infected.SpecialAttackRequested = null;
             infected.QueueFree();
         }
         _infected.Clear();
