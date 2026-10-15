@@ -25,3 +25,11 @@ The process then returned Windows `-1073740940` (`0xC0000374`, heap-corruption t
 These changes are code and CI hardening until the new Pass118 GitHub Actions workflow completes. A clean Windows exit has **not** been demonstrated merely by committing this pass. A native crash, even after correct gameplay markers, remains a failure to be investigated and not a reason to disable tests.
 
 The Pass117 owner-private original Laboratory pack remains external to GitHub and unchanged.
+
+## Root-cause improvement — detached special-infected transforms
+
+A second Pass117 error came from `GameplayRoot.OnInfectedSpecialAttack`, at original source line 1219. A Bloater physics callback assigned `GlobalPosition` in the detached `SporeProjectileRuntime` initializer before its `AddChild`. Godot logged `!is_inside_tree()` and `Node3D.SetGlobalPosition`; a fatal `System.AccessViolationException` followed in the Pass90 run. The Burster cloud used the same detached-node pattern.
+
+Pass118 now preserves the authored WORLD spawns by converting to parent-local `Position = ToLocal(...)` before attachment. The projectile `_Ready()` sees the intended spawn transform and can compute its initial direction correctly. Guards prevent late projectiles during level teardown. Combat reward authority, original source damage and blast radii remain unchanged.
+
+Pass118 additionally runs the native Pass74 special-infected physics tests and rejects detached-node or native-memory exceptions during Pass90. This is an attempted remediation until both full export and native process tests pass; static Python checks do not prove Godot behavior.

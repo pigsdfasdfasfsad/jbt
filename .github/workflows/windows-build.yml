@@ -2087,6 +2087,28 @@ jobs:
             throw "Pass89 exported Windows real Escort navigation failed. Exit: $($run.ExitCode)"
           }
 
+      - name: Pass 118 native Bloater projectile and Burster cloud placement
+        if: success() && github.ref_name == 'twr-pass118-stable-native-shutdown'
+        shell: pwsh
+        run: |
+          $stdout = Join-Path $env:RUNNER_TEMP 'pass118-specials.stdout.txt'
+          $stderr = Join-Path $env:RUNNER_TEMP 'pass118-specials.stderr.txt'
+          $exe = (Resolve-Path 'build/output/ThoseWhoRemainOffline.exe').Path
+          $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--verbose','--quit-after','2400','--','--smoke-pass74') -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          $output = @()
+          if (Test-Path $stdout) { $output += Get-Content $stdout }
+          if (Test-Path $stderr) { $output += Get-Content $stderr }
+          $output | ForEach-Object { Write-Host $_ }
+          foreach ($marker in @('TWR_PASS74_BOLTER_RESISTANCE_OK','TWR_PASS74_HAZARDS_OK','TWR_SMOKE_PASS74_SPECIAL_INFECTED_OK')) {
+            if (-not ($output | Where-Object { "$_" -match "$marker" })) {
+              throw "Pass118 special-infected simulation did not reach $marker"
+            }
+          }
+          if ($run.ExitCode -ne 0 -or
+              ($output | Where-Object { "$_" -match 'Fatal error|System.AccessViolationException|!is_inside_tree\(\)|Node3D.SetGlobalPosition' })) {
+            throw "Pass118 special-infected runtime leaked native errors or exited nonzero: $($run.ExitCode)"
+          }
+
       - name: Smoke Pass 90 real Wave5 Escort ground arrival and exactly-once reward
         if: success() && ((github.ref_name == 'twr-pass106-material-models-and-carry-view' || (github.ref_name == 'twr-pass107-carry-aim-safe-presentation' || (github.ref_name == 'twr-pass108-native-carry-ads-frustum' || (github.ref_name == 'twr-pass109-reference-generator-repair-icon' || (github.ref_name == 'twr-pass110-repair-vehicle-assembly' || (github.ref_name == 'twr-pass111-bounded-infected-corpse-fall' || (github.ref_name == 'twr-pass112-articulated-infected-death-pose' || (github.ref_name == 'twr-pass113-ground-contact-corpse-settling' || (github.ref_name == 'twr-pass114-slope-aligned-corpse-settling' || (github.ref_name == 'twr-pass115-laboratory-reference-dressing' || (github.ref_name == 'twr-pass116-laboratory-surface-materials' || (github.ref_name == 'twr-pass117-original-laboratory-private-installer' || github.ref_name == 'twr-pass118-stable-native-shutdown')))))))))))) || (((github.ref_name == 'twr-pass101-spawn-objective-walk' || (github.ref_name == 'twr-pass102-remaining-spawn-ingress' || (github.ref_name == 'twr-pass103-full-physical-load' || (github.ref_name == 'twr-pass104-full-physical-repair' || github.ref_name == 'twr-pass105-live-objective-threat')))) || ((github.ref_name == 'twr-pass90-escort-completion-rewards' || github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || (github.ref_name == 'twr-pass96-grounded-material-objectives' || github.ref_name == 'twr-pass97-unified-gameplay' || github.ref_name == 'twr-pass98-material-objective-completion'))))))
         shell: pwsh
@@ -2103,6 +2125,10 @@ jobs:
             if(-not ($output | Where-Object {"$_" -match $marker})){throw "Missing Pass90 native marker $marker"}
           }
           if($run.ExitCode -ne 0){throw "Pass90 native Escort failed: $($run.ExitCode)"}
+          if ($env:GITHUB_REF_NAME -eq 'twr-pass118-stable-native-shutdown' -and
+              ($output | Where-Object { "$_" -match 'Fatal error|System.AccessViolationException|!is_inside_tree\(\)|Node3D.SetGlobalPosition' })) {
+            throw "Pass118 Pass90 emitted native memory corruption or detached-node transform errors"
+          }
 
       - name: Smoke Pass 91 native eight-map physically validated Escort completion
         if: success() && ((github.ref_name == 'twr-pass106-material-models-and-carry-view' || (github.ref_name == 'twr-pass107-carry-aim-safe-presentation' || (github.ref_name == 'twr-pass108-native-carry-ads-frustum' || (github.ref_name == 'twr-pass109-reference-generator-repair-icon' || (github.ref_name == 'twr-pass110-repair-vehicle-assembly' || (github.ref_name == 'twr-pass111-bounded-infected-corpse-fall' || (github.ref_name == 'twr-pass112-articulated-infected-death-pose' || (github.ref_name == 'twr-pass113-ground-contact-corpse-settling' || (github.ref_name == 'twr-pass114-slope-aligned-corpse-settling' || (github.ref_name == 'twr-pass115-laboratory-reference-dressing' || (github.ref_name == 'twr-pass116-laboratory-surface-materials' || (github.ref_name == 'twr-pass117-original-laboratory-private-installer' || github.ref_name == 'twr-pass118-stable-native-shutdown')))))))))))) || (((github.ref_name == 'twr-pass101-spawn-objective-walk' || (github.ref_name == 'twr-pass102-remaining-spawn-ingress' || (github.ref_name == 'twr-pass103-full-physical-load' || (github.ref_name == 'twr-pass104-full-physical-repair' || github.ref_name == 'twr-pass105-live-objective-threat')))) || ((github.ref_name == 'twr-pass91-multimap-escort' || github.ref_name == 'twr-pass92-expressway-escort' || github.ref_name == 'twr-pass93-escort-completion-safety' || github.ref_name == 'twr-pass94-manor-stair-escort' || github.ref_name == 'twr-pass95-manor-escort-rotation' || (github.ref_name == 'twr-pass96-grounded-material-objectives' || github.ref_name == 'twr-pass97-unified-gameplay' || github.ref_name == 'twr-pass98-material-objective-completion'))))))

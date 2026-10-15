@@ -1215,7 +1215,16 @@ public partial class GameplayRoot : Node3D
 
     private void OnInfectedSpecialAttack(InfectedAgent infected)
     {
-        if (infected.InfectedType != "Bloater") return;
+        if (infected.InfectedType != "Bloater" || _finished ||
+            !IsInsideTree() || IsQueuedForDeletion() ||
+            !GodotObject.IsInstanceValid(infected) ||
+            !GodotObject.IsInstanceValid(_player) ||
+            Runtime?.Player?.IsAlive != true) return;
+
+        // In Godot GlobalPosition is invalid on detached Node3D instances.
+        // Compute parent-relative Position before AddChild, so _Ready sees
+        // the exact world position and computes the correct launch vector.
+        var spawnGlobalPosition = infected.GlobalPosition + Vector3.Up * 1.2f;
         AddChild(new SporeProjectileRuntime
         {
             Name = "BloaterSpore",
@@ -1223,19 +1232,22 @@ public partial class GameplayRoot : Node3D
             Target = _player,
             Damage = 26.4f,
             Radius = 15f, // Source spore radius is in Roblox studs.
-            GlobalPosition = infected.GlobalPosition + Vector3.Up * 1.2f
+            Position = ToLocal(spawnGlobalPosition)
         });
     }
 
     private void SpawnBursterHazard(Vector3 position)
     {
-        const float blastRadius = 20f; // Source Burster radius, Roblox studs.
+        if (!IsInsideTree() || IsQueuedForDeletion()) return;
+        const float blastRadius = 20f; // Source Burster radius is in Roblox studs.
         if (Runtime?.Player?.IsAlive == true &&
             Pass74SpecialInfectedSafety.CanHitPlayerWithBlast(
                 GetWorld3D(), position, _player,
                 RobloxUnits.Distance(blastRadius)))
             Runtime.DamagePlayer(27.5f, "Burster detonation");
 
+        // Attach this cloud using local Position, not the invalid global
+        // transform setter on a detached node.
         AddChild(new SporeCloudRuntime
         {
             Name = "BursterSporeCloud",
@@ -1244,7 +1256,7 @@ public partial class GameplayRoot : Node3D
             Radius = blastRadius,
             TickDamage = 5f,
             DurationSeconds = 4.0,
-            GlobalPosition = position
+            Position = ToLocal(position)
         });
     }
 
