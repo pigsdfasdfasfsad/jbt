@@ -138,6 +138,8 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Ground-checked rescues: {Game?.AssistedInfectedRecoveryCount ?? 0}\n" +
             $"F9 near (14/10m): {Game?.Pass40AdaptiveNearSpawns ?? 0} spawns, {Game?.Pass40AdaptiveNearRecoveries ?? 0} rescues\n" +
             $"Unsafe candidates rejected: {Game?.RejectedAssistedSpawnAttempts ?? 0}\n" +
+            $"P119 source spawns: {Game?.VerifiedSourceSpawns119 ?? 0} grounded / {Game?.RejectedSourceSpawns119 ?? 0} rejected / {Game?.AlternateSourceMarkers119 ?? 0} alternate\n" +
+            $"P120 original loot: {Game?.VerifiedOriginalNaturalPickups120 ?? 0} grounded / {Game?.RejectedOriginalNaturalPickups120 ?? 0} rejected / {Game?.OriginalLootRespawns120 ?? 0} respawns\n" +
             $"Managed memory: {GC.GetTotalMemory(false) / 1048576} MiB";
     }
 
@@ -239,6 +241,12 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 assisted_infected_spawn_count = Game?.AssistedInfectedSpawnCount ?? 0,
                 assisted_physics_checked_recoveries = Game?.AssistedInfectedRecoveryCount ?? 0,
                 unsafe_assisted_spawn_attempts = Game?.RejectedAssistedSpawnAttempts ?? 0,
+                pass119_supported_original_spawns = Game?.VerifiedSourceSpawns119 ?? 0,
+                pass119_rejected_original_spawns = Game?.RejectedSourceSpawns119 ?? 0,
+                pass119_alternate_original_spawns = Game?.AlternateSourceMarkers119 ?? 0,
+                pass120_supported_original_pickups = Game?.VerifiedOriginalNaturalPickups120 ?? 0,
+                pass120_rejected_original_pickups = Game?.RejectedOriginalNaturalPickups120 ?? 0,
+                pass120_original_loot_respawns = Game?.OriginalLootRespawns120 ?? 0,
                 managed_memory_bytes = GC.GetTotalMemory(false)
             };
             var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass33_Diagnostics.json");

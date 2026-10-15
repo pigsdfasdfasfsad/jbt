@@ -72,7 +72,10 @@ public partial class GameplayRoot : Node3D
     // not expose this interval directly.
     private const double NaturalRespawnMinSeconds=20.0;
     private const double NaturalRespawnMaxSeconds=20.0;
-    private readonly record struct NaturalRespawn(Vector3 Position,string Group,double Remaining);
+    // Original-source pickup retries keep the ORIGINAL marker rather than
+    // an offset render centre. Temporary collision blocks can later clear.
+    private readonly record struct NaturalRespawn(
+        Vector3 Position,string Group,double Remaining,int Attempts=0);
     private bool _finished;
     private PauseOverlayRuntime? _pauseOverlay;
     public ulong MapLoadMilliseconds { get; private set; }
@@ -84,6 +87,12 @@ public partial class GameplayRoot : Node3D
     public int AlternateSourceMarkers119 { get; private set; }
     public int VerifiedFallbackNaturalPickups86 { get; private set; }
     public int RejectedFallbackNaturalPickups86 { get; private set; }
+    // Pass120 source-only pickup placement counters; diagnostics only.
+    public int VerifiedOriginalNaturalPickups120 { get; private set; }
+    public int RejectedOriginalNaturalPickups120 { get; private set; }
+    public int OriginalLootRespawns120 { get; private set; }
+    private bool _pendingOriginalLoot120;
+    private int _originalLootPhysicsFrames120;
     public int VerifiedFallbackEscortStarts91 { get; private set; }
     public int RejectedFallbackEscortStarts91 { get; private set; }
     public int AdjustedFallbackEscortStarts91 { get; private set; }
@@ -300,13 +309,37 @@ public partial class GameplayRoot : Node3D
         _fortifications.StatusChanged = status => _hud.SetUtility(status);
         AddChild(_fortifications);
 
-        SpawnNaturalPickups();
+        // The source scene's static bodies must enter PhysicsServer before
+        // ray/capsule queries. The original loot starts after two physics
+        // frames; approximate blockout maps retain legacy immediate setup.
+        if (_isFallbackScene86) SpawnNaturalPickups();
+        else
+        {
+            _pendingOriginalLoot120 = true;
+            _originalLootPhysicsFrames120 = 2;
+        }
         AddChild(new Pass30DiagnosticsHud { Name = "Pass30Diagnostics", Game = this, MapName = MapName });
         MapLoadMilliseconds = Time.GetTicksMsec() - startup;
         GD.Print($"TWR_PASS30_STARTUP map={MapName} milliseconds={MapLoadMilliseconds} " +
             $"source_nav={_sourceNavigator is not null} " +
             $"streamed={GetNodeOrNull<Pass28PrimitiveStreamer>("Recovered" + MapName + "/Pass28PrimitiveStream") is not null} " +
             $"batched_collision={GetNodeOrNull<Node3D>("Recovered" + MapName + "/Pass26Collision") is not null}");
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        if (_isFallbackScene86 || _finished || !IsInsideTree() ||
+            IsQueuedForDeletion() || Runtime?.Player?.IsAlive != true)
+            return;
+        if (_pendingOriginalLoot120)
+        {
+            if (--_originalLootPhysicsFrames120 > 0) return;
+            _pendingOriginalLoot120 = false;
+            SpawnNaturalPickups();
+        }
+        // Original source loot must probe current PhysicsServer collision
+        // while inside a physics tick; the fallback retains _Process timing.
+        TickNaturalRespawns(delta);
     }
 
     public override void _Process(double delta)
@@ -321,7 +354,7 @@ public partial class GameplayRoot : Node3D
 
         if(!_finished)
         {
-            TickNaturalRespawns(delta);
+            if (_isFallbackScene86) TickNaturalRespawns(delta);
             TickAssistedInfectedRecovery(delta);
         }
 
@@ -831,27 +864,26 @@ public partial class GameplayRoot : Node3D
 
     private void SpawnNaturalPickups()
     {
-        // Owner-authored map markers preserve their pre-Pass86 exact policy,
-        // including the four item and two fortification selections.
+        // Source-authored item/fortification markers are evidence, not a
+        // guarantee that missing cloud MeshParts have standing collision.
+        // Scan the complete original pool once in random non-repeating order
+        // until four items and two forts have real supported source X/Z.
         if (!_isFallbackScene86)
         {
-            foreach (var position in ChooseUniqueMarkers(_mapLayout.PickupPoints, 4))
-                SpawnNaturalAt(position, "Item");
-            if (_mapLayout.FortificationPoints.Count > 0)
-            {
-                foreach (var position in ChooseUniqueMarkers(_mapLayout.FortificationPoints, 2))
-                    SpawnNaturalAt(position, "Fortification");
-            }
-            else
-            {
-                var fortCount=Math.Min(2,_mapLayout.PickupPoints.Count);
-                for(var i=0;i<fortCount;i++)
-                {
-                    var basePoint=_mapLayout.PickupPoints[i];
-                    var offset=new Vector3(i%2==0 ? 1.8f : -1.8f,0,(i%3-1)*1.2f);
-                    SpawnNaturalAt(basePoint+offset,"Fortification");
-                }
-            }
+            var placedOriginalItems = 0;
+            foreach (var position in ChooseUniqueMarkers(
+                         _mapLayout.PickupPoints,_mapLayout.PickupPoints.Count))
+                if (SpawnNaturalAt(position,"Item") &&
+                    ++placedOriginalItems >= 4) break;
+
+            var placedOriginalForts = 0;
+            foreach (var position in ChooseUniqueMarkers(
+                         _mapLayout.FortificationPoints,
+                         _mapLayout.FortificationPoints.Count))
+                if (SpawnNaturalAt(position,"Fortification") &&
+                    ++placedOriginalForts >= 2) break;
+            // Never fabricate "source-original" fort placements when
+            // the original map has no recovered fort marker pool.
             return;
         }
         // The recovered Laboratory pack supplies distinct original item and
@@ -909,6 +941,9 @@ public partial class GameplayRoot : Node3D
 
     private bool SpawnNaturalAt(Vector3 position,string group)
     {
+        // Capture the authored source coordinate before the collision-bound
+        // visual centre is raised; the original marker owns resupply.
+        var authoredNaturalMarker = position;
         if (_isFallbackScene86)
         {
             var grounded=Pass86NaturalLootPlacement.TryGround(
@@ -921,15 +956,31 @@ public partial class GameplayRoot : Node3D
             position=grounded.Value;
             VerifiedFallbackNaturalPickups86++;
         }
+        else
+        {
+            var grounded=Pass120OriginalLootPlacement.TryGround(
+                GetWorld3D(),authoredNaturalMarker);
+            if (!grounded.HasValue)
+            {
+                RejectedOriginalNaturalPickups120++;
+                return false;
+            }
+            position=grounded.Value;
+            VerifiedOriginalNaturalPickups120++;
+        }
         if(group=="Fortification")
         {
             var forts=new[]{"Barbed Wire","Clap Bomb","Jack"};
-            SpawnPickup(forts[_rng.RandiRange(0,forts.Length-1)],position,1,true,group);
+            SpawnPickup(forts[_rng.RandiRange(0,forts.Length-1)],
+                position,1,true,group,
+                _isFallbackScene86 ? null : authoredNaturalMarker);
             return true;
         }
 
         var items=new[]{"Bandages","Ammo","Body Armor","Medkit","Energy Drink","Gas Mask","Frag","Molotov","Nerve Gas"};
-        SpawnPickup(items[_rng.RandiRange(0,items.Length-1)],position,1,true,group);
+        SpawnPickup(items[_rng.RandiRange(0,items.Length-1)],
+            position,1,true,group,
+            _isFallbackScene86 ? null : authoredNaturalMarker);
         return true;
     }
 
@@ -946,7 +997,21 @@ public partial class GameplayRoot : Node3D
             }
 
             _naturalRespawns.RemoveAt(i);
-            SpawnNaturalAt(entry.Position,entry.Group);
+            if (SpawnNaturalAt(entry.Position,entry.Group))
+            {
+                if (!_isFallbackScene86) OriginalLootRespawns120++;
+            }
+            else if (!_isFallbackScene86 && entry.Attempts < 4)
+            {
+                // The original marker might be temporarily blocked by
+                // changing physics. Retry at most four times, never create
+                // a pickup at an unsupported or invented spot.
+                _naturalRespawns.Add(entry with
+                {
+                    Remaining = NaturalRespawnMinSeconds,
+                    Attempts = entry.Attempts+1
+                });
+            }
         }
     }
 
@@ -956,8 +1021,9 @@ public partial class GameplayRoot : Node3D
         _naturalRespawns.Add(new NaturalRespawn(position,group,seconds));
     }
 
-    private void SpawnPickup(string type, Vector3 position, int grantCount = 1, bool natural=false, string naturalGroup="")
+    private void SpawnPickup(string type, Vector3 position, int grantCount = 1, bool natural=false, string naturalGroup="", Vector3? naturalMarker=null)
     {
+        var authoredNaturalMarker = naturalMarker ?? position;
         var pickup = new PickupActor
         {
             Name = $"Pickup_{type}_{_pickups.Count}",
@@ -970,7 +1036,7 @@ public partial class GameplayRoot : Node3D
         pickup.Collected = collected =>
         {
             _pickups.Remove(collected);
-            if(natural)ScheduleNaturalRespawn(position,naturalGroup);
+            if(natural)ScheduleNaturalRespawn(authoredNaturalMarker,naturalGroup);
         };
         _pickups.Add(pickup);
         AddChild(pickup);
