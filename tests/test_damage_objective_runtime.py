@@ -29,5 +29,10 @@ def test_map_specific_objective_pool_comes_from_recovered_catalog():
 def test_explosive_fortifications_can_damage_tanker_and_slow_trap_suppresses_burster():
     fort=read("src/Twr.Godot/Scripts/FortificationActor.cs")
     assert 'GetNodesInGroup("damage_objective")' in fort
-    assert 'tanker.ApplyDamage(Definition.Damage!.Value*DamageMultiplier, "Explosive")' in fort
+    # Jack now has reference-described distance falloff, while Clap Bomb's
+    # existing catalog-scaled damage stays at multiplier 1. Both continue
+    # through the authoritative tanker explosive-damage method.
+    assert 'tanker.ApplyDamage(Definition.Damage!.Value*DamageMultiplier *' in fort
+    assert 'GlobalPosition.DistanceTo(tanker.GlobalPosition),radius) : 1f), "Explosive")' in fort
+    assert 'timedJack ? JackDetonationRules.ApproximateFalloff(' in fort
     assert 'infected.ApplyDamage(15f, false, "BarbedWire")' in fort
