@@ -35,7 +35,7 @@ def test_native_scene_free_is_verified_before_lobby_restart():
 def test_pass118_preserves_full_windows_matrix_and_repeats_clean_exit():
     workflow = read(".github/workflows/windows-build.yml")
     assert "twr-pass118-stable-native-shutdown" in workflow
-    assert "Smoke Pass 91 real" in workflow
+    assert "Smoke Pass 91 native eight-map physically validated Escort completion" in workflow
     assert "Smoke Pass 92 real" in workflow
     assert "TWR_PASS118_EXPRESSWAY_TEARDOWN_OK" in workflow
     assert "Pass92 attempt $attempt failed during gameplay or native shutdown" in workflow
