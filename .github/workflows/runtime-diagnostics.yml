@@ -12,20 +12,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Extract native failure evidence without replaying megabyte logs
+      - name: Extract precise native exception stack
         uses: actions/github-script@v7
         with:
           script: |
             const jobId = 116275459614;
             const meta = await github.rest.actions.getJobForWorkflowRun({...context.repo, job_id: jobId});
-            const failed = meta.data.steps.filter(s => s.conclusion === 'failure');
-            console.log(JSON.stringify({jobId, conclusion: meta.data.conclusion, failed: failed.map(s => s.name)}));
+            console.log(JSON.stringify({jobId, conclusion: meta.data.conclusion, failed: meta.data.steps.filter(s => s.conclusion === 'failure').map(s => s.name)}));
             const response = await github.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {...context.repo, job_id: jobId});
             const text = typeof response.data === 'string' ? response.data : Buffer.from(response.data).toString('utf8');
             const lines = text.split(/\r?\n/).map(s => s.replace(/\x1b\[[0-9;]*m/g, ''));
-            const start = lines.findLastIndex(s => s.includes('TWR_PASS94_ROUTE_DIAGNOSTIC'));
-            const relevant = lines.slice(Math.max(0,start)).filter(s => /TWR_PASS94|TWR_SMOKE_PASS94|InvalidOperationException|Exception:|native shutdown|exit|Fatal error|AccessViolationException|##\[error\]/i.test(s));
-            console.log('NATIVE_FAILURE_EXCERPT_BEGIN');
-            for (const line of relevant.slice(-24)) console.log(line.slice(0,3000));
-            console.log('NATIVE_FAILURE_EXCERPT_END');
-            await core.summary.addHeading('Native failure evidence').addCodeBlock(JSON.stringify({jobId, failed: failed.map(s => s.name), lines: relevant.slice(-24)}, null, 2)).write();
+            const indices = lines.map((s,i) => (/Fatal error\. System\.AccessViolationException|TWR_SMOKE_PASS(?:90|92|94).*FAILED/.test(s) && !s.includes('Where-Object')) ? i : -1).filter(i => i >= 0).slice(-3);
+            for (const index of indices) {
+              console.log('NATIVE_EXCEPTION_CONTEXT_BEGIN');
+              for (const line of lines.slice(Math.max(0,index-8),index+35)) console.log(line.slice(0,2500));
+              console.log('NATIVE_EXCEPTION_CONTEXT_END');
+            }
+            if (!indices.length) console.log(lines.slice(-40).join('\n'));
