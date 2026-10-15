@@ -39,6 +39,8 @@ def test_production_spawns_use_original_only_physics_without_changing_fallback()
         "if (alternateMarker) AlternateSourceMarkers119++;",
         "Pass85FallbackInfectedSpawn.TryFind(",
         "Pass40AdaptiveEntry.TryFind(",
+        "sourceNeedsAssistedPlacement119 = true;",
+        "if (sourceNeedsAssistedPlacement119)",
     ):
         assert token in code
 
