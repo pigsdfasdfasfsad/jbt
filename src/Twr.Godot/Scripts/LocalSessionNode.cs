@@ -116,7 +116,10 @@ public partial class LocalSessionNode : Node
         if (runtimeReadinessSmoke)
             save = ProjectSettings.GlobalizePath(
                 "user://runtime-readiness-smoke-profile.json");
+        var sourceMeshSmoke = OS.GetCmdlineUserArgs().Contains("--smoke-source-mesh", StringComparer.Ordinal);
+        if (sourceMeshSmoke) save = ProjectSettings.GlobalizePath("user://source-mesh-smoke-profile.json");
         var store = new JsonProfileStore(save);
+        if (sourceMeshSmoke) store.Save(new Profile());
         if (runtimeReadinessSmoke) store.Save(new Profile());
         if(smoke70 || smoke71)
             store.Save(new Profile());

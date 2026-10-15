@@ -333,7 +333,7 @@ public static class LaboratorySourceLoader
         // Keep exact collision from the source record above even when a native
         // mesh is already rendered by the optional streamed primitive layer.
         // Exactly match the private TWRINS28 eligibility rule. The older
-        // implementation also hid SpecialMeshType=6 (sphere), even though
+        // implementation also hid SpecialMeshType=6 (Brick), even though
         // Pass28 never generated a primitive for that source geometry.
         // Preserving those exceptional parts avoids silent visible losses.
         if (packedNativeParts && (cls == "Part" || cls == "WedgePart") &&
@@ -366,6 +366,8 @@ public static class LaboratorySourceLoader
         var batchTextureKey = preparedTexture is null ? "" : textureId;
         var appearanceKey = $"{cls}|{Str(r, "shape")}|{Str(r, "mat")}|{batchMeshKey}|{batchTextureKey}|" +
             $"{rgb[0]},{rgb[1]},{rgb[2]}|{opacity:F3}|{shadow}";
+        // Distinct built-in shapes must not share a visual batch.
+        appearanceKey += "|builtin:" + SourceMeshPresentation.Kind(r);
         var key = appearanceKey;
         if (useProxyTiles)
         {
@@ -382,7 +384,8 @@ public static class LaboratorySourceLoader
         {
             if (!appearanceCache.TryGetValue(appearanceKey, out var shared))
             {
-                var mesh = prepared ?? ProxyMesh(cls, Str(r, "shape"));
+                var mesh = prepared ?? SourceMeshPresentation.BuiltinMesh(r)
+                    ?? ProxyMesh(cls, Str(r, "shape"));
                 var materialCode = Str(r, "mat");
                 var metallic = materialCode is "1088" or "1056" or "1040";
                 var neon = materialCode == "288";
@@ -440,7 +443,7 @@ public static class LaboratorySourceLoader
         if (cls == "Part" && shape == "0")
             return new SphereMesh { Radius = 0.5f, Height = 1f };
         if (cls == "Part" && shape == "2")
-            return new CylinderMesh { TopRadius = 0.5f, BottomRadius = 0.5f, Height = 1f };
+            return SourceMeshPresentation.CylinderAlongX();
         return new BoxMesh { Size = Vector3.One };
     }
 
@@ -528,6 +531,11 @@ public static class LaboratorySourceLoader
 
     private static Vector3 VisualExtents(JsonElement r, Vector3 physicalPartSize)
     {
+        if (SourceMeshPresentation.TryBuiltinSize(r, physicalPartSize, out var builtinSize))
+            return builtinSize;
+        // FileMesh and unknown historical meshes retain their existing
+        // approximation below; original upload-space bounds are absent.
+
         // Roblox SpecialMesh.Scale is a mesh-local size/scale distinct from
         // the parent Part.Size. In the recovered Laboratory source the large
         // MountainsFar SpecialMeshes sit inside 0.2-stud carrier Parts yet
