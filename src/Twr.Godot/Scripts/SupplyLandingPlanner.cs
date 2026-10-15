@@ -23,13 +23,15 @@ public static class SupplyLandingPlanner
     {
         if (!playerFeet.IsFinite() || index < 0 || index >= MaximumCandidates) return null;
         var excluded = new global::Godot.Collections.Array<Rid> { playerRid };
+        var playerFloor=Pass90EscortArrivalSafety.TryGroundDestination(world,playerFeet,excluded);
+        if (!playerFloor.HasValue) return null;
         // Production checks two candidates per physics frame, so a crowded
         // map cannot monopolize a single frame with a complete route scan.
         var angle=Mathf.Tau*(index%8)/8f;
         var distance=Distances[index/8];
-        var guess=playerFeet+new Vector3(MathF.Cos(angle)*distance,0,MathF.Sin(angle)*distance);
+        var guess=playerFloor.Value+new Vector3(MathF.Cos(angle)*distance,0,MathF.Sin(angle)*distance);
         var floor=Pass90EscortArrivalSafety.TryGroundDestination(world,guess,excluded);
-        if (!floor.HasValue || Math.Abs(floor.Value.Y-playerFeet.Y)>.8f) return null;
+        if (!floor.HasValue || Math.Abs(floor.Value.Y-playerFloor.Value.Y)>.8f) return null;
         return AtFloor(world,floor.Value,playerFeet,playerRid,true);
     }
 
@@ -38,6 +40,12 @@ public static class SupplyLandingPlanner
     {
         if (!floor.IsFinite() || !playerFeet.IsFinite()) return null;
         var excluded=new global::Godot.Collections.Array<Rid> { playerRid };
+        // The caller can be mid-jump when a radio transmission completes.
+        // Test walking access from the physical floor below that position,
+        // not an airborne body origin mistaken for a floating floor.
+        var playerFloor=Pass90EscortArrivalSafety.TryGroundDestination(world,playerFeet,excluded);
+        if (!playerFloor.HasValue) return null;
+        var routeOrigin=playerFloor.Value;
         var space=world.DirectSpaceState;
         foreach(var offset in Footprint)
         {
@@ -73,8 +81,8 @@ public static class SupplyLandingPlanner
             var candidate=floor+new Vector3(MathF.Cos(angle)*2.3f,0,MathF.Sin(angle)*2.3f);
             var grounded=Pass90EscortArrivalSafety.TryGroundDestination(world,candidate,excluded);
             if(!grounded.HasValue || Math.Abs(grounded.Value.Y-floor.Y)>.3f ||
-                !Pass89EscortSurfaceSafety.CanTravel(world,playerFeet,grounded.Value,excluded) ||
-                !Pass89EscortSurfaceSafety.CanTravel(world,grounded.Value,playerFeet,excluded)) return null;
+                !Pass89EscortSurfaceSafety.CanTravel(world,routeOrigin,grounded.Value,excluded) ||
+                !Pass89EscortSurfaceSafety.CanTravel(world,grounded.Value,routeOrigin,excluded)) return null;
             pickupCentres.Add(grounded.Value+Vector3.Up*.48f);
         }
         return new Plan(new Vector3(floor.X,floor.Y+.23f,floor.Z),pickupCentres.ToArray());

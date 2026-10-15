@@ -62,6 +62,11 @@ def apply() -> None:
         '  dotnet build $Solution -c Release\n',
         '  dotnet build $Solution -c Release\n'
         '  if ($LASTEXITCODE -ne 0) { throw "C# compilation failed: $LASTEXITCODE" }\n')
+    # Checkpoint verified locally in the real engine: planning must anchor
+    # walking access to a measured floor, not an airborne player origin.
+    planner=(ROOT/'src/Twr.Godot/Scripts/SupplyLandingPlanner.cs').read_text(encoding='utf8')
+    if 'var routeOrigin=playerFloor.Value;' not in planner:
+        raise RuntimeError('Supply player-floor correction is missing')
 
 if __name__ == "__main__":
     apply()

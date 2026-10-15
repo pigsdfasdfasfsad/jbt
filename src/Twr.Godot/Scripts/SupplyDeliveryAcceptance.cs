@@ -29,8 +29,9 @@ public static class SupplyDeliveryAcceptance
                 ?? throw new InvalidOperationException("Production supply entry point missing");
             trigger.Invoke(game,null);
             var pallet=game.GetChildren().OfType<SupplyDropRuntime>().Single();
-            for(var waiting=0; waiting<40 && !pallet.Visible && !pallet.FailedDelivery; waiting++)
+            for(var waiting=0; waiting<40 && GodotObject.IsInstanceValid(pallet) && !pallet.Visible && !pallet.FailedDelivery; waiting++)
                 await Frames(game,1);
+            if (!GodotObject.IsInstanceValid(pallet)) throw new InvalidOperationException("Supply planning exhausted candidates");
             pallet.SetPhysicsProcess(false);
             if(pallet.FailedDelivery || !pallet.Visible)
                 throw new InvalidOperationException("Ranch has no valid supply landing plan");
@@ -45,10 +46,12 @@ public static class SupplyDeliveryAcceptance
             if(regular!=4 || forts!=4)
                 throw new InvalidOperationException("Recovered four-regular/four-fort supply contract changed");
             var excluded=new global::Godot.Collections.Array<Rid>{player.GetRid()};
+            var playerFloor=Pass90EscortArrivalSafety.TryGroundDestination(game.GetWorld3D(),player.GlobalPosition,excluded)
+                ?? throw new InvalidOperationException("Player's actual floor is absent");
             foreach(var pickup in spawned)
             {
                 var feet=pickup.GlobalPosition-Vector3.Up*.48f;
-                if(!Pass89EscortSurfaceSafety.CanTravel(game.GetWorld3D(),player.GlobalPosition,feet,excluded))
+                if(!Pass89EscortSurfaceSafety.CanTravel(game.GetWorld3D(),playerFloor,feet,excluded))
                     throw new InvalidOperationException("Landed supply spawned an inaccessible pickup");
             }
             // Calling a retired managed actor cannot create duplicate payloads.
@@ -81,8 +84,9 @@ public static class SupplyDeliveryAcceptance
                 Landed=_=>falseLandings++,Failed=_=>failed++
             };
             game.AddChild(blocked);
-            for(var waiting=0; waiting<40 && !blocked.Visible && !blocked.FailedDelivery; waiting++)
+            for(var waiting=0; waiting<40 && GodotObject.IsInstanceValid(blocked) && !blocked.Visible && !blocked.FailedDelivery; waiting++)
                 await Frames(game,1);
+            if (!GodotObject.IsInstanceValid(blocked)) throw new InvalidOperationException("Supply blocker fixture could not plan");
             blocked.SetPhysicsProcess(false);
             if(blocked.FailedDelivery) throw new InvalidOperationException("Could not create obstruction fixture");
             var obstacle=new StaticBody3D
