@@ -85,6 +85,12 @@ public partial class GameplayRoot : Node3D
     public int VerifiedSourceSpawns119 { get; private set; }
     public int RejectedSourceSpawns119 { get; private set; }
     public int AlternateSourceMarkers119 { get; private set; }
+    public int VerifiedOriginalPlayerSpawn121 { get; private set; }
+    public int RejectedOriginalPlayerSpawns121 { get; private set; }
+    public bool AlternativeOriginalPlayerSpawn121 { get; private set; }
+    public bool BlockedOriginalPlayerSpawn121 { get; private set; }
+    private bool _sourcePlayerPlacementPending121;
+    private int _sourcePlayerPhysicsFrames121;
     public int VerifiedFallbackNaturalPickups86 { get; private set; }
     public int RejectedFallbackNaturalPickups86 { get; private set; }
     // Pass120 source-only pickup placement counters; diagnostics only.
@@ -282,6 +288,15 @@ public partial class GameplayRoot : Node3D
             Position = _mapLayout.PlayerSpawn
         };
         AddChild(_player);
+        if (originalWorldAvailable)
+        {
+            // Do not move/attack from an unverified ORIGINAL player marker.
+            // PhysicsServer requires the loaded source world to have
+            // entered its first simulation frames before checking it.
+            _player.SetPhysicsProcess(false);
+            _sourcePlayerPlacementPending121 = true;
+            _sourcePlayerPhysicsFrames121 = 2;
+        }
         _sourceSoundscape = Pass38SourceSoundscapeRuntime.TryBuild(this, MapName,
             GetNodeOrNull<Node3D>("Recovered" + MapName) is not null);
         _sourceSoundscape?.Track(_player);
@@ -331,6 +346,39 @@ public partial class GameplayRoot : Node3D
         if (_isFallbackScene86 || _finished || !IsInsideTree() ||
             IsQueuedForDeletion() || Runtime?.Player?.IsAlive != true)
             return;
+        if (_sourcePlayerPlacementPending121)
+        {
+            if (--_sourcePlayerPhysicsFrames121 > 0)
+                return;
+
+            // Only exact source marker candidates, a real standing-player
+            // capsule, and the current WORLD collision can authorize an
+            // actual spawn. Exclude our own live CharacterBody RID.
+            var validatedPosition = Pass121OriginalPlayerSpawnSafety.TryFind(
+                GetWorld3D(), _mapLayout.SourcePlayerFootMarkers121,
+                _mapLayout.PlayerSpawn, _player.GetRid(),
+                out var alternateOriginal, out var rejectedOriginal);
+            RejectedOriginalPlayerSpawns121 += rejectedOriginal;
+            _sourcePlayerPlacementPending121 = false;
+            if (!validatedPosition.HasValue)
+            {
+                BlockedOriginalPlayerSpawn121 = true;
+                GD.PushWarning("TWR_PASS121_PLAYER_SPAWN_REJECTED map=" +
+                    MapName + " original_collision_unavailable=true");
+                Finish(false, "ORIGINAL PLAYER SPAWN HAS NO RECOVERED FLOOR");
+                return;
+            }
+
+            // Source X/Z is unchanged: only 8cm world-floor clearance.
+            _player.GlobalPosition = validatedPosition.Value;
+            _player.Velocity = Vector3.Zero;
+            VerifiedOriginalPlayerSpawn121++;
+            AlternativeOriginalPlayerSpawn121 = alternateOriginal;
+            _player.SetPhysicsProcess(true);
+            GD.Print("TWR_PASS121_PLAYER_SPAWN_VERIFIED map=" + MapName +
+                " alternate_source=" + alternateOriginal +
+                " rejected_source_markers=" + rejectedOriginal);
+        }
         if (_pendingOriginalLoot120)
         {
             if (--_originalLootPhysicsFrames120 > 0) return;
@@ -346,6 +394,9 @@ public partial class GameplayRoot : Node3D
     {
         Pass43FrameTimes.Record(delta, ActiveInfectedCount);
         if (Runtime?.Player is null || Runtime.Match is null) return;
+        // Do not advance source gameplay wave timers while physical player
+        // placement is pending; the rest of the source map is still loading.
+        if (_sourcePlayerPlacementPending121) return;
         // Suppress the HUD plus only while the reconstructed optic
         // reticle is actually displayed; non-scoped weapons retain
         // the existing crosshair without gameplay input changes.

@@ -140,6 +140,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"Unsafe candidates rejected: {Game?.RejectedAssistedSpawnAttempts ?? 0}\n" +
             $"P119 source spawns: {Game?.VerifiedSourceSpawns119 ?? 0} grounded / {Game?.RejectedSourceSpawns119 ?? 0} rejected / {Game?.AlternateSourceMarkers119 ?? 0} alternate\n" +
             $"P120 original loot: {Game?.VerifiedOriginalNaturalPickups120 ?? 0} grounded / {Game?.RejectedOriginalNaturalPickups120 ?? 0} rejected / {Game?.OriginalLootRespawns120 ?? 0} respawns\n" +
+            $"P121 original player: {Game?.VerifiedOriginalPlayerSpawn121 ?? 0} validated / {Game?.RejectedOriginalPlayerSpawns121 ?? 0} rejected / alternate: {Game?.AlternativeOriginalPlayerSpawn121 ?? false} / blocked: {Game?.BlockedOriginalPlayerSpawn121 ?? false}\n" +
             $"Managed memory: {GC.GetTotalMemory(false) / 1048576} MiB";
     }
 
@@ -247,6 +248,10 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 pass120_supported_original_pickups = Game?.VerifiedOriginalNaturalPickups120 ?? 0,
                 pass120_rejected_original_pickups = Game?.RejectedOriginalNaturalPickups120 ?? 0,
                 pass120_original_loot_respawns = Game?.OriginalLootRespawns120 ?? 0,
+                pass121_source_player_verified = Game?.VerifiedOriginalPlayerSpawn121 ?? 0,
+                pass121_source_player_rejected_candidates = Game?.RejectedOriginalPlayerSpawns121 ?? 0,
+                pass121_source_player_alternate = Game?.AlternativeOriginalPlayerSpawn121 ?? false,
+                pass121_source_player_blocked = Game?.BlockedOriginalPlayerSpawn121 ?? false,
                 managed_memory_bytes = GC.GetTotalMemory(false)
             };
             var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass33_Diagnostics.json");

@@ -278,7 +278,10 @@ public static class LaboratorySourceLoader
                 })
             {
                 UseExactInfectedSpawns = true,
-                FortificationPoints = fortificationMarkers
+                FortificationPoints = fortificationMarkers,
+                SourcePlayerFootMarkers121 = players
+                    .OrderBy(p => p.Name, StringComparer.Ordinal)
+                    .Select(p => p.Position).ToArray()
             };
             GD.Print($"TWR_LAB_SOURCE_LOADED map={mapName} geometry={count["geometry"]} " +
                 $"server_walls={count["collision"]} physical_shapes={collisions.Count} " +

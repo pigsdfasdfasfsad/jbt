@@ -24,6 +24,9 @@ public sealed record RuntimeMapLayout(
     // When source markers are recovered, do not move spawns into arbitrary
     // offsets that might intersect the original collision geometry.
     public bool UseExactInfectedSpawns { get; init; }
+    // Pass121: source-authoritative ORIGINAL named player marker feet.
+    // Empty for the ten approximate blockouts; never fabricates positions.
+    public IReadOnlyList<Vector3> SourcePlayerFootMarkers121 { get; init; } = [];
     public IReadOnlyList<Vector3> FortificationPoints { get; init; } = [];
     public IReadOnlyList<Pass77StairLink> ApproximateStairs77 { get; init; } = [];
     public IReadOnlyList<Pass80UpperCrossing> ApproximateCrossings80 { get; init; } = [];
