@@ -1,3 +1,102 @@
+<!-- CURRENT_SOURCE_SAFE_RELEASE -->
+# CURRENT CHECKPOINT - SOURCE FIDELITY AND RETAINED WINDOWS RELEASE
+
+**Development branch:** `twr-source-fidelity-release`, continued from
+`twr-runtime-stabilization` / `18bec9515d2d44020e8c402f9eec0800af34feba`.
+
+**Exact compiled and tested source commit:** `af31be6aee135098dd6f432a1009475c60488735`.
+The subsequent continuation commit changes documentation only. It does not
+change which source revision was executed, visually captured, and packaged.
+
+**Verification and retained artifacts:**
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38715187235
+
+**Windows package:** `TWR-SourceSafe-Windows-x64-af31be6aee13.zip`
+- Archive bytes: 74269847.
+- SHA-256: `90f06e5b036acacb99cb8a728fd7a93d1c186f32224ea94dff28d2666a3bbf6e`.
+- Complete companion files and bundled .NET runtime included.
+- Clean-directory native launch passed with system SDK paths removed.
+- Original private maps, mesh binaries, textures, and test profiles excluded.
+- This is the existing reconstructed-map game, NOT a finished 1:1 recreation.
+
+Prior retained working binary: `91dd5b92485e466b50b042aa20680ece2f55f942`,
+run 38709423959. Its Windows, graphics and packaging jobs all passed; only its
+post-build documentation job failed because a newer build-tool-only commit
+had advanced the branch. Do not conflate that documentation failure with a
+failed executable or claim the later source was tested by the earlier run.
+
+## Implemented player-visible changes
+
+1. Original map importer treats built-in SpecialMesh Scale as relative to
+   parent Part.Size, distinguishes Brick/Sphere/Wedge/Cylinder render batches,
+   and puts cylinder axes on source local X. Parent-part collision is retained.
+   FileMesh topology/upload-space dimensions remain unresolved when absent.
+2. Deployed Barbed Wire, Clap Bomb, Jack and 50 Cal replace generic boxes.
+   Wire uses instanced coils/barbs. Mounted guns show aim, ammunition, recoil
+   and muzzle feedback without changing damage or collision authority.
+3. Jack uses the reference-described ten-second fuse rather than proximity.
+   Script-catalog peak damage and radius remain authoritative. Linear distance
+   falloff is explicitly reconstructed, not a recovered server curve.
+4. Viewmodel-only illumination makes hands/weapons readable without changing
+   map lighting, shot rays, ammunition, or world collision.
+5. Supply requests now plan a supported drop near the player, including all
+   eight reachable payload locations and a clear descent. Only real collision
+   contact authorizes delivery; a guessed Y coordinate no longer invents a
+   floor. Changed obstruction/missing floor cancels once. Deferred callbacks
+   preserve four regular plus four fortification slots, and match teardown
+   retires pending pallets. Descent and delivery waypoints are approximated.
+6. Strict packaging checks exact-commit receipts, rejects private/test files,
+   launches from a clean directory, hashes all files and retains a Windows ZIP.
+
+## Verification scope
+
+Complete Python/content checks, native Windows export, production input and
+pickup/fortification/supply lifecycles, repeated Ranch/Expressway/Manor exits,
+and the inherited 34-check native matrix are in the workflow. Mesa/OpenGL
+checks inspect actual imported mesh transforms and produce real screenshots.
+Exact receipts accompany the run; screenshots are not proof of retail parity.
+
+## Private original Laboratory inspection (separate from public release)
+
+Local Linux tests used the user's actual TestPlace XML, with 34,268 source
+geometry records and 18,130 collision shapes. The original player grounded,
+six natural pickups appeared, and about 6.9 metres of actual keyboard-driven
+walking remained supported. The first wave spawned actual infected.
+
+A local engine-physics-derived navigation graph (41,098 nodes, 144,048 edges,
+167 regions) was encoded in the existing nav31 format, bound to the exact
+locally serialized scene SHA. Existing loader validation accepted it normally;
+no strict nav41/nav42 or private-installer SHA pins were relaxed. All original
+infected markers remain disconnected from the player's floor region. The
+existing explicit F9 assistance mode did enable connected spawns, route
+search/cache use, and enemies approaching and killing the stationary player.
+That is a verified assisted gameplay path, NOT original spawn/pathfinding parity.
+
+These private tests ran on source commit 91dd5b92485e466b50b042aa20680ece2f55f942,
+not the new Windows executable, and did not validate a complete real-time match.
+The private map and navigation files were never uploaded to public GitHub.
+
+## Remaining gaps / next concrete task
+
+- Recover original custom mesh and texture binaries: the inspected Laboratory
+  references 489 unresolved mesh IDs and 59 unresolved texture IDs.
+- Resolve the source traversal breaks connecting original exterior infected
+  entries to the player's region; F9 assistance is not the default solution.
+- Recover or physically route provisional source objective locations beyond
+  the current conservative straight-corridor policy, then test full material
+  pickup/deposit and Escort routes in the actual original scene.
+- Visually compare remaining maps, source lighting, first-person wall clipping,
+  animation timing and original equipment dimensions against references.
+- Address non-fatal audio/resource cleanup warnings still emitted by some
+  inherited native tests rather than claiming zero leaks.
+- Perform full human-operated real-time fifteen-wave original-map survival.
+
+The retained source-safe Windows build excludes the privately inspected map.
+Do not report full 1:1 completion or extrapolate percentages from pass numbers.
+<!-- END_CURRENT_SOURCE_SAFE_RELEASE -->
+
+---
+
 # PASS 78 — VERIFIED WINDOWS BIDIRECTIONAL MANOR STAIR TRAVERSAL
 
 **Branch:** `twr-pass78-manor-bidirectional-stairs`; based on [verified Pass77 exported Windows native gameplay](https://github.com/pigsdfasdfasfsad/jbt/actions/runs/38212138620).
