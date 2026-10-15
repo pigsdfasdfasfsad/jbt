@@ -71,14 +71,16 @@ def test_source_stud_bomb_radius_wall_occlusion_and_50cal_infected_layer():
 def test_supply_drop_uses_collision_floor_once_not_global_y_only():
     pallet=read("src/Twr.Godot/Scripts/SupplyDropRuntime.cs")
     game=read("src/Twr.Godot/Scripts/GameplayRoot.cs")
-    assert "var hit = GetWorld3D().DirectSpaceState.IntersectRay(ray)" in pallet
-    assert "((Vector3)hit[\"normal\"]).Y >= .70f" in pallet
+    assert "var hit=GetWorld3D().DirectSpaceState.IntersectRay(ray)" in pallet
+    assert '((Vector3)hit["normal"]).Y<.70f' in pallet
     assert "SourcePlayer.GetRid()" in pallet
-    assert "position.Y = ((Vector3)hit[\"position\"]).Y + .23f;" in pallet
-    assert "if (position.Y <= GroundY)" in pallet
-    assert "Landed?.Invoke(position)" in pallet
+    assert "position.Y=floor.Y+.23f;" in pallet
+    assert "if (position.Y <= GroundY)" not in pallet
+    assert 'QueueFailure("physical_landing_floor_missing")' in pallet
+    assert "Landed?.Invoke(_landing)" in pallet
+    assert "if(_resolved || _notificationQueued) return;" in pallet
     assert "SourcePlayer = _player" in game
-    assert "SpawnSupplyContents(position)" in game
+    assert "SpawnSupplyContents(position, pallet.PayloadPositions)" in game
     assert "SpawnUnpackContents(completionPosition)" in game
 
 

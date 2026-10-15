@@ -13,7 +13,7 @@ def test_natural_pickups_use_selected_map_layout_points():
 
 def test_radio_supply_drop_lands_before_eight_pickups_spawn():
     assert "SpawnSupplyDrop()" in GAME
-    assert "SpawnSupplyContents(position)" in GAME
+    assert "SpawnSupplyContents(position, pallet.PayloadPositions)" in GAME
     assert "exactly four Regular slots and four Fort" in GAME
     assert 'var regularPool=new[] { "Medkit","Ammo","Body Armor" }' in GAME
     assert "var nFifty=_rng.RandiRange(0,4)" in GAME

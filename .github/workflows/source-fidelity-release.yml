@@ -33,6 +33,7 @@ jobs:
           python tools/dev/apply_deployed_visuals.py
           python tools/dev/apply_graphics_validation.py
           python tools/dev/apply_final_presentation.py
+          python tools/dev/apply_supply_delivery.py
           git diff --check
           python - <<'PY'
           import subprocess
@@ -48,6 +49,7 @@ jobs:
               'src/Twr.Godot/Scripts/FirstPersonPlayer.cs',
               'src/Twr.Godot/Scripts/RuntimePresentationCapture.cs',
               'src/Twr.Godot/Scripts/TimedJackAcceptance.cs',
+              'src/Twr.Godot/Scripts/GameplayRoot.cs',
               'tools/validation/run_source_fidelity.py',
               'tools/build/package_source_safe.py',
               'build/Windows/build.ps1',
@@ -61,7 +63,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'feat(gameplay): integrate source meshes equipment lighting and verified Jack lifecycle'
+            git commit -m 'feat(gameplay): integrate physical supply delivery with verified reachable payload'
             git push origin HEAD:refs/heads/twr-source-fidelity-release
           fi
           echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -106,7 +108,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Package local-verification harness
-        run: python tools/build/package_linux_qa_harness.py
+        run: python tools/build/package_linux_qa_harness.py --include-sdk
       - name: Retain public-only Linux QA harness
         uses: actions/upload-artifact@v4
         with:
@@ -159,7 +161,7 @@ jobs:
               Get-Content 'build/source-fidelity-validation/export.log' -Tail 45
             }
           }
-      - name: Native readiness timed Jack and actual mounted-fire interactions
+      - name: Native input equipment and complete supply delivery lifecycle
         if: always() && steps.export.outcome == 'success'
         shell: pwsh
         run: python tools/validation/run_source_fidelity.py
@@ -237,7 +239,10 @@ jobs:
         run: |
           set -euo pipefail
           current=$(git ls-remote origin refs/heads/twr-source-fidelity-release | cut -f1)
-          test "$current" = "$TESTED_COMMIT"
+          if [ "$current" != "$TESTED_COMMIT" ]; then
+            echo "Branch changed during validation: expected $TESTED_COMMIT, current $current. Refusing to overwrite concurrent work."
+            exit 1
+          fi
           python tools/dev/write_release_handoff.py
           git diff --check
           git add docs/development/CURRENT_IMPLEMENTATION_STATUS.md

@@ -12,6 +12,10 @@ def test_pickup_values_preserve_recovered_item_rules():
 
 def test_supply_drop_collection_waits_for_ground():
     s=read("src/Twr.Godot/Scripts/SupplyDropRuntime.cs")
-    assert "position.Y <= GroundY" in s
-    assert "Landed?.Invoke(position)" in s
+    # Configured height is only a failure bound, never fabricated floor.
+    assert "position.Y <= GroundY" not in s
+    assert 'var hit=GetWorld3D().DirectSpaceState.IntersectRay(ray)' in s
+    assert 'Landed?.Invoke(_landing)' in s
+    assert 'Callable.From(NotifyOnIdle).CallDeferred()' in s
+    assert 'QueueFailure("physical_landing_floor_missing")' in s
     assert "APPROXIMATED" in s
