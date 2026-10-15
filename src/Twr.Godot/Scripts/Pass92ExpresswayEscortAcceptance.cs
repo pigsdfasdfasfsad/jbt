@@ -24,14 +24,25 @@ public partial class Pass92ExpresswayEscortAcceptance : Node
                 " map=Expressway wave=6"+
                 " original_retail_meshes_unverified=true"+
                 " original_roblox_escort_animation_unverified=true");
-            GetTree().Quit(0);
+            // This async _Ready resumes from the PhysicsFrame signal.
+            // Exiting synchronously here can tear down managed Godot nodes
+            // while the frame event is still being delivered.
+            ScheduleQuitOnIdle(0);
         }
         catch(Exception e)
         {
             GD.PushError("TWR_SMOKE_PASS92_EXPRESSWAY_ESCORT_FAILED "+
                 e.GetType().Name+" "+e.Message+"\n"+e.StackTrace);
-            GetTree().Quit(1);
+            ScheduleQuitOnIdle(1);
         }
+    }
+
+    private void ScheduleQuitOnIdle(int exitCode)
+    {
+        // Leave the physics signal dispatcher before Godot performs final
+        // managed/native object disposal. Windows CI still requires the
+        // actual child-process exit code to be 0 on success.
+        GetTree().CallDeferred("quit", exitCode);
     }
 
     private async Task Frames(int count)
@@ -219,10 +230,23 @@ public partial class Pass92ExpresswayEscortAcceptance : Node
             throw new InvalidOperationException(
                 "Pass92 did not save authorized results");
         game.QueueFree();
-        await Frames(3);
+        // A gameplay result is not a clean release while its Godot scene
+        // is still queued for deletion. Wait for the native tree to let go
+        // before recreating the lobby or requesting engine shutdown.
+        for(var frame=0;frame<30 && GodotObject.IsInstanceValid(game);frame++)
+            await Frames(1);
+        if(GodotObject.IsInstanceValid(game))
+            throw new InvalidOperationException(
+                "Pass118 Expressway gameplay scene survived QueueFree");
         Runtime.ReturnToLobby();
         if(Runtime.Match?.Phase!=MatchPhase.Lobby)
             throw new InvalidOperationException(
                 "Pass92 did not return to isolated lobby");
+        // Let an idle frame drain the game's deferred callbacks. The
+        // following _Ready continuation schedules quit rather than
+        // synchronously unloading inside PhysicsFrame.
+        await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);
+        GD.Print("TWR_PASS118_EXPRESSWAY_TEARDOWN_OK" +
+            " scene_released=true lobby_restored=true");
     }
 }
