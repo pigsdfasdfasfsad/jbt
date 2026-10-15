@@ -13,7 +13,7 @@ def test_source_objectives_are_planned_on_physics_then_instantiated_on_idle():
     assert "_sourceObjectivePlanPending123 = true;" in code
     assert "if (_sourceObjectivePlanPending123)" in code
     assert "Pass123ProvisionalObjectiveRouting.TryFind(" in code
-    assert "if (_sourceObjectivePlanReady123)" in code
+    assert "if (_sourceObjectivePlanReady123 && !_finished)" in code
     assert "SpawnWaveObjectives();" in code
     # Regression: the source-only physics probe must NOT be reached by a
     # direct StartWave -> SpawnWaveObjectives path on the render frame.
