@@ -25,4 +25,7 @@ def test_shuffled_retries_allow_four_item_and_two_fortification_markers():
     assert "++placedForts86>=2" in g
     assert "++fortCount>=2" in g
     assert "if (_isFallbackScene86)" in g
-    assert "ScheduleNaturalRespawn(position,naturalGroup)" in g
+    # Fallback policy still schedules its grounded render centre. Source
+    # policy retains authored markers via nullable naturalMarker override.
+    assert "var authoredNaturalMarker = naturalMarker ?? position;" in g
+    assert "ScheduleNaturalRespawn(authoredNaturalMarker,naturalGroup)" in g

@@ -111,8 +111,13 @@ def test_laboratory_original_pickup_markers_are_loaded_separately():
     assert 'itemMarkers.Count != 127 || fortificationMarkers.Count != 47' in loader
     assert 'FortificationPoints = fortificationMarkers' in loader
     assert 'FortificationPoints { get; init; }' in layout
-    assert 'ChooseUniqueMarkers(_mapLayout.FortificationPoints, 2)' in gameplay
-    assert 'ChooseUniqueMarkers(_mapLayout.PickupPoints, 4)' in gameplay
+    # Pass120 scans additional ORIGINAL markers only when prior entries
+    # have no reconstructed collision; the opening quota remains 4+2.
+    assert '_mapLayout.FortificationPoints.Count' in gameplay
+    assert '_mapLayout.PickupPoints.Count' in gameplay
+    assert '++placedOriginalItems >= 4' in gameplay
+    assert '++placedOriginalForts >= 2' in gameplay
+    assert 'Pass120OriginalLootPlacement.TryGround(' in gameplay
     assert 'layout.PickupPoints.Count != 127' in bootstrap
     assert 'layout.FortificationPoints.Count != 47' in bootstrap
 

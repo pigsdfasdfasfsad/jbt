@@ -39,8 +39,10 @@ def test_game_source_loot_is_separated_from_fallback_and_original_marker_saved()
         "authoredNaturalMarker",
         "naturalMarker ?? position",
         "Pass86NaturalLootPlacement.TryGround(",
-        "ChooseUniqueMarkers(_mapLayout.PickupPoints,",
-        "ChooseUniqueMarkers(_mapLayout.FortificationPoints,",
+        "_mapLayout.PickupPoints.Count",
+        "_mapLayout.FortificationPoints.Count",
+        "++placedOriginalItems >= 4",
+        "++placedOriginalForts >= 2",
     ):
         assert token in game
 
