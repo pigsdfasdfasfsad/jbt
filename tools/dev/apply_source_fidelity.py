@@ -1,10 +1,4 @@
-"""Idempotent inspected source edits; run by the dedicated release workflow.
-
-No owner ZIP or original geometry is read or published by this script.
-The private archive audit found 334 Brick SpecialMeshes in Laboratory,
-207 visible, including glass panes, wire shelves and supports. Roblox's
-MeshType value 6 is Brick, not Sphere, and its Scale multiplies Part.Size.
-"""
+"""Idempotent inspected source integration; no private source bytes are used."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -58,6 +52,16 @@ def apply() -> None:
         '        if (sourceMeshSmoke) save = ProjectSettings.GlobalizePath("user://source-mesh-smoke-profile.json");\n'
         '        var store = new JsonProfileStore(save);\n'
         '        if (sourceMeshSmoke) store.Save(new Profile());\n')
+    # The first real Windows compile revealed the Godot/System.IO name clash.
+    change("src/Twr.Godot/Scripts/SourceMeshPresentationAcceptance.cs",
+        'FileMode.CreateNew, FileAccess.Write)',
+        'FileMode.CreateNew, System.IO.FileAccess.Write)')
+    # Stop at the actual compiler failure instead of continuing into export
+    # and reporting only a secondary Godot export error.
+    change("build/Windows/build.ps1",
+        '  dotnet build $Solution -c Release\n',
+        '  dotnet build $Solution -c Release\n'
+        '  if ($LASTEXITCODE -ne 0) { throw "C# compilation failed: $LASTEXITCODE" }\n')
 
 
 if __name__ == "__main__":

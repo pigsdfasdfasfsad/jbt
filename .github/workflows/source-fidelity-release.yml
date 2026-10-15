@@ -37,6 +37,8 @@ jobs:
               'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs',
               'src/Twr.Godot/Scripts/Bootstrap.cs',
               'src/Twr.Godot/Scripts/LocalSessionNode.cs',
+              'src/Twr.Godot/Scripts/SourceMeshPresentationAcceptance.cs',
+              'build/Windows/build.ps1',
           }
           changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
           if not changed <= allowed:
@@ -47,10 +49,17 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'fix(maps): integrate parent-relative built-in mesh scaling and X-axis cylinders'
+            git commit -m 'fix(maps): integrate inspected source-mesh and build corrections'
             git push origin HEAD:refs/heads/twr-source-fidelity-release
           fi
           echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git archive --format=zip --output=public-source-checkpoint.zip HEAD
+      - name: Retain tracked public-source checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-PublicSource-${{ steps.patch.outputs.tested_commit }}
+          path: public-source-checkpoint.zip
+          retention-days: 7
   verify:
     needs: prepare
     runs-on: windows-latest
@@ -82,11 +91,16 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force 'build/source-fidelity-validation' | Out-Null
-          & .\build\Windows\build.ps1 -BootstrapToolchain -SkipTests *> 'build/source-fidelity-validation/export.log'
-          $code = $LASTEXITCODE
-          Get-Content 'build/source-fidelity-validation/export.log' -Tail 50
-          if ($code -ne 0) { throw "Native export failed: $code" }
-          if (!(Test-Path 'build/output/ThoseWhoRemainOffline.exe')) { throw 'Executable missing' }
+          try {
+            & .\build\Windows\build.ps1 -BootstrapToolchain -SkipTests *> 'build/source-fidelity-validation/export.log'
+            if ($LASTEXITCODE -ne 0) { throw "Native export failed: $LASTEXITCODE" }
+            if (!(Test-Path 'build/output/ThoseWhoRemainOffline.exe')) { throw 'Executable missing' }
+          } finally {
+            if (Test-Path 'build/source-fidelity-validation/export.log') {
+              Select-String -Path 'build/source-fidelity-validation/export.log' -Pattern 'error CS|ERROR:|Build FAILED' -Context 2,3
+              Get-Content 'build/source-fidelity-validation/export.log' -Tail 45
+            }
+          }
       - name: Native source mesh importer and real gameplay readiness
         if: always() && steps.export.outcome == 'success'
         shell: pwsh
