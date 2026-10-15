@@ -79,6 +79,9 @@ public partial class GameplayRoot : Node3D
     public int ActiveInfectedCount => _infected.Count(agent => GodotObject.IsInstanceValid(agent));
     public int VerifiedFallbackSpawns85 { get; private set; }
     public int RejectedFallbackSpawns85 { get; private set; }
+    public int VerifiedSourceSpawns119 { get; private set; }
+    public int RejectedSourceSpawns119 { get; private set; }
+    public int AlternateSourceMarkers119 { get; private set; }
     public int VerifiedFallbackNaturalPickups86 { get; private set; }
     public int RejectedFallbackNaturalPickups86 { get; private set; }
     public int VerifiedFallbackEscortStarts91 { get; private set; }
@@ -1079,6 +1082,31 @@ public partial class GameplayRoot : Node3D
         var speedScale = (float)RegularWaveRules.InfectedWalkSpeedScale(wave);
 
         var spawn = RandomSpawnPoint();
+        if (_mapLayout.UseExactInfectedSpawns)
+        {
+            // Preserve original source-marker X/Z. Reject positions that
+            // lack actual physics support in the reconstructed offline
+            // world, trying only the other original markers.
+            var supported = Pass119OriginalSourceSpawnSafety.TryFind(
+                GetWorld3D(), _mapLayout.InfectedSpawns, spawn,
+                _player.GlobalPosition, _player.GetRid(),
+                out var alternateMarker);
+            if (!supported.HasValue)
+            {
+                RejectedSourceSpawns119++;
+                // Preserve existing explicit F9 accessibility routing.
+                // Default source mode never silently invents a foothold.
+                if (!AssistedInfectedSpawnsEnabled ||
+                    _sourceNavigator?.IsBridgePackActive != true)
+                    return;
+            }
+            else
+            {
+                spawn = supported.Value;
+                VerifiedSourceSpawns119++;
+                if (alternateMarker) AlternateSourceMarkers119++;
+            }
+        }
         if (!_mapLayout.UseExactInfectedSpawns)
         {
             // Pass85: random offsets in the ten approximated maps can
