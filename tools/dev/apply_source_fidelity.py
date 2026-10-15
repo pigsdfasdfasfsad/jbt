@@ -1,18 +1,21 @@
 """Idempotent inspected source integration; no private source bytes are used."""
 from pathlib import Path
-
 ROOT = Path(__file__).resolve().parents[2]
-
 
 def change(path: str, old: str, new: str) -> None:
     file = ROOT / path
     text = file.read_text(encoding="utf-8")
     if new in text:
         return
+    # Other verified integrations may insert adjacent CLI/profile handlers.
+    # Unique handler declarations are stable idempotency markers.
+    if path.endswith('Bootstrap.cs') and '--smoke-source-mesh' in new and 'args.Contains("--smoke-source-mesh"' in text:
+        return
+    if path.endswith('LocalSessionNode.cs') and 'var sourceMeshSmoke' in new and 'var sourceMeshSmoke' in text:
+        return
     if text.count(old) != 1:
         raise RuntimeError(f"Inspected source anchor changed: {path}: {old[:100]!r}")
     file.write_text(text.replace(old, new), encoding="utf-8", newline="\n")
-
 
 def apply() -> None:
     loader = "src/Twr.Godot/Scripts/LaboratorySourceLoader.cs"
@@ -52,17 +55,13 @@ def apply() -> None:
         '        if (sourceMeshSmoke) save = ProjectSettings.GlobalizePath("user://source-mesh-smoke-profile.json");\n'
         '        var store = new JsonProfileStore(save);\n'
         '        if (sourceMeshSmoke) store.Save(new Profile());\n')
-    # The first real Windows compile revealed the Godot/System.IO name clash.
     change("src/Twr.Godot/Scripts/SourceMeshPresentationAcceptance.cs",
         'FileMode.CreateNew, FileAccess.Write)',
         'FileMode.CreateNew, System.IO.FileAccess.Write)')
-    # Stop at the actual compiler failure instead of continuing into export
-    # and reporting only a secondary Godot export error.
     change("build/Windows/build.ps1",
         '  dotnet build $Solution -c Release\n',
         '  dotnet build $Solution -c Release\n'
         '  if ($LASTEXITCODE -ne 0) { throw "C# compilation failed: $LASTEXITCODE" }\n')
-
 
 if __name__ == "__main__":
     apply()

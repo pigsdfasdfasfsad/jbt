@@ -23,13 +23,15 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.sha }}
-      - name: Apply inspected source integration
+      - name: Integrate inspected source changes
         id: patch
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_REF_NAME" = 'twr-source-fidelity-release'
           python tools/dev/apply_source_fidelity.py
+          python tools/dev/apply_deployed_visuals.py
+          python tools/dev/apply_graphics_validation.py
           git diff --check
           python - <<'PY'
           import subprocess
@@ -38,6 +40,12 @@ jobs:
               'src/Twr.Godot/Scripts/Bootstrap.cs',
               'src/Twr.Godot/Scripts/LocalSessionNode.cs',
               'src/Twr.Godot/Scripts/SourceMeshPresentationAcceptance.cs',
+              'src/Twr.Godot/Scripts/FortificationActor.cs',
+              'src/Twr.Godot/Scripts/RuntimeReadinessAcceptance.cs',
+              'src/Twr.Godot/Scripts/RuntimeInteractionAcceptance.cs',
+              'src/Twr.Godot/Scripts/Pass76ObjectiveFortificationAcceptance.cs',
+              'tools/validation/run_source_fidelity.py',
+              'tools/build/package_source_safe.py',
               'build/Windows/build.ps1',
           }
           changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
@@ -49,7 +57,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'fix(maps): integrate inspected source-mesh and build corrections'
+            git commit -m 'feat(gameplay): integrate source meshes deployed equipment and timed Jack lifecycle'
             git push origin HEAD:refs/heads/twr-source-fidelity-release
           fi
           echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -60,8 +68,50 @@ jobs:
           name: TWR-PublicSource-${{ steps.patch.outputs.tested_commit }}
           path: public-source-checkpoint.zip
           retention-days: 7
-  verify:
+  graphics:
     needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      vblank_mode: '0'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.prepare.outputs.tested_commit }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.425'
+      - name: Install software graphics dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri libegl1 libx11-6 libxrandr2 libxi6 libxinerama1 libxcursor1
+          python -m pip install -e .[test] PyYAML
+      - name: Real-renderer geometry assertions and engine captures
+        run: python tools/validation/run_graphics_validation.py
+      - name: Retain graphics evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Graphics-${{ needs.prepare.outputs.tested_commit }}
+          path: build/graphics-validation/*
+          if-no-files-found: error
+          retention-days: 30
+      - name: Package local-verification harness
+        run: python tools/build/package_linux_qa_harness.py
+      - name: Retain public-only Linux QA harness
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Linux-QA-${{ needs.prepare.outputs.tested_commit }}
+          path: build/qa-harness/*.zip
+          compression-level: 0
+          retention-days: 3
+  verify:
+    needs: [prepare, graphics]
     runs-on: windows-latest
     timeout-minutes: 90
     env:
@@ -76,6 +126,10 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.425'
+      - uses: actions/download-artifact@v5
+        with:
+          name: TWR-Graphics-${{ needs.prepare.outputs.tested_commit }}
+          path: build/graphics-validation
       - name: Dependencies
         shell: pwsh
         run: python -m pip install -e .[test] PyYAML
@@ -101,10 +155,18 @@ jobs:
               Get-Content 'build/source-fidelity-validation/export.log' -Tail 45
             }
           }
-      - name: Native source mesh importer and real gameplay readiness
+      - name: Native readiness timed Jack and actual mounted-fire interactions
         if: always() && steps.export.outcome == 'success'
         shell: pwsh
         run: python tools/validation/run_source_fidelity.py
+      - name: Retain targeted diagnostics immediately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Targeted-${{ needs.prepare.outputs.tested_commit }}
+          path: build/source-fidelity-validation/*
+          if-no-files-found: warn
+          retention-days: 30
       - name: Repeated native shutdown regressions
         if: always() && steps.export.outcome == 'success'
         shell: pwsh
