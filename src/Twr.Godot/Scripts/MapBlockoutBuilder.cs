@@ -24,6 +24,9 @@ public sealed record RuntimeMapLayout(
     // When source markers are recovered, do not move spawns into arbitrary
     // offsets that might intersect the original collision geometry.
     public bool UseExactInfectedSpawns { get; init; }
+    // Source importer supplies only provisional objectives; no original
+    // objective spawn transforms survived in its scene-pack contract.
+    public bool ProvisionalSourceObjectives122 { get; init; }
     // Pass121: source-authoritative ORIGINAL named player marker feet.
     // Empty for the ten approximate blockouts; never fabricates positions.
     public IReadOnlyList<Vector3> SourcePlayerFootMarkers121 { get; init; } = [];

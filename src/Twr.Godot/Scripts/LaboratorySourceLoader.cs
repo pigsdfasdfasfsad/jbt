@@ -278,6 +278,7 @@ public static class LaboratorySourceLoader
                 })
             {
                 UseExactInfectedSpawns = true,
+                ProvisionalSourceObjectives122 = true,
                 FortificationPoints = fortificationMarkers,
                 SourcePlayerFootMarkers121 = players
                     .OrderBy(p => p.Name, StringComparer.Ordinal)

@@ -90,6 +90,10 @@ public partial class GameplayRoot : Node3D
     public bool AlternativeOriginalPlayerSpawn121 { get; private set; }
     public bool BlockedOriginalPlayerSpawn121 { get; private set; }
     private bool _sourcePlayerPlacementPending121;
+    private readonly List<Vector3> _provisionalObjectiveAnchors122 = [];
+    public int VerifiedProvisionalObjectives122 { get; private set; }
+    public int RejectedProvisionalObjectives122 { get; private set; }
+    public int AdjustedProvisionalObjectives122 { get; private set; }
     private int _sourcePlayerPhysicsFrames121;
     public int VerifiedFallbackNaturalPickups86 { get; private set; }
     public int RejectedFallbackNaturalPickups86 { get; private set; }
@@ -375,6 +379,16 @@ public partial class GameplayRoot : Node3D
             VerifiedOriginalPlayerSpawn121++;
             AlternativeOriginalPlayerSpawn121 = alternateOriginal;
             _player.SetPhysicsProcess(true);
+            if (_mapLayout.ProvisionalSourceObjectives122)
+            {
+                // Previous positions were rough offsets from the originally
+                // chosen player marker. Retarget only these NON-source
+                // locations to the physically verified current player.
+                _provisionalObjectiveAnchors122.Clear();
+                var centre = validatedPosition.Value;
+                _provisionalObjectiveAnchors122.Add(centre + new Vector3(7,0,-5));
+                _provisionalObjectiveAnchors122.Add(centre + new Vector3(-7,0,-5));
+            }
             GD.Print("TWR_PASS121_PLAYER_SPAWN_VERIFIED map=" + MapName +
                 " alternate_source=" + alternateOriginal +
                 " rejected_source_markers=" + rejectedOriginal);
@@ -747,6 +761,21 @@ public partial class GameplayRoot : Node3D
         {
             var family = families[(wave - 1 + i * 2) % families.Length];
             var position = ObjectivePosition(i);
+            if (_mapLayout.ProvisionalSourceObjectives122)
+            {
+                var candidate = Pass122ProvisionalObjectiveSafety.TryFind(
+                    GetWorld3D(), _provisionalObjectiveAnchors122,
+                    i, _player.GlobalPosition, _player.GetRid());
+                if (!candidate.HasValue)
+                {
+                    RejectedProvisionalObjectives122++;
+                    continue; // Never instantiate unreachable guessed locations.
+                }
+                VerifiedProvisionalObjectives122++;
+                if (position.DistanceTo(candidate.Value) > .25f)
+                    AdjustedProvisionalObjectives122++;
+                position = candidate.Value;
+            }
             // Pass95: source-absent fallback Manor upper Escort rotates
             // through the three physically existing Pass82 wings. This
             // leaves every owner-original marker, objective family and
