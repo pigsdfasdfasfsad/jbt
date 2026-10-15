@@ -31,6 +31,11 @@ public partial class RuntimePresentationCapture : Node3D
             game.SetProcess(false);
             var player=game.GetNode<FirstPersonPlayer>("Player");
             await Frames(90);
+            // Let the actual gameplay HUD read authoritative ammo,
+            // health and match state before capturing its view.
+            game.SetProcess(true);
+            await Frames(3);
+            game.SetProcess(false);
             player.SetGameplayControlsEnabled(false);
             await Frames(5);
             Save(folder,"laboratory-fallback-first-person.png");
@@ -73,7 +78,7 @@ public partial class RuntimePresentationCapture : Node3D
                     Name="Rendered"+i,Definition=definitions.First(x=>x.Name==types[i]),
                     Position=new Vector3(xs[i],0,0)
                 });
-            var camera=new Camera3D { Current=true,Fov=46,Position=new Vector3(0,4.5f,12.5f) };
+            var camera=new Camera3D { Current=true,Fov=46,Position=new Vector3(0,3.2f,9.0f) };
             gallery.AddChild(camera);
             camera.LookAt(new Vector3(0,.50f,0),Vector3.Up);
             var canvas=new CanvasLayer();

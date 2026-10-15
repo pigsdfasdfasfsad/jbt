@@ -122,6 +122,10 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         _viewModel = new WeaponViewModelRuntime { Name = "WeaponViewModel" };
         _camera.AddChild(_viewModel);
+        _camera.AddChild(new FirstPersonModelLighting
+        {
+            Name="FirstPersonModelLight", Model=_viewModel
+        });
 
         // Optic drawings are screen-space, visual-only and never used
         // for bullet-ray hit tests. GameplayHud remains lower-layer UI.
