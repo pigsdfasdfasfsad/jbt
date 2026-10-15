@@ -32,6 +32,7 @@ jobs:
           python tools/dev/apply_source_fidelity.py
           python tools/dev/apply_deployed_visuals.py
           python tools/dev/apply_graphics_validation.py
+          python tools/dev/apply_final_presentation.py
           git diff --check
           python - <<'PY'
           import subprocess
@@ -44,6 +45,9 @@ jobs:
               'src/Twr.Godot/Scripts/RuntimeReadinessAcceptance.cs',
               'src/Twr.Godot/Scripts/RuntimeInteractionAcceptance.cs',
               'src/Twr.Godot/Scripts/Pass76ObjectiveFortificationAcceptance.cs',
+              'src/Twr.Godot/Scripts/FirstPersonPlayer.cs',
+              'src/Twr.Godot/Scripts/RuntimePresentationCapture.cs',
+              'src/Twr.Godot/Scripts/TimedJackAcceptance.cs',
               'tools/validation/run_source_fidelity.py',
               'tools/build/package_source_safe.py',
               'build/Windows/build.ps1',
@@ -57,7 +61,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'feat(gameplay): integrate source meshes deployed equipment and timed Jack lifecycle'
+            git commit -m 'feat(gameplay): integrate source meshes equipment lighting and verified Jack lifecycle'
             git push origin HEAD:refs/heads/twr-source-fidelity-release
           fi
           echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -186,6 +190,13 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
+      - name: Retain release receipt separately
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Release-Receipt-${{ needs.prepare.outputs.tested_commit }}
+          path: build/deliverables/release-receipt.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Retain validation receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -205,3 +216,36 @@ jobs:
             Write-Host "RECEIPT=$($_.Name)"
             Get-Content $_.FullName
           }
+  continuation:
+    needs: [prepare, graphics, verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      TESTED_COMMIT: ${{ needs.prepare.outputs.tested_commit }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.prepare.outputs.tested_commit }}
+      - uses: actions/download-artifact@v5
+        with:
+          name: TWR-Release-Receipt-${{ needs.prepare.outputs.tested_commit }}
+          path: build/deliverables
+      - name: Preserve canonical continuation and exact tested source
+        shell: bash
+        run: |
+          set -euo pipefail
+          current=$(git ls-remote origin refs/heads/twr-source-fidelity-release | cut -f1)
+          test "$current" = "$TESTED_COMMIT"
+          python tools/dev/write_release_handoff.py
+          git diff --check
+          git add docs/development/CURRENT_IMPLEMENTATION_STATUS.md
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'docs: record retained source-safe release and precise continuation gaps'
+            git push origin HEAD:refs/heads/twr-source-fidelity-release
+          fi
+          echo "SOURCE_TESTED=$TESTED_COMMIT"
+          echo "CONTINUATION_COMMIT=$(git rev-parse HEAD)"
