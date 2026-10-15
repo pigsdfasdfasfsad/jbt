@@ -21,7 +21,7 @@ def test_bloater_spawn_is_parent_local_before_ready():
     assert "new SporeProjectileRuntime" in bloater
     assert "var spawnGlobalPosition = infected.GlobalPosition + Vector3.Up * 1.2f;" in bloater
     assert "Position = ToLocal(spawnGlobalPosition)" in bloater
-    assert "GlobalPosition = infected.GlobalPosition" not in bloater
+    assert not any(line.strip().startswith("GlobalPosition =") for line in bloater.splitlines())
     assert "Damage = 26.4f" in bloater and "Radius = 15f" in bloater
 
 
