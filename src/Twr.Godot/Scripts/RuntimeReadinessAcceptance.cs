@@ -74,6 +74,8 @@ public partial class RuntimeReadinessAcceptance : Node
             player.Rotation.DistanceTo(rotation) > .001f)
             throw new InvalidOperationException("Suppressed startup accepted gameplay input");
 
+        await RuntimePickupVisualAcceptance.Verify(game);
+        await RuntimeInteractionAcceptance.Verify(game, player, Runtime);
         player.SetGameplayControlsEnabled(true);
         player._UnhandledInput(equip);
         if (player.EquippedWeaponName != player.PrimaryWeaponName)

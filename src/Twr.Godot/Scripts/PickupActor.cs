@@ -16,18 +16,9 @@ public partial class PickupActor : Node3D
     public override void _Ready()
     {
         AddToGroup("twr-pickup");
-        AddChild(new MeshInstance3D
-        {
-            Mesh = new BoxMesh
-            {
-                Size = new Vector3(0.55f, 0.35f, 0.55f),
-                Material = new StandardMaterial3D
-                {
-                    AlbedoColor = PickupColor(PickupType),
-                    Roughness = 0.8f
-                }
-            }
-        });
+        // Locally reconstructed silhouettes; no original asset pixels.
+        // Bounds preserve the existing grounded pickup envelope.
+        AddChild(ReconstructedPickupVisuals.Build(PickupType, PickupColor(PickupType)));
 
         AddChild(new Label3D
         {
@@ -40,6 +31,7 @@ public partial class PickupActor : Node3D
 
     public override void _Process(double delta)
     {
+        if (Player?.GameplayControlsEnabled != true) return;
         if (Player is null || Runtime?.Player?.IsAlive != true)
             return;
 
@@ -62,6 +54,7 @@ public partial class PickupActor : Node3D
 
     private bool TryCollect()
     {
+        if (Player?.GameplayControlsEnabled != true) return false;
         if (Player is null || Runtime?.Player?.IsAlive != true)
             return false;
 

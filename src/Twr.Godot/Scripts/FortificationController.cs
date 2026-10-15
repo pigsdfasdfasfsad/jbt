@@ -30,6 +30,17 @@ public partial class FortificationController : Node
 
     public override void _Process(double delta)
     {
+        if (Player?.GameplayControlsEnabled != true)
+        {
+            if (_hammerMode)
+            {
+                _hammerMode = false;
+                _swingsCompleted = 0;
+                if (Player is not null && GodotObject.IsInstanceValid(Player))
+                    Player.SetHammerMode(false);
+            }
+            return;
+        }
         if (Runtime?.Player?.IsAlive != true)
         {
             if (_hammerMode)
@@ -50,6 +61,7 @@ public partial class FortificationController : Node
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        if (Player?.GameplayControlsEnabled != true) return;
         if (Runtime?.Player?.IsAlive != true) return;
         if(@event is InputEventKey switchKey && switchKey.Pressed && !switchKey.Echo &&
            _hammerMode && switchKey.Keycode is Key.Key1 or Key.Key2 or Key.Key3 or Key.Key5 or Key.Key6 or Key.Key7 or Key.G)
@@ -93,6 +105,7 @@ public partial class FortificationController : Node
 
     private void TrySwing()
     {
+        if (Player?.GameplayControlsEnabled != true) return;
         if (_swingCooldown > 0 || Runtime?.Player?.IsAlive != true ||
             Player is null)
             return;
@@ -145,11 +158,13 @@ public partial class FortificationController : Node
             DamageMultiplier = FortificationDamageMultiplier(definition),
             RangeMultiplier = FortificationRangeMultiplier(definition),
             Player = Player,
-            Runtime = Runtime,
-            GlobalPosition = groundedPosition
+            Runtime = Runtime
         };
         _deployed.Add(actor);
         AddChild(actor);
+        // World transforms require an attached Node3D. _Ready only
+        // builds local visual children; position it before any tick.
+        actor.GlobalPosition = groundedPosition;
         PublishStatus();
     }
 

@@ -55,6 +55,12 @@ public partial class FortificationActor : Node3D
 
     public override void _Process(double delta)
     {
+        if (Player?.GameplayControlsEnabled != true)
+        {
+            if (_mounted && Player is not null && GodotObject.IsInstanceValid(Player))
+                SetMounted(false);
+            return;
+        }
         if (IsQueuedForDeletion()) return;
         if (Runtime?.Player?.IsAlive != true)
         {
@@ -77,11 +83,13 @@ public partial class FortificationActor : Node3D
 
     public override void _ExitTree()
     {
-        if(_mounted)Player?.SetMountedMode(false);
+        if(_mounted && Player is not null && GodotObject.IsInstanceValid(Player))
+            Player.SetMountedMode(false);
     }
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        if (Player?.GameplayControlsEnabled != true) return;
         // The first actual left click must fire immediately. Holding LMB
         // still uses the existing 0.225-second automatic _Process cadence;
         // the common firing cooldown prevents a double shot in one frame.
@@ -135,6 +143,7 @@ public partial class FortificationActor : Node3D
 
     private void Fire50Cal()
     {
+        if (Player?.GameplayControlsEnabled != true) return;
         if(Player is null || Runtime?.Player?.IsAlive != true ||
             Definition.Damage is null || !_mounted || _remainingShots <= 0 ||
             _timer > 0)
@@ -150,7 +159,7 @@ public partial class FortificationActor : Node3D
 
         for(var penetration=0;penetration<=Math.Max(0,Definition.MaxPen ?? 0);penetration++)
         {
-            var query=PhysicsRayQueryParameters3D.Create(origin,origin+direction*remaining);
+            using var query=PhysicsRayQueryParameters3D.Create(origin,origin+direction*remaining);
             // Pass76: same world + infected + source-server layer mask as
             // actual hand-held weapons. Default Godot layer 1 misses layer-2
             // infected CharacterBody collision completely.
