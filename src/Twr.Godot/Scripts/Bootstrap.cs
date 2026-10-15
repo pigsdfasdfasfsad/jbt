@@ -36,6 +36,11 @@ public partial class Bootstrap : Node
         AddChild(_runtime);
         AddChild(new RuntimeWindowCloseHandler { Name = "RuntimeWindowClose" });
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--capture-presentation", StringComparer.Ordinal))
+        {
+            AddChild(new RuntimePresentationCapture { Runtime=_runtime,Name="RuntimePresentationCapture" });
+            return;
+        }
         if(args.Contains("--smoke-source-mesh", StringComparer.Ordinal))
         {
             AddChild(new SourceMeshPresentationAcceptance { Name="SourceMeshPresentationAcceptance" });

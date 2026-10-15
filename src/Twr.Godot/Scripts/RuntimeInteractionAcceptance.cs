@@ -53,6 +53,8 @@ public static class RuntimeInteractionAcceptance
             deployed.GlobalPosition.DistanceTo(player.GlobalPosition) > 5f ||
             deployed.GlobalPosition.LengthSquared() < 1f)
             throw new InvalidOperationException("Fortification was not placed at its attached world-space location");
+        if (deployed.DeployedVisual.WireSegments < 96)
+            throw new InvalidOperationException("Actual hammer deployment lost its wire-coil model");
         forts._UnhandledInput(hammer);
         forts.ClearDeployed();
         player.SetGameplayControlsEnabled(false);

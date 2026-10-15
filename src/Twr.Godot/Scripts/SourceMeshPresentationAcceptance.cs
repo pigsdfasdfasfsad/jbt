@@ -55,6 +55,8 @@ public partial class SourceMeshPresentationAcceptance : Node3D
 
     private async Task Verify()
     {
+        if (DisplayServer.GetName() == "headless")
+            throw new InvalidOperationException("Mesh instance readback requires a real renderer, not Godot dummy rendering");
         var folder = Path.Combine(Path.GetDirectoryName(OS.GetExecutablePath())!, "Content", "Maps");
         var fixture = Path.Combine(folder, "Cabin.scene.jsonl.gz");
         if (File.Exists(fixture))

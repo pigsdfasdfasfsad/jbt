@@ -75,6 +75,8 @@ public partial class RuntimeReadinessAcceptance : Node
             throw new InvalidOperationException("Suppressed startup accepted gameplay input");
 
         await RuntimePickupVisualAcceptance.Verify(game);
+        await DeployedFortificationAcceptance.Verify(game, player, Runtime);
+        await TimedJackAcceptance.Verify(game, player, Runtime);
         await RuntimeInteractionAcceptance.Verify(game, player, Runtime);
         player.SetGameplayControlsEnabled(true);
         player._UnhandledInput(equip);

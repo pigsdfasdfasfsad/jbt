@@ -19,38 +19,27 @@ public partial class FortificationActor : Node3D
     private bool _toggleAim;
     public bool Mounted76 => _mounted;
     public int ShotsFired76 { get; private set; }
+    public int RemainingShots76 => _remainingShots;
+    public FortificationPresentation DeployedVisual { get; private set; } = null!;
+    private Label3D _nameplate = null!;
+    private double _jackRemaining = JackDetonationRules.ReferenceDelaySeconds;
+    private bool _detonated;
 
     public override void _Ready()
     {
-        var size = Definition.Radius.HasValue
-            ? new Vector3(0.75f, 0.35f, 0.75f)
-            : Definition.Damage.HasValue
-                ? new Vector3(0.75f, 1.2f, 1.4f)
-                : new Vector3(2.8f, 0.35f, 0.55f);
-
-        AddChild(new MeshInstance3D
+        DeployedVisual = new FortificationPresentation
         {
-            Position = new Vector3(0, size.Y * 0.5f, 0),
-            Mesh = new BoxMesh
-            {
-                Size = size,
-                Material = new StandardMaterial3D
-                {
-                    AlbedoColor = Definition.Damage.HasValue
-                        ? new Color(0.28f, 0.26f, 0.20f)
-                        : new Color(0.34f, 0.34f, 0.34f),
-                    Roughness = 0.9f
-                }
-            }
-        });
-
-        AddChild(new Label3D
+            Name = "DeployedVisual", FortificationType = Definition.Name
+        };
+        AddChild(DeployedVisual);
+        _nameplate = new Label3D
         {
-            Text = Definition.Name=="50 Cal" ? "50 CAL [E]" : Definition.Name,
+            Text = Definition.Name=="50 Cal" ? "50 CAL [E] | 21/21" : Definition.Name,
             Position = new Vector3(0, 1.7f, 0),
             FontSize = 30,
             Billboard = BaseMaterial3D.BillboardModeEnum.Enabled
-        });
+        };
+        AddChild(_nameplate);
     }
 
     public override void _Process(double delta)
@@ -75,6 +64,13 @@ public partial class FortificationActor : Node3D
             return;
         }
 
+        if (Definition.Name == "Jack")
+        {
+            _jackRemaining = Math.Max(0, _jackRemaining - Math.Max(0, delta));
+            _nameplate.Text = $"JACK | {Math.Ceiling(_jackRemaining)}s";
+            if (_jackRemaining <= 0) DetonateAreaDevice(true);
+            return;
+        }
         if (Definition.Damage.HasValue && Definition.Radius.HasValue)
             TickAreaDevice();
         else
@@ -122,6 +118,7 @@ public partial class FortificationActor : Node3D
         _qWasDown=qDown;
         if(qPressed)_toggleAim=!_toggleAim;
         Player.SetMountedAim(_toggleAim || Input.IsMouseButtonPressed(MouseButton.Right));
+        DeployedVisual.Aim(Player.AimDirection);
 
         if(_remainingShots>0 && _timer<=0 && Input.IsMouseButtonPressed(MouseButton.Left))
             Fire50Cal();
@@ -151,6 +148,9 @@ public partial class FortificationActor : Node3D
         _timer=0.225; // RECOVERED animation timeline: 0.075s + 0.15s.
         _remainingShots--;
         ShotsFired76++;
+        DeployedVisual.Aim(Player.AimDirection);
+        DeployedVisual.PresentShot();
+        _nameplate.Text = $"50 CAL [E] | {_remainingShots}/21";
 
         var origin=GlobalPosition+Vector3.Up*1.35f;
         var direction=Player.AimDirection.Normalized();
@@ -200,6 +200,15 @@ public partial class FortificationActor : Node3D
         if (_timer > 0) return;
         var trigger = FindNearest(2.0f);
         if (trigger is null) return;
+        DetonateAreaDevice(false);
+    }
+
+    private void DetonateAreaDevice(bool timedJack)
+    {
+        if (_detonated || IsQueuedForDeletion()) return;
+        _detonated = true;
+        // Existing synthesized cue, not the unrecovered original Jack audio.
+        Player?.Audio?.Play("launcher");
 
         // STRONGLY INFERRED: the Clap Bomb exposes Radius but no separate range stat.
         // Enhanced Electronics therefore applies its exact +40% to this radius.
@@ -210,14 +219,18 @@ public partial class FortificationActor : Node3D
         foreach (var infected in EnumerateInfected())
             if (Pass75BlastOcclusion.CanReachTarget(
                     GetWorld3D(), GlobalPosition, infected, radius, Player))
-                infected.ApplyDamage(Definition.Damage!.Value*DamageMultiplier,
+                infected.ApplyDamage(Definition.Damage!.Value*DamageMultiplier *
+                    (timedJack ? JackDetonationRules.ApproximateFalloff(
+                        GlobalPosition.DistanceTo(infected.GlobalPosition),radius) : 1f),
                     false, "Explosion");
 
         foreach (var node in GetTree().GetNodesInGroup("damage_objective"))
             if (node is DamageObjectiveTarget tanker &&
                 Pass75BlastOcclusion.CanReachTarget(
                     GetWorld3D(), GlobalPosition, tanker, radius, Player))
-                tanker.ApplyDamage(Definition.Damage!.Value*DamageMultiplier, "Explosive");
+                tanker.ApplyDamage(Definition.Damage!.Value*DamageMultiplier *
+                    (timedJack ? JackDetonationRules.ApproximateFalloff(
+                        GlobalPosition.DistanceTo(tanker.GlobalPosition),radius) : 1f), "Explosive");
 
         QueueFree();
     }

@@ -118,7 +118,10 @@ public partial class LocalSessionNode : Node
                 "user://runtime-readiness-smoke-profile.json");
         var sourceMeshSmoke = OS.GetCmdlineUserArgs().Contains("--smoke-source-mesh", StringComparer.Ordinal);
         if (sourceMeshSmoke) save = ProjectSettings.GlobalizePath("user://source-mesh-smoke-profile.json");
+        var presentationCapture = OS.GetCmdlineUserArgs().Contains("--capture-presentation", StringComparer.Ordinal);
+        if (presentationCapture) save = ProjectSettings.GlobalizePath("user://presentation-capture-profile.json");
         var store = new JsonProfileStore(save);
+        if (presentationCapture) store.Save(new Profile());
         if (sourceMeshSmoke) store.Save(new Profile());
         if (runtimeReadinessSmoke) store.Save(new Profile());
         if(smoke70 || smoke71)

@@ -426,6 +426,8 @@ public partial class Pass76ObjectiveFortificationAcceptance : Node
             Pressed = true,
             Position = Vector2.Zero
         });
+        if (!turret.DeployedVisual.ShotFlashVisible || turret.RemainingShots76 != 20)
+            throw new InvalidOperationException("A real mounted shot did not update its presentation and ammunition");
         await Frames(3);
         if (turret.ShotsFired76 != 1 ||
             (GodotObject.IsInstanceValid(enemy) && enemy.Health > 0) ||

@@ -38,8 +38,9 @@ def main() -> None:
     parser.add_argument("--reports", type=Path, default=ROOT / "build/source-fidelity-validation")
     args = parser.parse_args()
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-    tests = [("--smoke-source-mesh", "TWR_SOURCE_MESH_PRESENTATION_OK"),
-             ("--smoke-runtime-readiness", "TWR_SMOKE_RUNTIME_READINESS_OK")]
+    # MultiMesh visual assertions run unchanged in the real-renderer job.
+    tests = [("--smoke-runtime-readiness", "TWR_SMOKE_RUNTIME_READINESS_OK"),
+             ("--smoke-pass76", "TWR_SMOKE_PASS76_OBJECTIVE_FORTIFICATION_OK")]
     outcomes = [execute(args.exe, flag, marker, args.reports) for flag, marker in tests]
     report = {"tested_commit": commit, "passed": sum(x["passed"] for x in outcomes),
         "failed": sum(not x["passed"] for x in outcomes), "tests": outcomes,
