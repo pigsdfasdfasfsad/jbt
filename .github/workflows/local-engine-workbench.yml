@@ -1,0 +1,55 @@
+name: Offline engine development workbench
+on:
+  workflow_dispatch:
+  push:
+    branches: [twr-laboratory-runtime-integration]
+    paths:
+      - '.github/workflows/local-engine-workbench.yml'
+permissions:
+  contents: read
+jobs:
+  workbench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.425'
+      - name: Install renderer and validation dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri libegl1 libx11-6 libxrandr2 libxi6 libxinerama1 libxcursor1
+          python -m pip install -e .[test] PyYAML
+      - name: Validate actual checked-out source
+        run: python tools/validation/run_all.py
+      - name: Compile and capture using real OpenGL renderer
+        run: python tools/validation/run_graphics_validation.py
+      - name: Package offline compiler and public-only source
+        run: |
+          python tools/build/package_linux_qa_harness.py --include-sdk
+          git archive --format=zip --output=build/qa-harness/public-source-checkpoint.zip HEAD
+      - name: Retain development workbench
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Offline-Workbench-${{ github.sha }}
+          path: build/qa-harness/*
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 3
+      - name: Retain graphics verification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Workbench-Graphics-${{ github.sha }}
+          path: build/graphics-validation/*
+          if-no-files-found: warn
+          retention-days: 14
