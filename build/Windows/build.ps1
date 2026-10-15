@@ -72,6 +72,7 @@ New-Item -ItemType Directory -Force -Path $Output | Out-Null
 Push-Location $Project
 try {
   dotnet build $Solution -c Release
+  if ($LASTEXITCODE -ne 0) { throw "C# compilation failed: $LASTEXITCODE" }
 
   $importOutput = & $godot --headless --verbose --path $Project --editor --quit 2>&1
   $importCode = $LASTEXITCODE

@@ -80,7 +80,7 @@ public partial class SourceMeshPresentationAcceptance : Node3D
         Node3D? stage = null;
         try
         {
-            using (var file = new FileStream(fixture, FileMode.CreateNew, FileAccess.Write))
+            using (var file = new FileStream(fixture, FileMode.CreateNew, System.IO.FileAccess.Write))
             using (var gzip = new GZipStream(file, CompressionLevel.Optimal))
             using (var writer = new StreamWriter(gzip))
             {
