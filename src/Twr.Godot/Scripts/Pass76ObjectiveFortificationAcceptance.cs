@@ -458,14 +458,15 @@ public partial class Pass76ObjectiveFortificationAcceptance : Node
             }
         };
         game.AddChild(supply);
-        supply._Process(4.0); // accelerate descent, not collider authority
+        supply._PhysicsProcess(4.0); // accelerate descent, not collider authority
+        await Frames(2); // payload notification runs after the physics callback
         if (!supply.Landed76 || landCount != 1 ||
             Math.Abs(landing.Y - (FloorY + .58f)) > .12f)
             throw new InvalidOperationException(
                 "Pass76 supply pallet ignored real elevated physics floor " +
                 "landed=" + supply.Landed76 +
                 " callbacks=" + landCount + " y=" + landing.Y);
-        supply._Process(1.0);
+        supply._PhysicsProcess(1.0);
         if (landCount != 1)
             throw new InvalidOperationException(
                 "Pass76 supply landed callback fired more than once");

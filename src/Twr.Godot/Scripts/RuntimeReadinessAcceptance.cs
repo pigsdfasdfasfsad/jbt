@@ -79,6 +79,7 @@ public partial class RuntimeReadinessAcceptance : Node
         await TimedJackAcceptance.Verify(game, player, Runtime);
         await RuntimeInteractionAcceptance.Verify(game, player, Runtime);
         FirstPersonModelLighting.Verify(player);
+        await SupplyDeliveryAcceptance.Verify(game, player);
         player.SetGameplayControlsEnabled(true);
         player._UnhandledInput(equip);
         if (player.EquippedWeaponName != player.PrimaryWeaponName)

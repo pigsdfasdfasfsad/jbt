@@ -1190,26 +1190,40 @@ public partial class GameplayRoot : Node3D
 
     private void SpawnSupplyDrop()
     {
-        var destination = new Vector3(_rng.RandfRange(-8f, 8f), 0.3f, _rng.RandfRange(-20f, 20f));
+        if (_finished || Runtime?.Player?.IsAlive != true) return;
+        var destination = _player.GlobalPosition;
         var pallet = new SupplyDropRuntime
         {
             Name = $"SupplyDrop_{Runtime?.Match?.Wave ?? 0}",
             Position = destination + Vector3.Up * 15f,
             GroundY = destination.Y,
+            PlanNearSourcePlayer = true,
             SourcePlayer = _player
         };
         pallet.Landed = position =>
         {
             _supplyDrops.Remove(pallet);
-            SpawnSupplyContents(position);
+            if (_finished || Runtime?.Player?.IsAlive != true) return;
+            SpawnSupplyContents(position, pallet.PayloadPositions);
             _hud.SetBanner("SUPPLY DROP LANDED");
+        };
+        pallet.Failed = reason =>
+        {
+            _supplyDrops.Remove(pallet);
+            if (!_finished && GodotObject.IsInstanceValid(_hud))
+                _hud.SetBanner("SUPPLY DROP UNAVAILABLE - NO SAFE LANDING");
+            GD.Print("TWR_SUPPLY_DELIVERY_CANCELLED reason=" + reason);
         };
         _supplyDrops.Add(pallet);
         AddChild(pallet);
     }
 
-    private void SpawnSupplyContents(Vector3 center)
+    private void SpawnSupplyContents(Vector3 center, Vector3[]? groundedPayload = null)
     {
+        if (groundedPayload is not null && groundedPayload.Length != 8)
+            throw new InvalidOperationException("Supply payload requires eight verified positions");
+        Vector3 SupplyPoint(int i) => groundedPayload is null
+            ? RingPoint(center,i,8,2.3f) : groundedPayload[i];
         // RECOVERED payload contract: exactly four Regular slots and four Fort
         // slots. Regular pool is Medkit/Ammo/Body Armor. Fort pool includes
         // 50 Cal/Barbed Wire/Clap Bomb/Jack, with 0..4 50 Cals per drop.
@@ -1217,7 +1231,7 @@ public partial class GameplayRoot : Node3D
         for(var i=0;i<4;i++)
         {
             var kind=regularPool[_rng.RandiRange(0,regularPool.Length-1)];
-            SpawnPickup(kind,RingPoint(center,i,8,2.3f));
+            SpawnPickup(kind,SupplyPoint(i));
         }
 
         var forts=LoadFortificationCatalog();
@@ -1233,10 +1247,10 @@ public partial class GameplayRoot : Node3D
                 fort=nonFifty[_rng.RandiRange(0,nonFifty.Length-1)];
             else
             {
-                SpawnPickup("Ammo",RingPoint(center,i+4,8,2.3f));
+                SpawnPickup("Ammo",SupplyPoint(i+4));
                 continue;
             }
-            SpawnPickup(fort.Name,RingPoint(center,i+4,8,2.3f),fort.Count);
+            SpawnPickup(fort.Name,SupplyPoint(i+4),fort.Count);
         }
     }
 
@@ -1527,6 +1541,10 @@ public partial class GameplayRoot : Node3D
         ClearInfected();
         ClearObjectives();
         _fortifications.ClearDeployed();
+        foreach (var supply in _supplyDrops)
+            if (GodotObject.IsInstanceValid(supply) && !supply.IsQueuedForDeletion())
+                supply.QueueFree();
+        _supplyDrops.Clear();
         Input.MouseMode = Input.MouseModeEnum.Visible;
         _hud.SetBanner($"{title}  -  [R] RESTART  |  [ENTER] MENU");
     }
@@ -1581,7 +1599,7 @@ public partial class GameplayRoot : Node3D
         {
             if (child is not (SporeCloudRuntime or SporeProjectileRuntime or
                 ThrowableProjectileRuntime or SupplyDropRuntime)) continue;
-            if (child is SupplyDropRuntime drop) drop.Landed = null;
+            if (child is SupplyDropRuntime drop) { drop.Landed = null; drop.Failed = null; }
             child.SetProcess(false);
             child.SetPhysicsProcess(false);
             child.QueueFree();
