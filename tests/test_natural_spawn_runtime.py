@@ -29,7 +29,10 @@ def test_collected_natural_pickups_respawn_with_recovered_regular_cadence():
     assert "FITTED in the recovered TestPlace directive" in s
     assert "_mapLayout.PickupPoints.Count" in s
     assert "++placedOriginalItems >= 4" in s
-    assert "var fortCount=Math.Min(2,_mapLayout.PickupPoints.Count)" in s
+    # Source-authored maps without fortification markers no longer invent
+    # offset positions. Approximate blockouts retain their own two-fort cap.
+    assert "var fortCount=0;" in s
+    assert "++fortCount>=2" in s
     assert "ScheduleNaturalRespawn(authoredNaturalMarker,naturalGroup)" in s
     assert "var authoredNaturalMarker = naturalMarker ?? position;" in s
     assert "if (_isFallbackScene86) TickNaturalRespawns(delta);" in s
