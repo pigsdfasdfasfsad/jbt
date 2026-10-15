@@ -1,0 +1,131 @@
+name: Source fidelity and retained Windows release
+on:
+  workflow_dispatch:
+  push:
+    branches: [twr-source-fidelity-release]
+    paths:
+      - 'tools/dev/apply_source_fidelity.py'
+      - '.github/workflows/source-fidelity-release.yml'
+concurrency:
+  group: source-fidelity-release-${{ github.ref }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      tested_commit: ${{ steps.patch.outputs.tested_commit }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+      - name: Apply inspected source integration
+        id: patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'twr-source-fidelity-release'
+          python tools/dev/apply_source_fidelity.py
+          git diff --check
+          python - <<'PY'
+          import subprocess
+          allowed = {
+              'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs',
+              'src/Twr.Godot/Scripts/Bootstrap.cs',
+              'src/Twr.Godot/Scripts/LocalSessionNode.cs',
+          }
+          changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
+          if not changed <= allowed:
+              raise SystemExit('Unexpected source edit: ' + repr(changed - allowed))
+          for path in sorted(changed):
+              subprocess.run(['git','add','--',path], check=True)
+          PY
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix(maps): integrate parent-relative built-in mesh scaling and X-axis cylinders'
+            git push origin HEAD:refs/heads/twr-source-fidelity-release
+          fi
+          echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  verify:
+    needs: prepare
+    runs-on: windows-latest
+    timeout-minutes: 90
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.prepare.outputs.tested_commit }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.425'
+      - name: Dependencies
+        shell: pwsh
+        run: python -m pip install -e .[test] PyYAML
+      - name: Complete content and Python regression
+        shell: pwsh
+        run: |
+          python tools/validation/run_all.py
+          if ($LASTEXITCODE -ne 0) { throw 'Content or Python validation failed' }
+          python tools/build/package_source_safe.py --check-inputs
+          if ($LASTEXITCODE -ne 0) { throw 'Source-safe input audit failed' }
+      - name: Export native Windows game
+        id: export
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force 'build/source-fidelity-validation' | Out-Null
+          & .\build\Windows\build.ps1 -BootstrapToolchain -SkipTests *> 'build/source-fidelity-validation/export.log'
+          $code = $LASTEXITCODE
+          Get-Content 'build/source-fidelity-validation/export.log' -Tail 50
+          if ($code -ne 0) { throw "Native export failed: $code" }
+          if (!(Test-Path 'build/output/ThoseWhoRemainOffline.exe')) { throw 'Executable missing' }
+      - name: Native source mesh importer and real gameplay readiness
+        if: always() && steps.export.outcome == 'success'
+        shell: pwsh
+        run: python tools/validation/run_source_fidelity.py
+      - name: Repeated native shutdown regressions
+        if: always() && steps.export.outcome == 'success'
+        shell: pwsh
+        run: python tools/validation/run_runtime_matrix.py --focus
+      - name: Complete inherited native acceptance matrix
+        if: always() && steps.export.outcome == 'success'
+        shell: pwsh
+        run: python tools/validation/run_runtime_matrix.py
+      - name: Package and launch from clean folder with bundled runtime
+        shell: pwsh
+        run: python tools/build/package_source_safe.py
+      - name: Retain source-safe playable Windows package
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-SourceSafe-Windows-${{ needs.prepare.outputs.tested_commit }}
+          path: build/deliverables/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - name: Retain validation receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWR-Validation-${{ needs.prepare.outputs.tested_commit }}
+          path: |
+            build/source-fidelity-validation/*
+            build/runtime-validation/*.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Report exact tested revision
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host "TESTED_COMMIT=$(git rev-parse HEAD)"
+          Get-ChildItem 'build/runtime-validation/*.json','build/source-fidelity-validation/*.json','build/deliverables/*.json' -ErrorAction SilentlyContinue | ForEach-Object {
+            Write-Host "RECEIPT=$($_.Name)"
+            Get-Content $_.FullName
+          }
