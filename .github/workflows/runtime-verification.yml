@@ -6,12 +6,14 @@ on:
     paths:
       - 'src/**'
       - 'tools/dev/apply_runtime_stabilization.py'
+      - 'tools/dev/apply_interaction_fixes.py'
+      - 'tools/dev/apply_pickup_visuals.py'
       - 'tools/validation/run_runtime_matrix.py'
       - 'tests/**'
       - 'build/**'
       - '.github/workflows/runtime-verification.yml'
 concurrency:
-  group: runtime-stabilization-${{ github.ref }}
+  group: runtime-stabilization-interaction-visuals-${{ github.ref }}
   cancel-in-progress: true
 permissions:
   contents: read
@@ -34,6 +36,8 @@ jobs:
           set -euo pipefail
           test "$GITHUB_REF_NAME" = 'twr-runtime-stabilization'
           python tools/dev/apply_runtime_stabilization.py
+          python tools/dev/apply_interaction_fixes.py
+          python tools/dev/apply_pickup_visuals.py
           git diff --check
           python - <<'PY'
           import subprocess
@@ -45,6 +49,10 @@ jobs:
               'src/Twr.Godot/Scripts/Pass90EscortCompletionAcceptance.cs',
               'src/Twr.Godot/Scripts/Pass92ExpresswayEscortAcceptance.cs',
               'src/Twr.Godot/Scripts/Pass94ManorEscortAcceptance.cs',
+              'src/Twr.Godot/Scripts/PickupActor.cs',
+              'src/Twr.Godot/Scripts/FortificationController.cs',
+              'src/Twr.Godot/Scripts/FortificationActor.cs',
+              'src/Twr.Godot/Scripts/RuntimeReadinessAcceptance.cs',
               'tests/test_pass118_native_exit.py',
           }
           changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
@@ -56,7 +64,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'fix(runtime): gate startup controls, resolve pending-plan death and drain native shutdown'
+            git commit -m 'fix(runtime): integrate safe interactions and thirteen reconstructed pickup silhouettes'
             git push origin HEAD:refs/heads/twr-runtime-stabilization
           fi
           echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -93,7 +101,7 @@ jobs:
           if ($buildExit -ne 0) { throw "Windows export failed: $buildExit" }
           if (!(Test-Path 'build/output/ThoseWhoRemainOffline.exe')) { throw 'Missing Windows executable' }
           git rev-parse HEAD
-      - name: Native startup controls and pending-plan death regression
+      - name: Native startup controls interaction and pickup visual regressions
         if: always() && steps.export.outcome == 'success'
         shell: pwsh
         run: python tools/validation/run_runtime_matrix.py --readiness
