@@ -1,0 +1,118 @@
+name: Runtime stabilization verification
+on:
+  workflow_dispatch:
+  push:
+    branches: [twr-runtime-stabilization]
+    paths:
+      - 'src/**'
+      - 'tools/dev/apply_runtime_stabilization.py'
+      - 'tools/validation/run_runtime_matrix.py'
+      - 'tests/**'
+      - 'build/**'
+      - '.github/workflows/runtime-verification.yml'
+concurrency:
+  group: runtime-stabilization-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      tested_commit: ${{ steps.patch.outputs.tested_commit }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+      - name: Apply and commit inspected runtime source edits
+        id: patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'twr-runtime-stabilization'
+          python tools/dev/apply_runtime_stabilization.py
+          git diff --check
+          python - <<'PY'
+          import subprocess
+          allowed = {
+              'src/Twr.Godot/Scripts/FirstPersonPlayer.cs',
+              'src/Twr.Godot/Scripts/GameplayRoot.cs',
+              'src/Twr.Godot/Scripts/Bootstrap.cs',
+              'src/Twr.Godot/Scripts/LocalSessionNode.cs',
+              'src/Twr.Godot/Scripts/Pass90EscortCompletionAcceptance.cs',
+              'src/Twr.Godot/Scripts/Pass92ExpresswayEscortAcceptance.cs',
+              'src/Twr.Godot/Scripts/Pass94ManorEscortAcceptance.cs',
+              'tests/test_pass118_native_exit.py',
+          }
+          changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
+          if not changed <= allowed:
+              raise SystemExit('Unexpected source edit: ' + repr(changed - allowed))
+          for path in sorted(changed):
+              subprocess.run(['git','add','--',path], check=True)
+          PY
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix(runtime): gate startup controls, resolve pending-plan death and drain native shutdown'
+            git push origin HEAD:refs/heads/twr-runtime-stabilization
+          fi
+          echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git log -1 --format='%H %s'
+  verify:
+    needs: prepare
+    runs-on: windows-latest
+    timeout-minutes: 90
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.prepare.outputs.tested_commit }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.425'
+      - name: Dependencies
+        shell: pwsh
+        run: python -m pip install -e .[test] PyYAML
+      - name: Full Python and content validation
+        shell: pwsh
+        run: python tools/validation/run_all.py
+      - name: Export pinned native Windows game
+        id: export
+        shell: pwsh
+        run: |
+          & .\build\Windows\build.ps1 -BootstrapToolchain -SkipTests *> "$env:RUNNER_TEMP\runtime-build.log"
+          $buildExit = $LASTEXITCODE
+          Get-Content "$env:RUNNER_TEMP\runtime-build.log" -Tail 45
+          if ($buildExit -ne 0) { throw "Windows export failed: $buildExit" }
+          if (!(Test-Path 'build/output/ThoseWhoRemainOffline.exe')) { throw 'Missing Windows executable' }
+          git rev-parse HEAD
+      - name: Native startup controls and pending-plan death regression
+        if: always() && steps.export.outcome == 'success'
+        shell: pwsh
+        run: python tools/validation/run_runtime_matrix.py --readiness
+      - name: Repeated Ranch Expressway and Manor native exit checks
+        if: always() && steps.export.outcome == 'success'
+        shell: pwsh
+        run: python tools/validation/run_runtime_matrix.py --focus
+      - name: Complete inherited native acceptance matrix
+        if: always() && steps.export.outcome == 'success'
+        shell: pwsh
+        run: python tools/validation/run_runtime_matrix.py
+      - name: Report tested commit and exact outcomes
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host "TESTED_COMMIT=$(git rev-parse HEAD)"
+          Get-ChildItem 'build/runtime-validation/*.json' -ErrorAction SilentlyContinue | ForEach-Object {
+            $result = Get-Content $_.FullName -Raw | ConvertFrom-Json
+            Write-Host "$($_.Name): passed=$($result.passed) failed=$($result.failed)"
+            $result.results | Where-Object { $_.exit_code -ne 0 } | ConvertTo-Json -Depth 5
+          }
+# No artifact uploads: original assets and executable distribution remain private.
