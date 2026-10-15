@@ -141,6 +141,7 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
             $"P119 source spawns: {Game?.VerifiedSourceSpawns119 ?? 0} grounded / {Game?.RejectedSourceSpawns119 ?? 0} rejected / {Game?.AlternateSourceMarkers119 ?? 0} alternate\n" +
             $"P120 original loot: {Game?.VerifiedOriginalNaturalPickups120 ?? 0} grounded / {Game?.RejectedOriginalNaturalPickups120 ?? 0} rejected / {Game?.OriginalLootRespawns120 ?? 0} respawns\n" +
             $"P121 original player: {Game?.VerifiedOriginalPlayerSpawn121 ?? 0} validated / {Game?.RejectedOriginalPlayerSpawns121 ?? 0} rejected / alternate: {Game?.AlternativeOriginalPlayerSpawn121 ?? false} / blocked: {Game?.BlockedOriginalPlayerSpawn121 ?? false}\n" +
+            $"P122 PROVISIONAL objectives: {Game?.VerifiedProvisionalObjectives122 ?? 0} supported / {Game?.RejectedProvisionalObjectives122 ?? 0} rejected / {Game?.AdjustedProvisionalObjectives122 ?? 0} adjusted (NOT recovered originals)\n" +
             $"Managed memory: {GC.GetTotalMemory(false) / 1048576} MiB";
     }
 
@@ -252,6 +253,9 @@ public partial class Pass30DiagnosticsHud : CanvasLayer
                 pass121_source_player_rejected_candidates = Game?.RejectedOriginalPlayerSpawns121 ?? 0,
                 pass121_source_player_alternate = Game?.AlternativeOriginalPlayerSpawn121 ?? false,
                 pass121_source_player_blocked = Game?.BlockedOriginalPlayerSpawn121 ?? false,
+                pass122_provisional_objectives_verified = Game?.VerifiedProvisionalObjectives122 ?? 0,
+                pass122_provisional_objectives_rejected = Game?.RejectedProvisionalObjectives122 ?? 0,
+                pass122_provisional_objectives_adjusted = Game?.AdjustedProvisionalObjectives122 ?? 0,
                 managed_memory_bytes = GC.GetTotalMemory(false)
             };
             var path = Path.Combine(OS.GetUserDataDir(), "TWR_Pass33_Diagnostics.json");
