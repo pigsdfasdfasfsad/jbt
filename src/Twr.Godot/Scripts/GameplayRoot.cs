@@ -1082,6 +1082,10 @@ public partial class GameplayRoot : Node3D
         var speedScale = (float)RegularWaveRules.InfectedWalkSpeedScale(wave);
 
         var spawn = RandomSpawnPoint();
+        // Explicit F9 accessibility may request a replacement only when
+        // original collision fails. A missing assisted route must still
+        // fail closed: never instantiate at the unsupported original spot.
+        var sourceNeedsAssistedPlacement119 = false;
         if (_mapLayout.UseExactInfectedSpawns)
         {
             // Preserve original source-marker X/Z. Reject positions that
@@ -1094,6 +1098,7 @@ public partial class GameplayRoot : Node3D
             if (!supported.HasValue)
             {
                 RejectedSourceSpawns119++;
+                sourceNeedsAssistedPlacement119 = true;
                 // Preserve existing explicit F9 accessibility routing.
                 // Default source mode never silently invents a foothold.
                 if (!AssistedInfectedSpawnsEnabled ||
@@ -1139,7 +1144,12 @@ public partial class GameplayRoot : Node3D
                     Pass32SpawnSafety.MinimumPlayerDistance)
                     Pass40AdaptiveNearSpawns++;
             }
-            else RejectedAssistedSpawnAttempts++;
+            else
+            {
+                RejectedAssistedSpawnAttempts++;
+                if (sourceNeedsAssistedPlacement119)
+                    return; // no supported original and no F9 alternative
+            }
         }
 
         var infected = new InfectedAgent
