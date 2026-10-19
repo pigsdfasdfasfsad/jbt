@@ -102,6 +102,7 @@ public partial class GameplayRoot : Node3D
     private bool _sourceObjectivePlanReady123;
     private int _sourceObjectiveCount123;
     private readonly Vector3?[] _sourceObjectivePositions123 = new Vector3?[2];
+    private readonly SourceObjectiveLayout?[] _sourceObjectiveLayouts = new SourceObjectiveLayout?[2];
     public int Pass123ReachableProvisionalObjectives { get; private set; }
     public int Pass123BlockedProvisionalObjectives { get; private set; }
     public int Pass123DuplicateProvisionalCandidates { get; private set; }
@@ -423,6 +424,24 @@ public partial class GameplayRoot : Node3D
                     GetWorld3D(), _provisionalObjectiveAnchors122,
                     i, _player.GlobalPosition, _player.GetRid(), reserved,
                     out var alternate, out var rejected, out var duplicates);
+                // Preserve the tested direct-corridor policy, but a source
+                // graph can now propose complete physically checked detours.
+                var families = _mapDefinition.Objectives.ToArray();
+                var family = families.Length == 0 ? "Radio" :
+                    families[((Runtime?.Match?.Wave ?? 1)-1+i*2)%families.Length];
+                var preferred = new List<Vector3>();
+                if (candidate.HasValue) preferred.Add(candidate.Value);
+                preferred.AddRange(_provisionalObjectiveAnchors122);
+                // Escort destinations and Damage tanker footprints have
+                // separate lifecycles; do not label them verified by a
+                // player/depot route alone. Keep their previous policy.
+                var routedFamily = family is "Radio" or "Unpack" or "Load" or "Repair";
+                var fullLayout = routedFamily ? SourceObjectiveLayout.TryPlan(GetWorld3D(),
+                    _player.GlobalPosition, _player.GetRid(), family,
+                    preferred, reserved, _sourceNavigator,
+                    family != "Repair" || _rng.RandiRange(1,2) == 2) : null;
+                _sourceObjectiveLayouts[i] = fullLayout;
+                if (routedFamily) candidate = fullLayout?.Position;
                 _sourceObjectivePositions123[i] = candidate;
                 Pass123BlockedProvisionalObjectives += rejected;
                 Pass123DuplicateProvisionalCandidates += duplicates;
@@ -759,6 +778,7 @@ public partial class GameplayRoot : Node3D
             _sourceObjectiveCount123 = _rng.RandiRange(1, 2);
             Array.Clear(_sourceObjectivePositions123, 0,
                 _sourceObjectivePositions123.Length);
+            Array.Clear(_sourceObjectiveLayouts, 0, _sourceObjectiveLayouts.Length);
             _sourceObjectivePlanPending123 = true;
             _sourceObjectivePlanReady123 = false;
         }
@@ -917,6 +937,8 @@ public partial class GameplayRoot : Node3D
                 UseFallbackMaterialGrounding96 = _isFallbackScene86 &&
                     (family == "Load" || family == "Repair"),
                 EscortGroundNavigator89 = _groundNavigation73,
+                SourceMaterialLayout = _mapLayout.ProvisionalSourceObjectives122
+                    ? _sourceObjectiveLayouts[i] : null,
                 Player = _player,
                 Runtime = Runtime,
                 Position = position

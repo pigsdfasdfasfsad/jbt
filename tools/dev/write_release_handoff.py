@@ -78,6 +78,17 @@ failed executable or claim the later source was tested by the earlier run.
 6. Strict packaging checks exact-commit receipts, rejects private/test files,
    launches from a clean directory, hashes all files and retains a Windows ZIP.
 
+7. Source-neutral Radio/Unpack/Load/Repair objectives can use complete,
+   collision-rechecked graph detours instead of requiring one straight line.
+   Candidate pools now include all directions around the player. Load and
+   both Repair variants get complete, unique, verified round-trip material
+   layouts before actors appear. Escort/Damage retain their separate policy.
+8. Native traversal acceptance walks a real player around a blocking wall,
+   rejects partial paths and a newly blocked route, then walks all 32 material
+   interactions across Load, small Repair and large Repair with real E input
+   and exactly-once rewards. The post-build offline audit now distinguishes
+   authored runtime code from MSBuild-generated namespace imports.
+
 ## Verification scope
 
 Complete Python/content checks, native Windows export, production input and
@@ -102,9 +113,15 @@ existing explicit F9 assistance mode did enable connected spawns, route
 search/cache use, and enemies approaching and killing the stationary player.
 That is a verified assisted gameplay path, NOT original spawn/pathfinding parity.
 
-These private tests ran on source commit 91dd5b92485e466b50b042aa20680ece2f55f942,
-not the new Windows executable, and did not validate a complete real-time match.
-The private map and navigation files were never uploaded to public GitHub.
+The earlier source-map inspection ran on 91dd5b9. A subsequent local Linux
+traversal test of the source-traversal contribution completed Load plus large
+Repair in that same private scene: 22 actual E-key deposits, two mission
+receipts, about 98.5m of keyboard-driven walking, no position teleports, and
+idempotent rewards. This was isolated mission verification, not a survival
+match or a Windows test of private assets. The existing weapon extractor also
+recovered the authenticated source assembly pack (98 original tools, 91 catalog
+weapons covered); original mesh triangle bytes remain absent. No private map,
+weapon assembly pack, source coordinates or navigation bytes entered GitHub.
 
 ## Remaining gaps / next concrete task
 
@@ -112,9 +129,10 @@ The private map and navigation files were never uploaded to public GitHub.
   references 489 unresolved mesh IDs and 59 unresolved texture IDs.
 - Resolve the source traversal breaks connecting original exterior infected
   entries to the player's region; F9 assistance is not the default solution.
-- Recover or physically route provisional source objective locations beyond
-  the current conservative straight-corridor policy, then test full material
-  pickup/deposit and Escort routes in the actual original scene.
+- Extend provisional source Escort/Damage lifecycles and verify their whole
+  routes in the original scene; Radio/Unpack/Load/Repair now have the complete
+  collision-rechecked planner, but that does not recover original objective
+  coordinates or bridge missing terrain.
 - Visually compare remaining maps, source lighting, first-person wall clipping,
   animation timing and original equipment dimensions against references.
 - Address non-fatal audio/resource cleanup warnings still emitted by some

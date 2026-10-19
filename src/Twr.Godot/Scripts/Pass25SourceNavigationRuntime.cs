@@ -187,6 +187,34 @@ public partial class Pass25SourceNavigationRuntime : Node3D
         return reordered;
     }
 
+    /// <summary>Existing reachable graph points for provisional objectives.
+    /// These are NOT source-authored objective transforms. The caller must
+    /// validate full paths and actual standing clearance before using them.</summary>
+    public Vector3[] GetProvisionalCandidates(Vector3 from, Vector3 preferred,
+        int maximum, float minimumDistance, float maximumDistance)
+    {
+        if (!from.IsFinite() || !preferred.IsFinite() || maximum is < 1 or > 64 ||
+            minimumDistance < 0 || maximumDistance > 30 ||
+            maximumDistance < minimumDistance || _componentRoot.Length == 0)
+            return [];
+        var anchor = _graph.GetClosestPoint(from);
+        if (anchor < 0 || from.DistanceTo(_graph.GetPointPosition(anchor)) > MaximumAnchorDistance)
+            return [];
+        if (!_componentNodes.TryGetValue(_componentRoot[(int)anchor], out var component)) return [];
+        var chosen = new List<Vector3>(maximum);
+        foreach (var point in component.Select(id => _graph.GetPointPosition(id))
+            .Where(p => Math.Abs(p.Y-from.Y) <= 1.4f &&
+                p.DistanceSquaredTo(from) >= minimumDistance*minimumDistance &&
+                p.DistanceSquaredTo(from) <= maximumDistance*maximumDistance)
+            .OrderBy(p => p.DistanceSquaredTo(preferred)))
+        {
+            if (chosen.Any(p => p.DistanceSquaredTo(point) < 1.0f)) continue;
+            chosen.Add(point);
+            if (chosen.Count == maximum) break;
+        }
+        return chosen.ToArray();
+    }
+
     public Vector3[] GetRoute(Vector3 from, Vector3 to)
     {
         RouteRequests++;

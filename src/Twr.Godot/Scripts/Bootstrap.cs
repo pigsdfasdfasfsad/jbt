@@ -41,6 +41,16 @@ public partial class Bootstrap : Node
             AddChild(new RuntimePresentationCapture { Runtime=_runtime,Name="RuntimePresentationCapture" });
             return;
         }
+        if(args.Contains("--inspect-private-traversal",StringComparer.Ordinal))
+        {
+            AddChild(new PrivateSourceTraversalAcceptance { Runtime=_runtime });
+            return;
+        }
+        if(args.Contains("--smoke-source-traversal",StringComparer.Ordinal))
+        {
+            AddChild(new SourceTraversalAcceptance { Name="SourceTraversalAcceptance",Runtime=_runtime });
+            return;
+        }
         if(args.Contains("--smoke-source-mesh", StringComparer.Ordinal))
         {
             AddChild(new SourceMeshPresentationAcceptance { Name="SourceMeshPresentationAcceptance" });

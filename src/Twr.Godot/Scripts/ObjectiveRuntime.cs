@@ -13,6 +13,9 @@ public partial class ObjectiveRuntime : Node3D
     // On source-absent fallback maps only, ground Load/Repair materials
     // onto player-sized supported floors with line-of-sight to the depot.
     public bool UseFallbackMaterialGrounding96 { get; set; }
+    // Precomputed in the parent physics tick; source-only, provisional,
+    // complete material circuits. Never launch render-time graph queries.
+    public SourceObjectiveLayout? SourceMaterialLayout { get; set; }
     public bool Pass96GroundedMaterialLayout { get; private set; }
     // Preserve the exact Pass87 scheduled source-neutral marker before any
     // justified floor adjustment, so older objective rotation tests remain
@@ -515,7 +518,9 @@ public partial class ObjectiveRuntime : Node3D
         // RECOVERED reconstruction variants:
         // Small Silverado = 4 plugs + 2 wheels + 4 cans (10 total).
         // Large Tundra    = 4 plugs + 2 wheels + 6 cans (12 total).
-        var large=_rng.RandiRange(1,2)==2;
+        var large = SourceMaterialLayout is not null
+            ? SourceMaterialLayout.MaterialFeet.Length == 12
+            : _rng.RandiRange(1,2)==2;
         var items=new List<string>
         {
             "Spark Plug A","Spark Plug B","Spark Plug C","Spark Plug D",
@@ -566,6 +571,13 @@ public partial class ObjectiveRuntime : Node3D
     {
         _required = names.Length;
         Vector3[]? supportedFeet=null;
+        if (SourceMaterialLayout is not null)
+        {
+            if (SourceMaterialLayout.MaterialFeet.Length != names.Length ||
+                SourceMaterialLayout.MaterialRoutes.Length != names.Length)
+                throw new InvalidOperationException("Incomplete provisional source material circuit");
+            supportedFeet = SourceMaterialLayout.MaterialFeet.ToArray();
+        }
         if(UseFallbackMaterialGrounding96 && Player is not null)
         {
             Pass96AuthoredMaterialAnchor=GlobalPosition;
