@@ -4,7 +4,14 @@ on:
   push:
     branches: [twr-source-fidelity-release]
     paths:
-      - 'tools/dev/apply_source_fidelity.py'
+      - 'tools/dev/**'
+      - 'tools/validation/**'
+      - 'tools/content/**'
+      - 'tools/build/**'
+      - 'build/Windows/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'content/**'
       - '.github/workflows/source-fidelity-release.yml'
 concurrency:
   group: source-fidelity-release-${{ github.ref }}
@@ -29,36 +36,16 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_REF_NAME" = 'twr-source-fidelity-release'
-          python tools/dev/apply_source_fidelity.py
-          python tools/dev/apply_deployed_visuals.py
-          python tools/dev/apply_graphics_validation.py
-          python tools/dev/apply_final_presentation.py
-          python tools/dev/apply_supply_delivery.py
-          python tools/dev/apply_source_traversal.py
+          current=$(git ls-remote origin refs/heads/twr-source-fidelity-release | cut -f1)
+          test "$current" = "$GITHUB_SHA"
+          python tools/dev/apply_objective_playability.py
           git diff --check
           python - <<'PY'
           import subprocess
-          allowed = {
-              'src/Twr.Godot/Scripts/LaboratorySourceLoader.cs',
-              'src/Twr.Godot/Scripts/Bootstrap.cs',
-              'src/Twr.Godot/Scripts/LocalSessionNode.cs',
-              'src/Twr.Godot/Scripts/SourceMeshPresentationAcceptance.cs',
-              'src/Twr.Godot/Scripts/FortificationActor.cs',
-              'src/Twr.Godot/Scripts/RuntimeReadinessAcceptance.cs',
-              'src/Twr.Godot/Scripts/RuntimeInteractionAcceptance.cs',
-              'src/Twr.Godot/Scripts/Pass76ObjectiveFortificationAcceptance.cs',
-              'src/Twr.Godot/Scripts/FirstPersonPlayer.cs',
-              'src/Twr.Godot/Scripts/RuntimePresentationCapture.cs',
-              'src/Twr.Godot/Scripts/TimedJackAcceptance.cs',
-              'src/Twr.Godot/Scripts/GameplayRoot.cs',
-              'src/Twr.Godot/Scripts/ObjectiveRuntime.cs',
-              'src/Twr.Godot/Scripts/Pass25SourceNavigationRuntime.cs',
-              'tools/dev/write_release_handoff.py',
-              'tools/validation/run_source_fidelity.py',
-              'tools/build/package_source_safe.py',
-              'build/Windows/build.ps1',
-          }
+          from tools.dev.apply_objective_playability import ALLOWED, MARKER
+          allowed = ALLOWED | {MARKER}
           changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
+          changed.update(subprocess.check_output(['git','ls-files','--others','--exclude-standard'], text=True).splitlines())
           if not changed <= allowed:
               raise SystemExit('Unexpected source edit: ' + repr(changed - allowed))
           for path in sorted(changed):
@@ -67,7 +54,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'feat(gameplay): integrate collision-checked detours and complete source material circuits'
+            git commit -m 'feat(gameplay): integrate physical Escort routes H guidance and grounded Bolter recovery'
             git push origin HEAD:refs/heads/twr-source-fidelity-release
           fi
           echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -165,7 +152,7 @@ jobs:
               Get-Content 'build/source-fidelity-validation/export.log' -Tail 45
             }
           }
-      - name: Native walking material circuits input equipment and supply lifecycles
+      - name: Native Escort routes grounded Bolters guidance and inherited interactions
         if: always() && steps.export.outcome == 'success'
         shell: pwsh
         run: python tools/validation/run_source_fidelity.py
