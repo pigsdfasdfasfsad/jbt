@@ -34,6 +34,7 @@ jobs:
           python tools/dev/apply_graphics_validation.py
           python tools/dev/apply_final_presentation.py
           python tools/dev/apply_supply_delivery.py
+          python tools/dev/apply_source_traversal.py
           git diff --check
           python - <<'PY'
           import subprocess
@@ -50,6 +51,9 @@ jobs:
               'src/Twr.Godot/Scripts/RuntimePresentationCapture.cs',
               'src/Twr.Godot/Scripts/TimedJackAcceptance.cs',
               'src/Twr.Godot/Scripts/GameplayRoot.cs',
+              'src/Twr.Godot/Scripts/ObjectiveRuntime.cs',
+              'src/Twr.Godot/Scripts/Pass25SourceNavigationRuntime.cs',
+              'tools/dev/write_release_handoff.py',
               'tools/validation/run_source_fidelity.py',
               'tools/build/package_source_safe.py',
               'build/Windows/build.ps1',
@@ -63,7 +67,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'feat(gameplay): integrate physical supply delivery with verified reachable payload'
+            git commit -m 'feat(gameplay): integrate collision-checked detours and complete source material circuits'
             git push origin HEAD:refs/heads/twr-source-fidelity-release
           fi
           echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -161,7 +165,7 @@ jobs:
               Get-Content 'build/source-fidelity-validation/export.log' -Tail 45
             }
           }
-      - name: Native input equipment and complete supply delivery lifecycle
+      - name: Native walking material circuits input equipment and supply lifecycles
         if: always() && steps.export.outcome == 'success'
         shell: pwsh
         run: python tools/validation/run_source_fidelity.py

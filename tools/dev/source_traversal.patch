@@ -1,0 +1,229 @@
+diff --git a/src/Twr.Godot/Scripts/Bootstrap.cs b/src/Twr.Godot/Scripts/Bootstrap.cs
+index 142c0e1..0e4e180 100644
+--- a/src/Twr.Godot/Scripts/Bootstrap.cs
++++ b/src/Twr.Godot/Scripts/Bootstrap.cs
+@@ -41,6 +41,16 @@ public partial class Bootstrap : Node
+             AddChild(new RuntimePresentationCapture { Runtime=_runtime,Name="RuntimePresentationCapture" });
+             return;
+         }
++        if(args.Contains("--inspect-private-traversal",StringComparer.Ordinal))
++        {
++            AddChild(new PrivateSourceTraversalAcceptance { Runtime=_runtime });
++            return;
++        }
++        if(args.Contains("--smoke-source-traversal",StringComparer.Ordinal))
++        {
++            AddChild(new SourceTraversalAcceptance { Name="SourceTraversalAcceptance",Runtime=_runtime });
++            return;
++        }
+         if(args.Contains("--smoke-source-mesh", StringComparer.Ordinal))
+         {
+             AddChild(new SourceMeshPresentationAcceptance { Name="SourceMeshPresentationAcceptance" });
+diff --git a/src/Twr.Godot/Scripts/GameplayRoot.cs b/src/Twr.Godot/Scripts/GameplayRoot.cs
+index 90b241e..377a164 100644
+--- a/src/Twr.Godot/Scripts/GameplayRoot.cs
++++ b/src/Twr.Godot/Scripts/GameplayRoot.cs
+@@ -102,6 +102,7 @@ public partial class GameplayRoot : Node3D
+     private bool _sourceObjectivePlanReady123;
+     private int _sourceObjectiveCount123;
+     private readonly Vector3?[] _sourceObjectivePositions123 = new Vector3?[2];
++    private readonly SourceObjectiveLayout?[] _sourceObjectiveLayouts = new SourceObjectiveLayout?[2];
+     public int Pass123ReachableProvisionalObjectives { get; private set; }
+     public int Pass123BlockedProvisionalObjectives { get; private set; }
+     public int Pass123DuplicateProvisionalCandidates { get; private set; }
+@@ -423,6 +424,24 @@ public partial class GameplayRoot : Node3D
+                     GetWorld3D(), _provisionalObjectiveAnchors122,
+                     i, _player.GlobalPosition, _player.GetRid(), reserved,
+                     out var alternate, out var rejected, out var duplicates);
++                // Preserve the tested direct-corridor policy, but a source
++                // graph can now propose complete physically checked detours.
++                var families = _mapDefinition.Objectives.ToArray();
++                var family = families.Length == 0 ? "Radio" :
++                    families[((Runtime?.Match?.Wave ?? 1)-1+i*2)%families.Length];
++                var preferred = new List<Vector3>();
++                if (candidate.HasValue) preferred.Add(candidate.Value);
++                preferred.AddRange(_provisionalObjectiveAnchors122);
++                // Escort destinations and Damage tanker footprints have
++                // separate lifecycles; do not label them verified by a
++                // player/depot route alone. Keep their previous policy.
++                var routedFamily = family is "Radio" or "Unpack" or "Load" or "Repair";
++                var fullLayout = routedFamily ? SourceObjectiveLayout.TryPlan(GetWorld3D(),
++                    _player.GlobalPosition, _player.GetRid(), family,
++                    preferred, reserved, _sourceNavigator,
++                    family != "Repair" || _rng.RandiRange(1,2) == 2) : null;
++                _sourceObjectiveLayouts[i] = fullLayout;
++                if (routedFamily) candidate = fullLayout?.Position;
+                 _sourceObjectivePositions123[i] = candidate;
+                 Pass123BlockedProvisionalObjectives += rejected;
+                 Pass123DuplicateProvisionalCandidates += duplicates;
+@@ -759,6 +778,7 @@ public partial class GameplayRoot : Node3D
+             _sourceObjectiveCount123 = _rng.RandiRange(1, 2);
+             Array.Clear(_sourceObjectivePositions123, 0,
+                 _sourceObjectivePositions123.Length);
++            Array.Clear(_sourceObjectiveLayouts, 0, _sourceObjectiveLayouts.Length);
+             _sourceObjectivePlanPending123 = true;
+             _sourceObjectivePlanReady123 = false;
+         }
+@@ -917,6 +937,8 @@ public partial class GameplayRoot : Node3D
+                 UseFallbackMaterialGrounding96 = _isFallbackScene86 &&
+                     (family == "Load" || family == "Repair"),
+                 EscortGroundNavigator89 = _groundNavigation73,
++                SourceMaterialLayout = _mapLayout.ProvisionalSourceObjectives122
++                    ? _sourceObjectiveLayouts[i] : null,
+                 Player = _player,
+                 Runtime = Runtime,
+                 Position = position
+diff --git a/src/Twr.Godot/Scripts/LocalSessionNode.cs b/src/Twr.Godot/Scripts/LocalSessionNode.cs
+index 885c65c..9132893 100644
+--- a/src/Twr.Godot/Scripts/LocalSessionNode.cs
++++ b/src/Twr.Godot/Scripts/LocalSessionNode.cs
+@@ -118,10 +118,16 @@ public partial class LocalSessionNode : Node
+                 "user://runtime-readiness-smoke-profile.json");
+         var sourceMeshSmoke = OS.GetCmdlineUserArgs().Contains("--smoke-source-mesh", StringComparer.Ordinal);
+         if (sourceMeshSmoke) save = ProjectSettings.GlobalizePath("user://source-mesh-smoke-profile.json");
++        var sourceTraversalSmoke=OS.GetCmdlineUserArgs().Contains("--smoke-source-traversal",StringComparer.Ordinal);
++        if(sourceTraversalSmoke) save=ProjectSettings.GlobalizePath("user://source-traversal-smoke-profile.json");
++        var privateTraversalSmoke=OS.GetCmdlineUserArgs().Contains("--inspect-private-traversal",StringComparer.Ordinal);
++        if(privateTraversalSmoke) save=ProjectSettings.GlobalizePath("user://private-traversal-smoke-profile.json");
+         var presentationCapture = OS.GetCmdlineUserArgs().Contains("--capture-presentation", StringComparer.Ordinal);
+         if (presentationCapture) save = ProjectSettings.GlobalizePath("user://presentation-capture-profile.json");
+         var store = new JsonProfileStore(save);
+         if (presentationCapture) store.Save(new Profile());
++        if(privateTraversalSmoke) store.Save(new Profile());
++        if(sourceTraversalSmoke) store.Save(new Profile());
+         if (sourceMeshSmoke) store.Save(new Profile());
+         if (runtimeReadinessSmoke) store.Save(new Profile());
+         if(smoke70 || smoke71)
+diff --git a/src/Twr.Godot/Scripts/ObjectiveRuntime.cs b/src/Twr.Godot/Scripts/ObjectiveRuntime.cs
+index f475b75..27e8cb1 100644
+--- a/src/Twr.Godot/Scripts/ObjectiveRuntime.cs
++++ b/src/Twr.Godot/Scripts/ObjectiveRuntime.cs
+@@ -13,6 +13,9 @@ public partial class ObjectiveRuntime : Node3D
+     // On source-absent fallback maps only, ground Load/Repair materials
+     // onto player-sized supported floors with line-of-sight to the depot.
+     public bool UseFallbackMaterialGrounding96 { get; set; }
++    // Precomputed in the parent physics tick; source-only, provisional,
++    // complete material circuits. Never launch render-time graph queries.
++    public SourceObjectiveLayout? SourceMaterialLayout { get; set; }
+     public bool Pass96GroundedMaterialLayout { get; private set; }
+     // Preserve the exact Pass87 scheduled source-neutral marker before any
+     // justified floor adjustment, so older objective rotation tests remain
+@@ -515,7 +518,9 @@ public partial class ObjectiveRuntime : Node3D
+         // RECOVERED reconstruction variants:
+         // Small Silverado = 4 plugs + 2 wheels + 4 cans (10 total).
+         // Large Tundra    = 4 plugs + 2 wheels + 6 cans (12 total).
+-        var large=_rng.RandiRange(1,2)==2;
++        var large = SourceMaterialLayout is not null
++            ? SourceMaterialLayout.MaterialFeet.Length == 12
++            : _rng.RandiRange(1,2)==2;
+         var items=new List<string>
+         {
+             "Spark Plug A","Spark Plug B","Spark Plug C","Spark Plug D",
+@@ -566,6 +571,13 @@ public partial class ObjectiveRuntime : Node3D
+     {
+         _required = names.Length;
+         Vector3[]? supportedFeet=null;
++        if (SourceMaterialLayout is not null)
++        {
++            if (SourceMaterialLayout.MaterialFeet.Length != names.Length ||
++                SourceMaterialLayout.MaterialRoutes.Length != names.Length)
++                throw new InvalidOperationException("Incomplete provisional source material circuit");
++            supportedFeet = SourceMaterialLayout.MaterialFeet.ToArray();
++        }
+         if(UseFallbackMaterialGrounding96 && Player is not null)
+         {
+             Pass96AuthoredMaterialAnchor=GlobalPosition;
+diff --git a/src/Twr.Godot/Scripts/Pass25SourceNavigationRuntime.cs b/src/Twr.Godot/Scripts/Pass25SourceNavigationRuntime.cs
+index ca865dc..f245731 100644
+--- a/src/Twr.Godot/Scripts/Pass25SourceNavigationRuntime.cs
++++ b/src/Twr.Godot/Scripts/Pass25SourceNavigationRuntime.cs
+@@ -187,6 +187,34 @@ public partial class Pass25SourceNavigationRuntime : Node3D
+         return reordered;
+     }
+ 
++    /// <summary>Existing reachable graph points for provisional objectives.
++    /// These are NOT source-authored objective transforms. The caller must
++    /// validate full paths and actual standing clearance before using them.</summary>
++    public Vector3[] GetProvisionalCandidates(Vector3 from, Vector3 preferred,
++        int maximum, float minimumDistance, float maximumDistance)
++    {
++        if (!from.IsFinite() || !preferred.IsFinite() || maximum is < 1 or > 64 ||
++            minimumDistance < 0 || maximumDistance > 30 ||
++            maximumDistance < minimumDistance || _componentRoot.Length == 0)
++            return [];
++        var anchor = _graph.GetClosestPoint(from);
++        if (anchor < 0 || from.DistanceTo(_graph.GetPointPosition(anchor)) > MaximumAnchorDistance)
++            return [];
++        if (!_componentNodes.TryGetValue(_componentRoot[(int)anchor], out var component)) return [];
++        var chosen = new List<Vector3>(maximum);
++        foreach (var point in component.Select(id => _graph.GetPointPosition(id))
++            .Where(p => Math.Abs(p.Y-from.Y) <= 1.4f &&
++                p.DistanceSquaredTo(from) >= minimumDistance*minimumDistance &&
++                p.DistanceSquaredTo(from) <= maximumDistance*maximumDistance)
++            .OrderBy(p => p.DistanceSquaredTo(preferred)))
++        {
++            if (chosen.Any(p => p.DistanceSquaredTo(point) < 1.0f)) continue;
++            chosen.Add(point);
++            if (chosen.Count == maximum) break;
++        }
++        return chosen.ToArray();
++    }
++
+     public Vector3[] GetRoute(Vector3 from, Vector3 to)
+     {
+         RouteRequests++;
+diff --git a/tools/dev/write_release_handoff.py b/tools/dev/write_release_handoff.py
+index 8e329d1..36bd886 100644
+--- a/tools/dev/write_release_handoff.py
++++ b/tools/dev/write_release_handoff.py
+@@ -78,6 +78,17 @@ failed executable or claim the later source was tested by the earlier run.
+ 6. Strict packaging checks exact-commit receipts, rejects private/test files,
+    launches from a clean directory, hashes all files and retains a Windows ZIP.
+ 
++7. Source-neutral Radio/Unpack/Load/Repair objectives can use complete,
++   collision-rechecked graph detours instead of requiring one straight line.
++   Candidate pools now include all directions around the player. Load and
++   both Repair variants get complete, unique, verified round-trip material
++   layouts before actors appear. Escort/Damage retain their separate policy.
++8. Native traversal acceptance walks a real player around a blocking wall,
++   rejects partial paths and a newly blocked route, then walks all 32 material
++   interactions across Load, small Repair and large Repair with real E input
++   and exactly-once rewards. The post-build offline audit now distinguishes
++   authored runtime code from MSBuild-generated namespace imports.
++
+ ## Verification scope
+ 
+ Complete Python/content checks, native Windows export, production input and
+@@ -102,9 +113,15 @@ existing explicit F9 assistance mode did enable connected spawns, route
+ search/cache use, and enemies approaching and killing the stationary player.
+ That is a verified assisted gameplay path, NOT original spawn/pathfinding parity.
+ 
+-These private tests ran on source commit 91dd5b92485e466b50b042aa20680ece2f55f942,
+-not the new Windows executable, and did not validate a complete real-time match.
+-The private map and navigation files were never uploaded to public GitHub.
++The earlier source-map inspection ran on 91dd5b9. A subsequent local Linux
++traversal test of the source-traversal contribution completed Load plus large
++Repair in that same private scene: 22 actual E-key deposits, two mission
++receipts, about 98.5m of keyboard-driven walking, no position teleports, and
++idempotent rewards. This was isolated mission verification, not a survival
++match or a Windows test of private assets. The existing weapon extractor also
++recovered the authenticated source assembly pack (98 original tools, 91 catalog
++weapons covered); original mesh triangle bytes remain absent. No private map,
++weapon assembly pack, source coordinates or navigation bytes entered GitHub.
+ 
+ ## Remaining gaps / next concrete task
+ 
+@@ -112,9 +129,10 @@ The private map and navigation files were never uploaded to public GitHub.
+   references 489 unresolved mesh IDs and 59 unresolved texture IDs.
+ - Resolve the source traversal breaks connecting original exterior infected
+   entries to the player's region; F9 assistance is not the default solution.
+-- Recover or physically route provisional source objective locations beyond
+-  the current conservative straight-corridor policy, then test full material
+-  pickup/deposit and Escort routes in the actual original scene.
++- Extend provisional source Escort/Damage lifecycles and verify their whole
++  routes in the original scene; Radio/Unpack/Load/Repair now have the complete
++  collision-rechecked planner, but that does not recover original objective
++  coordinates or bridge missing terrain.
+ - Visually compare remaining maps, source lighting, first-person wall clipping,
+   animation timing and original equipment dimensions against references.
+ - Address non-fatal audio/resource cleanup warnings still emitted by some

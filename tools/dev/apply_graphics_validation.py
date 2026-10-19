@@ -13,6 +13,14 @@ def replace(path,old,new):
     file=ROOT/path
     text=file.read_text(encoding='utf8')
     if new in text:return
+    # Later traversal acceptance extends (not replaces) these native gates.
+    # Recognize the complete known successor so reruns remain idempotentent.
+    if path.endswith('run_source_fidelity.py'):
+        extended = new[:-1] + ',\n             ("--smoke-source-traversal", "TWR_SMOKE_SOURCE_TRAVERSAL_OK")]'
+        if extended in text:return
+    if path.endswith('package_source_safe.py'):
+        extended = new.replace('targeted.json", commit, 2)', 'targeted.json", commit, 3)')
+        if extended in text:return
     if text.count(old)!=1:raise RuntimeError('Inspected integration anchor changed: '+path)
     file.write_text(text.replace(old,new),encoding='utf8',newline='\n')
 
