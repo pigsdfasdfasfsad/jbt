@@ -48,3 +48,6 @@ src/Twr.Godot/Content/
 # Owner-only static Roblox source scene packs
 **/Laboratory.scene.jsonl.gz
 **/private-Laboratory/
+
+# Local metadata ownership state (private backups live in private-evidence/)
+build/content-sync/

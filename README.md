@@ -572,3 +572,26 @@ unit-normalized Godot mesh resources in `Content/Assets/Meshes/` before export.
 **No original mesh or texture bytes are currently committed to public Git.**
 Source IDs are not texture images, and this loader does not fetch resources
 over the network.
+
+
+### Objective playability continuation
+
+The current source-fidelity development lineage adds complete provisional
+Escort routes and **H**-toggled objective route guidance. Guidance is optional,
+off by default, and is an offline assistance feature rather than recovered
+original TWR behavior. **F4** still controls the existing floorplan overlay.
+The guide follows remaining mission materials and switches to the correct
+depot while carrying; it does not automate movement, interaction, or rewards.
+
+Source-map Escort routes are floor/capsule-checked through the existing graph.
+Survivors stop at newly blocked passages and may resume after a complete
+physical route is available. Load staging is now low-profile. Bolter recovery
+continues under gravity instead of suspending an airborne character.
+
+Metadata rebuilds preserve unknown installed private content and back up local
+metadata conflicts under `private-evidence/content-sync-backups`. This does
+not permit publishing the original content: the public packager still refuses
+private assets and requires all current exact-commit verification receipts.
+
+Consult `docs/development/CURRENT_IMPLEMENTATION_STATUS.md` for the latest
+actually tested source SHA, package, remaining fidelity gaps, and test scope.

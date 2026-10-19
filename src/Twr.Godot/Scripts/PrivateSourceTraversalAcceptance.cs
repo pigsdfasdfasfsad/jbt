@@ -111,6 +111,40 @@ public partial class PrivateSourceTraversalAcceptance : Node
                     walked_metres=walked, original_mesh_and_terrain_fidelity_complete=false,
                     isolated_mission_test=true, real_time_survival_match_test=false },new JsonSerializerOptions{WriteIndented=true}));
             }
+            if (OS.GetCmdlineUserArgs().Contains("--exercise-private-escort",StringComparer.Ordinal))
+            {
+                // The actual installed scene and graph are required. No
+                // canned coordinates, fabricated route, or public CI assets.
+                var escortPlan=SourceEscortLayout.TryPlan(game.GetWorld3D(),player.GlobalPosition,
+                    player.GetRid(),preferred,Array.Empty<Vector3>(),nav)
+                    ?? throw new InvalidOperationException("No complete private-scene Escort route");
+                var approachWalked=await AcceptanceKeyboardDriver.Walk(this,player,escortPlan.PlayerRoute);
+                approachWalked+=await AcceptanceKeyboardDriver.Walk(this,player,escortPlan.PlayerRoute.Reverse().ToArray());
+                var receipt=0;
+                var escort=new ObjectiveRuntime { Name="PrivateEscort",Family="Escort",
+                    ObjectiveId="Laboratory:PrivateTraversal:Escort",Runtime=Runtime,Player=player,
+                    Position=escortPlan.Position,SourceEscortPlan=escortPlan,SourceEscortGraph=nav.GetRoute,
+                    Completed=_=>receipt++ };
+                game.AddChild(escort);
+                var ticks=0;
+                while(!escort.IsCompleted && ++ticks<3600)await Frames(1);
+                var survivor=escort.GetNode<CharacterBody3D>("EscortSurvivor");
+                if(!escort.IsCompleted || receipt!=1 || !survivor.IsOnFloor())
+                    throw new InvalidOperationException("Private source Escort stalled at "+survivor.GlobalPosition+
+                        " toward "+string.Join(";",escort.SourceEscortMotion!.RemainingRoute)+
+                        " blocks="+escort.SourceEscortMotion.BlockedSteps);
+                var credits=Runtime.Player!.Credits;
+                Runtime.CompleteObjective(escort.ObjectiveId,"Escort");
+                if(Runtime.Player.Credits!=credits)throw new InvalidOperationException("Private Escort reward replay duplicated");
+                File.WriteAllText(Path.ChangeExtension(output,"escort.json"),JsonSerializer.Serialize(new {
+                    private_original_scene=true, complete_Escort=true, completed_receipts=receipt,
+                    player_walked_metres=approachWalked,survivor_walked_metres=escort.SourceEscortMotion!.DistanceWalked,
+                    player_and_survivor_teleported=false, survivor_grounded=true,
+                    blocked_steps=escort.SourceEscortMotion.BlockedSteps, replans=escort.SourceEscortMotion.AcceptedReplans,
+                    original_objective_coordinates_recovered=false, human_survival_playthrough=false },
+                    new JsonSerializerOptions { WriteIndented=true }));
+                GD.Print("TWR_PRIVATE_SOURCE_ESCORT_OK complete=true grounded=true receipts=1");
+            }
             if (DisplayServer.GetName()!="headless")
             {
                 await Frames(4);

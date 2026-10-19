@@ -22,10 +22,19 @@ internal static class AcceptanceKeyboardDriver
     }
     public static async Task PressE(Node owner)
     {
-        SendKey(Key.E,false); await Frames(owner,3);
-        try { SendKey(Key.E,true); await Frames(owner,4); }
+        // Material interactions are sampled by ObjectiveRuntime._Process.
+        // A slow real renderer can run several physics ticks before one
+        // idle update, so a physics-only key tap could vanish unobserved.
+        // Hold each edge across a complete idle callback, as a human tap is.
+        async Task IdleEdge()
+        {
+            await owner.ToSignal(owner.GetTree(),SceneTree.SignalName.ProcessFrame);
+            await owner.ToSignal(owner.GetTree(),SceneTree.SignalName.ProcessFrame);
+        }
+        SendKey(Key.E,false); await IdleEdge();
+        try { SendKey(Key.E,true); await IdleEdge(); }
         finally { SendKey(Key.E,false); }
-        await Frames(owner,3);
+        await IdleEdge();
     }
     public static async Task<float> Walk(Node owner,FirstPersonPlayer player,IReadOnlyList<Vector3> path)
     {

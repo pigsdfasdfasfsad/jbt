@@ -98,6 +98,9 @@ public partial class InfectedAgent : CharacterBody3D
         _sourceJumpRemaining = 0;
         _sourceJumpElapsed = 0;
         _sourceJumpPlanarVelocity = Vector3.Zero;
+        _leapTime = 0;
+        _leapRecovery = 0;
+        _leapVelocity = Vector3.Zero;
         _progressSampleTimer = .75;
         _lastProgressPosition = newPosition;
         return true;
@@ -570,7 +573,9 @@ public partial class InfectedAgent : CharacterBody3D
             if (_leapTime <= 0)
             {
                 _leapRecovery = 1.0; // APPROXIMATED immobilized recovery window.
-                Velocity = Vector3.Zero;
+                // Immobilization means no horizontal motion, not no gravity.
+                // Short leaps often finish their timer before landing.
+                Velocity = new Vector3(0, Velocity.Y, 0);
             }
             return true;
         }
@@ -578,13 +583,14 @@ public partial class InfectedAgent : CharacterBody3D
         if (_leapRecovery > 0)
         {
             _leapRecovery = Math.Max(0, _leapRecovery - delta);
-            Velocity = Vector3.Zero;
+            var vertical = IsOnFloor() ? 0f : Velocity.Y - 22f * (float)delta;
+            Velocity = new Vector3(0, vertical, 0);
             MoveAndSlide();
             return true;
         }
 
         if (_specialCooldown <= 0 && distance >= 5f && distance <= 18f &&
-            flat.LengthSquared() > 0.001f && Target is not null &&
+            flat.LengthSquared() > 0.001f && Target is not null && IsOnFloor() &&
             Math.Abs(Target.GlobalPosition.Y - GlobalPosition.Y) <= 2.1f &&
             HasClearAttackPath())
         {

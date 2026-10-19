@@ -19,11 +19,12 @@ public static class SourceTraversalRoutes
 
     public static bool TryPlan(World3D world, Vector3 from, Vector3 to,
         Rid playerRid, Func<Vector3, Vector3, Vector3[]>? graphRoute,
-        out Vector3[] route)
+        out Vector3[] route, Rid? excludedActor = null)
     {
         route = [];
         if (!from.IsFinite() || !to.IsFinite()) return false;
         var exclude = new global::Godot.Collections.Array<Rid> { playerRid };
+        if(excludedActor.HasValue)exclude.Add(excludedActor.Value);
         var start = Pass90EscortArrivalSafety.TryGroundDestination(world, from, exclude);
         var end = Pass90EscortArrivalSafety.TryGroundDestination(world, to, exclude);
         if (!start.HasValue || !end.HasValue) return false;

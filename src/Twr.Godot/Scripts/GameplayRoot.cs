@@ -103,6 +103,7 @@ public partial class GameplayRoot : Node3D
     private int _sourceObjectiveCount123;
     private readonly Vector3?[] _sourceObjectivePositions123 = new Vector3?[2];
     private readonly SourceObjectiveLayout?[] _sourceObjectiveLayouts = new SourceObjectiveLayout?[2];
+    private readonly SourceEscortLayout?[] _sourceEscortLayouts = new SourceEscortLayout?[2];
     public int Pass123ReachableProvisionalObjectives { get; private set; }
     public int Pass123BlockedProvisionalObjectives { get; private set; }
     public int Pass123DuplicateProvisionalCandidates { get; private set; }
@@ -351,6 +352,12 @@ public partial class GameplayRoot : Node3D
             _pendingOriginalLoot120 = true;
             _originalLootPhysicsFrames120 = 2;
         }
+        AddChild(new ObjectiveRouteGuidance
+        {
+            Name="ObjectiveRouteGuidance", Player=_player, Runtime=Runtime,
+            GraphRoute=_sourceNavigator is not null ? _sourceNavigator.GetRoute :
+                _groundNavigation73 is not null ? _groundNavigation73.GetRoute : null
+        });
         AddChild(new Pass30DiagnosticsHud { Name = "Pass30Diagnostics", Game = this, MapName = MapName });
         MapLoadMilliseconds = Time.GetTicksMsec() - startup;
         GD.Print($"TWR_PASS30_STARTUP map={MapName} milliseconds={MapLoadMilliseconds} " +
@@ -432,22 +439,28 @@ public partial class GameplayRoot : Node3D
                 var preferred = new List<Vector3>();
                 if (candidate.HasValue) preferred.Add(candidate.Value);
                 preferred.AddRange(_provisionalObjectiveAnchors122);
-                // Escort destinations and Damage tanker footprints have
-                // separate lifecycles; do not label them verified by a
-                // player/depot route alone. Keep their previous policy.
+                // Material loops and survivor destinations need separate
+                // complete layouts, not merely a reachable start marker.
+                // Damage tankers retain their existing separate policy.
                 var routedFamily = family is "Radio" or "Unpack" or "Load" or "Repair";
                 var fullLayout = routedFamily ? SourceObjectiveLayout.TryPlan(GetWorld3D(),
                     _player.GlobalPosition, _player.GetRid(), family,
                     preferred, reserved, _sourceNavigator,
                     family != "Repair" || _rng.RandiRange(1,2) == 2) : null;
                 _sourceObjectiveLayouts[i] = fullLayout;
+                _sourceEscortLayouts[i] = family=="Escort"
+                    ? SourceEscortLayout.TryPlan(GetWorld3D(),_player.GlobalPosition,
+                        _player.GetRid(),preferred,reserved,_sourceNavigator) : null;
                 if (routedFamily) candidate = fullLayout?.Position;
+                if (family=="Escort") candidate = _sourceEscortLayouts[i]?.Position;
                 _sourceObjectivePositions123[i] = candidate;
                 Pass123BlockedProvisionalObjectives += rejected;
                 Pass123DuplicateProvisionalCandidates += duplicates;
                 if (candidate.HasValue)
                 {
                     reserved.Add(candidate.Value);
+                    if(_sourceEscortLayouts[i] is not null)
+                        reserved.Add(_sourceEscortLayouts[i]!.Destination);
                     Pass123ReachableProvisionalObjectives++;
                     if (alternate) Pass123AlternateProvisionalObjectives++;
                 }
@@ -779,6 +792,7 @@ public partial class GameplayRoot : Node3D
             Array.Clear(_sourceObjectivePositions123, 0,
                 _sourceObjectivePositions123.Length);
             Array.Clear(_sourceObjectiveLayouts, 0, _sourceObjectiveLayouts.Length);
+            Array.Clear(_sourceEscortLayouts, 0, _sourceEscortLayouts.Length);
             _sourceObjectivePlanPending123 = true;
             _sourceObjectivePlanReady123 = false;
         }
@@ -939,6 +953,9 @@ public partial class GameplayRoot : Node3D
                 EscortGroundNavigator89 = _groundNavigation73,
                 SourceMaterialLayout = _mapLayout.ProvisionalSourceObjectives122
                     ? _sourceObjectiveLayouts[i] : null,
+                SourceEscortPlan = _mapLayout.ProvisionalSourceObjectives122
+                    ? _sourceEscortLayouts[i] : null,
+                SourceEscortGraph = _sourceNavigator is null ? null : _sourceNavigator.GetRoute,
                 Player = _player,
                 Runtime = Runtime,
                 Position = position

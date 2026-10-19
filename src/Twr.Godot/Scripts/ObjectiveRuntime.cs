@@ -16,6 +16,11 @@ public partial class ObjectiveRuntime : Node3D
     // Precomputed in the parent physics tick; source-only, provisional,
     // complete material circuits. Never launch render-time graph queries.
     public SourceObjectiveLayout? SourceMaterialLayout { get; set; }
+    public SourceEscortLayout? SourceEscortPlan { get; set; }
+    public Func<Vector3,Vector3,Vector3[]>? SourceEscortGraph { get; set; }
+    private SourceEscortFollower? _sourceEscortFollower;
+    public SourceEscortFollower? SourceEscortMotion => _sourceEscortFollower;
+    public bool IsCompleted => _completed;
     public bool Pass96GroundedMaterialLayout { get; private set; }
     // Preserve the exact Pass87 scheduled source-neutral marker before any
     // justified floor adjustment, so older objective rotation tests remain
@@ -110,6 +115,7 @@ public partial class ObjectiveRuntime : Node3D
 
     public override void _Ready()
     {
+        AddToGroup("twr-objective");
         _rng.Randomize();
         BuildObjective();
         PublishStatus();
@@ -178,6 +184,17 @@ public partial class ObjectiveRuntime : Node3D
             _escort is null || _escortDestination is null)
             return;
 
+        if (_sourceEscortFollower is not null)
+        {
+            if(_sourceEscortFollower.Tick(GetWorld3D(),_escort,Player,delta,
+                _escortSpeed,EscortProximity,SourceEscortGraph))
+            {
+                EscortGroundedCompletion90=true;
+                Complete();
+            }
+            PublishStatus();
+            return;
+        }
         if (UseFallbackEscortNavigation89)
         {
             TickFallbackEscort89(delta);
@@ -595,7 +612,8 @@ public partial class ObjectiveRuntime : Node3D
             }
         }
 
-        AddChild(MakeBox("DepositTarget",
+        if(Family=="Load") AddChild(LoadStagingVisual.Build());
+        else AddChild(MakeBox("DepositTarget",
             new Vector3(0,.75f,0),
             new Vector3(2.4f,1.5f,2.4f),
             new Color(.18f,.48f,.22f)));
@@ -665,6 +683,15 @@ public partial class ObjectiveRuntime : Node3D
 
         _escortDestination = MakeBox("EscortDestination", new Vector3(0, 0.1f, -24f), new Vector3(3f, 0.2f, 3f), new Color(0.15f, 0.65f, 0.28f));
         AddChild(_escortDestination);
+        if(SourceEscortPlan is not null)
+        {
+            // Both endpoints were grounded before allocation. Setup-time
+            // placement only; subsequent motion is MoveAndSlide, not teleport.
+            _escort.Position=ToLocal(SourceEscortPlan.Position+Vector3.Up*.08f);
+            _escort.FloorSnapLength=.25f;
+            _escortDestination.Position=ToLocal(SourceEscortPlan.Destination+Vector3.Up*.04f);
+            _sourceEscortFollower=new SourceEscortFollower(SourceEscortPlan);
+        }
         _escortStartDistance = _escort.GlobalPosition.DistanceTo(_escortDestination.GlobalPosition);
     }
 

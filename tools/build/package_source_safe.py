@@ -92,8 +92,8 @@ def main() -> None:
     receipts = {
         "full": verify_receipt(ROOT / "build/runtime-validation/full.json", commit, 34),
         "focus": verify_receipt(ROOT / "build/runtime-validation/focus.json", commit, 9),
-        "targeted": verify_receipt(ROOT / "build/source-fidelity-validation/targeted.json", commit, 3),
-        "graphics": verify_receipt(ROOT / "build/graphics-validation/graphics.json", commit, 2),
+        "targeted": verify_receipt(ROOT / "build/source-fidelity-validation/targeted.json", commit, 6),
+        "graphics": verify_receipt(ROOT / "build/graphics-validation/graphics.json", commit, 3),
     }
     files = choose_files(args.output)
     args.destination.mkdir(parents=True, exist_ok=True)

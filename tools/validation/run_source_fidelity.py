@@ -13,7 +13,7 @@ FATAL = re.compile(r"(^|\n)(?:[^\n]*)(?:ERROR:|Fatal error|System.AccessViolatio
 def execute(exe: Path, flag: str, marker: str, report_dir: Path) -> dict:
     # The scripted walking test is a real-time physics loop. A bare
     # render-frame watchdog can quit a fast headless scene before it ends.
-    frames = "12000" if flag == "--smoke-source-traversal" else "3000"
+    frames = "12000" if flag in {"--smoke-source-traversal", "--smoke-source-escort", "--smoke-objective-guidance"} else "3000"
     command = [str(exe.resolve()), "--headless", "--verbose", "--max-fps", "60",
                "--quit-after", frames, "--", flag]
     try:
@@ -45,7 +45,10 @@ def main() -> None:
     # MultiMesh visual assertions run unchanged in the real-renderer job.
     tests = [("--smoke-runtime-readiness", "TWR_SMOKE_RUNTIME_READINESS_OK"),
              ("--smoke-pass76", "TWR_SMOKE_PASS76_OBJECTIVE_FORTIFICATION_OK"),
-             ("--smoke-source-traversal", "TWR_SMOKE_SOURCE_TRAVERSAL_OK")]
+             ("--smoke-source-traversal", "TWR_SMOKE_SOURCE_TRAVERSAL_OK"),
+             ("--smoke-bolter-grounding", "TWR_BOLTER_GROUNDING_OK"),
+             ("--smoke-source-escort", "TWR_SOURCE_ESCORT_OK"),
+             ("--smoke-objective-guidance", "TWR_OBJECTIVE_GUIDANCE_OK")]
     outcomes = [execute(args.exe, flag, marker, args.reports) for flag, marker in tests]
     report = {"tested_commit": commit, "passed": sum(x["passed"] for x in outcomes),
         "failed": sum(not x["passed"] for x in outcomes), "tests": outcomes,

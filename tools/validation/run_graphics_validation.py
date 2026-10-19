@@ -85,9 +85,14 @@ def main() -> None:
         report['passed']+=1
         invoke('actual-gameplay-capture',common+['--capture-presentation',f'--capture-output={OUT}'],180,
             'TWR_PRESENTATION_CAPTURE_OK')
+        invoke('guided-load-real-renderer',common+['--smoke-objective-guidance',
+            f'--guidance-capture={OUT}/guided-load-actual-engine.png'],180,
+            'TWR_OBJECTIVE_GUIDANCE_OK')
+        report['passed']+=1
         from PIL import Image, ImageStat
         images=[]
-        for name in ('laboratory-fallback-first-person.png','deployed-fortifications-engine-render.png'):
+        for name in ('laboratory-fallback-first-person.png','deployed-fortifications-engine-render.png',
+                     'guided-load-actual-engine.png'):
             image=Image.open(OUT/name).convert('RGB')
             if image.width<640 or image.height<360 or max(ImageStat.Stat(image).stddev)<4:
                 raise RuntimeError('Empty or blank engine screenshot: '+name)

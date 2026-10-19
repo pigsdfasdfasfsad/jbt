@@ -49,7 +49,10 @@ https://github.com/pigsdfasdfasfsad/jbt/actions/runs/{run_id}
 - Original private maps, mesh binaries, textures, and test profiles excluded.
 - This is the existing reconstructed-map game, NOT a finished 1:1 recreation.
 
-Prior retained working binary: `91dd5b92485e466b50b042aa20680ece2f55f942`,
+Previous verified source checkpoint: `19bcba9e5b05bc7b502bd062d8d83d3a72fd3dd4`,
+run 39205332855. The current release builds on that checkpoint.
+
+Earlier retained binary: `91dd5b92485e466b50b042aa20680ece2f55f942`,
 run 38709423959. Its Windows, graphics and packaging jobs all passed; only its
 post-build documentation job failed because a newer build-tool-only commit
 had advanced the branch. Do not conflate that documentation failure with a
@@ -82,14 +85,42 @@ failed executable or claim the later source was tested by the earlier run.
    collision-rechecked graph detours instead of requiring one straight line.
    Candidate pools now include all directions around the player. Load and
    both Repair variants get complete, unique, verified round-trip material
-   layouts before actors appear. Escort/Damage retain their separate policy.
+   layouts before actors appear. Source Escort now has its own complete-route
+   planner as described below; Damage retains its separate existing policy.
 8. Native traversal acceptance walks a real player around a blocking wall,
    rejects partial paths and a newly blocked route, then walks all 32 material
    interactions across Load, small Repair and large Repair with real E input
    and exactly-once rewards. The post-build offline audit now distinguishes
    authored runtime code from MSBuild-generated namespace imports.
 
+9. Provisional source Escort now verifies both the player approach and the
+   complete survivor-to-destination route. A real CharacterBody3D follows
+   floor-checked waypoints, stops at a new obstruction and replans only a
+   complete viable route. Per-wave plans are cleared and destinations reserved.
+   Native tests cover a blocked/reopened corner and three-metre up/down ramps,
+   grounded arrivals and one-time rewards. These are not original coordinates.
+10. H toggles an optional, off-by-default walking-route guide. F4 remains the
+    existing floorplan overlay. Guidance follows the real remaining materials,
+    switches to the correct depot while carrying, and retires at completion or
+    disabled controls. It never walks, collects, spends inventory or pays rewards
+    for the player. A real-rendered ten-item E-key Load circuit verifies it.
+11. Load uses a low-profile noncolliding staging deck instead of the opaque
+    green box. Bolter recovery retains gravity and waits for a grounded start
+    before another leap; the regression reproduces suspension before the fix.
+12. Generated metadata synchronization tracks owned-file hashes, preserves
+    unknown/private installed assets, and backs up edited metadata outside the
+    game project before replacement. Unchanged stale generated files alone may
+    be retired. Public packaging still refuses private assets; preservation does
+    not permit their publication.
+
 ## Verification scope
+
+The distribution requires all SIX targeted native checks (the original input,
+fortification and material circuits plus Bolter grounding, complete Escort and
+optional guidance), all nine repeated shutdown groups, the inherited 34-check
+matrix, and THREE real-renderer checks including guided loading. Exact-commit
+receipts and a clean-directory packaged launch are mandatory. Earlier counts
+alone cannot authorize this newer release.
 
 Complete Python/content checks, native Windows export, production input and
 pickup/fortification/supply lifecycles, repeated Ranch/Expressway/Manor exits,
@@ -123,16 +154,25 @@ recovered the authenticated source assembly pack (98 original tools, 91 catalog
 weapons covered); original mesh triangle bytes remain absent. No private map,
 weapon assembly pack, source coordinates or navigation bytes entered GitHub.
 
+An additional local Linux original-Laboratory test during objective-playability
+work completed a provisional Escort with a real player approach, grounded
+survivor movement, exactly one mission receipt and no mid-motion position
+assignment. This was NOT a Windows private-asset test and did not connect the
+original infected entries. Private data and diagnostic files remain outside
+public Git history. See local validation receipts for its exact assembly hash;
+the Windows package contains only the source-safe reconstructed game.
+
 ## Remaining gaps / next concrete task
 
 - Recover original custom mesh and texture binaries: the inspected Laboratory
   references 489 unresolved mesh IDs and 59 unresolved texture IDs.
 - Resolve the source traversal breaks connecting original exterior infected
   entries to the player's region; F9 assistance is not the default solution.
-- Extend provisional source Escort/Damage lifecycles and verify their whole
-  routes in the original scene; Radio/Unpack/Load/Repair now have the complete
-  collision-rechecked planner, but that does not recover original objective
-  coordinates or bridge missing terrain.
+- Continue original-scene Escort coverage across more locations and recovered
+  stairways, and improve Damage-objective layout. The new Escort controller
+  passes synthetic corners/ramps and an isolated original-Laboratory mission,
+  not every original route or a full survival match. Provisional coordinates
+  and reconstruction gaps must remain explicitly labeled.
 - Visually compare remaining maps, source lighting, first-person wall clipping,
   animation timing and original equipment dimensions against references.
 - Address non-fatal audio/resource cleanup warnings still emitted by some

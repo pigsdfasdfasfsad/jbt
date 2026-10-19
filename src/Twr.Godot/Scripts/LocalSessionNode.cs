@@ -124,7 +124,15 @@ public partial class LocalSessionNode : Node
         if(privateTraversalSmoke) save=ProjectSettings.GlobalizePath("user://private-traversal-smoke-profile.json");
         var presentationCapture = OS.GetCmdlineUserArgs().Contains("--capture-presentation", StringComparer.Ordinal);
         if (presentationCapture) save = ProjectSettings.GlobalizePath("user://presentation-capture-profile.json");
+        var bolterGroundingSmoke = OS.GetCmdlineUserArgs().Contains("--smoke-bolter-grounding",StringComparer.Ordinal);
+        if(bolterGroundingSmoke) save = ProjectSettings.GlobalizePath("user://bolter-grounding-smoke-profile.json");
+        var objectiveContinuationSmoke=OS.GetCmdlineUserArgs().Any(a=>a is "--smoke-source-escort" or "--smoke-objective-guidance");
+        if(objectiveContinuationSmoke)save=ProjectSettings.GlobalizePath(
+            OS.GetCmdlineUserArgs().Contains("--smoke-source-escort",StringComparer.Ordinal)
+                ? "user://source-escort-smoke-profile.json" : "user://objective-guidance-smoke-profile.json");
         var store = new JsonProfileStore(save);
+        if(objectiveContinuationSmoke)store.Save(new Profile());
+        if(bolterGroundingSmoke) store.Save(new Profile());
         if (presentationCapture) store.Save(new Profile());
         if(privateTraversalSmoke) store.Save(new Profile());
         if(sourceTraversalSmoke) store.Save(new Profile());
