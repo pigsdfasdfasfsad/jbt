@@ -21,6 +21,7 @@ public partial class SourceMeshPresentationAcceptance : Node3D
         try
         {
             await Verify();
+            await SourceRenderPartitionAcceptance.Verify(this);
             GD.Print("TWR_SOURCE_MESH_PRESENTATION_OK" +
                 " actual_importer=true builtin_relative_scale=true" +
                 " shape_batches_distinct=true cylinder_axis_x=true" +

@@ -87,6 +87,8 @@ REQUIRED_TARGETED = {
     "--smoke-objective-guidance": "TWR_OBJECTIVE_GUIDANCE_OK",
     "--smoke-source-tanker": "TWR_SOURCE_DAMAGE_OK",
     "--smoke-audio-lifecycle": "TWR_AUDIO_LIFECYCLE_OK",
+    "--smoke-projectile-sweep": "TWR_PROJECTILE_COLLISION_OK",
+    "--smoke-startup-close": "TWR_RUNTIME_PREQUIT_OK exit_code=0",
 }
 
 

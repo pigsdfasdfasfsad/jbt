@@ -11,8 +11,11 @@ def test_rocket_sweep_hits_live_infected_and_occlusion_blocks_splash():
     policy=read("src/Twr.Godot/Scripts/Pass75BlastOcclusion.cs")
     assert "public override void _PhysicsProcess(double delta)" in rocket
     assert "1u | 2u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer" in rocket
-    assert 'hit["position"].AsVector3() +' in rocket
-    assert 'hit["normal"].AsVector3() * .08f' in rocket
+    # Sphere-safe centres replace point-on-surface offsets. Native Pass75
+    # still executes wall occlusion, real infected hits and reward behavior.
+    assert "_sweep.Move(GetWorld3D()" in rocket
+    assert "CollisionRadius = .13f" in rocket
+    assert "Detonate(step.Centre)" in rocket
     assert rocket.count("Pass75BlastOcclusion.CanReachTarget(") == 2
     assert "Damage * factor" in rocket
     assert "tanker.ApplyDamage(Damage, \"Explosive\")" in rocket
@@ -34,7 +37,9 @@ def test_frag_fuse_and_world_occlusion_preserve_source_damage():
     assert "RestingOnGround75" in frag
     assert "_restingOnGround=true;" in frag
     assert "if (_restingOnGround)" in frag
-    assert "GlobalPosition=hit[\"position\"].AsVector3()+normal*.04f;" in frag
+    assert "_sweep.Move(GetWorld3D()" in frag
+    assert "CollisionRadius = .18f" in frag
+    assert "GlobalPosition = step.Centre;" in frag
     assert frag.count("Pass75BlastOcclusion.CanReachTarget(") == 2
     assert 'infected.ApplyDamage(FragDamage*factor,false,"Explosion")' in frag
     assert 'tanker.ApplyDamage(FragDamage,"Explosive")' in frag

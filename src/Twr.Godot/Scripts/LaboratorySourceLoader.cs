@@ -48,6 +48,7 @@ public static class LaboratorySourceLoader
 
         var stage = new Node3D { Name = "Recovered" + mapName };
         var batches = new Dictionary<string, RenderBatch>(StringComparer.Ordinal);
+        var visualPopulation = new Dictionary<string, int>(StringComparer.Ordinal);
         // Each spatial batch shares exactly one source appearance/mesh
         // resource per material+shape; do not duplicate 15k proxy materials.
         var appearanceCache = new Dictionary<string, (Mesh Mesh,
@@ -110,7 +111,7 @@ public static class LaboratorySourceLoader
                 {
                     case "geometry":
                         AddGeometry(record, batches, collisions, meshCache, textureCache,
-                            packedNativeParts, useProxyTiles, appearanceCache);
+                            packedNativeParts, useProxyTiles, appearanceCache, visualPopulation);
                         break;
                     case "collision":
                     {
@@ -320,7 +321,8 @@ public static class LaboratorySourceLoader
         Dictionary<string, Mesh?> meshCache,
         Dictionary<string, Texture2D?> textureCache, bool packedNativeParts,
         bool useProxyTiles, Dictionary<string, (Mesh Mesh,
-            StandardMaterial3D Material)> appearanceCache)
+            StandardMaterial3D Material)> appearanceCache,
+        Dictionary<string, int> visualPopulation)
     {
         var opacity = Num(r, "opacity", 1);
         var size = Extents(r);
@@ -369,6 +371,8 @@ public static class LaboratorySourceLoader
         // Distinct built-in shapes must not share a visual batch.
         appearanceKey += "|builtin:" + SourceMeshPresentation.Kind(r);
         var key = appearanceKey;
+        var visualSize = VisualExtents(r, size);
+        var visualTransform = ToTransform(r, visualSize, true);
         if (useProxyTiles)
         {
             // Bin by actual original source-centre XZ, while visibility is
@@ -379,6 +383,15 @@ public static class LaboratorySourceLoader
             var tileZ = (int)Math.Floor(sourceCentre[2] /
                 Pass45FallbackProxyStreamer.TileSizeStuds);
             key += $"|source-tile:{tileX},{tileZ}";
+        }
+        if (!useProxyTiles)
+        {
+            // Include the actual transformed visual offset, not only the
+            // parent part centre. Keep resource sharing separate from tiles.
+            key += "|render-cell:" + SourceRenderPartition.Cell(visualTransform.Origin);
+            var population = visualPopulation.GetValueOrDefault(key);
+            visualPopulation[key] = population + 1;
+            key += "|page:" + population / SourceRenderPartition.MaximumInstances;
         }
         if (!batches.TryGetValue(key, out var batch))
         {
@@ -416,8 +429,7 @@ public static class LaboratorySourceLoader
             };
             batches.Add(key, batch);
         }
-        var visualSize = VisualExtents(r, size);
-        batch.Instances.Add(ToTransform(r, visualSize, true));
+        batch.Instances.Add(visualTransform);
     }
 
     private static Mesh? LoadPreparedMesh(string id)

@@ -32,10 +32,27 @@ public partial class Bootstrap : Node
 
     public override void _Ready()
     {
+        // Exercise close at the earliest main-scene setup point, before
+        // session creation. No user profile is touched by this acceptance.
+        var earlyArgs = OS.GetCmdlineUserArgs();
+        if (earlyArgs.Contains("--smoke-startup-close",StringComparer.Ordinal) ||
+            earlyArgs.Contains("--smoke-startup-close-failure",StringComparer.Ordinal))
+        {
+            RuntimeShutdownCoordinator.Request(GetTree(),0);
+            if (earlyArgs.Contains("--smoke-startup-close-failure",StringComparer.Ordinal))
+                RuntimeShutdownCoordinator.Request(GetTree(),7);
+            RuntimeShutdownCoordinator.Request(GetTree(),0);
+            return;
+        }
         _runtime = new LocalSessionNode { Name = "Runtime" };
         AddChild(_runtime);
         AddChild(new RuntimeWindowCloseHandler { Name = "RuntimeWindowClose" });
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-projectile-sweep",StringComparer.Ordinal))
+        {
+            AddChild(new ProjectileCollisionAcceptance { Runtime=_runtime });
+            return;
+        }
         if(args.Contains("--smoke-source-tanker",StringComparer.Ordinal))
         {
             AddChild(new SourceDamageAcceptance { Runtime=_runtime });

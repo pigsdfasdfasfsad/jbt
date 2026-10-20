@@ -20,21 +20,39 @@ public partial class RuntimeShutdownCoordinator : Node
     public static void Request(SceneTree tree, int exitCode)
     {
         ArgumentNullException.ThrowIfNull(tree);
-        var existing = tree.Root.GetNodeOrNull<RuntimeShutdownCoordinator>(CoordinatorName);
-        if (existing is not null)
+        var root = tree.Root;
+        // A request can originate inside main-scene _Ready, while root
+        // rejects synchronous AddChild. Reserve one pending coordinator
+        // before deferring the attachment, so repeated close events cannot
+        // create duplicates or lose a requested failure exit code.
+        var existing = root.HasMeta(CoordinatorName)
+            ? root.GetMeta(CoordinatorName).AsGodotObject() as RuntimeShutdownCoordinator
+            : root.GetNodeOrNull<RuntimeShutdownCoordinator>(CoordinatorName);
+        if (existing is not null && GodotObject.IsInstanceValid(existing))
         {
             if (exitCode != 0) existing._exitCode = exitCode;
             return;
         }
         tree.AutoAcceptQuit = false;
         tree.Paused = false;
-        tree.Root.AddChild(new RuntimeShutdownCoordinator
+        var coordinator = new RuntimeShutdownCoordinator
         {
             Name = CoordinatorName,
             ProcessMode = ProcessModeEnum.Always,
             _exitCode = exitCode,
             _started = Time.GetTicksMsec()
-        });
+        };
+        root.SetMeta(CoordinatorName, coordinator);
+        root.CallDeferred(Node.MethodName.AddChild, coordinator);
+    }
+
+    public override void _Ready()
+    {
+        // The attached node name now provides normal request deduplication.
+        var root = GetTree().Root;
+        if (root.HasMeta(CoordinatorName) &&
+            ReferenceEquals(root.GetMeta(CoordinatorName).AsGodotObject(), this))
+            root.RemoveMeta(CoordinatorName);
     }
 
     public override void _PhysicsProcess(double delta) => _physicsTicks++;

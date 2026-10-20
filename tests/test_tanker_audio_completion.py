@@ -76,7 +76,11 @@ def test_targeted_release_receipt_requires_named_successful_cases(tmp_path):
     package=package_module(); path=tmp_path/'targeted.json'; data=make_receipt(package)
     path.write_text(json.dumps(data))
     assert package.verify_targeted_receipt(path,'checked')['failed']==0
-    assert len(package.REQUIRED_TARGETED)==8
+    # The prior eight cases remain mandatory; new projectile and startup
+    # close regressions add requirements rather than replace old coverage.
+    assert len(package.REQUIRED_TARGETED)==10
+    assert '--smoke-projectile-sweep' in package.REQUIRED_TARGETED
+    assert '--smoke-startup-close' in package.REQUIRED_TARGETED
     assert '--smoke-source-tanker' in package.REQUIRED_TARGETED
     assert '--smoke-audio-lifecycle' in package.REQUIRED_TARGETED
 

@@ -8,6 +8,13 @@ public partial class ThrowableProjectileRuntime : Node3D
     public FirstPersonPlayer? SourcePlayer {get;set;}
     public Vector3 Direction {get;set;}=Vector3.Forward;
 
+    public const float CollisionRadius = .18f;
+    public float LaunchOffset { get; set; }
+    public bool Resolved { get; private set; }
+    public bool CancelledInvalidOrigin { get; private set; }
+    public int ContactCount => _contacts;
+    private ProjectileSweep? _sweep;
+    private bool _launchPending = true;
     private Vector3 _velocity;
     private int _contacts;
     private double _life;
@@ -27,6 +34,8 @@ public partial class ThrowableProjectileRuntime : Node3D
     public override void _Ready()
     {
         Direction=Direction.Normalized();
+        _sweep = new ProjectileSweep(CollisionRadius);
+        AddToGroup("twr-projectile");
         _velocity=Direction*ThrowSpeed+Vector3.Up*5f;
         _life=ThrowableType=="Frag" ? FragFuse : 12.0;
 
@@ -51,44 +60,47 @@ public partial class ThrowableProjectileRuntime : Node3D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (Resolved || _sweep is null) return;
         _life-=delta;
+        const uint mask = 1u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
+        if (_launchPending)
+        {
+            _launchPending = false;
+            var launch = _sweep.Move(GetWorld3D(), GlobalPosition,
+                Direction * LaunchOffset, mask, SourcePlayer);
+            if (!launch.Valid || launch.InitialOverlap) { CancelInvalidOrigin(); return; }
+            GlobalPosition = launch.Centre;
+            if (launch.Hit) { _contacts++; Bounce(launch.Normal); }
+        }
         if (_restingOnGround)
         {
-            // Continue the source 3-second Frag fuse while motionless.
-            // Physics ground support persists until the actual detonation.
-            if (ThrowableType=="Frag" && _life<=0)
-                DetonateFrag();
-            return;
+            // The support can disappear (moving/breakable source geometry).
+            // Recheck it; never leave a grenade suspended on a deleted floor.
+            var support = _sweep.Move(GetWorld3D(), GlobalPosition,
+                Vector3.Down * .06f, mask, SourcePlayer);
+            if (!support.Valid || support.InitialOverlap) { CancelInvalidOrigin(); return; }
+            if (support.Hit && support.Normal.Y >= .60f)
+            {
+                if (ThrowableType=="Frag" && _life<=0) DetonateFrag();
+                return;
+            }
+            _restingOnGround = false;
         }
         _velocity.Y-=Gravity*(float)delta;
-
-        var start=GlobalPosition;
-        var end=start+_velocity*(float)delta;
-        var query=PhysicsRayQueryParameters3D.Create(start,end);
-        query.CollisionMask =
-            1u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
-        if(SourcePlayer is not null && GodotObject.IsInstanceValid(SourcePlayer))
-            query.Exclude=new global::Godot.Collections.Array<Rid>{SourcePlayer.GetRid()};
-        var hit=GetWorld3D().DirectSpaceState.IntersectRay(query);
-
-        if(hit.Count>0)
+        var step = _sweep.Move(GetWorld3D(), GlobalPosition,
+            _velocity * (float)delta, mask, SourcePlayer);
+        if (!step.Valid || step.InitialOverlap) { CancelInvalidOrigin(); return; }
+        GlobalPosition = step.Centre;
+        if (step.Hit)
         {
-            var normal=hit["normal"].AsVector3();
-            // Advance outside the collision boundary; a ray starting
-            // exactly on a floor can miss its next downward crossing and
-            // tunnel through the ground before the Frag fuse expires.
-            GlobalPosition=hit["position"].AsVector3()+normal*.04f;
+            var normal = step.Normal;
             _contacts++;
-
             if(ThrowableType=="Frag")
             {
-                // CONTESTED: recovered module says MaxBounces=math.huge while
-                // surviving gameplay documentation describes one useful bounce.
-                if(_contacts==1)Bounce(normal);
+                // Preserve the pre-existing reconstructed bounce policy.
+                if(_contacts==1) Bounce(normal);
                 else if (normal.Y>=.60f)
                 {
-                    // At least two contacts, followed by a genuinely
-                    // upward-facing support; do not freeze on a vertical wall.
                     _velocity=Vector3.Zero;
                     _restingOnGround=true;
                 }
@@ -99,21 +111,24 @@ public partial class ThrowableProjectileRuntime : Node3D
                 DeployLingeringHazard();
                 return;
             }
-            else
-            {
-                Bounce(hit["normal"].AsVector3());
-            }
+            else Bounce(normal);
         }
-        else GlobalPosition=end;
+        if(ThrowableType=="Frag" && _life<=0) DetonateFrag();
+        else if(ThrowableType!="Frag" && _life<=0) DeployLingeringHazard();
+    }
 
-        if(ThrowableType=="Frag" && _life<=0)
-        {
-            DetonateFrag();
-            return;
-        }
+    private void CancelInvalidOrigin()
+    {
+        Resolved = true;
+        CancelledInvalidOrigin = true;
+        SetPhysicsProcess(false);
+        QueueFree();
+    }
 
-        if(ThrowableType!="Frag" && _life<=0)
-            DeployLingeringHazard();
+    public override void _ExitTree()
+    {
+        _sweep?.Dispose();
+        _sweep = null;
     }
 
     private void Bounce(Vector3 normal)
@@ -123,6 +138,9 @@ public partial class ThrowableProjectileRuntime : Node3D
 
     private void DetonateFrag()
     {
+        if (Resolved) return;
+        Resolved = true;
+        SetPhysicsProcess(false);
         foreach(var node in GetTree().GetNodesInGroup("infected"))
         {
             if(node is not InfectedAgent infected || !GodotObject.IsInstanceValid(infected))continue;
@@ -148,6 +166,9 @@ public partial class ThrowableProjectileRuntime : Node3D
 
     private void DeployLingeringHazard()
     {
+        if (Resolved) return;
+        Resolved = true;
+        SetPhysicsProcess(false);
         var parent=GetParent();
         if(parent is null){QueueFree();return;}
 

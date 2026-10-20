@@ -297,7 +297,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
                 !OS.GetCmdlineUserArgs().Contains(
                     "--smoke-pass114",StringComparer.Ordinal) &&
                 !OS.GetCmdlineUserArgs().Contains(
-                    "--smoke-source-tanker",StringComparer.Ordinal))
+                    "--smoke-source-tanker",StringComparer.Ordinal) &&
+                !OS.GetCmdlineUserArgs().Contains(
+                    "--smoke-projectile-sweep",StringComparer.Ordinal))
                 Input.MouseMode = Input.MouseModeEnum.Captured;
             else if (!HammerMode && _heldThrowable is not null)
                 TryThrowThrowable();
@@ -448,6 +450,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
     {
         if (!GameplayControlsEnabled) return;
         if(_heldThrowable is null || Runtime is null || _actionCooldown>0)return;
+        var parent = GetParent() as Node3D;
+        if (parent is null || parent.IsQueuedForDeletion()) return;
         var type=_heldThrowable;
         if(!Runtime.ConsumeItem(type)){_heldThrowable=null;ApplyViewModel();return;}
 
@@ -456,10 +460,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
             Name=type.Replace(" ","")+"Projectile",
             ThrowableType=type,
             SourcePlayer=this,
-            Direction=AimDirection
+            Direction=AimDirection,
+            LaunchOffset=.55f,
+            Position=parent.ToLocal(AimOrigin)
         };
-        GetParent()?.AddChild(projectile);
-        projectile.GlobalPosition=AimOrigin+AimDirection*0.55f;
+        parent.AddChild(projectile);
 
         _actionCooldown=type=="Molotov" ? 0.4 : 0.7;
         _heldThrowable=null;
@@ -744,8 +749,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     private void FireLauncher(RuntimeWeaponDefinition spec)
     {
-        var parent = GetParent();
-        if (parent is null) return;
+        var parent = GetParent() as Node3D;
+        if (parent is null || parent.IsQueuedForDeletion()) return;
 
         var projectile = new ExplosiveProjectileRuntime
         {
@@ -753,10 +758,11 @@ public partial class FirstPersonPlayer : CharacterBody3D
             SourcePlayer = this,
             WeaponName = spec.Name,
             Damage = spec.Damage,
-            Direction = -_camera.GlobalTransform.Basis.Z
+            Direction = -_camera.GlobalTransform.Basis.Z,
+            LaunchOffset = .6f,
+            Position = parent.ToLocal(_camera.GlobalPosition)
         };
         parent.AddChild(projectile);
-        projectile.GlobalPosition = _camera.GlobalPosition + projectile.Direction * 0.6f;
     }
 
     private Vector3 SpreadDirection(float spreadDegrees)

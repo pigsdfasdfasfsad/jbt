@@ -82,6 +82,8 @@ def main() -> None:
             '--audio-driver','Dummy','--verbose','--max-fps','60','--quit-after','12000','--']
         invoke('source-mesh-real-renderer',common+['--smoke-source-mesh'],180,
             'TWR_SOURCE_MESH_PRESENTATION_OK')
+        if 'TWR_SOURCE_RENDER_PARTITION_OK' not in (OUT/'source-mesh-real-renderer.log').read_text(encoding='utf8'):
+            raise RuntimeError('Spatial source instance/culling assertions did not execute')
         report['passed']+=1
         invoke('actual-gameplay-capture',common+['--capture-presentation',f'--capture-output={OUT}'],180,
             'TWR_PRESENTATION_CAPTURE_OK')

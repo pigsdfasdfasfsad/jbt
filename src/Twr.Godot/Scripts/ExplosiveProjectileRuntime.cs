@@ -14,11 +14,21 @@ public partial class ExplosiveProjectileRuntime : Node3D
     public float BlastRadius { get; set; } = 8f;
     public float Speed { get; set; } = 34f;
 
+    public const float CollisionRadius = .13f;
+    // Applied by a physics sweep from the eye, not an unchecked teleport.
+    public float LaunchOffset { get; set; }
+    public bool Resolved { get; private set; }
+    public bool CancelledInvalidOrigin { get; private set; }
+    public Vector3 ResolutionPosition { get; private set; }
+    private ProjectileSweep? _sweep;
+    private bool _launchPending = true;
     private double _life = 6.0;
 
     public override void _Ready()
     {
         Direction = Direction.Normalized();
+        _sweep = new ProjectileSweep(CollisionRadius);
+        AddToGroup("twr-projectile");
         AddChild(new MeshInstance3D
         {
             Mesh = new SphereMesh
@@ -38,36 +48,45 @@ public partial class ExplosiveProjectileRuntime : Node3D
     public override void _PhysicsProcess(double delta)
     {
         _life -= delta;
-        var start = GlobalPosition;
-        var end = start + Direction * Speed * (float)delta;
-        var query = PhysicsRayQueryParameters3D.Create(start, end);
-        // Pass75: a default Godot physics ray sees only layer 1. Live
-        // infected character bodies occupy layer 2, so old launcher
-        // projectiles passed straight through zombies.
-        query.CollisionMask =
-            1u | 2u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
-        if (SourcePlayer is not null && GodotObject.IsInstanceValid(SourcePlayer))
-            query.Exclude = new global::Godot.Collections.Array<Rid> {
-                SourcePlayer.GetRid()
-            };
-
-        var hit = GetWorld3D().DirectSpaceState.IntersectRay(query);
-        if (hit.Count > 0)
+        if (Resolved || _sweep is null) return;
+        const uint mask = 1u | 2u | Pass36SourceFragmentsRuntime.SourceServerCollisionLayer;
+        if (_launchPending)
         {
-            // Physical contact occurs on a collider's surface. Offset
-            // slightly outward to avoid starting a splash ray inside it.
-            Detonate(hit["position"].AsVector3() +
-                hit["normal"].AsVector3() * .08f);
-            return;
+            _launchPending = false;
+            var launch = _sweep.Move(GetWorld3D(), GlobalPosition,
+                Direction * LaunchOffset, mask, SourcePlayer);
+            if (!launch.Valid || launch.InitialOverlap) { CancelInvalidOrigin(); return; }
+            GlobalPosition = launch.Centre;
+            if (launch.Hit) { Detonate(launch.Centre); return; }
         }
+        var step = _sweep.Move(GetWorld3D(), GlobalPosition,
+            Direction * Speed * (float)delta, mask, SourcePlayer);
+        if (!step.Valid || step.InitialOverlap) { CancelInvalidOrigin(); return; }
+        GlobalPosition = step.Centre;
+        if (step.Hit || _life <= 0) Detonate(step.Centre);
+    }
 
-        GlobalPosition = end;
-        if (_life <= 0)
-            Detonate(GlobalPosition);
+    private void CancelInvalidOrigin()
+    {
+        Resolved = true;
+        CancelledInvalidOrigin = true;
+        ResolutionPosition = GlobalPosition;
+        SetPhysicsProcess(false);
+        QueueFree(); // No guessed exit point or damage through a solid.
+    }
+
+    public override void _ExitTree()
+    {
+        _sweep?.Dispose();
+        _sweep = null;
     }
 
     private void Detonate(Vector3 position)
     {
+        if (Resolved) return;
+        Resolved = true;
+        ResolutionPosition = position;
+        SetPhysicsProcess(false);
         foreach (var node in GetTree().GetNodesInGroup("infected"))
         {
             if (node is not InfectedAgent infected || !GodotObject.IsInstanceValid(infected))
