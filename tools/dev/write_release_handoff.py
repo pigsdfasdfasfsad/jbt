@@ -144,13 +144,22 @@ failed executable or claim the later source was tested by the earlier run.
     zero request cannot erase a deliberate nonzero exit. The reproduced early
     root-child race passes without native errors or a shutdown timeout.
 
+19. The recovered near-wall held-model correction now runs with the current
+    full-volume projectile API. Camera-relative fitting contracts the visual
+    weapon and its arms before static geometry without changing aim rays, FOV,
+    ammunition or body collision, then releases smoothly. Arm IK uses the
+    unmodified animation root to prevent enlarged counter-scaled shoulders.
+    Actual W/S, pistol/shotgun switching, ADS, and near-plane restoration are
+    checked in the native executable and a separate real-renderer capture.
+    This remains a presentation adaptation, not recovered Roblox animation.
+
 ## Verification scope
 
-The distribution requires all TEN targeted native checks (the original input,
+The distribution requires all ELEVEN targeted native checks (the original input,
 fortification and material circuits plus Bolter grounding, complete Escort and
 optional guidance plus tanker completion, audio teardown, sphere-projectile collision
-and early-startup shutdown), all nine repeated shutdown groups, the inherited 34-check
-matrix, and FOUR real-renderer checks including guided loading and tanker fire. Exact-commit
+early-startup shutdown and held-model clearance), all nine repeated shutdown groups, the inherited 34-check
+matrix, and FIVE individually named real-renderer checks including guided loading, tanker fire and near-wall weapon/arm fitting. Exact-commit
 receipts and a clean-directory packaged launch are mandatory. Earlier counts
 alone cannot authorize this newer release.
 

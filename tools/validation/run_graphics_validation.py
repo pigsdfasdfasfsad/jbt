@@ -67,7 +67,7 @@ def main() -> None:
     sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     report={'tested_commit':sha,'passed':0,'failed':0,'platform':'Linux',
         'graphics_backend':'Mesa OpenGL via Xvfb (not headless dummy)',
-        'original_private_assets_loaded':False,'original_visual_parity_verified':False}
+        'original_private_assets_loaded':False,'original_visual_parity_verified':False,'cases':[]}
     try:
         engine=get_engine()
         invoke('content-build',['python','tools/content/build_content.py'])
@@ -80,32 +80,37 @@ def main() -> None:
             '--path',str(project),'--rendering-method','gl_compatibility',
             '--rendering-driver','opengl3','--display-driver','x11',
             '--audio-driver','Dummy','--verbose','--max-fps','60','--quit-after','12000','--']
-        invoke('source-mesh-real-renderer',common+['--smoke-source-mesh'],180,
+        def case(name, arguments, marker):
+            invoke(name, common + arguments, 180, marker)
+            report['cases'].append({'name': name, 'exit_code': 0,
+                'required_marker': marker, 'marker_seen': True, 'passed': True})
+            report['passed'] += 1
+        case('source-mesh-real-renderer',['--smoke-source-mesh'],
             'TWR_SOURCE_MESH_PRESENTATION_OK')
         if 'TWR_SOURCE_RENDER_PARTITION_OK' not in (OUT/'source-mesh-real-renderer.log').read_text(encoding='utf8'):
             raise RuntimeError('Spatial source instance/culling assertions did not execute')
-        report['passed']+=1
-        invoke('actual-gameplay-capture',common+['--capture-presentation',f'--capture-output={OUT}'],180,
+        case('actual-gameplay-capture',['--capture-presentation',f'--capture-output={OUT}'],
             'TWR_PRESENTATION_CAPTURE_OK')
-        invoke('guided-load-real-renderer',common+['--smoke-objective-guidance',
-            f'--guidance-capture={OUT}/guided-load-actual-engine.png'],180,
+        case('guided-load-real-renderer',['--smoke-objective-guidance',
+            f'--guidance-capture={OUT}/guided-load-actual-engine.png'],
             'TWR_OBJECTIVE_GUIDANCE_OK')
-        report['passed']+=1
-        invoke('tanker-lifecycle-real-renderer',common+['--smoke-source-tanker',
-            f'--tanker-capture={OUT}/tanker-actual-engine.png'],180,
+        case('tanker-lifecycle-real-renderer',['--smoke-source-tanker',
+            f'--tanker-capture={OUT}/tanker-actual-engine.png'],
             'TWR_SOURCE_DAMAGE_OK')
-        report['passed']+=1
+        case('held-clearance-real-renderer',['--smoke-held-clearance',
+            f'--clearance-captures={OUT}'], 'TWR_HELD_MODEL_CLEARANCE_OK')
         from PIL import Image, ImageStat
         images=[]
         for name in ('laboratory-fallback-first-person.png','deployed-fortifications-engine-render.png',
-                     'guided-load-actual-engine.png', 'tanker-actual-engine.png'):
+                     'guided-load-actual-engine.png', 'tanker-actual-engine.png',
+                     'held-weapon-clear-of-wall.png', 'held-weapon-near-wall.png',
+                     'held-shotgun-near-wall.png', 'held-shotgun-aim-near-wall.png'):
             image=Image.open(OUT/name).convert('RGB')
             if image.width<640 or image.height<360 or max(ImageStat.Stat(image).stddev)<4:
                 raise RuntimeError('Empty or blank engine screenshot: '+name)
             images.append({'name':name,'size':list(image.size),
                 'sha256':hashlib.sha256((OUT/name).read_bytes()).hexdigest()})
         report['captures']=images
-        report['passed']+=1
         (OUT/'engine-location.txt').write_text(str(engine),encoding='utf8')
     except Exception as error:
         report['failed']+=1

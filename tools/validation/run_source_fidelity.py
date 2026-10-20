@@ -52,7 +52,8 @@ def main() -> None:
              ("--smoke-source-tanker", "TWR_SOURCE_DAMAGE_OK"),
              ("--smoke-audio-lifecycle", "TWR_AUDIO_LIFECYCLE_OK"),
              ("--smoke-projectile-sweep", "TWR_PROJECTILE_COLLISION_OK"),
-             ("--smoke-startup-close", "TWR_RUNTIME_PREQUIT_OK exit_code=0")]
+             ("--smoke-startup-close", "TWR_RUNTIME_PREQUIT_OK exit_code=0"),
+             ("--smoke-held-clearance", "TWR_HELD_MODEL_CLEARANCE_OK")]
     outcomes = [execute(args.exe, flag, marker, args.reports) for flag, marker in tests]
     report = {"tested_commit": commit, "passed": sum(x["passed"] for x in outcomes),
         "failed": sum(not x["passed"] for x in outcomes), "tests": outcomes,

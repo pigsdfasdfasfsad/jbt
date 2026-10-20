@@ -78,7 +78,8 @@ def test_targeted_release_receipt_requires_named_successful_cases(tmp_path):
     assert package.verify_targeted_receipt(path,'checked')['failed']==0
     # The prior eight cases remain mandatory; new projectile and startup
     # close regressions add requirements rather than replace old coverage.
-    assert len(package.REQUIRED_TARGETED)==10
+    assert len(package.REQUIRED_TARGETED)==11
+    assert package.REQUIRED_TARGETED["--smoke-held-clearance"]=="TWR_HELD_MODEL_CLEARANCE_OK"
     assert '--smoke-projectile-sweep' in package.REQUIRED_TARGETED
     assert '--smoke-startup-close' in package.REQUIRED_TARGETED
     assert '--smoke-source-tanker' in package.REQUIRED_TARGETED

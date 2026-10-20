@@ -88,6 +88,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private string _meleeWeapon = StarterLoadoutService.TwoByFour;
     private string _equippedWeapon = StarterLoadoutService.Glock17;
     private string? _heldThrowable;
+    private HeldModelClearance? _heldClearance;
+    public float HeldModelFitScale => _heldClearance?.FitScale ?? 1f;
 
     // Roblox game speeds are authored in studs/s; the Godot world uses metres.
     private const float WalkSpeed = 17f * RobloxUnits.MetersPerStud;
@@ -122,6 +124,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
         _viewModel = new WeaponViewModelRuntime { Name = "WeaponViewModel" };
         _camera.AddChild(_viewModel);
+        _heldClearance=new HeldModelClearance();
         _camera.AddChild(new FirstPersonModelLighting
         {
             Name="FirstPersonModelLight", Model=_viewModel
@@ -226,7 +229,9 @@ public partial class FirstPersonPlayer : CharacterBody3D
         MoveAndSlide();
 
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
+        _heldClearance?.Restore(_viewModel);
         UpdateAim(delta,spec);
+        _heldClearance?.Apply(_viewModel,_camera,GetWorld3D(),this,delta);
         if (!HammerMode && _heldThrowable is null && spec.IsAutomatic &&
             Input.MouseMode == Input.MouseModeEnum.Captured &&
             Input.IsMouseButtonPressed(MouseButton.Left))
@@ -236,6 +241,8 @@ public partial class FirstPersonPlayer : CharacterBody3D
     public override void _ExitTree()
     {
         Pass76InteractionSafety.ForgetPlayer(this);
+        _heldClearance?.Dispose();
+        _heldClearance=null;
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -310,6 +317,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     public void SetMountedMode(bool enabled)
     {
+        _heldClearance?.Restore(_viewModel);
         MountedMode=enabled;
         if(enabled)ResetSourceScope69();
         HammerMode=false;
@@ -384,6 +392,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
 
     private void ApplyViewModel()
     {
+        _heldClearance?.Restore(_viewModel);
         var spec = RuntimeWeaponCatalog.Get(_equippedWeapon);
         _viewModel.SetWeapon(spec);
         // Pass53 cosmetic proxy is render-only and never modifies damage,
@@ -421,6 +430,7 @@ public partial class FirstPersonPlayer : CharacterBody3D
     private void SelectThrowable(string type)
     {
         if(Runtime?.Player is null || Runtime.Player.Inventory.GetValueOrDefault(type)<=0)return;
+        _heldClearance?.Restore(_viewModel);
         HammerMode=false;
         _heldThrowable=type;
         ResetSourceAimVisual67();

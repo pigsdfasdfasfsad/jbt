@@ -89,9 +89,10 @@ def test_visual_aim_transition_and_camera_shot_authority_are_not_mixed():
         "src/Twr.Godot/Scripts/Pass62SourceWeaponHierarchy.cs")
     # ADS moves the WeaponViewModel root, so camera-anchored shoulders
     # now counter-transform its animated root before solving endpoints.
-    assert "_armRig66.Transform=Transform.AffineInverse();" in view
-    assert "var leftWrist=Transform*" in view
-    assert "var rightWrist=Transform*" in view
+    assert "var animationPose=ClearanceBasePose ?? Transform;" in view
+    assert "_armRig66.Transform=animationPose.AffineInverse();" in view
+    assert "var leftWrist=animationPose*" in view
+    assert "var rightWrist=animationPose*" in view
     assert "SpendAmmo" not in aim and "AwardKill" not in aim
     assert "Process.Start" not in aim and "HttpClient" not in aim
 

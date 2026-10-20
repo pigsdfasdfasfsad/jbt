@@ -14,6 +14,9 @@ namespace Twr.Godot;
 /// </summary>
 public partial class WeaponViewModelRuntime : Node3D
 {
+    // Unmodified animation root for arm IK, before view-only wall fitting.
+    // Using the fitted root would counter-scale the shoulders into huge arms.
+    public Transform3D? ClearanceBasePose { get; set; }
     public bool UsingPreparedScene { get; private set; }
     public string ActiveCosmeticSkinId { get; private set; } = "";
     public int CosmeticProxyTintParts { get; private set; }
@@ -898,10 +901,11 @@ public partial class WeaponViewModelRuntime : Node3D
         // Compensate its parent transform so shoulder anchors stay
         // camera-fixed rather than following the entire weapon to
         // the sights; the wrists still track the source hand welds.
-        _armRig66.Transform=Transform.AffineInverse();
-        var leftWrist=Transform*
+        var animationPose=ClearanceBasePose ?? Transform;
+        _armRig66.Transform=animationPose.AffineInverse();
+        var leftWrist=animationPose*
             (_rig.Transform*(_leftHandProxy.Transform*cuff));
-        var rightWrist=Transform*
+        var rightWrist=animationPose*
             (_rig.Transform*(_rightHandProxy.Transform*cuff));
         var left=Pass66ArmKinematics.Solve(true,leftWrist);
         var right=Pass66ArmKinematics.Solve(false,rightWrist);

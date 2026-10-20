@@ -48,6 +48,11 @@ public partial class Bootstrap : Node
         AddChild(_runtime);
         AddChild(new RuntimeWindowCloseHandler { Name = "RuntimeWindowClose" });
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-held-clearance",StringComparer.Ordinal))
+        {
+            AddChild(new HeldModelClearanceAcceptance { Runtime=_runtime });
+            return;
+        }
         if(args.Contains("--smoke-projectile-sweep",StringComparer.Ordinal))
         {
             AddChild(new ProjectileCollisionAcceptance { Runtime=_runtime });

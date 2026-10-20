@@ -89,6 +89,7 @@ REQUIRED_TARGETED = {
     "--smoke-audio-lifecycle": "TWR_AUDIO_LIFECYCLE_OK",
     "--smoke-projectile-sweep": "TWR_PROJECTILE_COLLISION_OK",
     "--smoke-startup-close": "TWR_RUNTIME_PREQUIT_OK exit_code=0",
+    "--smoke-held-clearance": "TWR_HELD_MODEL_CLEARANCE_OK",
 }
 
 
@@ -107,6 +108,30 @@ def verify_targeted_receipt(path: Path, commit: str) -> dict:
     return data
 
 
+REQUIRED_GRAPHICS = {
+    "source-mesh-real-renderer": "TWR_SOURCE_MESH_PRESENTATION_OK",
+    "actual-gameplay-capture": "TWR_PRESENTATION_CAPTURE_OK",
+    "guided-load-real-renderer": "TWR_OBJECTIVE_GUIDANCE_OK",
+    "tanker-lifecycle-real-renderer": "TWR_SOURCE_DAMAGE_OK",
+    "held-clearance-real-renderer": "TWR_HELD_MODEL_CLEARANCE_OK",
+}
+
+
+def verify_graphics_receipt(path: Path, commit: str) -> dict:
+    data = verify_receipt(path, commit, len(REQUIRED_GRAPHICS))
+    cases = data.get("cases", [])
+    names = [case.get("name") for case in cases]
+    if len(names) != len(set(names)):
+        raise ValueError("Duplicate graphics case cannot authorize release")
+    for name, marker in REQUIRED_GRAPHICS.items():
+        matches = [case for case in cases if case.get("name") == name]
+        if (len(matches) != 1 or matches[0].get("passed") is not True or
+                matches[0].get("exit_code") != 0 or matches[0].get("marker_seen") is not True or
+                matches[0].get("required_marker") != marker):
+            raise ValueError("Missing or unsuccessful real-renderer case: " + name)
+    return data
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check-inputs", action="store_true")
@@ -122,7 +147,7 @@ def main() -> None:
         "full": verify_receipt(ROOT / "build/runtime-validation/full.json", commit, 34),
         "focus": verify_receipt(ROOT / "build/runtime-validation/focus.json", commit, 9),
         "targeted": verify_targeted_receipt(ROOT / "build/source-fidelity-validation/targeted.json", commit),
-        "graphics": verify_receipt(ROOT / "build/graphics-validation/graphics.json", commit, 4),
+        "graphics": verify_graphics_receipt(ROOT / "build/graphics-validation/graphics.json", commit),
     }
     files = choose_files(args.output)
     args.destination.mkdir(parents=True, exist_ok=True)
