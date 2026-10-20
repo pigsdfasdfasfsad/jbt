@@ -4,16 +4,16 @@
 **Development branch:** `twr-source-fidelity-release`, continued from
 `twr-runtime-stabilization` / `18bec9515d2d44020e8c402f9eec0800af34feba`.
 
-**Exact compiled and tested source commit:** `e84e0ec1c8c83881b53f3dfc76e257af6f0be710`.
+**Exact compiled and tested source commit:** `a352000beae4dd0f0982c6637bad0a83f7955321`.
 The subsequent continuation commit changes documentation only. It does not
 change which source revision was executed, visually captured, and packaged.
 
 **Verification and retained artifacts:**
-https://github.com/pigsdfasdfasfsad/jbt/actions/runs/39396578431
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/39444591737
 
-**Windows package:** `TWR-SourceSafe-Windows-x64-e84e0ec1c8c8.zip`
-- Archive bytes: 74364080.
-- SHA-256: `da1ac7e1f2d59a79b6a11b4d0cd3f97d87e924e8064dbe02059e9c6d47db490d`.
+**Windows package:** `TWR-SourceSafe-Windows-x64-a352000beae4.zip`
+- Archive bytes: 74372542.
+- SHA-256: `8c74c991313e69db74fa96030634d09813e253fb23cbb1c469f52e49e86e7d11`.
 - Complete companion files and bundled .NET runtime included.
 - Clean-directory native launch passed with system SDK paths removed.
 - Original private maps, mesh binaries, textures, and test profiles excluded.
@@ -114,13 +114,22 @@ failed executable or claim the later source was tested by the earlier run.
     zero request cannot erase a deliberate nonzero exit. The reproduced early
     root-child race passes without native errors or a shutdown timeout.
 
+19. The recovered near-wall held-model correction now runs with the current
+    full-volume projectile API. Camera-relative fitting contracts the visual
+    weapon and its arms before static geometry without changing aim rays, FOV,
+    ammunition or body collision, then releases smoothly. Arm IK uses the
+    unmodified animation root to prevent enlarged counter-scaled shoulders.
+    Actual W/S, pistol/shotgun switching, ADS, and near-plane restoration are
+    checked in the native executable and a separate real-renderer capture.
+    This remains a presentation adaptation, not recovered Roblox animation.
+
 ## Verification scope
 
-The distribution requires all TEN targeted native checks (the original input,
+The distribution requires all ELEVEN targeted native checks (the original input,
 fortification and material circuits plus Bolter grounding, complete Escort and
 optional guidance plus tanker completion, audio teardown, sphere-projectile collision
-and early-startup shutdown), all nine repeated shutdown groups, the inherited 34-check
-matrix, and FOUR real-renderer checks including guided loading and tanker fire. Exact-commit
+early-startup shutdown and held-model clearance), all nine repeated shutdown groups, the inherited 34-check
+matrix, and FIVE individually named real-renderer checks including guided loading, tanker fire and near-wall weapon/arm fitting. Exact-commit
 receipts and a clean-directory packaged launch are mandatory. Earlier counts
 alone cannot authorize this newer release.
 
@@ -184,6 +193,8 @@ the Windows package contains only the source-safe reconstructed game.
 The retained source-safe Windows build excludes the privately inspected map.
 Do not report full 1:1 completion or extrapolate percentages from pass numbers.
 <!-- END_CURRENT_SOURCE_SAFE_RELEASE -->
+
+---
 
 ---
 
