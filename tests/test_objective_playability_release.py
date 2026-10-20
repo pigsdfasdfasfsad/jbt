@@ -93,7 +93,16 @@ def test_package_requires_new_tests_without_weakening_inherited_gates():
     assert 'verify_targeted_receipt(' in code
     assert '"--smoke-source-tanker": "TWR_SOURCE_DAMAGE_OK"' in code
     assert '"--smoke-audio-lifecycle": "TWR_AUDIO_LIFECYCLE_OK"' in code
-    assert 'graphics.json", commit, 4)' in code
+    # Individually named, exact-marker receipts replace the weaker aggregate
+    # four-test count. The additional held-model test is mandatory too.
+    assert 'verify_graphics_receipt(' in code
+    assert '"held-clearance-real-renderer": "TWR_HELD_MODEL_CLEARANCE_OK"' in code
+    from tools.build.package_source_safe import REQUIRED_GRAPHICS
+    assert set(REQUIRED_GRAPHICS) == {
+        "source-mesh-real-renderer", "actual-gameplay-capture",
+        "guided-load-real-renderer", "tanker-lifecycle-real-renderer",
+        "held-clearance-real-renderer",
+    }
 
 
 def test_incomplete_receipt_cannot_authorize_new_release(tmp_path):
