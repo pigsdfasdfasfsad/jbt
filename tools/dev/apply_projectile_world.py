@@ -18,7 +18,7 @@ COMPRESSED_BYTES = 15014
 PATCH_BYTES = 53802
 PAYLOADS = [f"tools/dev/projectile_world/part{i:02}.gz" for i in range(1, 5)]
 MARKER = "tools/dev/projectile_world/integrated.json"
-ALLOWED = {
+_PROJECTILE_PATHS = {
     'src/Twr.Godot/Scripts/Bootstrap.cs',
     'src/Twr.Godot/Scripts/ExplosiveProjectileRuntime.cs',
     'src/Twr.Godot/Scripts/FirstPersonPlayer.cs',
@@ -53,11 +53,11 @@ def apply(root: Path = ROOT) -> None:
     if len(patch) != PATCH_BYTES or hashlib.sha256(patch).hexdigest() != DIGEST:
         raise ValueError("Reviewed projectile/world patch digest mismatch")
     entries = re.findall(rb"^diff --git a/(.+) b/(.+)$", patch, re.M)
-    if len(entries) != len(ALLOWED) or any(a != b for a, b in entries):
+    if len(entries) != len(_PROJECTILE_PATHS) or any(a != b for a, b in entries):
         raise ValueError("Unexpected source rename or repeated file in patch")
-    if {a.decode("utf8") for a, b in entries} != ALLOWED:
+    if {a.decode("utf8") for a, b in entries} != _PROJECTILE_PATHS:
         raise ValueError("Unreviewed file in projectile/world patch")
-    for name in ALLOWED | {MARKER}:
+    for name in _PROJECTILE_PATHS | {MARKER}:
         target = root / name
         for part in [target, *target.parents]:
             if part == root:
@@ -82,5 +82,15 @@ def apply(root: Path = ROOT) -> None:
     print("PROJECTILE_WORLD_APPLIED source_only=true")
 
 
+# Keep the original projectile payload's allowlist independent. The workflow
+# imports ALLOWED as the complete set of files these integrations may stage.
+if __package__:
+    from .apply_held_clearance import ALLOWED as HELD_PATHS, MARKER as HELD_MARKER, apply as apply_held
+else:
+    from apply_held_clearance import ALLOWED as HELD_PATHS, MARKER as HELD_MARKER, apply as apply_held
+ALLOWED = _PROJECTILE_PATHS | HELD_PATHS | {HELD_MARKER}
+
+
 if __name__ == "__main__":
     apply()
+    apply_held()
