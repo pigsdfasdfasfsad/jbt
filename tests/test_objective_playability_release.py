@@ -88,8 +88,12 @@ def test_package_requires_new_tests_without_weakening_inherited_gates():
     code=read('tools/build/package_source_safe.py')
     assert 'full.json", commit, 34)' in code
     assert 'focus.json", commit, 9)' in code
-    assert 'targeted.json", commit, 6)' in code
-    assert 'graphics.json", commit, 3)' in code
+    # Tanker/audio completion adds two required cases. The release now
+    # validates the named receipts and their markers, not just a count.
+    assert 'verify_targeted_receipt(' in code
+    assert '"--smoke-source-tanker": "TWR_SOURCE_DAMAGE_OK"' in code
+    assert '"--smoke-audio-lifecycle": "TWR_AUDIO_LIFECYCLE_OK"' in code
+    assert 'graphics.json", commit, 4)' in code
 
 
 def test_incomplete_receipt_cannot_authorize_new_release(tmp_path):

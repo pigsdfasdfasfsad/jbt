@@ -104,6 +104,7 @@ public partial class GameplayRoot : Node3D
     private readonly Vector3?[] _sourceObjectivePositions123 = new Vector3?[2];
     private readonly SourceObjectiveLayout?[] _sourceObjectiveLayouts = new SourceObjectiveLayout?[2];
     private readonly SourceEscortLayout?[] _sourceEscortLayouts = new SourceEscortLayout?[2];
+    private readonly SourceDamageLayout?[] _sourceDamageLayouts = new SourceDamageLayout?[2];
     public int Pass123ReachableProvisionalObjectives { get; private set; }
     public int Pass123BlockedProvisionalObjectives { get; private set; }
     public int Pass123DuplicateProvisionalCandidates { get; private set; }
@@ -441,7 +442,7 @@ public partial class GameplayRoot : Node3D
                 preferred.AddRange(_provisionalObjectiveAnchors122);
                 // Material loops and survivor destinations need separate
                 // complete layouts, not merely a reachable start marker.
-                // Damage tankers retain their existing separate policy.
+                // Damage requires its full vehicle footprint and a reachable firing station.
                 var routedFamily = family is "Radio" or "Unpack" or "Load" or "Repair";
                 var fullLayout = routedFamily ? SourceObjectiveLayout.TryPlan(GetWorld3D(),
                     _player.GlobalPosition, _player.GetRid(), family,
@@ -453,12 +454,16 @@ public partial class GameplayRoot : Node3D
                         _player.GetRid(),preferred,reserved,_sourceNavigator) : null;
                 if (routedFamily) candidate = fullLayout?.Position;
                 if (family=="Escort") candidate = _sourceEscortLayouts[i]?.Position;
+                _sourceDamageLayouts[i] = family=="Damage" ? SourceDamageLayout.TryPlan(GetWorld3D(),
+                    _player.GlobalPosition,_player.GetRid(),preferred,reserved,_sourceNavigator) : null;
+                if (family=="Damage") candidate = _sourceDamageLayouts[i]?.Position;
                 _sourceObjectivePositions123[i] = candidate;
                 Pass123BlockedProvisionalObjectives += rejected;
                 Pass123DuplicateProvisionalCandidates += duplicates;
                 if (candidate.HasValue)
                 {
                     reserved.Add(candidate.Value);
+                    if (_sourceDamageLayouts[i] is not null) reserved.Add(_sourceDamageLayouts[i]!.FiringPosition);
                     if(_sourceEscortLayouts[i] is not null)
                         reserved.Add(_sourceEscortLayouts[i]!.Destination);
                     Pass123ReachableProvisionalObjectives++;
@@ -793,6 +798,7 @@ public partial class GameplayRoot : Node3D
                 _sourceObjectivePositions123.Length);
             Array.Clear(_sourceObjectiveLayouts, 0, _sourceObjectiveLayouts.Length);
             Array.Clear(_sourceEscortLayouts, 0, _sourceEscortLayouts.Length);
+            Array.Clear(_sourceDamageLayouts, 0, _sourceDamageLayouts.Length);
             _sourceObjectivePlanPending123 = true;
             _sourceObjectivePlanReady123 = false;
         }
@@ -951,6 +957,7 @@ public partial class GameplayRoot : Node3D
                 UseFallbackMaterialGrounding96 = _isFallbackScene86 &&
                     (family == "Load" || family == "Repair"),
                 EscortGroundNavigator89 = _groundNavigation73,
+                SourceDamagePlan = _mapLayout.ProvisionalSourceObjectives122 ? _sourceDamageLayouts[i] : null,
                 SourceMaterialLayout = _mapLayout.ProvisionalSourceObjectives122
                     ? _sourceObjectiveLayouts[i] : null,
                 SourceEscortPlan = _mapLayout.ProvisionalSourceObjectives122

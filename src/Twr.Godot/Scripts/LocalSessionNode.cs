@@ -130,7 +130,10 @@ public partial class LocalSessionNode : Node
         if(objectiveContinuationSmoke)save=ProjectSettings.GlobalizePath(
             OS.GetCmdlineUserArgs().Contains("--smoke-source-escort",StringComparer.Ordinal)
                 ? "user://source-escort-smoke-profile.json" : "user://objective-guidance-smoke-profile.json");
+        var extendedSmoke = OS.GetCmdlineUserArgs().Any(x=>x is "--smoke-audio-lifecycle" or "--smoke-source-tanker");
+        if (extendedSmoke) save=ProjectSettings.GlobalizePath("user://tanker-audio-acceptance-profile.json");
         var store = new JsonProfileStore(save);
+        if (extendedSmoke) store.Save(new Profile());
         if(objectiveContinuationSmoke)store.Save(new Profile());
         if(bolterGroundingSmoke) store.Save(new Profile());
         if (presentationCapture) store.Save(new Profile());

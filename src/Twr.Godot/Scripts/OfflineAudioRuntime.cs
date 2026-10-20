@@ -22,6 +22,42 @@ public partial class OfflineAudioRuntime : Node
     };
     private readonly Dictionary<string, AudioStreamWav> _streams = new(StringComparer.Ordinal);
     private readonly List<AudioStreamPlayer> _voices = [];
+    private readonly Dictionary<AudioStreamPlayer, Action> _finishedHandlers = [];
+    private bool _retired;
+    public int ActiveVoiceCount => _voices.Count;
+
+    public override void _EnterTree() => _retired = false;
+
+    // Finished is NOT emitted by Stop or tree exit. Detachment therefore
+    // needs its own teardown instead of leaving closures and streams alive.
+    public override void _ExitTree()
+    {
+        _retired = true;
+        foreach (var voice in _voices.ToArray()) RetireVoice(voice);
+        _streams.Clear();
+    }
+
+    public override void _Process(double delta)
+    {
+        foreach (var voice in _voices.ToArray())
+            if (!GodotObject.IsInstanceValid(voice) || voice.IsQueuedForDeletion() || !voice.Playing)
+                RetireVoice(voice);
+    }
+
+    private void RetireVoice(AudioStreamPlayer voice)
+    {
+        if (!_voices.Remove(voice)) return;
+        var valid = GodotObject.IsInstanceValid(voice);
+        if (_finishedHandlers.Remove(voice, out var handler) && valid)
+            voice.Finished -= handler;
+        if (!valid) return;
+        voice.Stop();
+        // Drop the playback's native stream reference BEFORE queuing deletion.
+        // Cached effects are shared within this scene and are not disposed
+        // while another active voice might still use the same stream.
+        voice.Stream = null;
+        if (!voice.IsQueuedForDeletion()) voice.QueueFree();
+    }
 
     public AudioStreamWav StreamFor(string kind)
     {
@@ -35,7 +71,7 @@ public partial class OfflineAudioRuntime : Node
 
     public void Play(string kind)
     {
-        if (_voices.Count >= MaxVoices) return;
+        if (_retired || !IsInsideTree() || IsQueuedForDeletion() || _voices.Count >= MaxVoices) return;
         var voice = new AudioStreamPlayer
         {
             Name = "Sfx_" + kind,
@@ -50,11 +86,9 @@ public partial class OfflineAudioRuntime : Node
         };
         _voices.Add(voice);
         AddChild(voice);
-        voice.Finished += () =>
-        {
-            _voices.Remove(voice);
-            voice.QueueFree();
-        };
+        Action finished = () => RetireVoice(voice);
+        _finishedHandlers.Add(voice, finished);
+        voice.Finished += finished;
         voice.Play();
     }
 

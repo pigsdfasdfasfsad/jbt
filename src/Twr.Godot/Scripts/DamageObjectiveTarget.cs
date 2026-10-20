@@ -25,25 +25,12 @@ public partial class DamageObjectiveTarget : StaticBody3D
             Shape = new BoxShape3D { Size = new Vector3(4.8f, 2.2f, 1.9f) }
         });
 
-        AddChild(new MeshInstance3D
-        {
-            Position = new Vector3(0, 1.1f, 0),
-            Mesh = new BoxMesh
-            {
-                Size = new Vector3(4.8f, 2.2f, 1.9f),
-                Material = new StandardMaterial3D
-                {
-                    AlbedoColor = new Color(0.38f, 0.09f, 0.06f),
-                    Metallic = 0.35f,
-                    Roughness = 0.58f
-                }
-            }
-        });
+        AddChild(ReconstructedTankerVisual.Build());
     }
 
     public void ApplyDamage(float amount, string damageKind)
     {
-        if (Health <= 0 || amount <= 0) return;
+        if (Health <= 0 || !float.IsFinite(amount) || amount <= 0 || IsQueuedForDeletion()) return;
         if (damageKind is "Melee" or "Fire") return; // VERIFIED immunity cases.
 
         Health = Math.Max(0, Health - amount);

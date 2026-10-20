@@ -25,6 +25,8 @@ public partial class ObjectiveRuntime
                 if(GodotObject.IsInstanceValid(item) && !item.IsQueuedForDeletion() && item.IsInsideTree())
                     yield return new(this,item.GlobalPosition,$"COLLECT {item.Name} | {Family.ToUpperInvariant()} {_deposited}/{_required}",false);
         }
+        else if(Family=="Damage" && SourceDamagePlan is not null && _damageTarget is not null && GodotObject.IsInstanceValid(_damageTarget))
+            yield return new(this,SourceDamagePlan.FiringPosition,"DAMAGE | REACH FIRING POSITION, THEN SHOOT TANKER",false);
         else if(Family=="Escort" && _escort is not null && GodotObject.IsInstanceValid(_escort))
             yield return new(this,_escort.GlobalPosition,"ESCORT | STAY WITH SURVIVOR",false,_escort.GetRid());
         else if(Family is "Radio" or "Unpack")

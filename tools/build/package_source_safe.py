@@ -78,6 +78,33 @@ def verify_receipt(path: Path, commit: str, expected: int | None = None) -> dict
     return data
 
 
+REQUIRED_TARGETED = {
+    "--smoke-runtime-readiness": "TWR_SMOKE_RUNTIME_READINESS_OK",
+    "--smoke-pass76": "TWR_SMOKE_PASS76_OBJECTIVE_FORTIFICATION_OK",
+    "--smoke-source-traversal": "TWR_SMOKE_SOURCE_TRAVERSAL_OK",
+    "--smoke-bolter-grounding": "TWR_BOLTER_GROUNDING_OK",
+    "--smoke-source-escort": "TWR_SOURCE_ESCORT_OK",
+    "--smoke-objective-guidance": "TWR_OBJECTIVE_GUIDANCE_OK",
+    "--smoke-source-tanker": "TWR_SOURCE_DAMAGE_OK",
+    "--smoke-audio-lifecycle": "TWR_AUDIO_LIFECYCLE_OK",
+}
+
+
+def verify_targeted_receipt(path: Path, commit: str) -> dict:
+    data = verify_receipt(path, commit, len(REQUIRED_TARGETED))
+    cases = data.get("tests", [])
+    flags = [case.get("flag") for case in cases]
+    if len(flags) != len(set(flags)):
+        raise ValueError("Duplicate targeted test cannot authorize release")
+    for flag, marker in REQUIRED_TARGETED.items():
+        match = [case for case in cases if case.get("flag") == flag]
+        if (len(match) != 1 or match[0].get("passed") is not True or
+                match[0].get("exit_code") != 0 or match[0].get("marker_seen") is not True or
+                match[0].get("required_marker") != marker):
+            raise ValueError("Missing or unsuccessful targeted case: " + flag)
+    return data
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check-inputs", action="store_true")
@@ -92,8 +119,8 @@ def main() -> None:
     receipts = {
         "full": verify_receipt(ROOT / "build/runtime-validation/full.json", commit, 34),
         "focus": verify_receipt(ROOT / "build/runtime-validation/focus.json", commit, 9),
-        "targeted": verify_receipt(ROOT / "build/source-fidelity-validation/targeted.json", commit, 6),
-        "graphics": verify_receipt(ROOT / "build/graphics-validation/graphics.json", commit, 3),
+        "targeted": verify_targeted_receipt(ROOT / "build/source-fidelity-validation/targeted.json", commit),
+        "graphics": verify_receipt(ROOT / "build/graphics-validation/graphics.json", commit, 4),
     }
     files = choose_files(args.output)
     args.destination.mkdir(parents=True, exist_ok=True)

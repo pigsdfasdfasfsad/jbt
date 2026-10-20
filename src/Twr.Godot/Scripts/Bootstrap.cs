@@ -36,6 +36,16 @@ public partial class Bootstrap : Node
         AddChild(_runtime);
         AddChild(new RuntimeWindowCloseHandler { Name = "RuntimeWindowClose" });
         var args=OS.GetCmdlineUserArgs();
+        if(args.Contains("--smoke-source-tanker",StringComparer.Ordinal))
+        {
+            AddChild(new SourceDamageAcceptance { Runtime=_runtime });
+            return;
+        }
+        if(args.Contains("--smoke-audio-lifecycle",StringComparer.Ordinal))
+        {
+            AddChild(new AudioLifecycleAcceptance());
+            return;
+        }
         if(args.Contains("--smoke-source-escort",StringComparer.Ordinal))
         {
             AddChild(new SourceEscortAcceptance { Runtime=_runtime });

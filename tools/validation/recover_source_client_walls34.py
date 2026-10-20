@@ -68,7 +68,8 @@ def read_client_walls(z):
                         if map_name in MAPS:
                             cframe=prop(item,'CFrame')
                             if cframe is None:raise ValueError('Source wall missing CFrame: '+str(path))
-                            size=prop(item,'Size') or prop(item,'size')
+                            size=prop(item,'Size')
+                            if size is None: size=prop(item,'size')
                             r=vec(cframe,('R00','R01','R02','R10','R11','R12','R20','R21','R22'))
                             t=vec(cframe,('X','Y','Z'))
                             s=vec(size,('X','Y','Z'))

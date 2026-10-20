@@ -17,6 +17,7 @@ public partial class ObjectiveRuntime : Node3D
     // complete material circuits. Never launch render-time graph queries.
     public SourceObjectiveLayout? SourceMaterialLayout { get; set; }
     public SourceEscortLayout? SourceEscortPlan { get; set; }
+    public SourceDamageLayout? SourceDamagePlan { get; set; }
     public Func<Vector3,Vector3,Vector3[]>? SourceEscortGraph { get; set; }
     private SourceEscortFollower? _sourceEscortFollower;
     public SourceEscortFollower? SourceEscortMotion => _sourceEscortFollower;

@@ -207,6 +207,20 @@ public partial class Pass38SourceSoundscapeRuntime : Node3D
         }
     }
 
+    public override void _ExitTree()
+    {
+        Enabled=false;
+        foreach (var cue in _cues)
+        {
+            if (cue.Ambient is not null && GodotObject.IsInstanceValid(cue.Ambient))
+            { cue.Ambient.Stop(); cue.Ambient.Stream=null; }
+            if (cue.Positioned is not null && GodotObject.IsInstanceValid(cue.Positioned))
+            { cue.Positioned.Stop(); cue.Positioned.Stream=null; }
+        }
+        _cues.Clear();
+        _listener=null;
+    }
+
     public void Track(FirstPersonPlayer listener)
     {
         _listener=listener;

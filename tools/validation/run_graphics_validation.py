@@ -79,7 +79,7 @@ def main() -> None:
         common=['xvfb-run','-a','-s','-screen 0 1280x720x24',str(engine),
             '--path',str(project),'--rendering-method','gl_compatibility',
             '--rendering-driver','opengl3','--display-driver','x11',
-            '--audio-driver','Dummy','--verbose','--max-fps','60','--quit-after','3000','--']
+            '--audio-driver','Dummy','--verbose','--max-fps','60','--quit-after','12000','--']
         invoke('source-mesh-real-renderer',common+['--smoke-source-mesh'],180,
             'TWR_SOURCE_MESH_PRESENTATION_OK')
         report['passed']+=1
@@ -89,10 +89,14 @@ def main() -> None:
             f'--guidance-capture={OUT}/guided-load-actual-engine.png'],180,
             'TWR_OBJECTIVE_GUIDANCE_OK')
         report['passed']+=1
+        invoke('tanker-lifecycle-real-renderer',common+['--smoke-source-tanker',
+            f'--tanker-capture={OUT}/tanker-actual-engine.png'],180,
+            'TWR_SOURCE_DAMAGE_OK')
+        report['passed']+=1
         from PIL import Image, ImageStat
         images=[]
         for name in ('laboratory-fallback-first-person.png','deployed-fortifications-engine-render.png',
-                     'guided-load-actual-engine.png'):
+                     'guided-load-actual-engine.png', 'tanker-actual-engine.png'):
             image=Image.open(OUT/name).convert('RGB')
             if image.width<640 or image.height<360 or max(ImageStat.Stat(image).stddev)<4:
                 raise RuntimeError('Empty or blank engine screenshot: '+name)
