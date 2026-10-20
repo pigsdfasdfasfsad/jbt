@@ -39,11 +39,13 @@ jobs:
           current=$(git ls-remote origin refs/heads/twr-source-fidelity-release | cut -f1)
           test "$current" = "$GITHUB_SHA"
           python tools/dev/apply_objective_playability.py
+          python tools/dev/apply_tanker_audio.py
           git diff --check
           python - <<'PY'
           import subprocess
           from tools.dev.apply_objective_playability import ALLOWED, MARKER
-          allowed = ALLOWED | {MARKER}
+          from tools.dev.apply_tanker_audio import ALLOWED as TANKER_PATHS, MARKER as TANKER_MARKER
+          allowed = ALLOWED | {MARKER} | TANKER_PATHS | {TANKER_MARKER}
           changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
           changed.update(subprocess.check_output(['git','ls-files','--others','--exclude-standard'], text=True).splitlines())
           if not changed <= allowed:
@@ -54,7 +56,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'feat(gameplay): integrate physical Escort routes H guidance and grounded Bolter recovery'
+            git commit -m 'feat(gameplay): finish reachable tanker objectives and retire audio resources on scene exit'
             git push origin HEAD:refs/heads/twr-source-fidelity-release
           fi
           echo "tested_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -152,7 +154,7 @@ jobs:
               Get-Content 'build/source-fidelity-validation/export.log' -Tail 45
             }
           }
-      - name: Native Escort routes grounded Bolters guidance and inherited interactions
+      - name: Native tanker audio Escort guidance and inherited interactions
         if: always() && steps.export.outcome == 'success'
         shell: pwsh
         run: python tools/validation/run_source_fidelity.py
