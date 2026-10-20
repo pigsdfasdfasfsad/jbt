@@ -4,23 +4,23 @@
 **Development branch:** `twr-source-fidelity-release`, continued from
 `twr-runtime-stabilization` / `18bec9515d2d44020e8c402f9eec0800af34feba`.
 
-**Exact compiled and tested source commit:** `da06ce99e5e6f4a4ad11e7675ba822895958c97d`.
+**Exact compiled and tested source commit:** `88b436d9fcb364672ce46f5e4854435f7ac9a064`.
 The subsequent continuation commit changes documentation only. It does not
 change which source revision was executed, visually captured, and packaged.
 
 **Verification and retained artifacts:**
-https://github.com/pigsdfasdfasfsad/jbt/actions/runs/39222018515
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/39362143981
 
-**Windows package:** `TWR-SourceSafe-Windows-x64-da06ce99e5e6.zip`
-- Archive bytes: 74329488.
-- SHA-256: `a654e6fe9273d109d88c885e3cd4630a5e83f30e761aa4bcaf75998b1877a5e6`.
+**Windows package:** `TWR-SourceSafe-Windows-x64-88b436d9fcb3.zip`
+- Archive bytes: 74347224.
+- SHA-256: `2a0dd0014eb11e9f68e5ed24907deac514ab0c4364dfba228d56383d4e1c8ac5`.
 - Complete companion files and bundled .NET runtime included.
 - Clean-directory native launch passed with system SDK paths removed.
 - Original private maps, mesh binaries, textures, and test profiles excluded.
 - This is the existing reconstructed-map game, NOT a finished 1:1 recreation.
 
-Previous verified source checkpoint: `19bcba9e5b05bc7b502bd062d8d83d3a72fd3dd4`,
-run 39205332855. The current release builds on that checkpoint.
+Previous verified source checkpoint: `da06ce99e5e6f4a4ad11e7675ba822895958c97d`,
+run 39222018515. The current release builds on that checkpoint.
 
 Earlier retained binary: `91dd5b92485e466b50b042aa20680ece2f55f942`,
 run 38709423959. Its Windows, graphics and packaging jobs all passed; only its
@@ -56,7 +56,7 @@ failed executable or claim the later source was tested by the earlier run.
    Candidate pools now include all directions around the player. Load and
    both Repair variants get complete, unique, verified round-trip material
    layouts before actors appear. Source Escort now has its own complete-route
-   planner as described below; Damage retains its separate existing policy.
+   planner as described below; Damage now checks a full tanker and firing position.
 8. Native traversal acceptance walks a real player around a blocking wall,
    rejects partial paths and a newly blocked route, then walks all 32 material
    interactions across Load, small Repair and large Repair with real E input
@@ -83,12 +83,27 @@ failed executable or claim the later source was tested by the earlier run.
     be retired. Public packaging still refuses private assets; preservation does
     not permit their publication.
 
+13. Provisional Damage objectives now require the whole 4.8m tanker footprint,
+    world clearance, a reachable firing station, and a route avoiding the future
+    tanker collider. H guidance ends at that station. A cylindrical local
+    reconstruction replaces the red box without adding or resizing collision.
+    Native and graphical tests walk, fire 167 normal starter-pistol shots,
+    reload nine times, collect ammunition, and check the domain reward including
+    level advancement, one completion, and saved results. No original tanker
+    model or authentic retail location is claimed.
+14. Offline effects explicitly disconnect completion callbacks, stop playback,
+    and drop stream references on natural finish, external stop and scene exit.
+    Source-positioned soundscapes also release playback references on removal.
+    The reproduced detachment defect now passes 120 voices across six scenes.
+15. Release packaging requires all eight named native cases with the right
+    success marker and zero process exit, not a bare passed-count field.
+
 ## Verification scope
 
-The distribution requires all SIX targeted native checks (the original input,
+The distribution requires all EIGHT targeted native checks (the original input,
 fortification and material circuits plus Bolter grounding, complete Escort and
-optional guidance), all nine repeated shutdown groups, the inherited 34-check
-matrix, and THREE real-renderer checks including guided loading. Exact-commit
+optional guidance plus tanker completion and audio teardown), all nine repeated shutdown groups, the inherited 34-check
+matrix, and FOUR real-renderer checks including guided loading and tanker fire. Exact-commit
 receipts and a clean-directory packaged launch are mandatory. Earlier counts
 alone cannot authorize this newer release.
 
@@ -152,6 +167,8 @@ the Windows package contains only the source-safe reconstructed game.
 The retained source-safe Windows build excludes the privately inspected map.
 Do not report full 1:1 completion or extrapolate percentages from pass numbers.
 <!-- END_CURRENT_SOURCE_SAFE_RELEASE -->
+
+---
 
 ---
 
