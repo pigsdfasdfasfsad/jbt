@@ -4,23 +4,23 @@
 **Development branch:** `twr-source-fidelity-release`, continued from
 `twr-runtime-stabilization` / `18bec9515d2d44020e8c402f9eec0800af34feba`.
 
-**Exact compiled and tested source commit:** `88b436d9fcb364672ce46f5e4854435f7ac9a064`.
+**Exact compiled and tested source commit:** `e84e0ec1c8c83881b53f3dfc76e257af6f0be710`.
 The subsequent continuation commit changes documentation only. It does not
 change which source revision was executed, visually captured, and packaged.
 
 **Verification and retained artifacts:**
-https://github.com/pigsdfasdfasfsad/jbt/actions/runs/39362143981
+https://github.com/pigsdfasdfasfsad/jbt/actions/runs/39396578431
 
-**Windows package:** `TWR-SourceSafe-Windows-x64-88b436d9fcb3.zip`
-- Archive bytes: 74347224.
-- SHA-256: `2a0dd0014eb11e9f68e5ed24907deac514ab0c4364dfba228d56383d4e1c8ac5`.
+**Windows package:** `TWR-SourceSafe-Windows-x64-e84e0ec1c8c8.zip`
+- Archive bytes: 74364080.
+- SHA-256: `da1ac7e1f2d59a79b6a11b4d0cd3f97d87e924e8064dbe02059e9c6d47db490d`.
 - Complete companion files and bundled .NET runtime included.
 - Clean-directory native launch passed with system SDK paths removed.
 - Original private maps, mesh binaries, textures, and test profiles excluded.
 - This is the existing reconstructed-map game, NOT a finished 1:1 recreation.
 
-Previous verified source checkpoint: `da06ce99e5e6f4a4ad11e7675ba822895958c97d`,
-run 39222018515. The current release builds on that checkpoint.
+Previous verified source checkpoint: `88b436d9fcb364672ce46f5e4854435f7ac9a064`,
+run 39362143981. The current release builds on that checkpoint.
 
 Earlier retained binary: `91dd5b92485e466b50b042aa20680ece2f55f942`,
 run 38709423959. Its Windows, graphics and packaging jobs all passed; only its
@@ -95,14 +95,31 @@ failed executable or claim the later source was tested by the earlier run.
     and drop stream references on natural finish, external stop and scene exit.
     Source-positioned soundscapes also release playback references on removal.
     The reproduced detachment defect now passes 120 voices across six scenes.
-15. Release packaging requires all eight named native cases with the right
+15. Release packaging requires all ten named native cases with the right
     success marker and zero process exit, not a bare passed-count field.
+16. Grenades and launcher rounds sweep their complete visible sphere radii,
+    test initial overlaps explicitly, and sweep from the camera to the launch
+    offset in a physics tick. A close wall no longer permits spawning on its
+    far side. Invalid embedded origins cancel without inventing an exit/blast.
+    Existing source damage, fuse, inventory and blast-occlusion tests remain.
+    Resting grenades resume falling if the supporting collider disappears.
+17. Original map visuals without a SHA-bound primitive stream now use 32m
+    three-dimensional render cells, capped at 128 instances per MultiMesh.
+    Mesh and material resources stay shared; every original transform and
+    world-space bounding box is retained. The existing native-pack streaming
+    and collision paths are unchanged. The real renderer verifies 500 instances
+    in five bounded batches with unchanged physics. This is not an FPS claim.
+18. Very early close requests defer coordinator attachment until scene setup
+    finishes. Repeated pending requests share one coordinator, and a later
+    zero request cannot erase a deliberate nonzero exit. The reproduced early
+    root-child race passes without native errors or a shutdown timeout.
 
 ## Verification scope
 
-The distribution requires all EIGHT targeted native checks (the original input,
+The distribution requires all TEN targeted native checks (the original input,
 fortification and material circuits plus Bolter grounding, complete Escort and
-optional guidance plus tanker completion and audio teardown), all nine repeated shutdown groups, the inherited 34-check
+optional guidance plus tanker completion, audio teardown, sphere-projectile collision
+and early-startup shutdown), all nine repeated shutdown groups, the inherited 34-check
 matrix, and FOUR real-renderer checks including guided loading and tanker fire. Exact-commit
 receipts and a clean-directory packaged launch are mandatory. Earlier counts
 alone cannot authorize this newer release.
@@ -167,6 +184,8 @@ the Windows package contains only the source-safe reconstructed game.
 The retained source-safe Windows build excludes the privately inspected map.
 Do not report full 1:1 completion or extrapolate percentages from pass numbers.
 <!-- END_CURRENT_SOURCE_SAFE_RELEASE -->
+
+---
 
 ---
 
